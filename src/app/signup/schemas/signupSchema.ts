@@ -11,9 +11,10 @@ export const signupSchema = z.object({
   notes: z.string().min(1, "Notes are required"),
   phoneNumber: z.object({
     countryCode: z.string().min(1, "Country code is required"),
-    number: z.string().refine((val) => {
+    number: z.string().refine((val, ctx) => {
       try {
-        return isValidPhoneNumber(`+${val}`, { defaultCountry: 'AU' });
+        const countryCode = ctx.parent.countryCode;
+        return isValidPhoneNumber(`+${countryCode}${val}`);
       } catch {
         return false;
       }
