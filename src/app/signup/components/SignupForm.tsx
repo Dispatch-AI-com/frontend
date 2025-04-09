@@ -86,7 +86,8 @@ export default function SignupForm() {
         <PhoneNumberInput
           control={control}
           name="phoneNumber"
-          error={!!errors.phoneNumber}
+          error={!!errors.phoneNumber?.root || !!errors.phoneNumber?.number}
+          helperText={errors.phoneNumber?.root?.message || errors.phoneNumber?.number?.message}
         />
       </FormField>
       <FormField label="Base city">

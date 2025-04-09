@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isValidPhoneNumber } from 'libphonenumber-js';
+import { isValidPhoneNumber, getCountryCallingCode } from 'libphonenumber-js';
 
 export const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -11,15 +11,17 @@ export const signupSchema = z.object({
   notes: z.string().min(1, "Notes are required"),
   phoneNumber: z.object({
     countryCode: z.string().min(1, "Country code is required"),
-    number: z.string().refine((val, ctx) => {
-      try {
-        const countryCode = ctx.parent.countryCode;
-        return isValidPhoneNumber(`+${countryCode}${val}`);
-      } catch {
-        return false;
-      }
-    }, "Invalid phone number"),
-  }),
+    dialCode: z.string(),
+    number: z.string().min(1, "Phone number is required")
+  }).refine((data) => {
+    if (!data.number) return false;
+    try {
+      const fullNumber = `+${data.dialCode}${data.number}`;
+      return isValidPhoneNumber(fullNumber);
+    } catch {
+      return false;
+    }
+  }, { message: "Please enter a valid phone number" }),
   baseCity: z.string().min(1, "Base city is required"),
   agreeToPolicy: z.boolean().refine((data) => data === true, {
     message: "You must agree to our privacy policy.",
