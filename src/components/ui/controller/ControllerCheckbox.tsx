@@ -27,7 +27,6 @@ const CheckedIcon = () => (
     position: 'relative',
   }}>
     <div style={{
-      content: '""',
       position: 'absolute',
       left: '50%',
       top: '45%',
