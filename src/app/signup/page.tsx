@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function SignupPage() {
   return (
-    <Box maxWidth="700px" minHeight="1318px" mx="auto" mt={8} px={10} py={2}>
+    <Box maxWidth="700px" minHeight="1318px" mx="auto" mt={2} px={5} py={2}>
       <Box display="flex" justifyContent="center" mb={4}>
         <Image src="/logo.svg" alt="Logo" width={200} height={100} />
       </Box>
