@@ -9,24 +9,12 @@ export const signupSchema = z.object({
   jobTitle: z.string().min(1, "Job title is required"),
   volume: z.number().min(1, "Volume is required"),
   notes: z.string().min(1, "Notes are required"),
-  phoneNumber: z.object({
-    countryCode: z.string().min(1, "Country code is required"),
-    dialCode: z.string(),
-    number: z.string().min(1, "Phone number is required")
-  }).refine((data) => {
-    if (!data.number) return false;
-    try {
-      const fullNumber = `+${data.dialCode}${data.number}`;
-      return isValidPhoneNumber(fullNumber);
-    } catch {
-      return false;
-    }
-  }, { message: "Please enter a valid phone number" }),
   baseCity: z.string().min(1, "Base city is required"),
   agreeToPolicy: z.boolean().refine((data) => data === true, {
     message: "You must agree to our privacy policy.",
   }),
   agreeToComms: z.boolean().optional(),
+  phoneNumber: z.string().min(1, "Phone number is required"),
 });
 
 export type SignupFormData = z.infer<typeof signupSchema>;

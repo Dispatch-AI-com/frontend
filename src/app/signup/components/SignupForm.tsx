@@ -7,10 +7,10 @@ import FormField from "@/app/signup/layout/FormField";
 import ControllerInput from "@/components/ui/controller/ControllerInput";
 import { defaultSignupValues } from "@/app/signup/schemas/defaultSignupValues";
 import ControllerSelect from "@/components/ui/controller/ControllerSelect";
-import PhoneNumberInput from "@/components/ui/controller/PhoneNumberInput";
 import ControllerTextarea from "@/components/ui/controller/ControllerTextarea";
 import ControllerCheckbox from "@/components/ui/controller/ControllerCheckbox";
 import Button from "@/components/ui/Button";
+import PhoneNumberInput from "@/components/ui/controller/PhoneNumberInput";
 export default function SignupForm() {
   const { control, handleSubmit, formState: { errors } } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -18,7 +18,12 @@ export default function SignupForm() {
   });
 
   const onSubmit = (data: SignupFormData) => {
-    console.log("Form data:", data);
+    try {
+      console.log("Form data:", data);
+      alert("Form submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   return (
@@ -84,10 +89,10 @@ export default function SignupForm() {
       </FormField>
       <FormField label="Phone number">
         <PhoneNumberInput
-          control={control}
           name="phoneNumber"
-          error={!!errors.phoneNumber?.root || !!errors.phoneNumber?.number}
-          helperText={errors.phoneNumber?.root?.message || errors.phoneNumber?.number?.message}
+          control={control}
+          error={!!errors.phoneNumber}
+          helperText={errors.phoneNumber?.message}
         />
       </FormField>
       <FormField label="Base city">
