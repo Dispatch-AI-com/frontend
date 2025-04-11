@@ -1,102 +1,103 @@
-import { useState } from 'react';
-import { Controller, Control } from "react-hook-form";
-import { InputAdornment, Select, MenuItem, TextField, FormHelperText } from "@mui/material";
-import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
+import { useMemo } from 'react';
+import { Controller, Control, FieldValues, Path, PathValue } from "react-hook-form";
+import { InputAdornment, Select, MenuItem, TextField, FormControl, FormHelperText } from "@mui/material";
+import { getCountries, getCountryCallingCode, CountryCode } from 'libphonenumber-js';
 
-interface PhoneNumberInputProps {
-  control: Control<any>;
-  name: string;
-  error?: boolean;
-  helperText?: string | undefined;
+interface PhoneNumberInputProps<T extends FieldValues> extends Omit<React.ComponentProps<typeof TextField>, "name"> {
+  name: Path<T>;
+  control: Control<T>;
 }
 
-const COUNTRY_CODES = getCountries().map(country => ({
-  code: country,
-  label: new Intl.DisplayNames(['en'], { type: 'region' }).of(country) || country,
-  dialCode: `+${getCountryCallingCode(country)}`
-})).sort((a, b) => {
-  if (a.code === 'AU') return -1;
-  if (b.code === 'AU') return 1;
-  return a.label.localeCompare(b.label);
-});
+const DEFAULT_COUNTRY: CountryCode = 'AU';
 
-const DEFAULT_COUNTRY = 'AU';
+interface PhoneNumberValue {
+  country: string;
+  number: string;
+}
 
-export default function PhoneNumberInput({ control, name, error, helperText }: PhoneNumberInputProps) {
+export default function PhoneNumberInput<T extends FieldValues>({
+  name,
+  control,
+  ...props
+}: PhoneNumberInputProps<T>) {
+  const countryOptions = useMemo(() => {
+    return getCountries()
+      .map(country => ({
+        code: country,
+        label: new Intl.DisplayNames(['en'], { type: 'region' }).of(country) || country,
+        dialCode: `+${getCountryCallingCode(country)}`
+      }))
+      .sort((a, b) => {
+        if (a.code === DEFAULT_COUNTRY) return -1;
+        if (b.code === DEFAULT_COUNTRY) return 1;
+        return a.label.localeCompare(b.label);
+      });
+  }, []);
+
   return (
-    <>
-      <Controller
-        name={name}
-        control={control}
-        defaultValue={{ 
-          countryCode: DEFAULT_COUNTRY, 
-          number: "", 
-          dialCode: getCountryCallingCode(DEFAULT_COUNTRY) 
-        }}
-        render={({ field }) => (
-          <>
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={{ country: DEFAULT_COUNTRY, number: "" } as PathValue<T, Path<T>>}
+      render={({ field, fieldState }) => {
+        const value = field.value as PhoneNumberValue || { country: DEFAULT_COUNTRY, number: "" };
+        const { country, number } = value;
+        const selectedCountryOption = countryOptions.find(option => option.code === country);
+        const displayValue = selectedCountryOption ? `${selectedCountryOption.dialCode} ${number}` : number;
+
+        const error = fieldState.error as { type: string; message: string; number?: { message: string } } | null;
+        const errorMessage = error?.number?.message || error?.message || '';
+
+        return (
+          <FormControl fullWidth error={!!error}>
             <TextField
-              {...field}
+              error={!!error}
+              {...props}
               fullWidth
               placeholder="Phone number"
-              error={error}
-              value={field.value.number}
-              helperText={helperText}
+              value={displayValue}
               onChange={(e) => {
-                field.onChange({ 
-                  countryCode: field.value.countryCode, 
-                  number: e.target.value,
-                  dialCode: field.value.dialCode
-                });
+                const newValue = e.target.value;
+                const selectedCountryOption = countryOptions.find(option => option.code === country);
+                const dialCode = selectedCountryOption?.dialCode || '';
+                const phoneNumber = newValue.replace(dialCode, '').trim();
+                
+                const newFieldValue: PhoneNumberValue = {
+                  country: country || DEFAULT_COUNTRY,
+                  number: phoneNumber
+                };
+                field.onChange(newFieldValue as PathValue<T, Path<T>>);
               }}
               InputProps={{
                 startAdornment: (
-                  <>
-                    <InputAdornment 
-                      position="start" 
-                      sx={{ 
-                        mr: 0,
-                        borderRight: '1px solid',
-                        borderColor: 'grey.300',
-                        pr: 1,
+                  <InputAdornment position="start">
+                    <Select
+                      value={country || DEFAULT_COUNTRY}
+                      error={!!error}
+                      onChange={(e) => {
+                        const newCountry = e.target.value;
+                        const newFieldValue: PhoneNumberValue = {
+                          country: newCountry || DEFAULT_COUNTRY,
+                          number: number || ""
+                        };
+                        field.onChange(newFieldValue as PathValue<T, Path<T>>);
+                      }}
+                      sx={{
+                        width: '120px',
+                        '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                        '& .MuiSelect-select': { 
+                          paddingY: '0',
+                          color: error ? 'error.main' : 'text.primary',
+                        },
                       }}
                     >
-                      <Select
-                        value={field.value.countryCode}
-                        onChange={(e) => {
-                          const country = e.target.value;
-                          field.onChange({
-                            countryCode: country,
-                            number: field.value.number,
-                            dialCode: getCountryCallingCode(country)
-                          });
-                        }}
-                        sx={{
-                          width: '120px',
-                          '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                          '& .MuiSelect-select': { 
-                            paddingY: '0',
-                            color: error ? 'error.main' : 'text.primary',
-                          },
-                        }}
-                      >
-                        {COUNTRY_CODES.map((country) => (
-                          <MenuItem key={country.code} value={country.code}>
-                            {country.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </InputAdornment>
-                    <InputAdornment position="start" sx={{ 
-                      mr: 0,
-                      ml: 1,
-                      height: '24px',
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}>
-                      {COUNTRY_CODES.find(c => c.code === field.value.countryCode)?.dialCode}
-                    </InputAdornment>
-                  </>
+                      {countryOptions.map((country) => (
+                        <MenuItem key={country.code} value={country.code}>
+                          {country.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </InputAdornment>
                 ),
               }}
               sx={{
@@ -110,11 +111,17 @@ export default function PhoneNumberInput({ control, name, error, helperText }: P
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: error ? "error.main" : "grey.300",
                 },
+                ...props.sx
               }}
             />
-          </>
-        )}
-      />
-    </>
+            {errorMessage && (
+              <FormHelperText error>
+                {errorMessage}
+              </FormHelperText>
+            )}
+          </FormControl>
+        );
+      }}
+    />
   );
 } 

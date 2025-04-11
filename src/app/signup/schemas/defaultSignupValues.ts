@@ -6,7 +6,10 @@ export const defaultSignupValues = {
     jobTitle: "",
     volume: 0,
     notes: "",
-    phoneNumber: "",
+    phoneNumber: {
+      country: "AU",
+      number: ""
+    },
     baseCity: "",
     agreeToPolicy: false,
     agreeToComms: false,

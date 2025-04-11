@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isValidPhoneNumber, getCountryCallingCode } from 'libphonenumber-js';
+import { isValidPhoneNumber, CountryCode } from "libphonenumber-js";
 
 export const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -14,7 +14,18 @@ export const signupSchema = z.object({
     message: "You must agree to our privacy policy.",
   }),
   agreeToComms: z.boolean().optional(),
-  phoneNumber: z.string().min(1, "Phone number is required"),
+  phoneNumber: z.object({
+    country: z.string().min(1, "Country is required"),
+    number: z.string().min(1, "Phone number is required"),
+  }).refine((data) => {
+    try {
+      return isValidPhoneNumber(data.number, { defaultCountry: data.country as CountryCode });
+    } catch {
+      return false;
+    }
+  }, {
+    message: "Invalid phone number",
+  }),
 });
 
 export type SignupFormData = z.infer<typeof signupSchema>;
