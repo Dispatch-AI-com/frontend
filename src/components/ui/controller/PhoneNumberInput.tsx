@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Controller, Control, FieldValues, Path, PathValue } from "react-hook-form";
-import { InputAdornment, Select, MenuItem, TextField, FormControl, FormHelperText } from "@mui/material";
+import { InputAdornment, Select, MenuItem, TextField, FormControl } from "@mui/material";
 import { getCountries, getCountryCallingCode, CountryCode } from 'libphonenumber-js';
 
 interface PhoneNumberInputProps<T extends FieldValues> extends Omit<React.ComponentProps<typeof TextField>, "name"> {
@@ -45,13 +45,12 @@ export default function PhoneNumberInput<T extends FieldValues>({
         const selectedCountryOption = countryOptions.find(option => option.code === country);
         const displayValue = selectedCountryOption ? `${selectedCountryOption.dialCode} ${number}` : number;
 
-        const error = fieldState.error as { type: string; message: string; number?: { message: string } } | null;
-        const errorMessage = error?.number?.message || error?.message || '';
+        const hasError = !!fieldState.error;
 
         return (
-          <FormControl fullWidth error={!!error}>
+          <FormControl fullWidth error={hasError}>
             <TextField
-              error={!!error}
+              error={hasError}
               {...props}
               fullWidth
               placeholder="Phone number"
@@ -73,7 +72,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
                   <InputAdornment position="start">
                     <Select
                       value={country || DEFAULT_COUNTRY}
-                      error={!!error}
+                      error={hasError}
                       onChange={(e) => {
                         const newCountry = e.target.value;
                         const newFieldValue: PhoneNumberValue = {
@@ -87,7 +86,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
                         '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
                         '& .MuiSelect-select': { 
                           paddingY: '0',
-                          color: error ? 'error.main' : 'text.primary',
+                          color: hasError ? 'error.main' : 'text.primary',
                         },
                       }}
                     >
@@ -109,16 +108,11 @@ export default function PhoneNumberInput<T extends FieldValues>({
                   },
                 },
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: error ? "error.main" : "grey.300",
+                  borderColor: hasError ? "error.main" : "grey.300",
                 },
                 ...props.sx
               }}
             />
-            {errorMessage && (
-              <FormHelperText error>
-                {errorMessage}
-              </FormHelperText>
-            )}
           </FormControl>
         );
       }}

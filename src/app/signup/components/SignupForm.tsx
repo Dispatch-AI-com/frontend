@@ -91,7 +91,6 @@ export default function SignupForm() {
         <PhoneNumberInput
           name="phoneNumber"
           control={control}
-          error={!!errors.phoneNumber}
           helperText={errors.phoneNumber?.message}
         />
       </FormField>
