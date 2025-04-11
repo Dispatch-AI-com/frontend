@@ -1,85 +1,83 @@
-import { Box, Button, Container, Typography, TextField, Alert } from '@mui/material'
-import axios, { AxiosError } from 'axios'
+// this file is the functional component for the sign up page
+// it contains the sign up form and handles the state and events for the form
 import React from 'react'
+import SignUpForm from '../../SignUpForm'
+import { AxiosError } from 'axios'
+import signUpService from '@/services/signUpService';
+import { NestErrorResponse } from '@/types/NestErrorResponse';
+import { set } from 'zod';
+
+
 
 export default function SignUp() {
-    const [name, setName] = React.useState<string>('')
-    const [email, setEmail] = React.useState<string>('')
-    const [password, setPassword] = React.useState<string>('')
-    const [error, setError] = React.useState<string>('')
-    const [status, setStatus] = React.useState<boolean>(true)
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      console.log('Form submit triggered')
-      e.preventDefault()
+  const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [netError, setNetError] = React.useState('');
+  const [zodError, setZodError] = React.useState('');
+  const [status, setStatus] = React.useState(true);
 
-      const userData = {
-       name,
-       password,
-       email,
-      }
-      interface NestErrorResponse {
-        statusCode: number;
-        message: string | string[];
-        error: string;
-      }
-      try{
-          const response = await axios.post('http://localhost:3000/auth/signup', userData, {
-            withCredentials: true,
-          })
-        console.log(response.data);
-        alert('User Created Successfully')
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value);
+  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+  const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
-      } catch (error) {
-        const axiosError = error as AxiosError<NestErrorResponse>;
-        console.error('User Created Failure:', axiosError.response?.data.statusCode, axiosError.response?.data.message);
-        setError(axiosError.response?.data.message as string)
-        setStatus(false)
-        setName('')
-        setEmail('')
-        setPassword('')
+  const onReset = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setNetError('');
+    setZodError('');
+    setStatus(true);
+  };
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const userData = { name, email, password };
+    try {
+      const response = await signUpService(userData);
+      alert("User Created Successfully");
+      console.log(response.data);
+    }catch (err: any) {
+      const zodSign = 'Zod Error';
+      const isZodError = err?.message?.includes(zodSign);
+      if (isZodError) {
+        const zodMessage = err.message.replace(zodSign + ': ', '');
+        setZodError(zodMessage);
+        }
+
+      const isAxiosError = !!err?.response;
+      if (isAxiosError) {
+        const axiosError = err as AxiosError<NestErrorResponse>;
+        console.error(
+        'User Created Failure:',
+        axiosError.response?.data?.statusCode,
+        axiosError.response?.data?.message
+        );
+
+        const errMsg =
+        typeof axiosError.response?.data?.message === 'string'
+          ? axiosError.response.data.message
+          : axiosError.response?.data?.message?.join(', ');
+
+        setNetError(errMsg || 'Unknown error');
       }
-    }
+    setStatus(false);
+    setName('');
+    setEmail('');
+    setPassword('');
+  }
+  }
   return (
-    <div>
-        <form onSubmit={handleSubmit}>
-            <Container maxWidth="xs" sx={{ my: 4, textAlign: 'center', display:'flex' , flexDirection:'column', gap:2 }}>
-                <Typography variant="h4" component='h1' align="center" gutterBottom sx={{ fontWeight: 'bold', letterSpacing:'0.1em', color: '#716a68',textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)', mb: 3 }}>
-                  Sign Up
-                </Typography>
-              <TextField
-                label="Name"
-                variant="outlined"
-                value={name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                fullWidth
-              />
-              <TextField
-                label="Email"
-                type="email"
-                variant="outlined"
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                fullWidth
-              />
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                fullWidth
-              />
-              {status ||<Alert severity="error">{error}</Alert>}
-              <Box sx={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-               <Button type='submit' variant='outlined' size='small'>Submit</Button>
-               <Button variant='outlined' href='#contained-buttons' size='small' onClick={() => {
-                  setName('')
-                  setEmail('')
-                  setPassword('')
-               }}>Reset</Button>
-              </Box>
-            </Container>
-        </form>
-    </div>
+     <SignUpForm
+      name={name}
+      email={email}
+      password={password}
+      error={netError||zodError}
+      status={status}
+      onNameChange={onNameChange}
+      onEmailChange={onEmailChange}
+      onPasswordChange={onPasswordChange}
+      onSubmit={onSubmit}
+      onReset={onReset}
+    />
   )
 }
