@@ -1,8 +1,14 @@
 'use client';
 
 import { Box, Typography, Button, Container } from '@mui/material';
+import { useRouter } from 'next/navigation';
+
 
 export default function Home() {
+  const router = useRouter()
+  const handleSignUp = () => {
+    router.push('/signup')
+  }
   return (
     <Container maxWidth="md">
       <Box sx={{ my: 4, textAlign: 'center' }}>
@@ -20,6 +26,9 @@ export default function Home() {
             Secondary Button
           </Button>
           <Button variant="outlined">Outlined Button</Button>
+          <Button variant="contained" color="primary" onClick={handleSignUp}>
+            Sign Up
+          </Button>
         </Box>
       </Box>
     </Container>
