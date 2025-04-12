@@ -1,24 +1,15 @@
 import React from "react";
-import { TextField } from "@mui/material";
+import { TextField, TextFieldProps } from "@mui/material";
 
-interface InputTextFieldProps {
-    label: string;
-    type?: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const InputTextField: React.FC<InputTextFieldProps> = ({ label, type = "text", value, onChange }) => {
-    return (
-        <TextField
-            label={label}
-            type={type}
-            variant="outlined"
-            value={value}
-            onChange={onChange}
-            fullWidth
-        />
-    );
-};
+const InputTextField = React.forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
+  return (
+    <TextField
+      inputRef={ref}
+      fullWidth
+      variant="outlined"
+      {...props}
+    />
+  );
+});
 
 export default InputTextField;

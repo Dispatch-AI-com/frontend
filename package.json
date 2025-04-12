@@ -11,12 +11,14 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^5.0.1",
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
     "axios": "^1.8.4",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.55.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -27,18 +29,5 @@
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "typescript": "^5"
-  },
-  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Dispatch-AI-com/frontend.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Dispatch-AI-com/frontend/issues"
-  },
-  "homepage": "https://github.com/Dispatch-AI-com/frontend#readme"
+  }
 }
