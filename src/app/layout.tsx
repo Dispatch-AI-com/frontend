@@ -1,3 +1,6 @@
+// This file wraps all pages in the app/ directory with a common layout.
+// It includes metadata (like the page title) and applies global styles or fonts.
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
