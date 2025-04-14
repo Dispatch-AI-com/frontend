@@ -9,7 +9,7 @@ export default function SignupPage() {
           <p className="text-sm text-gray-500">Enter your credentials to access your account</p>
         </div>
         <button className="w-full border py-2 mb-4 flex items-center justify-center gap-2">
-          <img src="/google-icon.svg" className="h-5 w-5" /> Sign up with Google
+          <img src="/google.png" className="h-5 w-5" /> Sign up with Google
         </button>
         <SignupForm />
         <p className="text-sm text-center mt-4">
