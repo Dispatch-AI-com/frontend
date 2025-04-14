@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Stack } from "@mui/material";
 import { signupSchema, type SignupFormData } from "@/app/signup/schemas/signupSchema";
-import FormField from "@/app/signup/layout/FormField";
+import FormField from "@/app/signup/components/FormField";
 import ControllerInput from "@/components/ui/controller/ControllerInput";
 import { defaultSignupValues } from "@/app/signup/schemas/defaultSignupValues";
 import ControllerSelect from "@/components/ui/controller/ControllerSelect";
