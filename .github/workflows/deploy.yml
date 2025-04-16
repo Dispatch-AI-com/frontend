@@ -33,12 +33,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: |
-            .next/standalone
-            .next/static
-            public
-            package.json
-            .env
+          source: ".next/standalone,.next/static,public,package.json,.env"
           target: "/home/ubuntu/deploy/dispatch-frontend"
 
       - name: 🔁 Restart frontend on EC2
