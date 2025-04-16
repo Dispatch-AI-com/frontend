@@ -7,7 +7,7 @@ export default function Home() {
     <Container maxWidth="md">
       <Box sx={{ my: 4, textAlign: 'center' }}>
         <Typography variant="h2" component="h1" gutterBottom>
-          Next.js + MUI Setup Test
+          cicd test
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
           Your MUI components are working correctly if you see styled elements
