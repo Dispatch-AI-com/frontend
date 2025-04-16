@@ -1,17 +1,16 @@
-name: Deploy - Frontend (pm2)
+name: Deploy - Frontend Static
 
 on:
   push:
     branches:
       - ci/cd
-  workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🚚 Checkout code
+      - name: 🚚 Checkout repo
         uses: actions/checkout@v3
 
       - name: 📦 Setup Node.js
@@ -19,24 +18,31 @@ jobs:
         with:
           node-version: 20
 
-      - name: 📥 Install pnpm
+      - name: 🧱 Install pnpm
         run: npm install -g pnpm
 
-      - name: 🔐 Connect to EC2 and deploy
-        uses: appleboy/ssh-action@v1.0.0
+      - name: 📥 Install dependencies
+        run: pnpm install
+
+      - name: 🏗️ Build project
+        run: pnpm build
+
+      - name: 📤 Upload to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: ".next/standalone/*,public,package.json,.env"
+          target: "/home/ubuntu/deploy/dispatch-frontend"
+
+      - name: 🔁 Restart frontend on EC2
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            export NVM_DIR="$HOME/.nvm"
-            cd ~/projects/dispatch-frontend
-            git reset --hard
-            git pull origin ci/cd
-            pnpm install --frozen-lockfile
-            pnpm build
-            pm2 describe dispatch-frontend > /dev/null \
-              && pm2 reload dispatch-frontend \
-              || pm2 start pnpm --name dispatch-frontend -- start
-            pm2 save
-            pm2 logs dispatch-frontend --lines 20
+            cd /home/ubuntu/deploy/dispatch-frontend
+            pnpm install --prod
+            pm2 restart dispatch-frontend || pm2 start npm --name dispatch-frontend -- start
