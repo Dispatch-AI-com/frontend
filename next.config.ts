@@ -1,11 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  outputFileTracing: false,
-  swcMinify: true,
-  experimental: {
-    turbo:{}
-  },
+  output: "standalone",
 };
 
 export default nextConfig;
