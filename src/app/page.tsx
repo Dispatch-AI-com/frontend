@@ -1,8 +1,8 @@
-'use client';
+import { Container } from '@mui/material';
+import HeroSection from '../components/features/landing/HeroSection';
 
-import { Box, Typography, Button, Container } from '@mui/material';
 
-export default function Home() {
+export default function LandingPage() {
   return (
     <Container maxWidth="md">
       <Box sx={{ my: 4, textAlign: 'center' }}>
@@ -22,6 +22,8 @@ export default function Home() {
           <Button variant="outlined">Outlined Button</Button>
         </Box>
       </Box>
+    <Container>
+      <HeroSection />
     </Container>
   );
 }
