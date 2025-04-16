@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  outputFileTracing: false,
+  swcMinify: true,
+  experimental: {
+    turbo:{}
+  },
 };
 
 export default nextConfig;
