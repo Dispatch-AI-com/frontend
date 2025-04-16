@@ -22,12 +22,6 @@ jobs:
       - name: 📥 Install pnpm
         run: npm install -g pnpm
 
-      - name: 📦 Install dependencies
-        run: pnpm install
-
-      - name: 🔨 Build project
-        run: pnpm build
-
       - name: 🔐 Connect to EC2 and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -44,4 +38,5 @@ jobs:
             pm2 describe dispatch-frontend > /dev/null \
               && pm2 reload dispatch-frontend \
               || pm2 start pnpm --name dispatch-frontend -- start
-      
+            pm2 save
+            pm2 logs dispatch-frontend --lines 20
