@@ -3,7 +3,7 @@ name: Deploy - Frontend Static (Standalone)
 on:
   push:
     branches:
-      - ci/cd
+      - main
 
 jobs:
   build-and-deploy:
