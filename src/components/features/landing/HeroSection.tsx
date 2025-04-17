@@ -65,7 +65,7 @@ export default function HeroSection() {
         }}
       >
         <Stack
-          spacing={2}
+          spacing={1}
           useFlexGap
           sx={{ alignItems: 'center', width: { xs: '100%', sm: '70%' } }}
         >
@@ -157,7 +157,7 @@ export default function HeroSection() {
               variant="contained"
               color="primary"
               sx={{
-                minWidth: '239px', height: '56px', borderRadius: '16px', fontSize: '18px', padding: '16px, 24px', backgroundColor: '#060606', textTransform: 'capitalize', fontWeight: 'bold'}}
+                minWidth: '250px', height: '56px', borderRadius: '16px', fontSize: '18px', padding: '16px 24px', backgroundColor: '#060606', textTransform: 'capitalize', fontWeight: 'bold'}}
                 endIcon={<ArrowForwardIcon />}
             >
               Start Your Free Trial
@@ -165,7 +165,7 @@ export default function HeroSection() {
             <Button
               variant="contained"
               sx={{
-                minWidth: '239px', height: '56px', borderRadius: '16px', fontSize: '18px', padding: '16px, 24px', backgroundColor: '#a8f574', textTransform: 'capitalize', fontWeight: 'bold', color: 'black'}}
+                minWidth: '239px', height: '56px', borderRadius: '16px', fontSize: '18px', padding: '16px 24px', backgroundColor: '#a8f574', textTransform: 'capitalize', fontWeight: 'bold', color: 'black'}}
                 endIcon={<ArrowForwardIcon />}
             >
               Request a Demo
