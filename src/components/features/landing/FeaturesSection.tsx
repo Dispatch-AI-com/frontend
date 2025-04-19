@@ -60,7 +60,7 @@ export default function FeaturesSection() {
           Automated Calls, Save Time, Grow Your Business
         </Typography>
 
-        <Grid container spacing={4} sx={{ pl: { xs: 2, sm: 3, md: 4 } }}>
+        <Grid container spacing={6} sx={{ pl: { xs: 2, sm: 3, md: 4 } }}>
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} key={index}>
               <Card 
@@ -71,6 +71,7 @@ export default function FeaturesSection() {
                   alignItems: 'flex-start',
                   textAlign: 'left',
                   ml:'20px',
+                  mb:'20px',
                   p: 0,
                   pl: 0,
                   boxShadow: 'none',
@@ -109,7 +110,8 @@ export default function FeaturesSection() {
                       fontSize: '24px',
                       lineHeight:'30px',
                       height: '30px',
-                      maxWidth: '269px'
+                      maxWidth: '269px',
+                      mb: 3
                     }}
                   >
                     {feature.title}
@@ -125,7 +127,8 @@ export default function FeaturesSection() {
                       textOverflow: 'ellipsis',
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical'
+                      WebkitBoxOrient: 'vertical',
+                      mt: '20px'
                     }}
                   >
                     {feature.description}
