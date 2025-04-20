@@ -8,6 +8,7 @@ import TestimonialCard from '@/components/ui/TestimonialCard';
 interface Testimonial {
   name: string;
   title: string;
+  quote: string;
   margin: SxProps<Theme>;
 }
 
