@@ -14,6 +14,7 @@ import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BuildIcon from '@mui/icons-material/Build';
+import SectionTitle from '../../ui/SectionTitle';
 
 export default function FeaturesSection() {
   const theme = useTheme();
@@ -43,22 +44,9 @@ export default function FeaturesSection() {
   return (
     <Box sx={{ py: 8, bgcolor: 'background.default' }}>
       <Container maxWidth="lg">
-        <Typography
-          variant="h2"
-          align="center"
-          gutterBottom
-          sx={{
-            fontFamily: 'var(--font-roboto)',
-            fontWeight: 700,
-            fontSize: '48px',
-            lineHeight: '56px',
-            color: '#060606',
-            mb: 8,
-            mx: 'auto'
-          }}
-        >
+        <SectionTitle mb={12}>
           Automated Calls, Save Time, Grow Your Business
-        </Typography>
+        </SectionTitle>
 
         <Grid container spacing={6} sx={{ pl: { xs: 2, sm: 3, md: 4 } }}>
           {features.map((feature, index) => (
