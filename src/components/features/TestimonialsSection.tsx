@@ -2,14 +2,13 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
+import type { SxProps, Theme } from '@mui/system';
 import TestimonialCard from '@/components/ui/TestimonialCard';
-import { SxProps, Theme } from '@mui/system';
 
 interface Testimonial {
-  quote: string;
   name: string;
   title: string;
-  margin: SxProps<Theme>['m'];
+  margin: SxProps<Theme>;
 }
 
 const testimonials: Testimonial[] = [
