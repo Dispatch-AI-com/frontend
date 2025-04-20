@@ -7,8 +7,7 @@ import {
   Typography, 
   Grid, 
   Card, 
-  CardContent,
-  useTheme
+  CardContent
 } from '@mui/material';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
@@ -17,7 +16,6 @@ import BuildIcon from '@mui/icons-material/Build';
 import SectionTitle from '../../ui/SectionTitle';
 
 export default function FeaturesSection() {
-  const theme = useTheme();
   const features = [
     {
       title: "Automated Call Handling",
