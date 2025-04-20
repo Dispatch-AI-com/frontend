@@ -63,7 +63,7 @@ export default function TestimonialsSection() {
             quote={item.quote}
             name={item.name}
             title={item.title}
-            sx={{ m: item.margin }}
+            sx={item.margin}
           />
         ))}
       </Box>
