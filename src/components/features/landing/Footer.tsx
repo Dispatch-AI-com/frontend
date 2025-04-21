@@ -15,7 +15,7 @@ export default function Footer() {
         <Grid container spacing={4}>
           {/* Logo and Social Media */}
           <Grid item xs={12} md={2.5}>
-            <Box sx={{ mb: 4, width: '100px', height: '28px', position: 'relative' }}>
+            <Box sx={{ mb: 5, width: '100px', height: '28px', position: 'relative' }}>
                 <Image
                   src="/logo.svg"
                   alt="DispatchAI Logo"
@@ -24,9 +24,9 @@ export default function Footer() {
                   priority
                 />
             </Box>
-            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
               <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.6rem', mr: 1 }}>
-                Follow Us On
+                Follow Us
               </Typography>
               <Stack direction="row" spacing={0}>
                 <IconButton href="#" color="inherit" sx={{ 
@@ -79,7 +79,7 @@ export default function Footer() {
             <Typography 
               variant="body2" 
               color="text.secondary" 
-              sx={{ fontSize: '0.6rem', mt: 1 }}
+              sx={{ fontSize: '0.6rem' }}
             >
               ©Copyright 2025 Dispatch AI
             </Typography>
