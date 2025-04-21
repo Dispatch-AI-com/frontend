@@ -15,7 +15,7 @@ export default function Footer() {
         <Grid container spacing={4}>
           {/* Logo and Social Media */}
           <Grid item xs={12} md={2.5}>
-            <Box sx={{ mb: 4, width: '150px', height: '40px', position: 'relative' }}>
+            <Box sx={{ mb: 4, width: '120px', height: '32px', position: 'relative' }}>
                 <Image
                   src="/logo.svg"
                   alt="DispatchAI Logo"
@@ -68,11 +68,11 @@ export default function Footer() {
                 <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">
                   Support
                 </Typography>
-                <Stack spacing={1} sx={{ position: 'absolute', mt: 1 }}>
-                  <Link href="#" color="inherit" underline="none" sx={{ fontSize: '0.75rem' }}>Documents</Link>
-                  <Link href="#" color="inherit" underline="none" sx={{ fontSize: '0.75rem' }}>FAQs</Link>
-                  <Link href="#" color="inherit" underline="none" sx={{ fontSize: '0.75rem' }}>Need Help</Link>
-                  <Link href="#" color="inherit" underline="none" sx={{ fontSize: '0.75rem' }}>Contact Us</Link>
+                <Stack spacing={1.5} sx={{ position: 'absolute', mt: 2 }}>
+                  <Link href="#" color="text.secondary" underline="none" sx={{ fontSize: '0.75rem' }}>Documents</Link>
+                  <Link href="#" color="text.secondary" underline="none" sx={{ fontSize: '0.75rem' }}>FAQs</Link>
+                  <Link href="#" color="text.secondary" underline="none" sx={{ fontSize: '0.75rem' }}>Need Help</Link>
+                  <Link href="#" color="text.secondary" underline="none" sx={{ fontSize: '0.75rem' }}>Contact Us</Link>
                 </Stack>
               </Box>
             </Stack>
@@ -89,18 +89,19 @@ export default function Footer() {
               sx={{
                 bgcolor: 'black',
                 color: 'white',
-                borderRadius: '24px',
-                padding: '10px 20px',
+                borderRadius: '10px',
+                padding: '6px 16px',
                 fontSize: '0.75rem',
                 textTransform: 'none',
                 fontWeight: 'bold',
+                height: '32px',
                 '&:hover': {
                   bgcolor: 'black',
                   opacity: 0.9,
                 },
               }}
             >
-              Start your free trial
+              Start Your Free Trial
             </Button>
           </Grid>
         </Grid>
