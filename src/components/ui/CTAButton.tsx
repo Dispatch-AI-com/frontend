@@ -1,4 +1,5 @@
 // src/components/ui/CTAButton.tsx
+'use client';
 
 import { Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';

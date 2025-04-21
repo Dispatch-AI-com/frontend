@@ -1,10 +1,6 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
-//color
-//font-size
-//padding
-//responsive
 
 
 let theme = createTheme({
