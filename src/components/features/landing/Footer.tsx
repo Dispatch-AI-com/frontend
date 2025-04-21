@@ -6,7 +6,6 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Image from 'next/image';
-import { useTheme } from '@mui/material/styles';
 
 
 export default function Footer() {
