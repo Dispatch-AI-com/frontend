@@ -131,7 +131,7 @@ export default function HeroSection() {
             sx={{
               textAlign: 'center',
               color: '#060606',
-              width: '1062px',
+              width: { xs: '100%', sm: '90%', md: '1062px' },
               margin: '32px 0 56px',
               fontSize: '20px',
               fontFamily: 'Roboto',
