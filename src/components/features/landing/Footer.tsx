@@ -86,8 +86,13 @@ export default function Footer() {
           </Grid>
 
           {/* Navigation Links - Single Row */}
-          <Grid item xs={12} md={6.5}>
-            <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
+          <Grid item xs={12} md={6.5} sx={{ 
+            display: { 
+              xs: 'none',     // 移动端隐藏
+              md: 'block'     // 改为md断点显示，这样在中等屏幕开始换行前就会隐藏
+            } 
+          }}>
+            <Stack direction="row" spacing={4} sx={{ mb: 2,}}>
               <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">Home</Typography>
               <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">Products</Typography>
               <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">Pricing</Typography>
