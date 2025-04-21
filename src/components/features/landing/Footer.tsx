@@ -88,8 +88,8 @@ export default function Footer() {
           {/* Navigation Links - Single Row */}
           <Grid item xs={12} md={6.5} sx={{ 
             display: { 
-              xs: 'none',     // 移动端隐藏
-              md: 'block'     // 改为md断点显示，这样在中等屏幕开始换行前就会隐藏
+              xs: 'none',     
+              md: 'block'    
             } 
           }}>
             <Stack direction="row" spacing={4} sx={{ mb: 2,}}>
