@@ -24,62 +24,62 @@ export default function Footer() {
                   priority
                 />
             </Box>
-            <Box sx={{ mb: 1 }}>
-              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
-                Follow Us On Social Media
+            <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.6rem', mr: 1 }}>
+                Follow Us On
               </Typography>
+              <Stack direction="row" spacing={0}>
+                <IconButton href="#" color="inherit" sx={{ 
+                  padding: '2px',
+                  '& svg': {
+                    width: '18px',
+                    height: '18px'
+                  }
+                }}>
+                  <LinkedInIcon />
+                </IconButton>
+                <IconButton href="#" color="inherit" sx={{ 
+                  padding: '2px',
+                  '& svg': {
+                    width: '18px',
+                    height: '18px'
+                  }
+                }}>
+                  <FacebookIcon />
+                </IconButton>
+                <IconButton href="#" color="inherit" sx={{ 
+                  padding: '2px',
+                  '& svg': {
+                    width: '18px',
+                    height: '18px'
+                  }
+                }}>
+                  <InstagramIcon />
+                </IconButton>
+                <IconButton href="#" color="inherit" sx={{ 
+                  padding: '2px',
+                  '& svg': {
+                    width: '18px',
+                    height: '18px'
+                  }
+                }}>
+                  <TwitterIcon />
+                </IconButton>
+                <IconButton href="#" color="inherit" sx={{ 
+                  padding: '2px',
+                  '& svg': {
+                    width: '18px',
+                    height: '18px'
+                  }
+                }}>
+                  <YouTubeIcon />
+                </IconButton>
+              </Stack>
             </Box>
-            <Stack direction="row" spacing={0} sx={{ mb: 2 }}>
-              <IconButton href="#" color="inherit" sx={{ 
-                padding: '2px',
-                '& svg': {
-                  width: '18px',
-                  height: '18px'
-                }
-              }}>
-                <LinkedInIcon />
-              </IconButton>
-              <IconButton href="#" color="inherit" sx={{ 
-                padding: '2px',
-                '& svg': {
-                  width: '18px',
-                  height: '18px'
-                }
-              }}>
-                <FacebookIcon />
-              </IconButton>
-              <IconButton href="#" color="inherit" sx={{ 
-                padding: '2px',
-                '& svg': {
-                  width: '18px',
-                  height: '18px'
-                }
-              }}>
-                <InstagramIcon />
-              </IconButton>
-              <IconButton href="#" color="inherit" sx={{ 
-                padding: '2px',
-                '& svg': {
-                  width: '18px',
-                  height: '18px'
-                }
-              }}>
-                <TwitterIcon />
-              </IconButton>
-              <IconButton href="#" color="inherit" sx={{ 
-                padding: '2px',
-                '& svg': {
-                  width: '18px',
-                  height: '18px'
-                }
-              }}>
-                <YouTubeIcon />
-              </IconButton>
-            </Stack>
             <Typography 
               variant="body2" 
               color="text.secondary" 
-              sx={{ fontSize: '0.6rem' }}
+              sx={{ fontSize: '0.6rem', mt: 1 }}
             >
               ©Copyright 2025 Dispatch AI
             </Typography>
