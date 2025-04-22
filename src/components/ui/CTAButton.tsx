@@ -14,8 +14,8 @@ interface CTAButtonProps extends Omit<ButtonProps, 'variant'> {
 }
 
 const StyledButton = styled(Button)<{ $variant: CTAButtonVariant; theme: Theme }>`
-  border-radius: 12px;
-  padding: 12px 20px;
+  border-radius: 14px;
+  padding: 7px 16px;
   font-family: ${({ theme }) => theme.typography.fontFamily};
   font-size: ${({ theme }) => theme.typography.button.fontSize};
   font-weight: ${({ theme }) => theme.typography.button.fontWeight};
