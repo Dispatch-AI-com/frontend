@@ -52,8 +52,8 @@ export default function CTAButton({
       href={href}
       endIcon={endIcon}
       sx={{
-        borderRadius: '16px',
-        padding: '13px 61px',
+        borderRadius: '12px',
+        padding: '12px 20px;',
         fontFamily: theme.typography.fontFamily,
         fontSize: theme.typography.button.fontSize,
         textTransform: 'none',
