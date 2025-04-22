@@ -110,33 +110,33 @@ export default function ProcessFlow() {
       <Typography 
         variant="h2" 
         align="center" 
-        sx={{ 
-          fontFamily: 'Roboto, sans-serif',  
-          fontWeight: 900,  
-          lineHeight: 1.17,        
-          letterSpacing: 'normal',  
-          color: '#060606', 
-          fontSize: {
-            xs: '2rem',  
-            md: '40px',   
-          },
-          width: {
-            xs: '100%',    
-            sm: '684px', 
-          },
-          mx: 'auto',
+        // sx={{ 
+          // fontFamily: 'Roboto, sans-serif',  
+          // fontWeight: 900,  
+          // lineHeight: 1.17,        
+          // letterSpacing: 'normal',  
+          // color: '#060606', 
+          // fontSize: {
+          //   xs: '2rem',  
+          //   md: '40px',   
+          // },
+          // width: {
+          //   xs: '100%',    
+          //   sm: '684px', 
+          // },
+          // mx: 'auto',
 
-          height: {
-            xs: 'auto',   
-            sm: '56px',    
-          },
+          // height: {
+          //   xs: 'auto',   
+          //   sm: '56px',    
+          // },
 
-          mb: {
-            xs: 'auto',         
-            sm: '72px',   
-          },
+          // mb: {
+          //   xs: 'auto',         
+          //   sm: '72px',   
+          // },
 
-        }}
+        // }}
           
         >
         How SmartAgent Works for You
