@@ -2,14 +2,24 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
+
 import {
   AppBar,
   Toolbar,
   Box,
   Stack,
-  Typography,
+  IconButton,
+  Drawer,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
-import { NavItem, NavItemProps } from './navbar/NavItem';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import { NavItemProps } from './navbar/NavItem';
+import { MobileDrawer } from './navbar/MobileDrawer';
+import { DesktopNavItems } from './navbar/DesktopNavItems';
+import { AuthButton } from './navbar/AuthButton';
 
 const navItems: NavItemProps[] = [
   { href: '/home', text: 'Home', width: 75, textWidth: 43 },
@@ -21,6 +31,14 @@ const navItems: NavItemProps[] = [
 ];
 
 export default function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   return (
     <AppBar
       position="static"
@@ -37,7 +55,7 @@ export default function Navbar() {
         sx={{
           width: '100%',
           maxWidth: 1920,
-          px: '240px',
+          px: { xs: '20px', md: '240px' },
           py: '20px',
           mx: 'auto'
         }}
@@ -64,104 +82,71 @@ export default function Navbar() {
           </Link>
         </Box>
 
-        {/* navigation */}
-        <Stack 
-          direction="row" 
-          spacing={0}
+        {/* Desktop Nav */}
+        {!isMobile && <DesktopNavItems navItems={navItems} />}
+
+        {/* Desktop Buttons */}
+        {!isMobile && (
+          <Stack 
+            direction="row" 
+            spacing={0} 
+            sx={{ 
+              alignItems: 'center',
+              marginLeft: 'auto'
+            }}
+          >
+            <AuthButton variant="login" />
+            <AuthButton variant="signup" />
+          </Stack>
+        )}
+
+        {/* Mobile Menu Button */}
+        {isMobile && (
+          <IconButton
+          color="inherit"
+          aria-label="toggle drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
           sx={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
+            ml: 'auto',
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            transition: 'transform 0.3s ease',
+            transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '12px',
+            width: 40,
+            height: 40,
+            '&:hover': {
+              backgroundColor: '#F5F5F5',
+            },
           }}
         >
-          {navItems.map((item) => (
-            <NavItem key={item.href} {...item} />
-          ))}
-        </Stack>
-
-        {/* Button */}
-        <Stack 
-          direction="row" 
-          spacing={0} 
-          sx={{ 
-            alignItems: 'center',
-            marginLeft: 'auto'
-          }}
-        >
-          {/* Login */}
-          <Link href="/login">
-            <Box
-              sx={{
-                width: 73,
-                height: 40,
-                padding: '10px 16px',
-                borderRadius: '12px',
-                backgroundColor: '#fff',
-                marginRight: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                '&:hover': {
-                  backgroundColor: '#F5F5F5',
-                },
-              }}
-            >
-              <Typography
-                sx={{
-                  width: 41,
-                  height: 20,
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  fontStretch: 'normal',
-                  fontStyle: 'normal',
-                  lineHeight: 1.25,
-                  letterSpacing: 'normal',
-                  color: '#060606',
-                }}
-              >
-                Login
-              </Typography>
-            </Box>
-          </Link>
-
-          {/* Sign Up */}
-          <Link href="/signup">
-            <Box
-              sx={{
-                width: 89,
-                height: 40,
-                padding: '10px 16px',
-                borderRadius: '12px',
-                backgroundColor: '#060606',
-                marginLeft: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                '&:hover': {
-                  backgroundColor: '#333',
-                },
-              }}
-            >
-              <Typography
-                sx={{
-                  maxWidth: 57,
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  fontStretch: 'normal',
-                  fontStyle: 'normal',
-                  lineHeight: 1.25,
-                  letterSpacing: 'normal',
-                  color: '#fff',
-                }}
-              >
-                Sign Up
-              </Typography>
-            </Box>
-          </Link>
-        </Stack>
+          {mobileOpen ? <CloseIcon fontSize="medium" /> : <MenuIcon fontSize="medium" />}
+          </IconButton>
+        )}
       </Toolbar>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        variant="temporary"
+        anchor="right"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, 
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: 240,
+            padding: '20px',
+            transition: 'transform 0.3s ease-in-out',
+          },
+        }}
+      >
+        <MobileDrawer handleDrawerToggle={handleDrawerToggle} navItems={navItems} />
+      </Drawer>
     </AppBar>
   );
 }
