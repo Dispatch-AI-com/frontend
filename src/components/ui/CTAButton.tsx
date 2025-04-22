@@ -13,6 +13,7 @@ interface CTAButtonProps {
   href?: string;
   endIcon?: React.ReactNode;
   variant?: CTAButtonVariant;
+  sx?: object;
 }
 
 export default function CTAButton({
@@ -21,6 +22,7 @@ export default function CTAButton({
   href,
   endIcon,
   variant = 'black',
+  sx
 }: CTAButtonProps) {
   const theme = useTheme();
   
@@ -58,6 +60,7 @@ export default function CTAButton({
         fontWeight: theme.typography.button.fontWeight,
         height: '48px',
         ...stylesByVariant[variant],
+        ...sx
       }}
     >
       {children}

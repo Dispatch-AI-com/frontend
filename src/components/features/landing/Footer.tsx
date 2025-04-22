@@ -1,32 +1,41 @@
+'use client';
+
 import { Box, Container, Grid, Typography, Link, Stack, IconButton, Button } from '@mui/material';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import TwitterIcon from '@mui/icons-material/Twitter';
+import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Image from 'next/image';
-
+import { useTheme } from '@mui/material/styles';
+import CTAButton from '@/components/ui/CTAButton';
 
 export default function Footer() {
+  const theme = useTheme();
+
   return (
-    <Box component="footer" sx={{ py: 6, bgcolor: 'background.paper' }}>
+    <Box component="footer" sx={{ 
+      py: 6, 
+      bgcolor: theme.palette.background.paper 
+    }}>
       <Container maxWidth="lg">
-        <Grid container spacing={4}>
+        <Grid container spacing={4} >
           {/* Logo and Social Media */}
           <Grid item xs={12} md={2.5}>
             <Box sx={{ mb: 5, width: '100px', height: '28px', position: 'relative' }}>
-                <Image
-                  src="/logo.svg"
-                  alt="DispatchAI Logo"
-                  layout="fill"
-                  objectFit="contain"
-                  priority
-                />
+              <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
             </Box>
             <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.6rem', mr: 1 }}>
-                Follow Us
+              <Typography 
+                variant="body2" 
+                color="text.secondary" 
+                sx={{ 
+                  mr: 1,
+                  fontSize: '0.6rem'
+                }}
+              >
+                Follow Us On
               </Typography>
               <Stack direction="row" spacing={0}>
                 <IconButton href="#" color="inherit" sx={{ 
@@ -63,7 +72,7 @@ export default function Footer() {
                     height: '18px'
                   }
                 }}>
-                  <TwitterIcon />
+                  <XIcon />
                 </IconButton>
                 <IconButton href="#" color="inherit" sx={{ 
                   padding: '2px',
@@ -79,7 +88,9 @@ export default function Footer() {
             <Typography 
               variant="body2" 
               color="text.secondary" 
-              sx={{ fontSize: '0.6rem' }}
+              sx={{ 
+                fontSize: '0.6rem'
+              }}
             >
               ©Copyright 2025 Dispatch AI
             </Typography>
@@ -87,27 +98,24 @@ export default function Footer() {
 
           {/* Navigation Links - Single Row */}
           <Grid item xs={12} md={6.5} sx={{ 
-            display: { 
-              xs: 'none',     
-              md: 'block'    
-            } 
+            display: { xs: 'none', lg: 'block' }
           }}>
-            <Stack direction="row" spacing={4} sx={{ mb: 2,}}>
-              <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">Home</Typography>
-              <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">Products</Typography>
-              <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">Pricing</Typography>
-              <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">Blogs</Typography>
-              <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">Features</Typography>
-              <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">About Us</Typography>
+            <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
+              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Home</Typography>
+              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Products</Typography>
+              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Pricing</Typography>
+              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Blogs</Typography>
+              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Features</Typography>
+              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>About Us</Typography>
               <Box>
-                <Typography sx={{ textDecoration: 'none', fontSize: '0.75rem' }} variant="subtitle1" fontWeight="bold" component={Link} href="#" color="inherit">
+                <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>
                   Support
                 </Typography>
                 <Stack spacing={1.5} sx={{ position: 'absolute', mt: 2 }}>
-                  <Link href="#" color="text.secondary" underline="none" sx={{ fontSize: '0.7rem' }}>Documents</Link>
-                  <Link href="#" color="text.secondary" underline="none" sx={{ fontSize: '0.7rem' }}>FAQs</Link>
-                  <Link href="#" color="text.secondary" underline="none" sx={{ fontSize: '0.7rem' }}>Need Help</Link>
-                  <Link href="#" color="text.secondary" underline="none" sx={{ fontSize: '0.7rem' }}>Contact Us</Link>
+                  <Link href="#" color="text.secondary" underline="none" className="footer-text">Documents</Link>
+                  <Link href="#" color="text.secondary" underline="none" className="footer-text">FAQs</Link>
+                  <Link href="#" color="text.secondary" underline="none" className="footer-text">Need Help</Link>
+                  <Link href="#" color="text.secondary" underline="none" className="footer-text">Contact Us</Link>
                 </Stack>
               </Box>
             </Stack>
@@ -115,29 +123,25 @@ export default function Footer() {
 
           {/* Ready to Save Time? Section */}
           <Grid item xs={12} md={3}>
-            <Typography variant="subtitle1" fontWeight="bold" mb={2} sx={{ fontSize: '0.75rem' }}>
+            <Typography className="footer-link" sx={{ mb: 3 }}>
               Ready to Save Time?
             </Typography>
-            <Button
-              variant="contained"
-              endIcon={<ArrowForwardIcon />}
+            <CTAButton
+              variant="black"
+              endIcon={<ArrowForwardIcon sx={{ fontSize: '0.75rem' }} />}
               sx={{
-                bgcolor: 'black',
-                color: 'white',
-                borderRadius: '10px',
-                padding: '6px 16px',
                 fontSize: '0.75rem',
-                textTransform: 'none',
-                fontWeight: 'bold',
+                padding: '6px 16px',
                 height: '32px',
-                '&:hover': {
-                  bgcolor: 'black',
-                  opacity: 0.9,
-                },
+                whiteSpace: 'nowrap',
+                minWidth: 'auto',
+                '& .MuiButton-endIcon': {
+                  marginLeft: '4px'
+                }
               }}
             >
               Start Your Free Trial
-            </Button>
+            </CTAButton>
           </Grid>
         </Grid>
       </Container>
