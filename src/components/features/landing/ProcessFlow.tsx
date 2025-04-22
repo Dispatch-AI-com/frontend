@@ -24,7 +24,7 @@ const steps: Step[] = [
     id: 2,
     title: "Select Plan",
     description: "Select the plan you want to get.",
-    imageUrl: "landing/undraw_set_up.svg",
+    imageUrl: "landing/undraw_plans.svg",
   },
   {
     id: 3,
@@ -36,7 +36,7 @@ const steps: Step[] = [
     id: 4,
     title: "Go Live",
     description: "Connect your phone number and let SmartAgent handle the rest.",
-    imageUrl: "landing/undraw_set_up.svg",
+    imageUrl: "landing/undraw_Go_Live.svg",
   },
 ];
 
@@ -53,7 +53,6 @@ export default function ProcessFlow() {
     if (stepId >= 1 && stepId <= steps.length) {
       setActiveStep(stepId);
       
-      // Scroll to the active step card
       const stepElement = document.getElementById(`step-${stepId}`);
       if (stepElement && containerRef.current) {
         const container = containerRef.current;
@@ -93,7 +92,6 @@ export default function ProcessFlow() {
     }
   };
 
-  // 自动轮播
   useEffect(() => {
     const timer = setTimeout(() => {
       const nextStep = activeStep < steps.length ? activeStep + 1 : 1;
