@@ -58,7 +58,6 @@ export default function CTAButton({
         fontSize: theme.typography.button.fontSize,
         textTransform: 'none',
         fontWeight: theme.typography.button.fontWeight,
-        height: '48px',
         ...stylesByVariant[variant],
         ...sx
       }}

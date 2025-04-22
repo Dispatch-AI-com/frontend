@@ -128,7 +128,14 @@ export default function Footer() {
             </Typography>
             <CTAButton
               variant="black"
-              endIcon={<ArrowForwardIcon sx={{ fontSize: '0.75rem' }} />}
+              endIcon={
+                <ArrowForwardIcon 
+                  sx={{ 
+                    width: '12px',
+                    height: '12px'
+                  }} 
+                />
+              }
               sx={{
                 fontSize: '0.75rem',
                 padding: '6px 16px',
