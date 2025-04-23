@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button, ButtonProps, SxProps, Theme, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -42,10 +42,6 @@ export default function CommonButton({
 }: CommonButtonProps) {
   const theme = useTheme();
   
-  useEffect(() => {
-    console.log('borderRadius:', theme.shape.borderRadius); // ✅ 检查主题值
-  }, [theme.shape.borderRadius]);
-
   return (
     <StyledButton
       variant="contained"
