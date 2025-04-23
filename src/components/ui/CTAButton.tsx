@@ -1,20 +1,37 @@
 // src/components/ui/CTAButton.tsx
 'use client';
 
-import { Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import React from 'react';
+import styled from 'styled-components';
+import { Button, ButtonProps, Theme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 type CTAButtonVariant = 'black' | 'green';
 
-interface CTAButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  href?: string;
-  endIcon?: React.ReactNode;
+interface CTAButtonProps extends Omit<ButtonProps, 'variant'> {
   variant?: CTAButtonVariant;
-  sx?: object;
+  href?: string;
 }
+
+const StyledButton = styled(Button)<{ $variant: CTAButtonVariant; theme: Theme }>`
+  border-radius: 14px;
+  padding: 7px 16px;
+  font-family: ${({ theme }) => theme.typography.fontFamily};
+  font-size: ${({ theme }) => theme.typography.button.fontSize};
+  font-weight: ${({ theme }) => theme.typography.button.fontWeight};
+  text-transform: none;
+
+  background-color: ${({ $variant }) =>
+    $variant === 'green' ? '#a8f574' : '#060606'};
+  color: ${({ $variant }) =>
+    $variant === 'green' ? '#060606' : '#ffffff'};
+
+  &:hover {
+    background-color: ${({ $variant }) =>
+      $variant === 'green' ? '#a8f574' : '#060606'};
+    opacity: 0.9;
+  }
+`;
 
 export default function CTAButton({
   children,
@@ -22,47 +39,20 @@ export default function CTAButton({
   href,
   endIcon,
   variant = 'black',
-  sx
+  ...rest
 }: CTAButtonProps) {
   const theme = useTheme();
-  
-  const stylesByVariant = {
-    black: {
-      bgcolor: '#060606',
-      color: '#ffffff',
-      '&:hover': {
-        bgcolor: '#060606',
-        opacity: 0.9,
-      },
-    },
-    green: {
-      bgcolor: '#a8f574',
-      color: '#060606',
-      '&:hover': {
-        bgcolor: '#a8f574',
-        opacity: 0.9,
-      },
-    },
-  };
 
   return (
-    <Button
-      variant="contained"
+    <StyledButton
+      $variant={variant}
       onClick={onClick}
       href={href}
       endIcon={endIcon}
-      sx={{
-        borderRadius: '12px',
-        padding: '12px 20px;',
-        fontFamily: theme.typography.fontFamily,
-        fontSize: theme.typography.button.fontSize,
-        textTransform: 'none',
-        fontWeight: theme.typography.button.fontWeight,
-        ...stylesByVariant[variant],
-        ...sx
-      }}
+      theme={theme}
+      {...rest}
     >
       {children}
-    </Button>
+    </StyledButton>
   );
 }
