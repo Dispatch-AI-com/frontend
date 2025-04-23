@@ -1,6 +1,7 @@
 'use client';
 
-import { Box, Container, Grid, Typography, Link, Stack, IconButton, Button } from '@mui/material';
+import { Box, Container, Stack, Typography, Link, IconButton } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -8,150 +9,147 @@ import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Image from 'next/image';
-import { useTheme } from '@mui/material/styles';
 import CTAButton from '@/components/ui/CTAButton';
 
+// Styled Components
+const FooterWrapper = styled(Box)(({ theme }) => ({
+  paddingTop: theme.spacing(6),
+  paddingBottom: theme.spacing(6),
+  backgroundColor: theme.palette.background.paper
+}));
+
+const LogoContainer = styled(Box)({
+  marginBottom: '60px',
+  width: '120px',
+  height: '40px',
+  position: 'relative'
+});
+
+const SocialContainer = styled(Box)({
+  marginBottom: '24px',
+  display: 'flex',
+  alignItems: 'center'
+});
+
+const SocialText = styled(Typography)(({ theme }) => ({
+  marginRight: '8px',
+  color: theme.palette.text.secondary
+}));
+
+const SocialIconButton = styled(IconButton)({
+  padding: '2px',
+  '& svg': {
+    width: '18px',
+    height: '18px'
+  }
+});
+
+const CopyrightText = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary
+}));
+
+
+const NavLinksStack = styled(Stack)({
+    marginRight: '16px',
+});
+
+const NavLink = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  cursor: 'pointer',
+  color: 'inherit',
+  ...theme.typography.body1
+}));
+
+const SupportLinksStack = styled(Stack)({
+  position: 'absolute',
+  marginTop: '16px',
+});
+
+const SupportLink = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.text.secondary,
+  ...theme.typography.body2
+}));
+
+const CTASection = styled(Box)(({ theme }) => ({
+  gap: '24px',
+}));
+
+const CTATitle = styled(Typography)(({ theme }) => ({
+  marginBottom: '16px',
+  ...theme.typography.body1
+}));
+
 export default function Footer() {
-  const theme = useTheme();
-
   return (
-    <Box component="footer" sx={{ 
-      py: 6, 
-      bgcolor: theme.palette.background.paper 
-    }}>
-      <Container maxWidth="lg">
-        <Grid container spacing={4} >
+    <FooterWrapper as="footer">
+      <Container>
+        <Stack 
+          direction={{ xs: 'column', md: 'row' }} 
+          spacing={{ xs: 4, md: 2 }}
+        >
           {/* Logo and Social Media */}
-          <Grid item xs={12} md={2.5}>
-            <Box sx={{ mb: 5, width: '100px', height: '28px', position: 'relative' }}>
+          <Box flex={{ md: 2.5 }}>
+            <LogoContainer>
               <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
-            </Box>
-            <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
-              <Typography 
-                variant="body2" 
-                color="text.secondary" 
-                sx={{ 
-                  mr: 1,
-                  fontSize: '0.6rem'
-                }}
-              >
-                Follow Us On
-              </Typography>
+            </LogoContainer>
+            <SocialContainer>
+              <SocialText variant="body2">Follow Us On</SocialText>
               <Stack direction="row" spacing={0}>
-                <IconButton href="#" color="inherit" sx={{ 
-                  padding: '2px',
-                  '& svg': {
-                    width: '18px',
-                    height: '18px'
-                  }
-                }}>
-                  <LinkedInIcon />
-                </IconButton>
-                <IconButton href="#" color="inherit" sx={{ 
-                  padding: '2px',
-                  '& svg': {
-                    width: '18px',
-                    height: '18px'
-                  }
-                }}>
-                  <FacebookIcon />
-                </IconButton>
-                <IconButton href="#" color="inherit" sx={{ 
-                  padding: '2px',
-                  '& svg': {
-                    width: '18px',
-                    height: '18px'
-                  }
-                }}>
-                  <InstagramIcon />
-                </IconButton>
-                <IconButton href="#" color="inherit" sx={{ 
-                  padding: '2px',
-                  '& svg': {
-                    width: '18px',
-                    height: '18px'
-                  }
-                }}>
-                  <XIcon />
-                </IconButton>
-                <IconButton href="#" color="inherit" sx={{ 
-                  padding: '2px',
-                  '& svg': {
-                    width: '18px',
-                    height: '18px'
-                  }
-                }}>
-                  <YouTubeIcon />
-                </IconButton>
+                <SocialIconButton color="inherit"><LinkedInIcon /></SocialIconButton>
+                <SocialIconButton color="inherit"><FacebookIcon /></SocialIconButton>
+                <SocialIconButton color="inherit"><InstagramIcon /></SocialIconButton>
+                <SocialIconButton color="inherit"><XIcon /></SocialIconButton>
+                <SocialIconButton color="inherit"><YouTubeIcon /></SocialIconButton>
               </Stack>
-            </Box>
-            <Typography 
-              variant="body2" 
-              color="text.secondary" 
-              sx={{ 
-                fontSize: '0.6rem'
-              }}
-            >
-              ©Copyright 2025 Dispatch AI
-            </Typography>
-          </Grid>
+            </SocialContainer>
+            <CopyrightText variant="body2">©Copyright 2025 Dispatch AI</CopyrightText>
+          </Box>
 
-          {/* Navigation Links - Single Row */}
-          <Grid item xs={12} md={6.5} sx={{ 
-            display: { xs: 'none', lg: 'block' }
-          }}>
-            <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
-              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Home</Typography>
-              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Products</Typography>
-              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Pricing</Typography>
-              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Blogs</Typography>
-              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>Features</Typography>
-              <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>About Us</Typography>
+          {/* Navigation Links */}
+          <Box 
+            flex={{ md: 6.5 }}
+            sx={{ 
+              display: { xs: 'none', lg: 'block' }
+            }}
+          >
+            <NavLinksStack direction="row" spacing={3}>
+              <NavLink as={Link} href="#" color="inherit">Home</NavLink>
+              <NavLink as={Link} href="#" color="inherit">Products</NavLink>
+              <NavLink as={Link} href="#" color="inherit">Pricing</NavLink>
+              <NavLink as={Link} href="#" color="inherit">Blogs</NavLink>
+              <NavLink as={Link} href="#" color="inherit">Features</NavLink>
+              <NavLink as={Link} href="#" color="inherit">About Us</NavLink>
               <Box>
-                <Typography className="footer-link" component={Link} href="#" color="inherit" sx={{ textDecoration: 'none' }}>
-                  Support
-                </Typography>
-                <Stack spacing={1.5} sx={{ position: 'absolute', mt: 2 }}>
-                  <Link href="#" color="text.secondary" underline="none" className="footer-text">Documents</Link>
-                  <Link href="#" color="text.secondary" underline="none" className="footer-text">FAQs</Link>
-                  <Link href="#" color="text.secondary" underline="none" className="footer-text">Need Help</Link>
-                  <Link href="#" color="text.secondary" underline="none" className="footer-text">Contact Us</Link>
-                </Stack>
+                <NavLink as={Link} href="#" color="inherit">Support</NavLink>
+                <SupportLinksStack spacing={1.5}>
+                  <SupportLink href="#">Documents</SupportLink>
+                  <SupportLink href="#">FAQs</SupportLink>
+                  <SupportLink href="#">Need Help</SupportLink>
+                  <SupportLink href="#">Contact Us</SupportLink>
+                </SupportLinksStack>
               </Box>
-            </Stack>
-          </Grid>
+            </NavLinksStack>
+          </Box>
 
-          {/* Ready to Save Time? Section */}
-          <Grid item xs={12} md={3}>
-            <Typography className="footer-link" sx={{ mb: 3 }}>
-              Ready to Save Time?
-            </Typography>
+          {/* CTA Section */}
+          <Box 
+            flex={{ md: 3 }}
+            sx={{ 
+              marginLeft: { md: 4 },
+              gap: 3
+            }}
+          >
+            <CTATitle>Ready to Save Time?</CTATitle>
             <CTAButton
               variant="black"
-              endIcon={
-                <ArrowForwardIcon 
-                  sx={{ 
-                    width: '12px',
-                    height: '12px'
-                  }} 
-                />
-              }
-              sx={{
-                fontSize: '0.75rem',
-                padding: '6px 16px',
-                height: '32px',
-                whiteSpace: 'nowrap',
-                minWidth: 'auto',
-                '& .MuiButton-endIcon': {
-                  marginLeft: '4px'
-                }
-              }}
+              endIcon={<ArrowForwardIcon sx={{ width: '12px', height: '12px' }} />}
             >
               Start Your Free Trial
             </CTAButton>
-          </Grid>
-        </Grid>
+          </Box>
+        </Stack>
       </Container>
-    </Box>
+    </FooterWrapper>
   );
 }
