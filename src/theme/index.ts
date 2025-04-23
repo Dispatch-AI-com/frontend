@@ -1,9 +1,12 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
-
 let theme = createTheme({
-  spacing: 8, // 默认 spacing 单位（8px）
+  spacing: 8, 
+
+  shape: {
+    borderRadius: 12, 
+  },
 
   palette: {
     background: {
@@ -48,9 +51,9 @@ let theme = createTheme({
     values: {
       xs: 0,    // mobile devices (<768px)
       sm: 768,   // desktop (≥768px)
-      md: 768,   // 保持与sm相同，实际不会用到
-      lg: 768,   // 保持与sm相同，实际不会用到
-      xl: 768,   // 保持与sm相同，实际不会用到
+      md: 768,   
+      lg: 768,   
+      xl: 768,   
     },
   },
 
