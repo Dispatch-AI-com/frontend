@@ -49,11 +49,11 @@ let theme = createTheme({
 
   breakpoints: {
     values: {
-      xs: 0,    // mobile devices (<768px)
-      sm: 768,   // desktop (≥768px)
-      md: 768,   
-      lg: 768,   
-      xl: 768,   
+      xs: 0,      // mobile devices
+      sm: 600,    // tablets
+      md: 900,    // small laptop
+      lg: 1200,   // desktop
+      xl: 1536    // large screens
     },
   },
 
@@ -63,9 +63,13 @@ let theme = createTheme({
         root: {
           paddingLeft: '16px',
           paddingRight: '16px',
-          '@media (min-width:768px)': { 
-            paddingLeft: '64px',
-            paddingRight: '64px',
+          '@media (min-width:600px)': { 
+            paddingLeft: '24px',
+            paddingRight: '24px',
+          },
+          '@media (min-width:900px)': { 
+            paddingLeft: '32px',
+            paddingRight: '32px',
           },
         },
       },

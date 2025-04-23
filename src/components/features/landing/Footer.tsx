@@ -9,13 +9,14 @@ import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Image from 'next/image';
-import CTAButton from '@/components/ui/CTAButton';
+import CommmonButton from '@/components/ui/CommonButton';
 
 // Styled Components
 const FooterWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(6),
-  backgroundColor: theme.palette.background.paper
+  backgroundColor: theme.palette.background.paper,
+  width: '100%'
 }));
 
 const LogoContainer = styled(Box)({
@@ -48,9 +49,8 @@ const CopyrightText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary
 }));
 
-
 const NavLinksStack = styled(Stack)({
-    marginRight: '16px',
+  marginRight: '16px',
 });
 
 const NavLink = styled(Link)(({ theme }) => ({
@@ -79,7 +79,7 @@ const CTATitle = styled(Typography)(({ theme }) => ({
 export default function Footer() {
   return (
     <FooterWrapper as="footer">
-      <Container>
+      <Container maxWidth={false} sx={{ maxWidth: '1440px', margin: '0 auto' }}>
         <Stack 
           direction={{ xs: 'column', md: 'row' }} 
           spacing={{ xs: 4, md: 2 }}
@@ -103,21 +103,21 @@ export default function Footer() {
           </Box>
 
           {/* Navigation Links */}
-          <Box 
+          <Box
             flex={{ md: 6.5 }}
             sx={{ 
               display: { xs: 'none', lg: 'block' }
             }}
           >
             <NavLinksStack direction="row" spacing={3}>
-              <NavLink as={Link} href="#" color="inherit">Home</NavLink>
-              <NavLink as={Link} href="#" color="inherit">Products</NavLink>
-              <NavLink as={Link} href="#" color="inherit">Pricing</NavLink>
-              <NavLink as={Link} href="#" color="inherit">Blogs</NavLink>
-              <NavLink as={Link} href="#" color="inherit">Features</NavLink>
-              <NavLink as={Link} href="#" color="inherit">About Us</NavLink>
+              <NavLink href="#" color="inherit">Home</NavLink>
+              <NavLink href="#" color="inherit">Products</NavLink>
+              <NavLink href="#" color="inherit">Pricing</NavLink>
+              <NavLink href="#" color="inherit">Blogs</NavLink>
+              <NavLink href="#" color="inherit">Features</NavLink>
+              <NavLink href="#" color="inherit">About Us</NavLink>
               <Box>
-                <NavLink as={Link} href="#" color="inherit">Support</NavLink>
+                <NavLink href="#" color="inherit">Support</NavLink>
                 <SupportLinksStack spacing={1.5}>
                   <SupportLink href="#">Documents</SupportLink>
                   <SupportLink href="#">FAQs</SupportLink>
@@ -137,12 +137,12 @@ export default function Footer() {
             }}
           >
             <CTATitle>Ready to Save Time?</CTATitle>
-            <CTAButton
-              variant="black"
+            <CommmonButton
+              buttonVariant="black"
               endIcon={<ArrowForwardIcon sx={{ width: '12px', height: '12px' }} />}
             >
               Start Your Free Trial
-            </CTAButton>
+            </CommmonButton>
           </Box>
         </Stack>
       </Container>
