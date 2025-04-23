@@ -71,10 +71,6 @@ const SupportLink = styled(Link)(({ theme }) => ({
   ...theme.typography.body2
 }));
 
-const CTASection = styled(Box)(({ theme }) => ({
-  gap: '24px',
-}));
-
 const CTATitle = styled(Typography)(({ theme }) => ({
   marginBottom: '16px',
   ...theme.typography.body1
