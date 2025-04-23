@@ -1,15 +1,17 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
-
-
 let theme = createTheme({
-  spacing: 8, // 默认 spacing 单位（8px）
+  spacing: 8, 
+
+  shape: {
+    borderRadius: 12, 
+  },
 
   palette: {
     background: {
-      default: '#f9f9f9',
-      paper: '#ffffff',
+      default: '#ffffff',
+      paper: '#fafafa',
     },
     text: {
       primary: '#060606',
@@ -23,15 +25,15 @@ let theme = createTheme({
     fontFamily: ['Roboto', 'sans-serif'].join(','),
     h1: {
       fontSize: '4.5rem',
-      fontWeight: 700,
+      fontWeight:800,
     },
     h2: {
       fontSize: '3.5rem',
-      fontWeight: 700,
+      fontWeight: 800,
     },
     h3: {
       fontSize: '1.5rem',
-      fontWeight: 700,
+      fontWeight: 800,
     },
     body1: {
       fontSize: '1.25rem',
@@ -40,8 +42,8 @@ let theme = createTheme({
       fontSize: '1rem',
     },
     button: {
-      fontSize: '0.75rem',
-      fontWeight: 700,
+      fontSize: '0.9rem',
+      fontWeight: 600,
     },
   },
 
@@ -49,9 +51,9 @@ let theme = createTheme({
     values: {
       xs: 0,    // mobile devices (<768px)
       sm: 768,   // desktop (≥768px)
-      md: 768,   // 保持与sm相同，实际不会用到
-      lg: 768,   // 保持与sm相同，实际不会用到
-      xl: 768,   // 保持与sm相同，实际不会用到
+      md: 768,   
+      lg: 768,   
+      xl: 768,   
     },
   },
 
