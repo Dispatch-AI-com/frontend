@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Button, ButtonProps, SxProps, Theme, useTheme } from '@mui/material';
+import { Button, ButtonProps, SxProps, Theme} from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 type ButtonVariant = 'black' | 'green';
@@ -39,9 +39,7 @@ export default function CommonButton({
   buttonVariant = 'black',
   sx,
   ...rest
-}: CommonButtonProps) {
-  const theme = useTheme();
-  
+}: CommonButtonProps) {  
   return (
     <StyledButton
       variant="contained"
