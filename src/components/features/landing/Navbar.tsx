@@ -33,7 +33,7 @@ const navItems: NavItemProps[] = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -41,13 +41,14 @@ export default function Navbar() {
 
   return (
     <AppBar
-      position="static"
+      position="fixed"
       color="transparent"
       elevation={0}
       sx={{
         height: 80,
         backgroundColor: '#fff',
         mb: '100px',
+        zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
       <Toolbar
@@ -74,6 +75,7 @@ export default function Navbar() {
               alt="Dispatch AI logo"
               width={152}
               height={36}
+              priority
               style={{
                 cursor: 'pointer',
                 display: 'block',
@@ -109,7 +111,6 @@ export default function Navbar() {
           onClick={handleDrawerToggle}
           sx={{
             ml: 'auto',
-            zIndex: (theme) => theme.zIndex.drawer + 1,
             transition: 'transform 0.3s ease',
             transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
             backgroundColor: '#f5f5f5',
