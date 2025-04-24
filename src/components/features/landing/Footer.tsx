@@ -128,7 +128,7 @@ export default function Footer() {
             </NavLinksStack>
           </Box>
 
-          {/* CTA Section */}
+          {/* Free Trial Section */}
           <Box 
             flex={{ md: 3 }}
             sx={{ 
