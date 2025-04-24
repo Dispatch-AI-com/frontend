@@ -71,7 +71,7 @@ const SupportLink = styled(Link)(({ theme }) => ({
   ...theme.typography.body2
 }));
 
-const CTATitle = styled(Typography)(({ theme }) => ({
+const ButtonTitle = styled(Typography)(({ theme }) => ({
   marginBottom: '16px',
   ...theme.typography.body1
 }));
@@ -136,7 +136,7 @@ export default function Footer() {
               gap: 3
             }}
           >
-            <CTATitle>Ready to Save Time?</CTATitle>
+            <ButtonTitle>Ready to Save Time?</ButtonTitle>
             <CommmonButton
               buttonVariant="black"
               endIcon={<ArrowForwardIcon sx={{ width: '12px', height: '12px' }} />}
