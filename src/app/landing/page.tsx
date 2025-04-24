@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
-import HeroSection from '../components/features/landing/HeroSection';
-import FeaturesSection from '../components/features/landing/FeaturesSection';
+import HeroSection from './components/HeroSection';
+import FeaturesSection from './components/FeaturesSection';
 
 export default function LandingPage() {
   return (

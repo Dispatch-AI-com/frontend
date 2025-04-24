@@ -23,9 +23,6 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
       align="center"
       gutterBottom
       sx={{
-        fontFamily: 'var(--font-roboto)',
-        fontWeight: 700,
-        fontSize: '48px',
         lineHeight: '56px',
         color: color,
         mb: mb,

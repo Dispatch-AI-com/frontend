@@ -13,7 +13,7 @@ import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BuildIcon from '@mui/icons-material/Build';
-import SectionTitle from '../../ui/SectionTitle';
+import SectionTitle from '../../../components/ui/SectionTitle';
 
 export default function FeaturesSection() {
   const features = [
