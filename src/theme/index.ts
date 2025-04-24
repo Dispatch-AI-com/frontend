@@ -2,20 +2,20 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 let theme = createTheme({
-  spacing: 8, 
+  spacing: 8,
 
   shape: {
-    borderRadius: 12, 
+    borderRadius: 12,
   },
 
   palette: {
     background: {
-      default: '#ffffff',
-      paper: '#fafafa',
+      default: '#ffffff', // white
+      paper: '#fafafa', // light grey
     },
     text: {
-      primary: '#060606',
-      secondary: '#6d6d6d',
+      primary: '#060606', // black
+      secondary: '#6d6d6d', // grey
     },
   },
 
@@ -25,7 +25,7 @@ let theme = createTheme({
     fontFamily: ['Roboto', 'sans-serif'].join(','),
     h1: {
       fontSize: '4.5rem',
-      fontWeight:800,
+      fontWeight: 800,
     },
     h2: {
       fontSize: '3.5rem',
@@ -51,9 +51,9 @@ let theme = createTheme({
     values: {
       xs: 0,    // mobile devices (<768px)
       sm: 768,   // desktop (≥768px)
-      md: 768,   
-      lg: 768,   
-      xl: 768,   
+      md: 768,
+      lg: 768,
+      xl: 768,
     },
   },
 
@@ -63,7 +63,7 @@ let theme = createTheme({
         root: {
           paddingLeft: '16px',
           paddingRight: '16px',
-          '@media (min-width:768px)': { 
+          '@media (min-width:768px)': {
             paddingLeft: '64px',
             paddingRight: '64px',
           },
