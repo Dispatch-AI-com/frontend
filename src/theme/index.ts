@@ -1,6 +1,14 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
+
+const responsiveFontSize = (baseSize: number, mobileRatio = 0.8) => ({
+  fontSize: `${baseSize}px`,
+  [createTheme().breakpoints.down('sm')]: {
+    fontSize: `${baseSize * mobileRatio}px`,
+  },
+});
+
 let theme = createTheme({
   spacing: 8, 
 
@@ -19,31 +27,30 @@ let theme = createTheme({
     },
   },
 
-
   typography: {
     fontSize: 16,
     fontFamily: ['Roboto', 'sans-serif'].join(','),
     h1: {
-      fontSize: '4.5rem',
-      fontWeight:800,
+      ...responsiveFontSize(72),
+      fontWeight: 900,
     },
     h2: {
-      fontSize: '3.5rem',
-      fontWeight: 800,
+      ...responsiveFontSize(48),
+      fontWeight: 900,
     },
     h3: {
-      fontSize: '1.5rem',
-      fontWeight: 800,
+      ...responsiveFontSize(24),
+      fontWeight: 700,
     },
     body1: {
-      fontSize: '1.25rem',
+      ...responsiveFontSize(20),
     },
     body2: {
-      fontSize: '1rem',
+      ...responsiveFontSize(16),
     },
     button: {
-      fontSize: '0.9rem',
-      fontWeight: 600,
+      ...responsiveFontSize(18),
+      fontWeight: 700,
     },
   },
 
@@ -56,27 +63,7 @@ let theme = createTheme({
       xl: 1536    // large screens
     },
   },
-
-  components: {
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          '@media (min-width:600px)': { 
-            paddingLeft: '24px',
-            paddingRight: '24px',
-          },
-          '@media (min-width:900px)': { 
-            paddingLeft: '32px',
-            paddingRight: '32px',
-          },
-        },
-      },
-    },
-  },
 });
-
 
 theme = responsiveFontSizes(theme);
 
