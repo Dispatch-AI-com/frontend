@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 
 type Step = {
   id: number;
@@ -39,6 +40,105 @@ const steps: Step[] = [
     imageUrl: "landing/undraw_Go_Live.svg",
   },
 ];
+
+// Styled Components
+const SectionBox = styled(Box)({
+  width: '100%',
+});
+
+const SectionTitle = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Roboto, sans-serif',
+  fontWeight: 900,
+  lineHeight: 1.17,
+  letterSpacing: 'normal',
+  color: '#060606',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  [theme.breakpoints.up('xs')]: {
+    fontSize: '2rem',
+    width: '100%',
+    height: 'auto',
+    marginBottom: 'auto',
+  },
+  [theme.breakpoints.up('sm')]: {
+    width: '684px',
+    height: '56px',
+    marginBottom: '72px',
+  },
+  [theme.breakpoints.up('md')]: {
+    fontSize: '40px',
+  },
+}));
+
+const ContentContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  maxWidth: '1260px',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  backgroundColor: '#060606',
+  borderRadius: '24px',
+  padding: '30px',
+  boxShadow: theme.shadows[4],
+  overflow: 'hidden',
+  [theme.breakpoints.up('md')]: {
+    minHeight: '911px',
+  },
+}));
+
+const ImageContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  backgroundColor: theme.palette.common.white,
+  borderRadius: theme.shape.borderRadius * 3,
+  marginBottom: theme.spacing(2),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  [theme.breakpoints.up('md')]: {
+    minHeight: '675px',
+  },
+}));
+
+const StepsGrid = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gap: theme.spacing(2),
+  [theme.breakpoints.up('xs')]: {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+  },
+  [theme.breakpoints.up('sm')]: {
+    gridTemplateColumns: 'repeat(4, 1fr)',
+  },
+}));
+
+const StepBox = styled(Box)({
+  cursor: 'pointer',
+});
+
+const StepPaper = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'isActive',
+})<{ isActive?: boolean }>(({ theme, isActive }) => ({
+  width: '100%',
+  maxWidth: '300px',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  padding: theme.spacing(2),
+  backgroundColor: isActive ? '#a8f574' : 'transparent',
+  color: isActive ? theme.palette.common.black : '#fff',
+  borderRadius: theme.shape.borderRadius * 2,
+  cursor: 'pointer',
+  transition: 'background-color 0.3s',
+  [theme.breakpoints.up('md')]: {
+    minHeight: '146px',
+  },
+}));
+
+const StepTitle = styled(Typography)({
+  fontWeight: 'bold',
+});
+
+const StepDescription = styled(Typography)({
+  marginTop: 8,
+  color: '#bbb',
+});
 
 export default function ProcessFlow() {
   const [activeStep, setActiveStep] = useState<number>(1);
@@ -102,80 +202,17 @@ export default function ProcessFlow() {
   }, [activeStep]);
 
   return (
-    <Box component="section" 
-      sx={{ 
-        width:'100%', 
-        }}
-    >
-      <Typography 
-        variant="h2" 
-        align="center" 
-        sx={{ 
-          fontFamily: 'Roboto, sans-serif',  
-          fontWeight: 900,  
-          lineHeight: 1.17,        
-          letterSpacing: 'normal',  
-          color: '#060606', 
-          fontSize: {
-            xs: '2rem',  
-            md: '40px',   
-          },
-          width: {
-            xs: '100%',    
-            sm: '684px', 
-          },
-          mx: 'auto',
-
-          height: {
-            xs: 'auto',   
-            sm: '56px',    
-          },
-
-          mb: {
-            xs: 'auto',         
-            sm: '72px',   
-          },
-
-        }}
-          
-        >
+    <SectionBox>
+      <SectionTitle variant="h2" align="center">
         How SmartAgent Works for You
-      </Typography>
+      </SectionTitle>
 
-      <Box
-        sx={{
-          width: '100%',
-          maxWidth: '1260px',
-          mx: 'auto',
-          minHeight: {
-            xs: 'auto',
-            md: '911px',
-          },
-          backgroundColor: '#060606',
-          borderRadius: '24px',
-          p: '30px',
-          boxShadow: 4,
-          overflow: 'hidden'
-        }}
-      >
-        <Box
+      <ContentContainer>
+        <ImageContainer
           ref={containerRef}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          sx={{
-            width: '100%',
-            minHeight: {
-              xs: 'auto',
-              md: '675px',
-            },
-            bgcolor: 'common.white',
-            borderRadius: 3,
-            mb:2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
         >
           {current && (
             <Image
@@ -186,56 +223,33 @@ export default function ProcessFlow() {
               className="object-contain"
             />
           )}
-        </Box>
+        </ImageContainer>
 
-        <Box 
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { 
-              xs: 'repeat(2, 1fr)', 
-              sm: 'repeat(4, 1fr)' 
-            },
-            gap: 2,
-          }}>
+        <StepsGrid>
           {steps.map(step => {
             const isActive = step.id === activeStep;
             return (
-              <Box
+              <StepBox
                 key={step.id}
                 id={`step-${step.id}`}
                 onClick={() => handleStepChange(step.id)}
-                sx={{ cursor:'pointer' }}
               >
-                <Paper
+                <StepPaper
                   elevation={isActive ? 8 : 1}
-                  sx={{
-                    width: '100%',
-                    maxWidth: '300px',
-                    mx: 'auto',
-                    minHeight: {
-                      xs: 'auto',
-                      md: '146px',
-                    },
-                    p:2,
-                    bgcolor: isActive ? '#a8f574' : 'transparent',
-                    color:    isActive ? 'common.dark' : '#fff',
-                    borderRadius: 2,
-                    cursor: 'pointer',
-                    transition: 'background-color 0.3s'
-                  }}
+                  isActive={isActive}
                 >
-                  <Typography variant="h6" sx={{ fontWeight:'bold' }}>
+                  <StepTitle variant="h6">
                     {step.id}. {step.title}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mt:1 , color: '#bbb',}}>
+                  </StepTitle>
+                  <StepDescription variant="body2">
                     {step.description}
-                  </Typography>
-                </Paper>
-              </Box>
+                  </StepDescription>
+                </StepPaper>
+              </StepBox>
             );
           })}
-        </Box>
-      </Box>
-    </Box>
+        </StepsGrid>
+      </ContentContainer>
+    </SectionBox>
   );
 }
