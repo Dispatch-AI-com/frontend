@@ -85,12 +85,12 @@ export default function Footer() {
           spacing={{ xs: 4, md: 2 }}
         >
           {/* Logo and Social Media */}
-          <Box flex={{ md: 2.5 }}>
+          <Box flex={{ md: 3 }}>
             <LogoContainer>
               <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
             </LogoContainer>
             <SocialContainer>
-              <SocialText variant="body2">Follow Us On</SocialText>
+              <SocialText variant="body2">Follow Us On Social Media</SocialText>
               <Stack direction="row" spacing={0}>
                 <SocialIconButton color="inherit"><LinkedInIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><FacebookIcon /></SocialIconButton>
