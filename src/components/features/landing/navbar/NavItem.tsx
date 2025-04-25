@@ -2,6 +2,7 @@
 
 import NextLink from 'next/link';
 import { Box, Typography } from '@mui/material';
+import theme from '@/theme';
 
 export interface NavItemProps {
   href: string;
@@ -25,17 +26,18 @@ export const NavItem = ({
     sx={{
       width: width,
       height: 36,
-      padding: '8px 16px',
+      px: 2,
+      py: 1,
       borderRadius: '12px',
-      marginRight: '8px',
-      backgroundColor: '#fff',
+      mr: 1,
+      backgroundColor: theme.palette.background.default,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       textDecoration: 'none',
       transition: 'background-color 0.3s ease, transform 0.1s ease',
       '&:hover': {
-        backgroundColor: '#F5F5F5',
+        backgroundColor: theme.palette.background.paper,
       },
       '&:active': {
         transform: 'scale(0.97)',
@@ -43,17 +45,18 @@ export const NavItem = ({
     }}
   >
     <Typography
+      variant="body2"
       sx={{
         width: textWidth,
         height: 20,
-        fontFamily: 'Roboto',
+        fontFamily: theme.typography.fontFamily,
         fontSize: 16,
         fontWeight: 'normal',
         fontStretch: 'normal',
         fontStyle: 'normal',
         lineHeight: 1.25,
         letterSpacing: 'normal',
-        color: '#060606',
+        color: theme.palette.text.primary,
       }}
     >
       {text}

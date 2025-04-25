@@ -13,7 +13,8 @@ export function DesktopNavItems({ navItems }: DesktopNavItemsProps) {
       sx={{
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginLeft: '28px'
       }}
     >
       {navItems.map((item) => (

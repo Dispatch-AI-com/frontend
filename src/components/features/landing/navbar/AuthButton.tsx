@@ -1,7 +1,8 @@
 'use client';
 
-import { Button, Typography } from '@mui/material';
-import NextLink from 'next/link';
+import CommonButton from '@/components/ui/CommonButton';
+import { SxProps, Theme } from '@mui/material';
+import theme from '@/theme';
 
 interface AuthButtonProps {
   variant: 'login' | 'signup';
@@ -16,83 +17,55 @@ export function AuthButton({
 }: AuthButtonProps) {
   const isLogin = variant === 'login';
 
-  const desktopStyles = {
-    login: {
-      wrapper: {
-        width: 73,
-        height: 40,
-        padding: '10px 16px',
-        borderRadius: '12px',
-        backgroundColor: '#fff',
-        marginRight: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        '&:hover': { backgroundColor: '#F5F5F5' },
-      },
-      text: {
-        width: 41,
-        height: 20,
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        fontWeight: 'bold',
-        lineHeight: 1.25,
-        color: '#060606',
-      },
-    },
-    signup: {
-      wrapper: {
-        width: 89,
-        height: 40,
-        padding: '10px 16px',
-        borderRadius: '12px',
-        backgroundColor: '#060606',
-        marginLeft: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        '&:hover': { backgroundColor: '#333' },
-      },
-      text: {
-        maxWidth: 57,
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        fontWeight: 'bold',
-        lineHeight: 1.25,
-        color: '#fff',
-      },
-    },
+  const fixedFontSize: SxProps<Theme> = {
+    fontSize: 16,
+    [theme.breakpoints.up('sm')]: { fontSize: 16 },
+    [theme.breakpoints.up('md')]: { fontSize: 16 },
+    [theme.breakpoints.up('lg')]: { fontSize: 16 },
+    [theme.breakpoints.up('xl')]: { fontSize: 16 },
   };
 
-  const mobileWrapper = {
+  const baseMobileStyles: SxProps<Theme> = {
     px: 2,
     py: 1,
     borderRadius: '12px',
-    backgroundColor: isLogin ? '#fff' : '#060606',
-    color: isLogin ? '#060606' : '#fff',
-    fontSize: 16,
     fontWeight: 'bold',
     textTransform: 'none',
+    ...fixedFontSize,
+  };
+
+  const loginSx: SxProps<Theme> = {
+    backgroundColor: theme.palette.background.default,
+    color: theme.palette.text.primary,
+    boxShadow: 'none', 
+    border: 'none',    
+    '&:hover': { backgroundColor: theme.palette.background.paper },
+    ...(isMobile ? baseMobileStyles : {
+      width: 73,
+      height: 40,
+      margin: '0 -2px',
+      ...fixedFontSize,
+    }),
+  };
+
+  const signupSx: SxProps<Theme> = {
+    ...(isMobile ? baseMobileStyles : {
+      width: 89,
+      height: 40,
+      marginLeft: '12px',
+      whiteSpace: 'nowrap',
+      ...fixedFontSize,
+    }),
   };
 
   return (
-    <Button
-      component={NextLink}
+    <CommonButton
+      buttonVariant={isLogin ? undefined : 'black'} 
       href={`/${variant}`}
-      disableRipple
       onClick={onClick}
-      sx={{
-        ...(isMobile ? mobileWrapper : desktopStyles[variant].wrapper),
-        textTransform: 'none',
-      }}
+      sx={isLogin ? loginSx : signupSx}
     >
-      {isMobile ? (
-        isLogin ? 'Login' : 'Sign Up'
-      ) : (
-        <Typography sx={desktopStyles[variant].text}>
-          {isLogin ? 'Login' : 'Sign Up'}
-        </Typography>
-      )}
-    </Button>
+      {isLogin ? 'Login' : 'Sign Up'}
+    </CommonButton>
   );
 }

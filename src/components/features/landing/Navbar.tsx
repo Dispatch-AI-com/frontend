@@ -46,7 +46,7 @@ export default function Navbar() {
       elevation={0}
       sx={{
         height: 80,
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.background.default,
         mb: '100px',
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
@@ -113,12 +113,12 @@ export default function Navbar() {
             ml: 'auto',
             transition: 'transform 0.3s ease',
             transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: theme.palette.background.paper,
             borderRadius: '12px',
             width: 40,
             height: 40,
             '&:hover': {
-              backgroundColor: '#F5F5F5',
+              backgroundColor: theme.palette.background.paper,
             },
           }}
         >
@@ -139,6 +139,7 @@ export default function Navbar() {
         sx={{
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': { 
+            backgroundColor: theme.palette.background.default,
             boxSizing: 'border-box', 
             width: 240,
             padding: '20px',

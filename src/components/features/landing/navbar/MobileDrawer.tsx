@@ -15,7 +15,7 @@ export function MobileDrawer({ handleDrawerToggle, navItems }: MobileDrawerProps
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         paddingTop: 6,
         paddingBottom: 6,
       }}
@@ -28,7 +28,7 @@ export function MobileDrawer({ handleDrawerToggle, navItems }: MobileDrawerProps
         ))}
       </List>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', mb: 6 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', mt: 4 }}>
         <AuthButton variant="login" isMobile onClick={handleDrawerToggle} />
         <AuthButton variant="signup" isMobile onClick={handleDrawerToggle} />
       </Box>
