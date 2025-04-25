@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
+import Image from 'next/image';
 
 interface TestimonialCardProps {
   quote: string;
@@ -11,7 +12,7 @@ interface TestimonialCardProps {
 }
 
 // Card container
-const StyledCard = styled.div<React.CSSProperties>`
+const StyledCard = styled.div`
   width: 100%;
   max-width: 696px;
   height: auto;
@@ -26,8 +27,6 @@ const StyledCard = styled.div<React.CSSProperties>`
   @media (min-width: 768px) {
     padding: 60px;
   }
-
-  ${(props) => props.sx && { ...props.sx }}
 `;
 
 // Quote icon
@@ -88,12 +87,12 @@ export default function TestimonialCard({ quote, name, title, sx }: TestimonialC
   return (
     <StyledCard style={sx}>
       <QuoteIconBox>
-        <img
+        <Image
           src="/invalid-name.svg"
           alt="Quote Icon"
+          width={22}
+          height={20}
           style={{
-            width: '100%',
-            height: '100%',
             objectFit: 'contain',
             display: 'block',
           }}
