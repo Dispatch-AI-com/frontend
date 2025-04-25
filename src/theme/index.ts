@@ -1,11 +1,10 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
-
 const responsiveFontSize = (baseSize: number, mobileRatio = 0.8) => ({
-  fontSize: `${baseSize}px`,
+  fontSize: baseSize,
   [createTheme().breakpoints.down('sm')]: {
-    fontSize: `${baseSize * mobileRatio}px`,
+    fontSize: baseSize * mobileRatio,
   },
 });
 
