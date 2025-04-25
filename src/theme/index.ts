@@ -1,13 +1,6 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
-const responsiveFontSize = (baseSize: number, mobileRatio = 0.8) => ({
-  fontSize: baseSize,
-  [createTheme().breakpoints.down('sm')]: {
-    fontSize: baseSize * mobileRatio,
-  },
-});
-
 let theme = createTheme({
   spacing: 8, 
 
@@ -30,25 +23,25 @@ let theme = createTheme({
     fontSize: 16,
     fontFamily: ['Roboto', 'sans-serif'].join(','),
     h1: {
-      ...responsiveFontSize(72),
+      fontSize: 72,
       fontWeight: 900,
     },
     h2: {
-      ...responsiveFontSize(48),
+      fontSize: 48,
       fontWeight: 900,
     },
     h3: {
-      ...responsiveFontSize(24),
+      fontSize: 24,
       fontWeight: 700,
     },
     body1: {
-      ...responsiveFontSize(20),
+      fontSize: 20,
     },
     body2: {
-      ...responsiveFontSize(16),
+      fontSize: 16,
     },
     button: {
-      ...responsiveFontSize(18),
+      fontSize: 18,
       fontWeight: 700,
     },
   },
