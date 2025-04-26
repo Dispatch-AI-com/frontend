@@ -40,6 +40,14 @@ const StyledHeader = styled('h1')`
   margin: 0;
 
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
+    font-size: ${({ theme }) => theme.typography.h3.fontSize};
+  }
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.values.md}px) {
+    font-size: ${({ theme }) => theme.typography.h2.fontSize};
+  }
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.values.lg}px) {
     font-size: ${({ theme }) => theme.typography.h1.fontSize};
   }
 `;
@@ -48,11 +56,11 @@ const StyledTypographyBody = styled('p')`
   text-align: center;
   color: ${({ theme }) => theme.palette.text.primary};
   margin: 32px 0;
-  font-size: ${({ theme }) => theme.typography.body2.fontSize};
+  font-size: ${({ theme }) => theme.typography.body1.fontSize};
   font-family: ${({ theme }) => theme.typography.fontFamily};
 
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
-    font-size: ${({ theme }) => theme.typography.body1.fontSize};
+    font-size: ${({ theme }) => theme.typography.body2.fontSize};
     min-width: 1000px;
   }
 `;
