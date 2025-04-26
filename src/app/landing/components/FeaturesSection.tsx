@@ -13,9 +13,86 @@ import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BuildIcon from '@mui/icons-material/Build';
-import SectionTitle from '../../../components/ui/SectionTitle';
+import { styled } from '@mui/material/styles';
 
-export default function FeaturesSection() {
+// Styled Components
+const FeaturesWrapper = styled(Box)(({ theme }) => ({
+  paddingTop: theme.spacing(8),
+  paddingBottom: theme.spacing(8),
+  backgroundColor: theme.palette.background.default,
+}));
+
+const StyledContainer = styled(Container)(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+  },
+  [theme.breakpoints.up('md')]: {
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
+  },
+}));
+
+const SectionTitle = styled(Typography)(({ theme }) => ({
+  display: 'block',
+  whiteSpace: 'nowrap',
+  textAlign: 'center',
+  marginBottom: theme.spacing(8),
+  width: '100%',
+}));
+
+const FeatureCard = styled(Card)(() => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  textAlign: 'left',
+  marginLeft: '20px',
+  marginBottom: '20px',
+  padding: 0,
+  paddingLeft: 0,
+  boxShadow: 'none',
+  backgroundColor: 'transparent',
+}));
+
+const FeatureIconContainer = styled(Box)(({ theme }) => ({
+  width: 80,
+  height: 80,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: theme.palette.grey[100],
+  borderRadius: '12px',
+  marginBottom: theme.spacing(3),
+  alignSelf: 'flex-start',
+  marginLeft: 0,
+}));
+
+const FeatureTitle = styled(Typography)(({ theme }) => ({
+  lineHeight: '30px',
+  height: '30px',
+  maxWidth: '269px',
+  marginBottom: theme.spacing(3),
+  textAlign: 'left',
+  whiteSpace: 'nowrap',
+}));
+
+const FeatureDescription = styled(Typography)(({ theme }) => ({
+  lineHeight: '20px',
+  maxWidth: '420px',
+  height: '40px',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  marginTop: theme.spacing(2.5),
+  color: theme.palette.text.secondary,
+}));
+
+export default function FeaturesSection( ) {
   const features = [
     {
       title: "Automated Call Handling",
@@ -38,93 +115,30 @@ export default function FeaturesSection() {
       icon: <BuildIcon sx={{ fontSize: 60 }} />
     }
   ];
-
+  
   return (
-    <Box sx={{ py: 8, bgcolor: 'background.default' }}>
-      <Container maxWidth="lg">
-        <SectionTitle mb={12}>
+    <FeaturesWrapper>
+      <StyledContainer maxWidth="lg">
+        <SectionTitle variant='h2'>
           Automated Calls, Save Time, Grow Your Business
         </SectionTitle>
 
-        <Grid container spacing={6} sx={{ pl: { xs: 2, sm: 3, md: 4 } }}>
+        <Grid container spacing={6}>
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} key={index}>
-              <Card 
-                sx={{ 
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  textAlign: 'left',
-                  ml:'20px',
-                  mb:'20px',
-                  p: 0,
-                  pl: 0,
-                  boxShadow: 'none',
-                  bgcolor: 'transparent'
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    bgcolor: 'grey.100',
-                    borderRadius: '12px',
-                    mb: 3,
-                    alignSelf: 'flex-start',
-                    ml: 0
-                  }}
-                >
+              <FeatureCard>
+                <FeatureIconContainer>
                   {feature.icon}
-                </Box>
-                <CardContent sx={{ 
-                  padding: 0, 
-                  paddingTop: 0,
-                  "&:last-child": { paddingBottom: 0 },
-                  width: '100%'
-                }}>
-                  <Typography 
-                    variant="h5" 
-                    component="h2" 
-                    gutterBottom
-                    sx={{ 
-                      fontFamily: 'var(--font-roboto)',
-                      fontWeight: 'bold',
-                      fontSize: '24px',
-                      lineHeight:'30px',
-                      height: '30px',
-                      maxWidth: '269px',
-                      mb: 3
-                    }}
-                  >
-                    {feature.title}
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary"
-                    sx={{
-                      fontFamily: 'var(--font-roboto)',
-                      maxWidth: '420px',
-                      height: '40px',
-                      fontSize: '16px',
-                      lineHeight: '20px',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      mt: '20px'
-                    }}
-                  >
-                    {feature.description}
-                  </Typography>
+                </FeatureIconContainer>
+                <CardContent sx={{ padding: 0, paddingTop: 0, '&:last-child': { paddingBottom: 0 }, width: '100%' }}>
+                  <FeatureTitle variant='h3'>{feature.title}</FeatureTitle>
+                  <FeatureDescription variant='body2'>{feature.description}</FeatureDescription>
                 </CardContent>
-              </Card>
+              </FeatureCard>
             </Grid>
           ))}
         </Grid>
-      </Container>
-    </Box>
+      </StyledContainer>
+    </FeaturesWrapper>
   );
-} 
+}

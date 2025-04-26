@@ -2,7 +2,7 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 let theme = createTheme({
-  /* spacing: 8, */ 
+  spacing: 8, 
 
   shape: {
     borderRadius: 12, 
