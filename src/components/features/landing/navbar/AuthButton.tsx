@@ -1,8 +1,7 @@
 'use client';
 
 import CommonButton from '@/components/ui/CommonButton';
-import { SxProps, Theme } from '@mui/material';
-import theme from '@/theme';
+import { styled } from '@mui/material/styles';
 
 interface AuthButtonProps {
   variant: 'login' | 'signup';
@@ -10,62 +9,70 @@ interface AuthButtonProps {
   onClick?: () => void;
 }
 
+const BaseAuthButton = styled(CommonButton, {
+  shouldForwardProp: (prop) => prop !== 'isMobile',
+})<{ isMobile?: boolean }>({
+  '&&': { fontSize: 16 },
+});
+
+const LoginButton = styled(BaseAuthButton, {
+  shouldForwardProp: (prop) => prop !== 'isMobile',
+})<{ isMobile?: boolean }>(({ theme, isMobile }) => ({
+  backgroundColor: theme.palette.background.default,
+  color: theme.palette.text.primary,
+  boxShadow: 'none',
+  border: 'none',
+  '&:hover': { backgroundColor: theme.palette.background.paper },
+
+  ...(isMobile
+    ? {
+        padding: theme.spacing(2),
+        borderRadius: 12,
+        fontWeight: 'bold',
+        textTransform: 'none',
+      }
+    : {
+        width: theme.spacing(9.125),
+        height: theme.spacing(5),
+        margin: '0 -2px',
+      }),
+}));
+
+const SignupButton = styled(BaseAuthButton, {
+  shouldForwardProp: (prop) => prop !== 'isMobile',
+})<{ isMobile?: boolean }>(({ theme, isMobile }) => ({
+  whiteSpace: 'nowrap',
+
+  ...(isMobile
+    ? {
+        padding: theme.spacing(2),
+        borderRadius: 12,
+        fontWeight: 'bold',
+        textTransform: 'none',
+      }
+    : {
+        width: theme.spacing(11.125),     
+        height: theme.spacing(5),
+        marginLeft: theme.spacing(1.5),  
+      }),
+}));
+
 export function AuthButton({
   variant,
   isMobile = false,
   onClick,
 }: AuthButtonProps) {
   const isLogin = variant === 'login';
-
-  const fixedFontSize: SxProps<Theme> = {
-    fontSize: 16,
-    [theme.breakpoints.up('sm')]: { fontSize: 16 },
-    [theme.breakpoints.up('md')]: { fontSize: 16 },
-    [theme.breakpoints.up('lg')]: { fontSize: 16 },
-    [theme.breakpoints.up('xl')]: { fontSize: 16 },
-  };
-
-  const baseMobileStyles: SxProps<Theme> = {
-    px: 2,
-    py: 1,
-    borderRadius: '12px',
-    fontWeight: 'bold',
-    textTransform: 'none',
-    ...fixedFontSize,
-  };
-
-  const loginSx: SxProps<Theme> = {
-    backgroundColor: theme.palette.background.default,
-    color: theme.palette.text.primary,
-    boxShadow: 'none', 
-    border: 'none',    
-    '&:hover': { backgroundColor: theme.palette.background.paper },
-    ...(isMobile ? baseMobileStyles : {
-      width: 73,
-      height: 40,
-      margin: '0 -2px',
-      ...fixedFontSize,
-    }),
-  };
-
-  const signupSx: SxProps<Theme> = {
-    ...(isMobile ? baseMobileStyles : {
-      width: 89,
-      height: 40,
-      marginLeft: '12px',
-      whiteSpace: 'nowrap',
-      ...fixedFontSize,
-    }),
-  };
+  const Btn = isLogin ? LoginButton : SignupButton;
 
   return (
-    <CommonButton
-      buttonVariant={isLogin ? undefined : 'black'} 
+    <Btn
+      buttonVariant={isLogin ? undefined : 'black'}
       href={`/${variant}`}
+      isMobile={isMobile}
       onClick={onClick}
-      sx={isLogin ? loginSx : signupSx}
     >
       {isLogin ? 'Login' : 'Sign Up'}
-    </CommonButton>
+    </Btn>
   );
 }

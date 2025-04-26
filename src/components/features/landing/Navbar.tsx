@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-
 import {
   AppBar,
   Toolbar,
@@ -14,6 +13,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { NavItemProps } from './navbar/NavItem';
@@ -30,45 +30,72 @@ const navItems: NavItemProps[] = [
   { href: '/about', text: 'About Us', width: 98, textWidth: 66 },
 ];
 
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  position: 'fixed',
+  height: 80,
+  backgroundColor: theme.palette.background.default,
+  marginBottom: '100px',
+  zIndex: theme.zIndex.drawer + 1,
+}));
+
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  width: '100%',
+  maxWidth: 1920,
+  padding: '20px 20px',
+  margin: '0 auto',
+  [theme.breakpoints.up('md')]: {
+    paddingLeft: 240,
+    paddingRight: 240,
+  },
+}));
+
+const LogoBox = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  margin: '2px 0',
+});
+
+const DesktopButtonGroup = styled(Stack)({
+  alignItems: 'center',
+  marginLeft: 'auto',
+});
+
+const MobileMenuButton = styled(IconButton)(({ theme }) => ({
+  marginLeft: 'auto',
+  transition: 'transform 0.3s ease',
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: 12,
+  width: 40,
+  height: 40,
+  '&:hover': { backgroundColor: theme.palette.background.paper },
+}));
+
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  display: 'block',
+  [theme.breakpoints.up('md')]: { display: 'none' },
+  '& .MuiDrawer-paper': {
+    backgroundColor: theme.palette.background.default,
+    boxSizing: 'border-box',
+    width: 240,
+    padding: 20,
+    transition: 'transform 0.3s ease-in-out',
+  },
+}));
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   return (
-    <AppBar
-      position="fixed"
-      color="transparent"
-      elevation={0}
-      sx={{
-        height: 80,
-        backgroundColor: theme.palette.background.default,
-        mb: '100px',
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-      }}
-    >
-      <Toolbar
-        disableGutters
-        sx={{
-          width: '100%',
-          maxWidth: 1920,
-          px: { xs: '20px', md: '240px' },
-          py: '20px',
-          mx: 'auto'
-        }}
-      >
+    <StyledAppBar color="transparent" elevation={0}>
+      <StyledToolbar disableGutters>
         {/* Logo */}
-        <Box 
-          sx={{ 
-            display: 'flex',
-            alignItems: 'center',
-            margin: '2px 0',
-          }}
-        >
+        <LogoBox>
           <Link href="/" aria-label="Dispatch AI Home">
             <Image
               src="/logo.svg"
@@ -76,79 +103,55 @@ export default function Navbar() {
               width={152}
               height={36}
               priority
-              style={{
-                cursor: 'pointer',
-                display: 'block',
-              }}
+              style={{ cursor: 'pointer', display: 'block' }}
             />
           </Link>
-        </Box>
+        </LogoBox>
 
-        {/* Desktop Nav */}
-        {!isMobile && <DesktopNavItems navItems={navItems} />}
-
-        {/* Desktop Buttons */}
+        {/* Desktop */}
         {!isMobile && (
-          <Stack 
-            direction="row" 
-            spacing={0} 
-            sx={{ 
-              alignItems: 'center',
-              marginLeft: 'auto'
+          <>
+            <DesktopNavItems navItems={navItems} />
+            <DesktopButtonGroup direction="row" spacing={0}>
+              <AuthButton variant="login" />
+              <AuthButton variant="signup" />
+            </DesktopButtonGroup>
+          </>
+        )}
+
+        {/* Mobile */}
+        {isMobile && (
+          <MobileMenuButton
+            color="inherit"
+            aria-label="toggle drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            style={{
+              transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
             }}
           >
-            <AuthButton variant="login" />
-            <AuthButton variant="signup" />
-          </Stack>
+            {mobileOpen ? (
+              <CloseIcon fontSize="medium" />
+            ) : (
+              <MenuIcon fontSize="medium" />
+            )}
+          </MobileMenuButton>
         )}
-
-        {/* Mobile Menu Button */}
-        {isMobile && (
-          <IconButton
-          color="inherit"
-          aria-label="toggle drawer"
-          edge="start"
-          onClick={handleDrawerToggle}
-          sx={{
-            ml: 'auto',
-            transition: 'transform 0.3s ease',
-            transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: '12px',
-            width: 40,
-            height: 40,
-            '&:hover': {
-              backgroundColor: theme.palette.background.paper,
-            },
-          }}
-        >
-          {mobileOpen ? <CloseIcon fontSize="medium" /> : <MenuIcon fontSize="medium" />}
-          </IconButton>
-        )}
-      </Toolbar>
+      </StyledToolbar>
 
       {/* Mobile Drawer */}
-      <Drawer
+      <StyledDrawer
         variant="temporary"
         anchor="right"
         open={mobileOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true, 
-        }}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { 
-            backgroundColor: theme.palette.background.default,
-            boxSizing: 'border-box', 
-            width: 240,
-            padding: '20px',
-            transition: 'transform 0.3s ease-in-out',
-          },
-        }}
+        ModalProps={{ keepMounted: true }}
       >
-        <MobileDrawer handleDrawerToggle={handleDrawerToggle} navItems={navItems} />
-      </Drawer>
-    </AppBar>
+        <MobileDrawer
+          handleDrawerToggle={handleDrawerToggle}
+          navItems={navItems}
+        />
+      </StyledDrawer>
+    </StyledAppBar>
   );
 }

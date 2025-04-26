@@ -1,4 +1,7 @@
-import { Box, List, ListItem} from '@mui/material';
+'use client';
+
+import { Box, List, ListItem } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { NavItem, NavItemProps } from './NavItem';
 import { AuthButton } from './AuthButton';
 
@@ -7,31 +10,49 @@ interface MobileDrawerProps {
   navItems: NavItemProps[];
 }
 
-export function MobileDrawer({ handleDrawerToggle, navItems }: MobileDrawerProps) {
+const DrawerContainer = styled(Box)({
+  textAlign: 'center',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  paddingTop: 48,
+  paddingBottom: 48,
+});
+
+const ActionArea = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 16,
+  alignItems: 'center',
+  marginTop: 32,
+});
+
+export function MobileDrawer({
+  handleDrawerToggle,
+  navItems,
+}: MobileDrawerProps) {
   return (
-    <Box
-      sx={{
-        textAlign: 'center',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        paddingTop: 6,
-        paddingBottom: 6,
-      }}
-    >
+    <DrawerContainer>
       <List sx={{ flexGrow: 1 }}>
         {navItems.map((item) => (
-          <ListItem key={item.href} sx={{ justifyContent: 'center', mb: 1.5 }}>
+          <ListItem
+            key={
+              typeof item.href === 'string'
+                ? item.href
+                : item.href.toString()
+            }
+            sx={{ justifyContent: 'center', mb: 1.5 }}
+          >
             <NavItem {...item} handleDrawerToggle={handleDrawerToggle} />
           </ListItem>
         ))}
       </List>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', mt: 4 }}>
+      <ActionArea>
         <AuthButton variant="login" isMobile onClick={handleDrawerToggle} />
         <AuthButton variant="signup" isMobile onClick={handleDrawerToggle} />
-      </Box>
-    </Box>
+      </ActionArea>
+    </DrawerContainer>
   );
 }
