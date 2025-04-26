@@ -37,7 +37,10 @@ const StyledContainer = styled(Container)(({ theme }) => ({
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
   display: 'block',
-  whiteSpace: 'nowrap',
+  whiteSpace: 'normal',
+  [theme.breakpoints.up('md')]: {
+    whiteSpace: 'nowrap',
+  },
   textAlign: 'center',
   marginBottom: theme.spacing(8),
   width: '100%',
