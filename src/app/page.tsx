@@ -1,10 +1,10 @@
 import { Container } from '@mui/material';
-import LandingPage from './landing/page';
+import Landing from './landing/page';
 
-export default function Home() {
+export default function LandingPage() {
   return (
     <Container>
-      <LandingPage />
+      <Landing />
     </Container>
   );
 }
