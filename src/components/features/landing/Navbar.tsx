@@ -1,25 +1,26 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
-  Toolbar,
   Box,
-  Stack,
-  IconButton,
   Drawer,
+  IconButton,
+  Stack,
+  Toolbar,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import { NavItemProps } from './navbar/NavItem';
-import { MobileDrawer } from './navbar/MobileDrawer';
-import { DesktopNavItems } from './navbar/DesktopNavItems';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+
 import { AuthButton } from './navbar/AuthButton';
+import { DesktopNavItems } from './navbar/DesktopNavItems';
+import { MobileDrawer } from './navbar/MobileDrawer';
+import { NavItemProps } from './navbar/NavItem';
 
 const navItems: NavItemProps[] = [
   { href: '/home', text: 'Home', width: 75, textWidth: 43 },

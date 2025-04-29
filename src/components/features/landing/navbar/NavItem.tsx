@@ -1,9 +1,9 @@
 'use client';
-
-import NextLink, { LinkProps } from 'next/link';
 import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import type { BoxProps } from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import NextLink, { LinkProps } from 'next/link';
+
 
 interface ExtraNavProps {
   width: number;

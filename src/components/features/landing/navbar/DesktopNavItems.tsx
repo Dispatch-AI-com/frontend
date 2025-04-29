@@ -2,6 +2,7 @@
 
 import { Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
 import { NavItem, NavItemProps } from './NavItem';
 
 interface DesktopNavItemsProps {
