@@ -1,21 +1,29 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
+// Extend the TypeBackground interface to include 'dark'
+declare module '@mui/material/styles/createPalette' {
+  interface TypeBackground {
+    dark: string;
+  }
+}
+
 let theme = createTheme({
-  spacing: 8, 
+  spacing: 8,
 
   shape: {
-    borderRadius: 12, 
+    borderRadius: 12,
   },
 
   palette: {
     background: {
-      default: '#ffffff',
-      paper: '#fafafa',
+      default: '#ffffff', // default background color for the app
+      paper: '#fafafa', // light gray
+      dark: '#000000', // black
     },
     text: {
-      primary: '#060606',
-      secondary: '#6d6d6d',
+      primary: '#060606', // black
+      secondary: '#6d6d6d', // dark gray
     },
   },
 
