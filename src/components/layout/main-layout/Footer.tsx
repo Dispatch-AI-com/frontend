@@ -16,7 +16,7 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(6),
   backgroundColor: theme.palette.background.paper,
-  width: '100%'
+  width: '100%',
 }));
 
 const LogoContainer = styled(Box)({
@@ -85,7 +85,7 @@ export default function Footer() {
           spacing={{ xs: 4, md: 2 }}
         >
           {/* Logo and Social Media */}
-          <Box flex={{ md:4 }}>
+          <Box flex={{ md:4.5 }}>
             <LogoContainer>
               <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
             </LogoContainer>
@@ -104,12 +104,12 @@ export default function Footer() {
 
           {/* Navigation Links */}
           <Box
-            flex={{ md: 7 }}
+            flex={{ md: 8 }}
             sx={{ 
               display: { xs: 'none', lg: 'block' }
             }}
           >
-            <NavLinksStack direction="row" spacing={4.5}>
+            <NavLinksStack direction="row" spacing={5}>
               <NavLink href="/" color="inherit">Home</NavLink>
               <NavLink href="/products" color="inherit">Products</NavLink>
               <NavLink href="/pricing" color="inherit">Pricing</NavLink>

@@ -41,11 +41,11 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   width: '100%',
   maxWidth: 1920,
-  padding: '20px 20px',
+  padding: '30px 30px',
   margin: '0 auto',
   [theme.breakpoints.up('md')]: {
-    paddingLeft: 240,
-    paddingRight: 240,
+    paddingLeft: 50,
+    paddingRight: 50,
   },
 }));
 

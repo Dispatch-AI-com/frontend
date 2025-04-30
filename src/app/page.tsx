@@ -1,10 +1,10 @@
 import Landing from "./landing/page";
-import HeaderBodyFooterLayout from "@/components/layout/header-body-footer-layout";
+import MainLayout from "@/components/layout/main-layout";
 
 export default function Home() {
   return (
-    <HeaderBodyFooterLayout>
+    <MainLayout>
       <Landing />
-    </HeaderBodyFooterLayout>
+    </MainLayout>
   );
 }
