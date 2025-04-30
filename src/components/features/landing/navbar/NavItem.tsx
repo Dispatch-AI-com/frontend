@@ -36,7 +36,7 @@ const NavItemContainer = styled(Box, {
   textDecoration: 'none',
   transition: 'background-color 0.3s ease, transform 0.1s ease',
   '&:hover': { 
-    backgroundColor: themeMode === 'dark' ? theme.palette.background.paper : theme.palette.background.paper 
+    backgroundColor: themeMode === 'dark' ? '#060606' : theme.palette.background.paper 
   },
   '&:active': { transform: 'scale(0.97)' },
 }));
