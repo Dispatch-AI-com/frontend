@@ -96,7 +96,7 @@ export default function Navbar({ themeMode = 'light' }: NavbarProps) {
   };
 
   return (
-    <StyledAppBar color="transparent" elevation={0} themeMode={themeMode}>
+    <StyledAppBar color="transparent" elevation={0}>
       <StyledToolbar disableGutters>
         {/* Logo */}
         <LogoBox>
