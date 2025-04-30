@@ -13,7 +13,7 @@ export default function MainLayout({
               <Navbar />
             </Container>
             
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" sx={{py: 4}} >
                 {children}
             </Container>
             
