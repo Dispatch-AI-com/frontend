@@ -80,13 +80,6 @@ const darkTheme: ThemeColors = {
 };
 
 declare module '@mui/material/styles' {
-  interface TypeBackground {
-    dark: string;
-    light: string;
-  }
-  interface TypeText {
-    white: string;
-  }
   interface Palette extends ThemeColors {}
   interface PaletteOptions extends ThemeColors {}
 }

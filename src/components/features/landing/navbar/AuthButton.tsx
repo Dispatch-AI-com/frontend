@@ -7,18 +7,18 @@ interface AuthButtonProps {
   variant: 'login' | 'signup';
   isMobile?: boolean;
   onClick?: () => void;
-  themeMode?: 'light' | 'dark';
+  themeMode?: 'light' | 'dark'; // keep for API compatibility, but don't pass to styled
 }
 
 const BaseAuthButton = styled(CommonButton, {
-  shouldForwardProp: (prop) => !['isMobile', 'themeMode'].includes(prop as string),
-})<{ isMobile?: boolean; themeMode?: 'light' | 'dark' }>({
+  shouldForwardProp: (prop) => prop !== 'isMobile',
+})<{ isMobile?: boolean }>({
   '&&': { fontSize: 16 },
 });
 
 const LoginButton = styled(BaseAuthButton, {
-  shouldForwardProp: (prop) => !['isMobile', 'themeMode'].includes(prop as string),
-})<{ isMobile?: boolean; themeMode?: 'light' | 'dark' }>(({ theme, isMobile, themeMode = 'light' }) => ({
+  shouldForwardProp: (prop) => prop !== 'isMobile',
+})<{ isMobile?: boolean }>(({ theme, isMobile }) => ({
   backgroundColor: theme.palette.button.secondary.background,
   color: theme.palette.button.secondary.text,
   boxShadow: 'none',
@@ -40,8 +40,8 @@ const LoginButton = styled(BaseAuthButton, {
 }));
 
 const SignupButton = styled(BaseAuthButton, {
-  shouldForwardProp: (prop) => !['isMobile', 'themeMode'].includes(prop as string),
-})<{ isMobile?: boolean; themeMode?: 'light' | 'dark' }>(({ theme, isMobile, themeMode = 'light' }) => ({
+  shouldForwardProp: (prop) => prop !== 'isMobile',
+})<{ isMobile?: boolean }>(({ theme, isMobile }) => ({
   whiteSpace: 'nowrap',
   backgroundColor: theme.palette.button.primary.background,
   color: theme.palette.button.primary.text,
@@ -65,7 +65,7 @@ export function AuthButton({
   variant,
   isMobile = false,
   onClick,
-  themeMode = 'light',
+  themeMode = 'light', // keep for API compatibility, but not used in styled
 }: AuthButtonProps) {
   const isLogin = variant === 'login';
   const Btn = isLogin ? LoginButton : SignupButton;
@@ -75,7 +75,6 @@ export function AuthButton({
       href={`/${variant}`}
       isMobile={isMobile}
       onClick={onClick}
-      themeMode={themeMode}
     >
       {isLogin ? 'Login' : 'Sign Up'}
     </Btn>
