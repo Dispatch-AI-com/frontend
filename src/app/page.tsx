@@ -5,7 +5,7 @@ import Footer from '@/components/features/landing/Footer';
 export default function Home() {
   return (
     <>
-      <Navbar themeMode="dark" />
+      <Navbar />
       <HeroSection />
       <Footer />
     </>
