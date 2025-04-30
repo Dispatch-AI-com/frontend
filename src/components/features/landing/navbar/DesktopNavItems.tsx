@@ -6,6 +6,7 @@ import { NavItem, NavItemProps } from './NavItem';
 
 interface DesktopNavItemsProps {
   navItems: NavItemProps[];
+  themeMode?: 'light' | 'dark';
 }
 
 const DesktopNavContainer = styled(Stack)(({ theme }) => ({
@@ -15,7 +16,7 @@ const DesktopNavContainer = styled(Stack)(({ theme }) => ({
   marginLeft: theme.spacing(3.5), 
 }));
 
-export function DesktopNavItems({ navItems }: DesktopNavItemsProps) {
+export function DesktopNavItems({ navItems, themeMode = 'light' }: DesktopNavItemsProps) {
   return (
     <DesktopNavContainer direction="row" spacing={0}>
       {navItems.map((item) => (
@@ -26,6 +27,7 @@ export function DesktopNavItems({ navItems }: DesktopNavItemsProps) {
               : item.href.toString()
           }
           {...item}
+          themeMode={themeMode}
         />
       ))}
     </DesktopNavContainer>

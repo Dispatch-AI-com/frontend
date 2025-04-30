@@ -1,6 +1,28 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
+const lightTheme = {
+  background: {
+    default: '#ffffff',
+    paper: '#fafafa',
+  },
+  text: {
+    primary: '#060606',
+    secondary: '#6d6d6d',
+  },
+};
+
+const darkTheme = {
+  background: {
+    default: '#060606',
+    paper: '#1a1a1a',
+  },
+  text: {
+    primary: '#ffffff',
+    secondary: '#a0a0a0',
+  },
+};
+
 let theme = createTheme({
   spacing: 8, 
 
@@ -9,14 +31,8 @@ let theme = createTheme({
   },
 
   palette: {
-    background: {
-      default: '#ffffff',
-      paper: '#fafafa',
-    },
-    text: {
-      primary: '#060606',
-      secondary: '#6d6d6d',
-    },
+    ...lightTheme,
+    mode: 'light',
   },
 
   typography: {
@@ -58,5 +74,18 @@ let theme = createTheme({
 });
 
 theme = responsiveFontSizes(theme);
+
+export const createAppTheme = (mode: 'light' | 'dark') => {
+  const baseTheme = createTheme({
+    ...theme,
+    palette: {
+      ...theme.palette,
+      ...(mode === 'dark' ? darkTheme : lightTheme),
+      mode,
+    },
+  });
+
+  return responsiveFontSizes(baseTheme);
+};
 
 export default theme;

@@ -30,10 +30,12 @@ const navItems: NavItemProps[] = [
   { href: '/about', text: 'About Us', width: 98, textWidth: 66 },
 ];
 
-const StyledAppBar = styled(AppBar)(({ theme }) => ({
+const StyledAppBar = styled(AppBar, {
+  shouldForwardProp: (prop) => prop !== 'themeMode',
+})<{ themeMode?: 'light' | 'dark' }>(({ theme, themeMode = 'light' }) => ({
   position: 'fixed',
   height: 80,
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: themeMode === 'dark' ? '#060606' : theme.palette.background.default,
   marginBottom: '100px',
   zIndex: theme.zIndex.drawer + 1,
 }));
@@ -82,7 +84,11 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
-export default function Navbar() {
+interface NavbarProps {
+  themeMode?: 'light' | 'dark';
+}
+
+export default function Navbar({ themeMode = 'light' }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -92,13 +98,13 @@ export default function Navbar() {
   };
 
   return (
-    <StyledAppBar color="transparent" elevation={0}>
+    <StyledAppBar color="transparent" elevation={0} themeMode={themeMode}>
       <StyledToolbar disableGutters>
         {/* Logo */}
         <LogoBox>
           <Link href="/" aria-label="Dispatch AI Home">
             <Image
-              src="/logo.svg"
+              src={themeMode === 'dark' ? "/logo_white.svg" : "/logo.svg"}
               alt="Dispatch AI logo"
               width={152}
               height={36}
@@ -111,10 +117,10 @@ export default function Navbar() {
         {/* Desktop */}
         {!isMobile && (
           <>
-            <DesktopNavItems navItems={navItems} />
+            <DesktopNavItems navItems={navItems} themeMode={themeMode} />
             <DesktopButtonGroup direction="row" spacing={0}>
-              <AuthButton variant="login" />
-              <AuthButton variant="signup" />
+              <AuthButton variant="login" themeMode={themeMode} />
+              <AuthButton variant="signup" themeMode={themeMode} />
             </DesktopButtonGroup>
           </>
         )}

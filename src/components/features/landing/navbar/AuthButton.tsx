@@ -1,28 +1,29 @@
 'use client';
 
-import CommonButton from '@/components/ui/CommonButton';
 import { styled } from '@mui/material/styles';
+import CommonButton from '@/components/ui/CommonButton';
 
 interface AuthButtonProps {
   variant: 'login' | 'signup';
   isMobile?: boolean;
   onClick?: () => void;
+  themeMode?: 'light' | 'dark';
 }
 
 const BaseAuthButton = styled(CommonButton, {
-  shouldForwardProp: (prop) => prop !== 'isMobile',
-})<{ isMobile?: boolean }>({
+  shouldForwardProp: (prop) => !['isMobile', 'themeMode'].includes(prop as string),
+})<{ isMobile?: boolean; themeMode?: 'light' | 'dark' }>({
   '&&': { fontSize: 16 },
 });
 
 const LoginButton = styled(BaseAuthButton, {
-  shouldForwardProp: (prop) => prop !== 'isMobile',
-})<{ isMobile?: boolean }>(({ theme, isMobile }) => ({
-  backgroundColor: theme.palette.background.default,
-  color: theme.palette.text.primary,
+  shouldForwardProp: (prop) => !['isMobile', 'themeMode'].includes(prop as string),
+})<{ isMobile?: boolean; themeMode?: 'light' | 'dark' }>(({ theme, isMobile, themeMode = 'light' }) => ({
+  backgroundColor: themeMode === 'dark' ? '#060606' : theme.palette.background.default,
+  color: themeMode === 'dark' ? '#ffffff' : theme.palette.text.primary,
   boxShadow: 'none',
   border: 'none',
-  '&:hover': { backgroundColor: theme.palette.background.paper },
+  '&:hover': { backgroundColor: themeMode === 'dark' ? '#1a1a1a' : theme.palette.background.paper },
 
   ...(isMobile
     ? {
@@ -39,9 +40,12 @@ const LoginButton = styled(BaseAuthButton, {
 }));
 
 const SignupButton = styled(BaseAuthButton, {
-  shouldForwardProp: (prop) => prop !== 'isMobile',
-})<{ isMobile?: boolean }>(({ theme, isMobile }) => ({
+  shouldForwardProp: (prop) => !['isMobile', 'themeMode'].includes(prop as string),
+})<{ isMobile?: boolean; themeMode?: 'light' | 'dark' }>(({ theme, isMobile, themeMode = 'light' }) => ({
   whiteSpace: 'nowrap',
+  backgroundColor: themeMode === 'dark' ? '#ffffff' : '#060606',
+  color: themeMode === 'dark' ? '#060606' : '#ffffff',
+  '&:hover': { backgroundColor: themeMode === 'dark' ? '#f0f0f0' : '#1a1a1a' },
 
   ...(isMobile
     ? {
@@ -61,16 +65,17 @@ export function AuthButton({
   variant,
   isMobile = false,
   onClick,
+  themeMode = 'light',
 }: AuthButtonProps) {
   const isLogin = variant === 'login';
   const Btn = isLogin ? LoginButton : SignupButton;
 
   return (
     <Btn
-      buttonVariant={isLogin ? undefined : 'black'}
       href={`/${variant}`}
       isMobile={isMobile}
       onClick={onClick}
+      themeMode={themeMode}
     >
       {isLogin ? 'Login' : 'Sign Up'}
     </Btn>
