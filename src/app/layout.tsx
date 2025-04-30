@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ThemeProvider from '@/components/providers/ThemeProvider';
-import Navbar from '@/components/features/landing/Navbar';
-import Footer from '@/components/features/landing/Footer';
+import Navbar from '@/components/layout/header-body-footer-layout/Navbar';
+import Footer from '@/components/layout/header-body-footer-layout/Footer';
 
 export const metadata: Metadata = {
   title: "Dispatch AI",

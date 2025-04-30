@@ -1,10 +1,10 @@
 
-import HeroSection from '@/components/features/landing/HeroSection';
+import Landing from "./landing/page";
 
 export default function Home() {
   return (
-    <>
-      <HeroSection />
-    </>
+    <HeaderBodyFooterLayout>
+      <Landing />
+    </HeaderBodyFooterLayout>
   );
 }
