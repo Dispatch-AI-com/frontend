@@ -119,8 +119,8 @@ export default function Navbar({ themeMode = 'light' }: NavbarProps) {
           <>
             <DesktopNavItems navItems={navItems} themeMode={themeMode} />
             <DesktopButtonGroup direction="row" spacing={0}>
-              <AuthButton variant="login" themeMode={themeMode} />
-              <AuthButton variant="signup" themeMode={themeMode} />
+              <AuthButton variant="login"/>
+              <AuthButton variant="signup"/>
             </DesktopButtonGroup>
           </>
         )}

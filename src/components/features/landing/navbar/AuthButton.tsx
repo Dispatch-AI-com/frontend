@@ -7,7 +7,6 @@ interface AuthButtonProps {
   variant: 'login' | 'signup';
   isMobile?: boolean;
   onClick?: () => void;
-  themeMode?: 'light' | 'dark'; // keep for API compatibility, but don't pass to styled
 }
 
 const BaseAuthButton = styled(CommonButton, {
@@ -65,7 +64,6 @@ export function AuthButton({
   variant,
   isMobile = false,
   onClick,
-  themeMode = 'light', // keep for API compatibility, but not used in styled
 }: AuthButtonProps) {
   const isLogin = variant === 'login';
   const Btn = isLogin ? LoginButton : SignupButton;

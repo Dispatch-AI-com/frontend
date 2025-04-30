@@ -79,11 +79,6 @@ const darkTheme: ThemeColors = {
   },
 };
 
-declare module '@mui/material/styles' {
-  interface Palette extends ThemeColors {}
-  interface PaletteOptions extends ThemeColors {}
-}
-
 let theme = createTheme({
   spacing: 8, 
 
