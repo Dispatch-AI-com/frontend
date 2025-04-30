@@ -133,25 +133,25 @@ let theme = createTheme({
     fontSize: 16,
     fontFamily: ['Roboto', 'sans-serif'].join(','),
     h1: {
-      fontSize: 72,
+      fontSize: 64,
       fontWeight: 900,
     },
     h2: {
-      fontSize: 48,
+      fontSize: 32,
       fontWeight: 900,
     },
     h3: {
-      fontSize: 24,
+      fontSize: 18,
       fontWeight: 700,
     },
     body1: {
-      fontSize: 20,
-    },
-    body2: {
       fontSize: 16,
     },
+    body2: {
+      fontSize: 14,
+    },
     button: {
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: 700,
     },
   },

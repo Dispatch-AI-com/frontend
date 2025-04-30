@@ -30,13 +30,11 @@ const navItems: NavItemProps[] = [
   { href: '/about', text: 'About Us', width: 98, textWidth: 66 },
 ];
 
-const StyledAppBar = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== 'themeMode',
-})<{ themeMode?: 'light' | 'dark' }>(({ theme, themeMode = 'light' }) => ({
-  position: 'fixed',
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  position: 'sticky',
   height: 80,
-  backgroundColor: themeMode === 'dark' ? '#060606' : theme.palette.background.default,
-  marginBottom: '100px',
+  backgroundColor: theme.palette.background.default,
+  marginBottom: '0',
   zIndex: theme.zIndex.drawer + 1,
 }));
 
