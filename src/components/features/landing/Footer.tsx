@@ -20,7 +20,7 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const LogoContainer = styled(Box)({
-  marginBottom: '60px',
+  marginBottom: '80px',
   width: '152px',
   height: '36px',
   position: 'relative'
@@ -40,8 +40,8 @@ const SocialText = styled(Typography)(({ theme }) => ({
 const SocialIconButton = styled(IconButton)({
   padding: '2px',
   '& svg': {
-    width: '18px',
-    height: '18px'
+    width: '20px',
+    height: '20px'
   }
 });
 
@@ -62,7 +62,7 @@ const NavLink = styled(Link)(({ theme }) => ({
 
 const SupportLinksStack = styled(Stack)({
   position: 'absolute',
-  marginTop: '28px',
+  marginTop: '24px',
 });
 
 const SupportLink = styled(Link)(({ theme }) => ({
@@ -91,7 +91,7 @@ export default function Footer() {
             </LogoContainer>
             <SocialContainer>
               <SocialText variant="body2">Follow Us On Social Media</SocialText>
-              <Stack direction="row" spacing={0.75}>
+              <Stack direction="row" spacing={0.8}>
                 <SocialIconButton color="inherit"><LinkedInIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><FacebookIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><InstagramIcon /></SocialIconButton>
@@ -115,14 +115,14 @@ export default function Footer() {
               <NavLink href="/pricing" color="inherit">Pricing</NavLink>
               <NavLink href="/blogs" color="inherit">Blogs</NavLink>
               <NavLink href="/features" color="inherit">Features</NavLink>
-              <NavLink href="/about-us" color="inherit">About Us</NavLink>
+              <NavLink href="/about" color="inherit">About Us</NavLink>
               <Box>
                 <NavLink href="/support" color="inherit">Support</NavLink>
                 <SupportLinksStack spacing={2}>
                   <SupportLink href="/support/documents">Documents</SupportLink>
                   <SupportLink href="/support/faqs">FAQs</SupportLink>
-                  <SupportLink href="/support/need-help">Need Help</SupportLink>
-                  <SupportLink href="/support/contact-us">Contact Us</SupportLink>
+                  <SupportLink href="/support/help">Need Help</SupportLink>
+                  <SupportLink href="/support/contact">Contact Us</SupportLink>
                 </SupportLinksStack>
               </Box>
             </NavLinksStack>
