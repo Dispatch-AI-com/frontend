@@ -19,11 +19,11 @@ const BaseAuthButton = styled(CommonButton, {
 const LoginButton = styled(BaseAuthButton, {
   shouldForwardProp: (prop) => !['isMobile', 'themeMode'].includes(prop as string),
 })<{ isMobile?: boolean; themeMode?: 'light' | 'dark' }>(({ theme, isMobile, themeMode = 'light' }) => ({
-  backgroundColor: themeMode === 'dark' ? '#060606' : theme.palette.background.default,
-  color: themeMode === 'dark' ? '#ffffff' : theme.palette.text.primary,
+  backgroundColor: theme.palette.button.secondary.background,
+  color: theme.palette.button.secondary.text,
   boxShadow: 'none',
   border: 'none',
-  '&:hover': { backgroundColor: themeMode === 'dark' ? '#1a1a1a' : theme.palette.background.paper },
+  '&:hover': { backgroundColor: theme.palette.button.secondary.hover },
 
   ...(isMobile
     ? {
@@ -43,9 +43,9 @@ const SignupButton = styled(BaseAuthButton, {
   shouldForwardProp: (prop) => !['isMobile', 'themeMode'].includes(prop as string),
 })<{ isMobile?: boolean; themeMode?: 'light' | 'dark' }>(({ theme, isMobile, themeMode = 'light' }) => ({
   whiteSpace: 'nowrap',
-  backgroundColor: themeMode === 'dark' ? '#ffffff' : '#060606',
-  color: themeMode === 'dark' ? '#060606' : '#ffffff',
-  '&:hover': { backgroundColor: themeMode === 'dark' ? '#f0f0f0' : '#1a1a1a' },
+  backgroundColor: theme.palette.button.primary.background,
+  color: theme.palette.button.primary.text,
+  '&:hover': { backgroundColor: theme.palette.button.primary.hover },
 
   ...(isMobile
     ? {

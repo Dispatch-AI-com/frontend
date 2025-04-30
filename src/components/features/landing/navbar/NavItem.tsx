@@ -29,13 +29,15 @@ const NavItemContainer = styled(Box, {
   padding: `${theme.spacing(1)} ${theme.spacing(2)}`, 
   borderRadius: 12,
   marginRight: theme.spacing(1),
-  backgroundColor: themeMode === 'dark' ? '#060606' : theme.palette.background.default,
+  backgroundColor: themeMode === 'dark' ? theme.palette.background.dark : theme.palette.background.default,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   textDecoration: 'none',
   transition: 'background-color 0.3s ease, transform 0.1s ease',
-  '&:hover': { backgroundColor: themeMode === 'dark' ? '#1a1a1a' : theme.palette.background.paper },
+  '&:hover': { 
+    backgroundColor: themeMode === 'dark' ? theme.palette.background.paper : theme.palette.background.paper 
+  },
   '&:active': { transform: 'scale(0.97)' },
 }));
 
@@ -46,7 +48,7 @@ const NavItemText = styled(Typography, {
   height: 20,
   '&&': { fontSize: 16 }, 
   lineHeight: 1.25,
-  color: themeMode === 'dark' ? '#ffffff' : theme.palette.text.primary,
+  color: themeMode === 'dark' ? theme.palette.text.white : theme.palette.text.primary,
 }));
 
 export function NavItem({
