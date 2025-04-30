@@ -9,7 +9,7 @@ export default function HeaderBodyFooterLayout({
     return (
         <>
             <Navbar />
-{children}
+            {children}
             <Footer />
             </>
     );

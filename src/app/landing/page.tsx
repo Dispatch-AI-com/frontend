@@ -5,9 +5,6 @@ export default function Landing() {
   return (
     <>
       <HeroSection />
-      <HeroSection />
-      <HeroSection />
-      <HeroSection />
     </>
   );
 }
