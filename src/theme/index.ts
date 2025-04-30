@@ -1,5 +1,6 @@
 // theme/index.ts
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import '@mui/material/styles';
 
 interface ThemeColors {
   background: {
@@ -78,6 +79,43 @@ const darkTheme: ThemeColors = {
     },
   },
 };
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    button: {
+      primary: {
+        background: string;
+        text: string;
+        hover: string;
+      };
+      secondary: {
+        background: string;
+        text: string;
+        hover: string;
+      };
+    };
+  }
+  interface PaletteOptions {
+    button?: {
+      primary?: {
+        background?: string;
+        text?: string;
+        hover?: string;
+      };
+      secondary?: {
+        background?: string;
+        text?: string;
+        hover?: string;
+      };
+    };
+  }
+  interface TypeBackground {
+    dark: string;
+  }
+  interface TypeText {
+    white: string;
+  }
+}
 
 let theme = createTheme({
   spacing: 8, 
