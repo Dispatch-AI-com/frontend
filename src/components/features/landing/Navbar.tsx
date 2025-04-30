@@ -31,10 +31,10 @@ const navItems: NavItemProps[] = [
 ];
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  position: 'fixed',
+  position: 'sticky',
   height: 80,
   backgroundColor: theme.palette.background.default,
-  marginBottom: '100px',
+  marginBottom: '0',
   zIndex: theme.zIndex.drawer + 1,
 }));
 
