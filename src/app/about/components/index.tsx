@@ -1,0 +1,14 @@
+export { AboutHeader } from '@/app/about/components/AboutHeader';
+export { BodyText } from '@/app/about/components/BodyText';
+export { CallToActionText } from '@/app/about/components/CallToActionText';
+export { CallToActionTitle } from '@/app/about/components/CallToActionTitle';
+export { CallToActionWrapper } from '@/app/about/components/CallToActionWrapper';
+export { HeaderImage } from '@/app/about/components/HeaderImage';
+export { HeaderTitle } from '@/app/about/components/HeaderTitle';
+export { SectionText } from '@/app/about/components/SectionText';
+export { SectionTitle } from '@/app/about/components/SectionTitle';
+export { SectionWrapper } from '@/app/about/components/SectionWrapper';
+export { SocialMediaButton } from '@/app/about/components/SocialMediaButton';
+export { TeamCardContainer } from '@/app/about/components/TeamCardContainer';
+export { TeamMemberCard } from '@/app/about/components/TeamMemberCard';
+export { TeamMemberImage } from '@/app/about/components/TeamMemberImage';
