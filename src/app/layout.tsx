@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+
+import Footer from '@/components/features/landing/Footer';
+import Navbar from '@/components/features/landing/Navbar';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 
 export const metadata: Metadata = {
