@@ -7,6 +7,7 @@ export default function Home() {
   return (
     <MainLayout>
       <Landing />
+      <h1>test</h1>
     </MainLayout>
   );
 }
