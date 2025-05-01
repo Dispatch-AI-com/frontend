@@ -34,7 +34,6 @@ const navItems: NavItemProps[] = [
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'sticky',
   height: 80,
-  backgroundColor: theme.palette.background.default,
   marginBottom: '0',
   zIndex: theme.zIndex.drawer + 1,
 }));
@@ -64,18 +63,15 @@ const DesktopButtonGroup = styled(Stack)({
 const MobileMenuButton = styled(IconButton)(({ theme }) => ({
   marginLeft: 'auto',
   transition: 'transform 0.3s ease',
-  backgroundColor: theme.palette.background.paper,
   borderRadius: 12,
   width: 40,
   height: 40,
-  '&:hover': { backgroundColor: theme.palette.background.paper },
 }));
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   display: 'block',
   [theme.breakpoints.up('md')]: { display: 'none' },
   '& .MuiDrawer-paper': {
-    backgroundColor: theme.palette.background.default,
     boxSizing: 'border-box',
     width: 240,
     padding: 20,
@@ -83,7 +79,11 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
-export default function Navbar() {
+interface NavbarProps {
+  variant?: 'light' | 'dark';
+}
+
+export default function Navbar({ variant = 'light' }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -93,13 +93,20 @@ export default function Navbar() {
   };
 
   return (
-    <StyledAppBar color="transparent" elevation={0}>
+    <StyledAppBar 
+      color="transparent" 
+      elevation={0}
+      sx={{
+        backgroundColor: variant === 'light' ? theme.palette.background.default : '#060606',
+        color: variant === 'light' ? 'inherit' : '#ffffff',
+      }}
+    >
       <StyledToolbar disableGutters>
         {/* Logo */}
         <LogoBox>
           <Link href="/" aria-label="Dispatch AI Home">
             <Image
-              src="/logo.svg"
+              src={variant === 'light' ? "/logo.svg" : "/logo-dark.svg"}
               alt="Dispatch AI logo"
               width={152}
               height={36}
@@ -112,7 +119,7 @@ export default function Navbar() {
         {/* Desktop */}
         {!isMobile && (
           <>
-            <DesktopNavItems navItems={navItems} />
+            <DesktopNavItems navItems={navItems} themeVariant={variant} />
             <DesktopButtonGroup direction="row" spacing={0}>
               <AuthButton variant="login" />
               <AuthButton variant="signup" />
@@ -127,7 +134,13 @@ export default function Navbar() {
             aria-label="toggle drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            style={{
+            sx={{
+              backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
+              color: variant === 'light' ? 'inherit' : '#ffffff',
+              '&:hover': {
+                backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
+                color: variant === 'light' ? 'inherit' : '#ffffff',
+              },
               transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
             }}
           >
@@ -147,10 +160,17 @@ export default function Navbar() {
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
+        sx={{
+          '& .MuiDrawer-paper': {
+            backgroundColor: variant === 'light' ? theme.palette.background.default : '#060606',
+            color: variant === 'light' ? 'inherit' : '#ffffff',
+          },
+        }}
       >
         <MobileDrawer
           handleDrawerToggle={handleDrawerToggle}
           navItems={navItems}
+          themeVariant={variant}
         />
       </StyledDrawer>
     </StyledAppBar>

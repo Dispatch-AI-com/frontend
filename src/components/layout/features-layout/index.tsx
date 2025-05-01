@@ -10,7 +10,7 @@ export default function MainLayout({
     return (
         <>
             <Container maxWidth="xl">
-              <Navbar />
+              <Navbar variant='dark'/>
             </Container>
             
             <Container maxWidth="xl" sx={{py: 4}} >
