@@ -15,9 +15,13 @@ const BaseAuthButton = styled(CommonButton, {
   shouldForwardProp: (prop) => !['isMobile', 'themeVariant'].includes(prop as string),
 })<{ isMobile?: boolean; themeVariant?: 'light' | 'dark' }>({
   '&&': { fontSize: 16 },
+  padding: '8px 16px',
+  borderRadius: 12,
+  fontWeight: 'bold',
+  textTransform: 'none',
 });
 
-const LoginButton = styled(BaseAuthButton)(({ theme, isMobile, themeVariant = 'light' }) => ({
+const LoginButton = styled(BaseAuthButton)(({ theme, themeVariant = 'light' }) => ({
   backgroundColor: themeVariant === 'light' ? theme.palette.background.default : '#060606',
   color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
   boxShadow: 'none',
@@ -25,41 +29,15 @@ const LoginButton = styled(BaseAuthButton)(({ theme, isMobile, themeVariant = 'l
   '&:hover': { 
     backgroundColor: themeVariant === 'light' ? theme.palette.background.paper : '#060606',
   },
-
-  ...(isMobile
-    ? {
-        padding: theme.spacing(2),
-        borderRadius: 12,
-        fontWeight: 'bold',
-        textTransform: 'none',
-      }
-    : {
-        width: theme.spacing(9.125),
-        height: theme.spacing(5),
-        margin: '0 -2px',
-      }),
 }));
 
-const SignupButton = styled(BaseAuthButton)(({ theme, isMobile, themeVariant = 'light' }) => ({
+const SignupButton = styled(BaseAuthButton)(({ theme, themeVariant = 'light' }) => ({
   whiteSpace: 'nowrap',
   backgroundColor: themeVariant === 'light' ? undefined : '#ffffff',
   color: themeVariant === 'light' ? undefined : '#060606',
   '&:hover': {
     backgroundColor: themeVariant === 'light' ? undefined : '#ffffff',
   },
-
-  ...(isMobile
-    ? {
-        padding: theme.spacing(2),
-        borderRadius: 12,
-        fontWeight: 'bold',
-        textTransform: 'none',
-      }
-    : {
-        width: theme.spacing(11.125),     
-        height: theme.spacing(5),
-        marginLeft: theme.spacing(1.5),  
-      }),
 }));
 
 export function AuthButton({
