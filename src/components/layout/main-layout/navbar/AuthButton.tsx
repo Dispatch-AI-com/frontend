@@ -31,7 +31,7 @@ const LoginButton = styled(BaseAuthButton)(({ theme, themeVariant = 'light' }) =
   },
 }));
 
-const SignupButton = styled(BaseAuthButton)(({ theme, themeVariant = 'light' }) => ({
+const SignupButton = styled(BaseAuthButton)(({ themeVariant = 'light' }) => ({
   whiteSpace: 'nowrap',
   backgroundColor: themeVariant === 'light' ? undefined : '#ffffff',
   color: themeVariant === 'light' ? undefined : '#060606',

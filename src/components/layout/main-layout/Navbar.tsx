@@ -60,7 +60,7 @@ const DesktopButtonGroup = styled(Stack)({
   marginLeft: 'auto',
 });
 
-const MobileMenuButton = styled(IconButton)(({ theme }) => ({
+const MobileMenuButton = styled(IconButton)(({ }) => ({
   marginLeft: 'auto',
   transition: 'transform 0.3s ease',
   borderRadius: 12,
