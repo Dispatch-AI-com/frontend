@@ -23,7 +23,7 @@ import { MobileDrawer } from './navbar/MobileDrawer';
 import { NavItemProps } from './navbar/NavItem';
 
 const navItems: NavItemProps[] = [
-  { href: '/home', text: 'Home', width: 75, textWidth: 43 },
+  { href: '/', text: 'Home', width: 75, textWidth: 43 },
   { href: '/products', text: 'Products', width: 98, textWidth: 66 },
   { href: '/pricing', text: 'Pricing', width: 83, textWidth: 51 },
   { href: '/blogs', text: 'Blogs', width: 73, textWidth: 41 },
