@@ -29,6 +29,9 @@ jobs:
       
       - name: 🧩 Copy public to standalone
         run: cp -r public .next/standalone/
+        
+      - name: 🧩 Copy static to standalone
+        run: cp -r .next/static .next/standalone/
 
       - name: 📤 Upload to EC2
         uses: appleboy/scp-action@master
