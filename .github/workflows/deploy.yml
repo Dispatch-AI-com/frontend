@@ -35,6 +35,7 @@ jobs:
           cp -r .next/static deploy-dist/static
           cp -r public deploy-dist/public
           cp package.json .env deploy-dist/
+          [ -f .env ] && cp .env deploy-dist/
 
       - name: 📤 Upload to EC2
         uses: appleboy/scp-action@master
