@@ -1,11 +1,11 @@
-
-import HeroSection from '@/components/features/landing/HeroSection';
+import Landing from "./landing/page";
+import MainLayout from "@/components/layout/main-layout";
 
 
 export default function Home() {
   return (
-    <>
-      <HeroSection />
-    </>
+    <MainLayout>
+      <Landing />
+    </MainLayout>
   );
 }
