@@ -3,8 +3,6 @@
 import { styled } from '@mui/material/styles';
 import CommonButton from '@/components/ui/CommonButton';
 
-import CommonButton from '@/components/ui/CommonButton';
-
 interface AuthButtonProps {
   variant: 'login' | 'signup';
   isMobile?: boolean;
