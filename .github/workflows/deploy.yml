@@ -49,8 +49,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            export PATH=$PATH:/home/ubuntu/.local/share/pnpm
-            cd /home/ubuntu/deploy/dispatch-frontend
-            pnpm install --prod
-            pm2 restart dispatch-frontend || pm2 start "node .next/standalone/server.js" --name dispatch-frontend
-            pm2 save
+              export PATH=$PATH:/home/ubuntu/.local/share/pnpm
+              cd /home/ubuntu/deploy/dispatch-frontend/.next/standalone
+              pnpm install --prod
+              pm2 restart dispatch-frontend || pm2 start "node server.js" --name dispatch-frontend
+              pm2 save
+
