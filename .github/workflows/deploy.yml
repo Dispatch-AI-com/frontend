@@ -26,12 +26,15 @@ jobs:
 
       - name: 🏗️ Build project
         run: pnpm build
-      
-      - name: 🧩 Copy public to standalone
-        run: cp -r public .next/standalone/
-        
-      - name: 🧩 Copy static to standalone
-        run: cp -r .next/static .next/standalone/
+
+      - name: 📦 Prepare deploy-dist folder
+        run: |
+          rm -rf deploy-dist
+          mkdir -p deploy-dist
+          cp -r .next/standalone deploy-dist/standalone
+          cp -r .next/static deploy-dist/static
+          cp -r public deploy-dist/public
+          cp package.json .env deploy-dist/
 
       - name: 📤 Upload to EC2
         uses: appleboy/scp-action@master
@@ -39,7 +42,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: ".next/standalone,.next/static,public,package.json,.env"
+          source: "deploy-dist/*"
           target: "/home/ubuntu/deploy/dispatch-frontend"
 
       - name: 🔁 Restart frontend on EC2
@@ -49,9 +52,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-              export PATH=$PATH:/home/ubuntu/.local/share/pnpm
-              cd /home/ubuntu/deploy/dispatch-frontend/.next/standalone
-              pnpm install --prod
-              pm2 restart dispatch-frontend || pm2 start "node server.js" --name dispatch-frontend
-              pm2 save
-
+            export PATH=$PATH:/home/ubuntu/.local/share/pnpm
+            cd /home/ubuntu/deploy/dispatch-frontend/standalone
+            pnpm install --prod
+            pm2 restart dispatch-frontend || pm2 start "node server.js" --name dispatch-frontend
+            pm2 save
