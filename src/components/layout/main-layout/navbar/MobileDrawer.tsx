@@ -60,8 +60,8 @@ export function MobileDrawer({
       </MobileNavContainer>
 
       <ActionArea>
-        <AuthButton variant="login" isMobile onClick={handleDrawerToggle} />
-        <AuthButton variant="signup" isMobile onClick={handleDrawerToggle} />
+        <AuthButton variant="login" isMobile onClick={handleDrawerToggle} themeVariant={themeVariant} />
+        <AuthButton variant="signup" isMobile onClick={handleDrawerToggle} themeVariant={themeVariant} />
       </ActionArea>
     </MobileDrawerContainer>
   );

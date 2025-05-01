@@ -121,8 +121,8 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
           <>
             <DesktopNavItems navItems={navItems} themeVariant={variant} />
             <DesktopButtonGroup direction="row" spacing={0}>
-              <AuthButton variant="login" />
-              <AuthButton variant="signup" />
+              <AuthButton variant="login" themeVariant={variant} />
+              <AuthButton variant="signup" themeVariant={variant} />
             </DesktopButtonGroup>
           </>
         )}
