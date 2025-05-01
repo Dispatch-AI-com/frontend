@@ -2,8 +2,9 @@
 
 import { Box, List, ListItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { NavItem, NavItemProps } from './NavItem';
+
 import { AuthButton } from './AuthButton';
+import { NavItem, NavItemProps } from './NavItem';
 
 interface MobileDrawerProps {
   handleDrawerToggle: () => void;

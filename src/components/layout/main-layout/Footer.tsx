@@ -1,14 +1,15 @@
 'use client';
 
-import { Box, Container, Stack, Typography, Link, IconButton } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Container, IconButton,Link, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Image from 'next/image';
+
 import CommmonButton from '@/components/ui/CommonButton';
 
 // Styled Components
@@ -16,7 +17,7 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(6),
   backgroundColor: theme.palette.background.paper,
-  width: '100%'
+  width: '100%',
 }));
 
 const LogoContainer = styled(Box)({
@@ -85,7 +86,7 @@ export default function Footer() {
           spacing={{ xs: 4, md: 2 }}
         >
           {/* Logo and Social Media */}
-          <Box flex={{ md:4 }}>
+          <Box flex={{ md:4.5 }}>
             <LogoContainer>
               <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
             </LogoContainer>
@@ -104,12 +105,12 @@ export default function Footer() {
 
           {/* Navigation Links */}
           <Box
-            flex={{ md: 7 }}
+            flex={{ md: 8 }}
             sx={{ 
               display: { xs: 'none', lg: 'block' }
             }}
           >
-            <NavLinksStack direction="row" spacing={4.5}>
+            <NavLinksStack direction="row" spacing={5}>
               <NavLink href="/" color="inherit">Home</NavLink>
               <NavLink href="/products" color="inherit">Products</NavLink>
               <NavLink href="/pricing" color="inherit">Pricing</NavLink>

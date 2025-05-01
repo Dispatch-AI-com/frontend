@@ -1,25 +1,26 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
-  Toolbar,
   Box,
-  Stack,
-  IconButton,
   Drawer,
+  IconButton,
+  Stack,
+  Toolbar,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import { NavItemProps } from './navbar/NavItem';
-import { MobileDrawer } from './navbar/MobileDrawer';
-import { DesktopNavItems } from './navbar/DesktopNavItems';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+
 import { AuthButton } from './navbar/AuthButton';
+import { DesktopNavItems } from './navbar/DesktopNavItems';
+import { MobileDrawer } from './navbar/MobileDrawer';
+import { NavItemProps } from './navbar/NavItem';
 
 const navItems: NavItemProps[] = [
   { href: '/home', text: 'Home', width: 75, textWidth: 43 },
@@ -41,11 +42,11 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   width: '100%',
   maxWidth: 1920,
-  padding: '20px 20px',
+  padding: '30px 30px',
   margin: '0 auto',
   [theme.breakpoints.up('md')]: {
-    paddingLeft: 240,
-    paddingRight: 240,
+    paddingLeft: 50,
+    paddingRight: 50,
   },
 }));
 
