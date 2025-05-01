@@ -1,4 +1,4 @@
-name: Deploy - Frontend Static (Standalone)
+name: Deploy - Frontend (No Standalone)
 
 on:
   push:
@@ -31,8 +31,7 @@ jobs:
         run: |
           rm -rf deploy-dist
           mkdir -p deploy-dist
-          cp -r .next/standalone deploy-dist/standalone
-          cp -r .next/static deploy-dist/static
+          cp -r .next deploy-dist/.next
           cp -r public deploy-dist/public
           cp package.json deploy-dist/
           [ -f .env ] && cp .env deploy-dist/
@@ -47,14 +46,14 @@ jobs:
           target: "/home/ubuntu/deploy/dispatch-frontend"
 
       - name: 🔁 Restart frontend on EC2
-  uses: appleboy/ssh-action@master
-  with:
-    host: ${{ secrets.EC2_HOST }}
-    username: ubuntu
-    key: ${{ secrets.EC2_SSH_KEY }}
-    script: |
-      export PATH=$PATH:/home/ubuntu/.local/share/pnpm
-      cd /home/ubuntu/deploy/dispatch-frontend
-      pnpm install --prod
-      pm2 restart dispatch-frontend || pm2 start "pnpm start" --name dispatch-frontend
-      pm2 save
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            export PATH=$PATH:/home/ubuntu/.local/share/pnpm
+            cd /home/ubuntu/deploy/dispatch-frontend
+            pnpm install --prod
+            pm2 restart dispatch-frontend || pm2 start "pnpm start" --name dispatch-frontend
+            pm2 save
