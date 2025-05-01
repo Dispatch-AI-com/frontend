@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, List, ListItem, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { AuthButton } from './AuthButton';
@@ -11,16 +11,6 @@ interface MobileDrawerProps {
   navItems: NavItemProps[];
   themeVariant?: 'light' | 'dark';
 }
-
-const DrawerContainer = styled(Box)({
-  textAlign: 'center',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  paddingTop: 48,
-  paddingBottom: 48,
-});
 
 const ActionArea = styled(Box)({
   display: 'flex',
