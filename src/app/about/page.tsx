@@ -1,46 +1,31 @@
 'use client';
 
-import { Box, Stack, IconButton, CardContent, Typography } from '@mui/material';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import { Box, CardContent, IconButton, Stack, Typography } from '@mui/material';
+
 import {
     AboutHeader,
+    BodyText,
+    CallToActionText,
+    CallToActionTitle,
+    CallToActionWrapper,
     HeaderImage,
     HeaderTitle,
-    BodyText,
-    SectionWrapper,
-    SectionTitle,
     SectionText,
+    SectionTitle,
+    SectionWrapper,
+    SocialMediaButton,
     TeamCardContainer,
     TeamMemberCard,
-    TeamMemberImage,
-    CallToActionWrapper,
-    CallToActionTitle,
-    CallToActionText,
-    SocialMediaButton
-} from '@/app/about/components';
+    TeamMemberImage} from '@/app/about/components';
+import teamMembers from '@/data/teamMembers.json';
 
 
 export default function AboutPage() {
-
-const teamMembers = [
-    { name: 'Alan', role: 'Technology Lead', linkedin: '/' },
-    { name: 'Leo', role: 'Business Analyst', linkedin: '/' },
-    { name: 'Yulia', role: 'UI Designer', linkedin: '/' },
-    { name: 'Paco', role: 'Developer Lead', linkedin: '/' },
-    { name: 'Chloe', role: 'Developer', linkedin: 'https://www.linkedin.com/in/mengying-xiao' },
-    { name: 'Coco', role: 'Developer', linkedin: '/' },
-    { name: 'Ethan', role: 'Developer', linkedin: '/' },
-    { name: 'Ewan', role: 'Developer', linkedin: '/' },
-    { name: 'Freya', role: 'Developer', linkedin: '/' },
-    { name: 'Leo', role: 'Developer', linkedin: '/' },
-    { name: 'Mark', role: 'Developer', linkedin: '/' },
-    { name: 'Tim', role: 'Developer', linkedin: '/' },
-    { name: 'David', role: 'Developer', linkedin: '/' },
-];
 
 <TeamCardContainer>
     {teamMembers.map((member, index) => (

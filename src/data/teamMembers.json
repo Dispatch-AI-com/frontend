@@ -1,0 +1,15 @@
+[
+    { "name": "Alan", "role": "Technology Lead", "linkedin": "/" },
+    { "name": "Leo", "role": "Business Analyst", "linkedin": "/" },
+    { "name": "Yulia", "role": "UI Designer", "linkedin": "/" },
+    { "name": "Paco", "role": "Developer Lead", "linkedin": "/" },
+    { "name": "Chloe", "role": "Developer", "linkedin": "https://www.linkedin.com/in/mengying-xiao" },
+    { "name": "Coco", "role": "Developer", "linkedin": "/" },
+    { "name": "Ethan", "role": "Developer", "linkedin": "https://www.linkedin.com/in/zichun-zhang-649592300/" },
+    { "name": "Ewan", "role": "Developer", "linkedin": "/" },
+    { "name": "Freya", "role": "Developer", "linkedin": "/" },
+    { "name": "Leo", "role": "Developer", "linkedin": "/" },
+    { "name": "Mark", "role": "Developer", "linkedin": "https://www.linkedin.com/in/mark-yonico-wang/" },
+    { "name": "Tim", "role": "Developer", "linkedin": "/" },
+    { "name": "David", "role": "Developer", "linkedin": "/" }
+]
