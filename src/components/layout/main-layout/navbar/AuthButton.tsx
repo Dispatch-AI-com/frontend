@@ -1,7 +1,8 @@
 'use client';
 
-import CommonButton from '@/components/ui/CommonButton';
 import { styled } from '@mui/material/styles';
+
+import CommonButton from '@/components/ui/CommonButton';
 
 interface AuthButtonProps {
   variant: 'login' | 'signup';
@@ -64,7 +65,7 @@ export function AuthButton({
 }: AuthButtonProps) {
   const isLogin = variant === 'login';
   const Btn = isLogin ? LoginButton : SignupButton;
-
+  
   return (
     <Btn
       buttonVariant={isLogin ? undefined : 'black'}

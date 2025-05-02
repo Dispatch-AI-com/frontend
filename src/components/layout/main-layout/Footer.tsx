@@ -1,14 +1,15 @@
 'use client';
 
-import { Box, Container, Stack, Typography, Link, IconButton } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Container, IconButton,Link, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Image from 'next/image';
+
 import CommmonButton from '@/components/ui/CommonButton';
 
 // Styled Components
@@ -16,13 +17,13 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(6),
   backgroundColor: theme.palette.background.paper,
-  width: '100%'
+  width: '100%',
 }));
 
 const LogoContainer = styled(Box)({
-  marginBottom: '60px',
-  width: '120px',
-  height: '40px',
+  marginBottom: '80px',
+  width: '152px',
+  height: '36px',
   position: 'relative'
 });
 
@@ -40,8 +41,8 @@ const SocialText = styled(Typography)(({ theme }) => ({
 const SocialIconButton = styled(IconButton)({
   padding: '2px',
   '& svg': {
-    width: '18px',
-    height: '18px'
+    width: '20px',
+    height: '20px'
   }
 });
 
@@ -62,7 +63,7 @@ const NavLink = styled(Link)(({ theme }) => ({
 
 const SupportLinksStack = styled(Stack)({
   position: 'absolute',
-  marginTop: '16px',
+  marginTop: '24px',
 });
 
 const SupportLink = styled(Link)(({ theme }) => ({
@@ -85,13 +86,13 @@ export default function Footer() {
           spacing={{ xs: 4, md: 2 }}
         >
           {/* Logo and Social Media */}
-          <Box flex={{ md: 3 }}>
+          <Box flex={{ md:4.5 }}>
             <LogoContainer>
               <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
             </LogoContainer>
             <SocialContainer>
               <SocialText variant="body2">Follow Us On Social Media</SocialText>
-              <Stack direction="row" spacing={0}>
+              <Stack direction="row" spacing={0.8}>
                 <SocialIconButton color="inherit"><LinkedInIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><FacebookIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><InstagramIcon /></SocialIconButton>
@@ -104,25 +105,25 @@ export default function Footer() {
 
           {/* Navigation Links */}
           <Box
-            flex={{ md: 6.5 }}
+            flex={{ md: 8 }}
             sx={{ 
               display: { xs: 'none', lg: 'block' }
             }}
           >
-            <NavLinksStack direction="row" spacing={3}>
-              <NavLink href="#" color="inherit">Home</NavLink>
-              <NavLink href="#" color="inherit">Products</NavLink>
-              <NavLink href="#" color="inherit">Pricing</NavLink>
-              <NavLink href="#" color="inherit">Blogs</NavLink>
-              <NavLink href="#" color="inherit">Features</NavLink>
-              <NavLink href="#" color="inherit">About Us</NavLink>
+            <NavLinksStack direction="row" spacing={5}>
+              <NavLink href="/" color="inherit">Home</NavLink>
+              <NavLink href="/products" color="inherit">Products</NavLink>
+              <NavLink href="/pricing" color="inherit">Pricing</NavLink>
+              <NavLink href="/blogs" color="inherit">Blogs</NavLink>
+              <NavLink href="/features" color="inherit">Features</NavLink>
+              <NavLink href="/about" color="inherit">About Us</NavLink>
               <Box>
-                <NavLink href="#" color="inherit">Support</NavLink>
-                <SupportLinksStack spacing={1.5}>
-                  <SupportLink href="#">Documents</SupportLink>
-                  <SupportLink href="#">FAQs</SupportLink>
-                  <SupportLink href="#">Need Help</SupportLink>
-                  <SupportLink href="#">Contact Us</SupportLink>
+                <NavLink href="/support" color="inherit">Support</NavLink>
+                <SupportLinksStack spacing={2}>
+                  <SupportLink href="/support/documents">Documents</SupportLink>
+                  <SupportLink href="/support/faqs">FAQs</SupportLink>
+                  <SupportLink href="/support/help">Need Help</SupportLink>
+                  <SupportLink href="/support/contact">Contact Us</SupportLink>
                 </SupportLinksStack>
               </Box>
             </NavLinksStack>
@@ -139,7 +140,7 @@ export default function Footer() {
             <ButtonTitle>Ready to Save Time?</ButtonTitle>
             <CommmonButton
               buttonVariant="black"
-              endIcon={<ArrowForwardIcon sx={{ width: '12px', height: '12px' }} />}
+              endIcon={<ArrowForwardIcon sx={{ width: '20px', height: '20px' }} />}
             >
               Start Your Free Trial
             </CommmonButton>
