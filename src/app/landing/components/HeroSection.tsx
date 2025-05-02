@@ -1,9 +1,10 @@
 "use client";
 
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import CommonButton from '@/components/ui/CommonButton';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+
+import CommonButton from '@/components/ui/CommonButton';
 
 const StyledContainer = styled('div')`
   display: flex;
