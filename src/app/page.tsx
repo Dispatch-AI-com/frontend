@@ -1,10 +1,13 @@
-import { Container } from '@mui/material';
-import LandingPage from './landing/page';
+import MainLayout from "@/components/layout/main-layout";
+
+import Landing from "./landing/page";
+
 
 export default function Home() {
   return (
-    <Container>
-      <LandingPage />
-    </Container>
+    <MainLayout>
+      <Landing />
+      <h1>test</h1>
+    </MainLayout>
   );
 }

@@ -1,4 +1,4 @@
-name: Deploy - Frontend Static (Standalone)
+name: Deploy - Frontend (Minimal)
 
 on:
   push:
@@ -27,13 +27,13 @@ jobs:
       - name: 🏗️ Build project
         run: pnpm build
 
-      - name: 📤 Upload to EC2
+      - name: 📤 Upload build to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: ".next/standalone,.next/static,public,package.json,.env"
+          source: ".next,public,package.json"
           target: "/home/ubuntu/deploy/dispatch-frontend"
 
       - name: 🔁 Restart frontend on EC2
@@ -46,5 +46,5 @@ jobs:
             export PATH=$PATH:/home/ubuntu/.local/share/pnpm
             cd /home/ubuntu/deploy/dispatch-frontend
             pnpm install --prod
-            pm2 restart dispatch-frontend || pm2 start "node .next/standalone/server.js" --name dispatch-frontend
+            pm2 restart dispatch-frontend || pm2 start "pnpm start" --name dispatch-frontend
             pm2 save

@@ -25,8 +25,14 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
+      - name: 🔍 Type Check
+        run: pnpm run type-check
+
       - name: ✅ Lint
-        run: pnpm run lint
+        run: pnpm run lint --max-warnings=0
+
+      - name: 🧪 Run Tests
+        run: pnpm test
 
       - name: 🏗️ Build
         run: pnpm run build
