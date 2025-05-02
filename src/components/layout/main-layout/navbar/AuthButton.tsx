@@ -8,70 +8,54 @@ interface AuthButtonProps {
   variant: 'login' | 'signup';
   isMobile?: boolean;
   onClick?: () => void;
+  themeVariant?: 'light' | 'dark';
 }
 
 const BaseAuthButton = styled(CommonButton, {
-  shouldForwardProp: (prop) => prop !== 'isMobile',
-})<{ isMobile?: boolean }>({
+  shouldForwardProp: (prop) => !['isMobile', 'themeVariant'].includes(prop as string),
+})<{ isMobile?: boolean; themeVariant?: 'light' | 'dark' }>({
   '&&': { fontSize: 16 },
+  padding: '8px 16px',
+  borderRadius: 12,
+  fontWeight: 'bold',
+  textTransform: 'none',
 });
 
-const LoginButton = styled(BaseAuthButton, {
-  shouldForwardProp: (prop) => prop !== 'isMobile',
-})<{ isMobile?: boolean }>(({ theme, isMobile }) => ({
-  backgroundColor: theme.palette.background.default,
-  color: theme.palette.text.primary,
+const LoginButton = styled(BaseAuthButton)(({ theme, themeVariant = 'light' }) => ({
+  backgroundColor: themeVariant === 'light' ? theme.palette.background.default : '#060606',
+  color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
   boxShadow: 'none',
   border: 'none',
-  '&:hover': { backgroundColor: theme.palette.background.paper },
-
-  ...(isMobile
-    ? {
-        padding: theme.spacing(2),
-        borderRadius: 12,
-        fontWeight: 'bold',
-        textTransform: 'none',
-      }
-    : {
-        width: theme.spacing(9.125),
-        height: theme.spacing(5),
-        margin: '0 -2px',
-      }),
+  '&:hover': { 
+    backgroundColor: themeVariant === 'light' ? theme.palette.background.paper : '#060606',
+  },
 }));
 
-const SignupButton = styled(BaseAuthButton, {
-  shouldForwardProp: (prop) => prop !== 'isMobile',
-})<{ isMobile?: boolean }>(({ theme, isMobile }) => ({
+const SignupButton = styled(BaseAuthButton)(({ themeVariant = 'light' }) => ({
   whiteSpace: 'nowrap',
-
-  ...(isMobile
-    ? {
-        padding: theme.spacing(2),
-        borderRadius: 12,
-        fontWeight: 'bold',
-        textTransform: 'none',
-      }
-    : {
-        width: theme.spacing(11.125),     
-        height: theme.spacing(5),
-        marginLeft: theme.spacing(1.5),  
-      }),
+  backgroundColor: themeVariant === 'light' ? undefined : '#ffffff',
+  color: themeVariant === 'light' ? undefined : '#060606',
+  '&:hover': {
+    backgroundColor: themeVariant === 'light' ? undefined : '#ffffff',
+  },
 }));
 
 export function AuthButton({
   variant,
   isMobile = false,
   onClick,
+  themeVariant = 'light',
 }: AuthButtonProps) {
   const isLogin = variant === 'login';
   const Btn = isLogin ? LoginButton : SignupButton;
   
   return (
     <Btn
-      buttonVariant={isLogin ? undefined : 'black'}
+      buttonVariant={themeVariant === 'light' ? (isLogin ? undefined : 'black') : undefined}
       href={`/${variant}`}
       isMobile={isMobile}
       onClick={onClick}
+      themeVariant={themeVariant}
     >
       {isLogin ? 'Login' : 'Sign Up'}
     </Btn>
