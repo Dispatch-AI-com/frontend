@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import Image from 'next/image';
+import { useEffect, useRef,useState } from 'react';
 
 type Step = {
   id: number;
