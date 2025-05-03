@@ -7,21 +7,10 @@ import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import { Box, CardContent, IconButton, Stack, Typography } from '@mui/material';
 
-import {
-    AboutHeader,
-    BodyText,
-    CallToActionText,
-    CallToActionTitle,
-    CallToActionWrapper,
-    HeaderImage,
-    HeaderTitle,
-    SectionText,
-    SectionTitle,
-    SectionWrapper,
-    SocialMediaButton,
-    TeamCardContainer,
-    TeamMemberCard,
-    TeamMemberImage} from '@/app/about/components';
+import { AboutHeader, HeaderImage, HeaderTitle } from '@/app/about/components/AboutBanner';
+import { CallToActionText, CallToActionTitle, CallToActionWrapper, SocialMediaButton } from '@/app/about/components/CallToAction';
+import { BodyText, SectionText, SectionTitle, SectionWrapper } from '@/app/about/components/InfoBody';
+import { TeamCardContainer, TeamMemberCard, TeamMemberImage } from '@/app/about/components/TeamCard';
 import teamMembers from '@/data/teamMembers.json';
 
 
