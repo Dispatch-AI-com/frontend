@@ -52,7 +52,7 @@ const QuoteText = styled.p`
 
   @media (min-width: 768px) {
     font-size: 24px;
-    width: 576px;
+    max-width: 90vw;
   }
 `;
 
