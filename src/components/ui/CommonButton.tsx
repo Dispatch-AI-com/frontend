@@ -39,7 +39,7 @@ export default function CommonButton({
   buttonVariant = 'black',
   sx,
   ...rest
-}: CommonButtonProps) {  
+}: CommonButtonProps) {
   return (
     <StyledButton
       variant="contained"
