@@ -1,8 +1,7 @@
 'use client';
 
+import axios from 'axios';
 import { useEffect, useState } from 'react';
-
-import api from '@/lib/api';
 
 interface HealthResponse {
   message: string;
@@ -12,11 +11,12 @@ export default function TestPage() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    api.get<HealthResponse>('/health/niubi')
+    axios.get<HealthResponse>('http://uat.dispatchai.click/api/health/niubi')
       .then((res) => {
         setMessage(res.data.message);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error('❌ Request failed:', error);
         setMessage('connection failed');
       });
   }, []);
