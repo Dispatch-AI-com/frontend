@@ -39,7 +39,7 @@ const StyledHeader = styled('h1')`
   font-family: ${({ theme }) => theme.typography.h1.fontFamily};
   font-weight: ${({ theme }) => theme.typography.h1.fontWeight};
   margin: 0;
-  overflow-wrap: anywhere;
+  word-break: break-word;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
     font-size: ${({ theme }) => theme.typography.h2.fontSize};
