@@ -16,27 +16,6 @@ import teamMembers from '@/data/teamMembers.json';
 
 export default function AboutPage() {
 
-<TeamCardContainer>
-    {teamMembers.map((member, index) => (
-        <Box key={index}>
-            <TeamMemberCard>
-                <TeamMemberImage />
-                <CardContent>
-                    <Typography variant="h3">{member.name}</Typography>
-                    <Typography variant="body2" color="text.primary">
-                        {member.role}
-                    </Typography>
-                </CardContent>
-                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                    <IconButton>
-                        <LinkedInIcon sx={{ color: 'black' }} />
-                    </IconButton>
-                </a>
-            </TeamMemberCard>
-        </Box>
-    ))}
-</TeamCardContainer>
-
     return (
         <>
             <AboutHeader>
@@ -87,7 +66,7 @@ export default function AboutPage() {
                         key={index}
                     >
                         <TeamMemberCard>
-                            <TeamMemberImage />
+                            <TeamMemberImage backgroundImage={member.image || ''} />
                             <CardContent>
                                 <Typography variant="h3">{member.name}</Typography>
                                 <Typography variant="body2" color="text.primary">

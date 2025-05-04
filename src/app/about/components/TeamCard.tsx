@@ -1,7 +1,7 @@
 import { Box, Card } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const TeamCardContainer = styled(Box)(({ theme }) => ({
+export const TeamCardContainer = styled(Box)(({ theme }) => ({
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "center",
@@ -9,7 +9,7 @@ const TeamCardContainer = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(10),
 }));
 
-const TeamMemberCard = styled(Card)(({ theme }) => ({
+export const TeamMemberCard = styled(Card)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -23,7 +23,7 @@ const TeamMemberCard = styled(Card)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-const TeamMemberImage = styled('div')(({ theme }) => ({
+export const TeamMemberImage = styled('div')<{ backgroundImage: string }>(({ theme, backgroundImage }) => ({
     width: '300px',
     height: '300px',
     borderRadius: theme.shape.borderRadius,
@@ -31,6 +31,5 @@ const TeamMemberImage = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    backgroundImage: `url(${backgroundImage})`,
 }));
-
-export { TeamCardContainer, TeamMemberCard, TeamMemberImage };
