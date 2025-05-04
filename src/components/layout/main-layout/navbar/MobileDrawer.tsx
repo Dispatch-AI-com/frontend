@@ -17,7 +17,8 @@ const ActionArea = styled(Box)({
   flexDirection: 'column',
   gap: 16,
   alignItems: 'center',
-  marginTop: 32,
+  marginTop: 'auto',
+  marginBottom: 48,
 });
 
 const MobileDrawerContainer = styled(Box)(({ theme }) => ({
@@ -25,10 +26,13 @@ const MobileDrawerContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   height: '100%',
   padding: theme.spacing(2),
+  alignItems: 'center',
 }));
 
 const MobileNavContainer = styled(Stack)(({ theme }) => ({
-  marginTop: theme.spacing(4),
+  marginTop: theme.spacing(10),
+  width: '100%',
+  alignItems: 'center',
 }));
 
 export function MobileDrawer({
@@ -45,6 +49,7 @@ export function MobileDrawer({
             {...item}
             handleDrawerToggle={handleDrawerToggle}
             themeVariant={themeVariant}
+            isMobile={true}
           />
         ))}
       </MobileNavContainer>
