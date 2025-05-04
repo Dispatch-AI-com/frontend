@@ -39,12 +39,9 @@ const StyledHeader = styled('h1')`
   font-family: ${({ theme }) => theme.typography.h1.fontFamily};
   font-weight: ${({ theme }) => theme.typography.h1.fontWeight};
   margin: 0;
+  overflow-wrap: anywhere;
 
-  @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
-    font-size: ${({ theme }) => theme.typography.h3.fontSize};
-  }
-
-  @media (min-width: ${({ theme }) => theme.breakpoints.values.md}px) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
     font-size: ${({ theme }) => theme.typography.h2.fontSize};
   }
 
@@ -85,20 +82,24 @@ const StyledDemoBox = styled('div')`
   background-color: ${({ theme }) => theme.palette.background.default};
   border-radius: ${({ theme }) => theme.shape.borderRadius};
   border: 1px solid ${({ theme }) => theme.palette.grey[200]};
-  box-shadow: 0 0 12px 8px hsla(220, 25%, 80%, 0.2);
+  box-shadow: 0 0 12px 8px ${({ theme }) => theme.shadows[4]};
   background-image: url('/demo-image.png');
   background-size: cover;
   background-position: center;
 
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
-    width: 900px;
-    height: 530px;
+    width: 90%;
+    height: auto;
+    aspect-ratio: 16 / 9;
     margin-top: ${({ theme }) => theme.spacing(10)};
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.values.xs}px) {
-    width: 700px;
-    height: 530px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
+    width: 90%;
+    max-width: 700px;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    margin-top: ${({ theme }) => theme.spacing(7)};
   }
 `;
 
