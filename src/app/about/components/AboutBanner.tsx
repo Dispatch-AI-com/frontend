@@ -43,3 +43,22 @@ export const HeaderTitle = styled('h1')(({ theme }) => ({
     margin: 0,
     lineHeight: 1.2,
 }));
+
+export const HeaderText = styled('p')(({ theme }) => ({
+    color: 'white',
+    marginTop: theme.spacing(1),
+    marginBottom: 0,
+    fontSize: theme.typography.body1.fontSize,
+    fontFamily: theme.typography.fontFamily,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    [theme.breakpoints.down('md')]: {
+        fontSize: theme.typography.body2.fontSize,
+        whiteSpace: 'nowrap',
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: theme.typography.body2.fontSize,
+        textAlign: 'center',
+        whiteSpace: 'normal',
+    },
+}));

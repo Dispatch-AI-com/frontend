@@ -7,9 +7,9 @@ import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import { Box, CardContent, IconButton, Stack, Typography } from '@mui/material';
 
-import { AboutHeader, HeaderImage, HeaderTitle } from '@/app/about/components/AboutBanner';
+import { AboutHeader, HeaderImage, HeaderText,HeaderTitle } from '@/app/about/components/AboutBanner';
 import { CallToActionText, CallToActionTitle, CallToActionWrapper, SocialMediaButton } from '@/app/about/components/CallToAction';
-import { BodyText, SectionText, SectionTitle, SectionWrapper } from '@/app/about/components/InfoBody';
+import { SectionText, SectionTitle, SectionWrapper } from '@/app/about/components/InfoBody';
 import { TeamCardContainer, TeamMemberCard, TeamMemberImage } from '@/app/about/components/TeamCard';
 import teamMembers from '@/data/teamMembers.json';
 
@@ -24,9 +24,9 @@ export default function AboutPage() {
                     <HeaderTitle>
                         Building the future of <br></br> Voice AI
                     </HeaderTitle>
-                    <BodyText>
+                    <HeaderText>
                         Transforming human-machine interaction through advanced voice technology.
-                    </BodyText>
+                    </HeaderText>
                 </Box>
             </AboutHeader>
             <SectionWrapper>
@@ -87,24 +87,24 @@ export default function AboutPage() {
                 <CallToActionTitle>
                     Want to work with us?
                 </CallToActionTitle>
-                <BodyText>
+                <HeaderText>
                     Email us at <a href="mailto:hello@jiangren.com.au" style={{ color: '#a8f574', textDecoration: 'underline' }}>hello@jiangren.com.au</a> with your resume and tell us why you&apos;re a great fit!
-                </BodyText>
-                <BodyText>
+                </HeaderText>
+                <HeaderText>
                     Address
-                </BodyText>
+                </HeaderText>
                 <CallToActionText>
                     Address
                 </CallToActionText>
-                <BodyText>
+                <HeaderText>
                     Phone
-                </BodyText>
+                </HeaderText>
                 <CallToActionText>
                     +63 4233365542
                 </CallToActionText>
-                <BodyText>
+                <HeaderText>
                     Find us on social media
-                </BodyText>
+                </HeaderText>
                 <Stack direction="row" spacing={0}>
                     <SocialMediaButton color="inherit"><LinkedInIcon /></SocialMediaButton>
                     <SocialMediaButton color="inherit"><FacebookIcon /></SocialMediaButton>
