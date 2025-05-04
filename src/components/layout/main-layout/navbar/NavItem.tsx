@@ -9,6 +9,7 @@ interface ExtraNavProps {
   width: number;
   textWidth: number;
   themeVariant?: 'light' | 'dark';
+  isMobile?: boolean;
 }
 
 type NavItemContainerProps = ExtraNavProps &
@@ -22,9 +23,9 @@ export interface NavItemProps extends ExtraNavProps {
 
 const NavItemContainer = styled(Box, {
   shouldForwardProp: (prop) =>
-    !['width', 'textWidth', 'themeVariant'].includes(prop as string),
-})<NavItemContainerProps>(({ theme, width, themeVariant = 'light' }) => ({
-  width,
+    !['width', 'textWidth', 'themeVariant', 'isMobile'].includes(prop as string),
+})<NavItemContainerProps>(({ theme, width, themeVariant = 'light', isMobile }) => ({
+  width: isMobile ? 'auto' : width,
   height: 36,
   padding: `${theme.spacing(1)} ${theme.spacing(2)}`, 
   borderRadius: 12,
@@ -42,14 +43,20 @@ const NavItemContainer = styled(Box, {
 }));
 
 const NavItemText = styled(Typography, {
-  shouldForwardProp: (prop) => !['textWidth', 'themeVariant'].includes(prop as string),
-})<{ textWidth: number; themeVariant?: 'light' | 'dark' }>(({ theme, textWidth, themeVariant = 'light' }) => ({
-  width: textWidth,
-  height: 20,
-  '&&': { fontSize: 16 }, 
-  lineHeight: 1.25,
-  color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
-}));
+  shouldForwardProp: (prop) => !['textWidth', 'themeVariant', 'isMobile'].includes(prop as string),
+})<{ textWidth: number; themeVariant?: 'light' | 'dark'; isMobile?: boolean }>(
+  ({ theme, textWidth, themeVariant = 'light', isMobile }) => ({
+    width: isMobile ? 'auto' : textWidth,
+    height: isMobile ? 24 : 20,
+    '&&': { 
+      fontSize: isMobile ? 20 : 16,
+      fontWeight: isMobile ? 500 : 400,
+      whiteSpace: 'nowrap',
+    },
+    lineHeight: 1.25,
+    color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
+  })
+);
 
 export function NavItem({
   href,
@@ -58,6 +65,7 @@ export function NavItem({
   textWidth,
   handleDrawerToggle,
   themeVariant = 'light',
+  isMobile,
 }: NavItemProps) {
   return (
     <NavItemContainer
@@ -68,7 +76,12 @@ export function NavItem({
       themeVariant={themeVariant}
       onClick={() => handleDrawerToggle?.()}
     >
-      <NavItemText textWidth={textWidth} themeVariant={themeVariant} variant="body2">
+      <NavItemText 
+        textWidth={textWidth} 
+        themeVariant={themeVariant} 
+        variant="body2"
+        isMobile={isMobile}
+      >
         {text}
       </NavItemText>
     </NavItemContainer>
