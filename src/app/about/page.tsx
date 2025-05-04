@@ -66,7 +66,7 @@ export default function AboutPage() {
                         key={index}
                     >
                         <TeamMemberCard>
-                            <TeamMemberImage backgroundImage={member.image || ''} />
+                            <TeamMemberImage backgroundImage={member.image} />
                             <CardContent>
                                 <Typography variant="h3">{member.name}</Typography>
                                 <Typography variant="body2" color="text.primary">
