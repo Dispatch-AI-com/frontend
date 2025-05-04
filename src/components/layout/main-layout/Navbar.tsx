@@ -32,7 +32,10 @@ const navItems: NavItemProps[] = [
 ];
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  position: 'sticky',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
   height: 80,
   marginBottom: '0',
   zIndex: theme.zIndex.drawer + 1,
@@ -73,7 +76,8 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   [theme.breakpoints.up('md')]: { display: 'none' },
   '& .MuiDrawer-paper': {
     boxSizing: 'border-box',
-    width: 240,
+    width: '100vw',
+    height: '100vh',
     padding: 20,
     transition: 'transform 0.3s ease-in-out',
   },
