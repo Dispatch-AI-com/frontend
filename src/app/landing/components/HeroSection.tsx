@@ -10,13 +10,6 @@ const StyledContainer = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: ${({ theme }) => theme.spacing(12)};
-  padding-bottom: ${({ theme }) => theme.spacing(12)};
-  
-  @media (min-width: ${({ theme }) => theme.breakpoints.values.xs}px) {
-    padding-top: ${({ theme }) => theme.spacing(10)};
-    padding-bottom: ${({ theme }) => theme.spacing(10)};
-  }
 `;
 
 const StyledStack = styled('div')`
@@ -32,20 +25,21 @@ const StyledStack = styled('div')`
 `;
 
 const StyledHeader = styled('h1')`
-  display: flex;
-  align-items: center;
+  display: block;
   color: ${({ theme }) => theme.palette.text.primary};
-  font-size: ${({ theme }) => theme.typography.h1.fontSize};
+  font-size: 4.5rem;
   font-family: ${({ theme }) => theme.typography.h1.fontFamily};
   font-weight: ${({ theme }) => theme.typography.h1.fontWeight};
   margin: 0;
-  word-break: break-word;
+  text-align: center;
+  word-break: normal;
+  margin-top: ${({ theme }) => theme.spacing(12)};
 
   @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
-    font-size: ${({ theme }) => theme.typography.h2.fontSize};
+    font-size: ${({ theme }) => theme.typography.h1.fontSize};
   }
 
-  @media (min-width: ${({ theme }) => theme.breakpoints.values.lg}px) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
     font-size: ${({ theme }) => theme.typography.h1.fontSize};
   }
 `;
@@ -69,7 +63,6 @@ const ButtonStack = styled('div')`
   justify-content: center;
   align-items: center;
   gap: ${({ theme }) => theme.spacing(7)};
-  padding-top: ${({ theme }) => theme.spacing(2)};
 
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
     flex-direction: row;
@@ -108,10 +101,10 @@ export default function HeroSection() {
     <StyledContainer>
       <StyledStack>
         <StyledHeader>
-          Let&nbsp;AI&nbsp;Handle&nbsp;Your&nbsp;Calls
+          Let AI Handle Your Calls
         </StyledHeader>
         <StyledHeader>
-          Focus&nbsp;on&nbsp;Growing&nbsp;Your&nbsp;Business
+          Focus on Growing Your Business
         </StyledHeader>
         <StyledTypographyBody>
           SmartAgent is your 24/7 virtual phone assistant for rental managers, plumbers, contractors,
