@@ -12,7 +12,6 @@ import Image from 'next/image';
 
 import CommmonButton from '@/components/ui/CommonButton';
 
-// Styled Components
 const FooterWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(6),
@@ -20,13 +19,13 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
   width: '100%',
 }));
 
-const LogoContainer = styled(Box)(() => ({
+const LogoContainer = styled(Box)(({ theme }) => ({
   width: '152px',
   height: '36px',
   position: 'relative',
-  marginBottom: '80px',
-  '@media (max-width: 600px)': {
-    marginBottom: '40px',
+  marginBottom: '40px',
+  [theme.breakpoints.up('sm')]: {
+    marginBottom: '80px',
   },
 }));
 
@@ -100,7 +99,7 @@ const CopyrightText = styled(Typography)(({ theme }) => ({
 }));
 
 const NavLinksBox = styled(Box)(({ theme }) => ({
-  flex: 8,
+  flex: 7,
   display: 'none',
   [theme.breakpoints.up('lg')]: {
     display: 'block',
@@ -140,7 +139,6 @@ const FreeTrialBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     alignItems: 'flex-start',
     gap: theme.spacing(2),
-    marginLeft: theme.spacing(4),
   },
 }));
 
