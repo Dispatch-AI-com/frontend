@@ -30,10 +30,10 @@ const BannerTitle = styled('h1')(({ theme }) => ({
   fontSize: '48px !important',
   margin: 0,
   marginBottom: 4,
-  lineHeight: 1.2,
+  lineHeight: 1.5,
   [theme.breakpoints.down('md')]: {
-    fontSize: '32px !important',
-    lineHeight: 1.2,
+    fontSize: '28px !important',
+    lineHeight: 1.5,
   },
   '&:last-of-type': {
     marginBottom: 0,
@@ -44,7 +44,11 @@ const FeatureGrid = styled(Grid)(({ theme }) => ({
   marginTop: theme.spacing(12),
   justifyContent: 'center',
   columnGap: theme.spacing(16),
-}));
+  [theme.breakpoints.down('md')]: {
+    marginTop: theme.spacing(4),
+    columnGap: theme.spacing(4),
+  },
+}));;
 
 const FeatureText = styled('div')(({ theme }) => ({
   fontSize: '18px',
