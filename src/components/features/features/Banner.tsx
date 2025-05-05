@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Typography, Container, Grid } from '@mui/material';
+import { Box, Container, Grid,Typography } from '@mui/material';
 import styled from 'styled-components';
 
 const GradientText = styled(Typography)`
