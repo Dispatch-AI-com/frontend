@@ -61,9 +61,9 @@ export default function AboutPage() {
             </SectionWrapper>
 
             <TeamCardContainer>
-                {teamMembers.map((member, index) => (
+                {teamMembers.map((member) => (
                     <Box
-                        key={index}
+                        key={member.linkedin}
                     >
                         <TeamMemberCard>
                             <TeamMemberImage backgroundImage={member.image} />
