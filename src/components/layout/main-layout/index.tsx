@@ -10,7 +10,7 @@ export default function MainLayout({
   }>) {
     return (
         <>
-            <Container maxWidth="xl">
+            <Container maxWidth={false}>
               <Navbar />
             </Container>
             
@@ -18,7 +18,7 @@ export default function MainLayout({
                 {children}
             </Container>
             
-            <Container maxWidth="xl">
+            <Container maxWidth={false}>
                 <Footer />
             </Container>
         </>

@@ -6,7 +6,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import { Box, Container, IconButton,Link, Stack, Typography } from '@mui/material';
+import { Box, Container, IconButton, Link, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 
@@ -20,97 +20,165 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
   width: '100%',
 }));
 
-const LogoContainer = styled(Box)({
-  marginBottom: '80px',
+const LogoContainer = styled(Box)(() => ({
   width: '152px',
   height: '36px',
-  position: 'relative'
-});
+  position: 'relative',
+  marginBottom: '80px',
+  '@media (max-width: 600px)': {
+    marginBottom: '40px',
+  },
+}));
 
-const SocialContainer = styled(Box)({
-  marginBottom: '24px',
+const FooterStack = styled(Stack)(({ theme }) => ({
+  flexDirection: 'column',
+  gap: theme.spacing(4),
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
+    gap: theme.spacing(2),
+  },
+}));
+
+const LogoAndSocialBox = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center'
-});
+  flexDirection: 'column',
+  alignItems: 'center',
+  flex: 4.5,
+  [theme.breakpoints.up('sm')]: {
+    alignItems: 'flex-start',
+  },
+}));
+
+const SocialBox = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
+    gap: theme.spacing(1),
+  },
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(3),
+  },
+}));
 
 const SocialText = styled(Typography)(({ theme }) => ({
-  marginRight: '8px',
-  color: theme.palette.text.secondary
+  color: theme.palette.text.secondary,
+  textAlign: 'center',
+  [theme.breakpoints.up('sm')]: {
+    textAlign: 'left',
+    marginRight: theme.spacing(1),
+  },
 }));
 
-const SocialIconButton = styled(IconButton)({
-  padding: '2px',
+const SocialIconsRow = styled(Stack)(({ theme }) => ({
+  flexDirection: 'row',
+  justifyContent: 'center',
+  [theme.breakpoints.up('sm')]: {
+    justifyContent: 'flex-start',
+  },
+}));
+
+const SocialIconButton = styled(IconButton)(() => ({
+  width: 20,
+  height: 20,
+  padding: 0,
   '& svg': {
-    width: '20px',
-    height: '20px'
-  }
-});
+    width: 20,
+    height: 20,
+  },
+}));
 
 const CopyrightText = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.secondary
+  color: theme.palette.text.secondary,
+  textAlign: 'center',
+  [theme.breakpoints.up('sm')]: {
+    textAlign: 'left',
+  },
 }));
 
-const NavLinksStack = styled(Stack)({
-  marginRight: '16px',
-});
+const NavLinksBox = styled(Box)(({ theme }) => ({
+  flex: 8,
+  display: 'none',
+  [theme.breakpoints.up('lg')]: {
+    display: 'block',
+  },
+}));
+
+const NavLinksStack = styled(Stack)(({ theme }) => ({
+  flexDirection: 'row',
+  marginRight: theme.spacing(2),
+  gap: theme.spacing(5),
+}));
 
 const NavLink = styled(Link)(({ theme }) => ({
   textDecoration: 'none',
   cursor: 'pointer',
   color: 'inherit',
-  ...theme.typography.body1
+  ...theme.typography.body1,
 }));
 
-const SupportLinksStack = styled(Stack)({
+const SupportLinksStack = styled(Stack)(({ theme }) => ({
   position: 'absolute',
-  marginTop: '24px',
-});
+  marginTop: theme.spacing(3),
+}));
 
 const SupportLink = styled(Link)(({ theme }) => ({
   textDecoration: 'none',
   color: theme.palette.text.secondary,
-  ...theme.typography.body2
+  ...theme.typography.body2,
 }));
 
-const ButtonTitle = styled(Typography)(({ theme }) => ({
-  marginBottom: '16px',
-  ...theme.typography.body1
+const FreeTrialBox = styled(Box)(({ theme }) => ({
+  flex: 3,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  [theme.breakpoints.up('sm')]: {
+    alignItems: 'flex-start',
+    gap: theme.spacing(2),
+    marginLeft: theme.spacing(4),
+  },
+}));
+
+const FreeTrialTitle = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(1),
+  textAlign: 'center',
+  [theme.breakpoints.up('sm')]: {
+    marginBottom: theme.spacing(1.5),
+    textAlign: 'left',
+  },
 }));
 
 export default function Footer() {
   return (
     <FooterWrapper as="footer">
-      <Container maxWidth={false} sx={{ maxWidth: '1440px', margin: '0 auto' }}>
-        <Stack 
-          direction={{ xs: 'column', md: 'row' }} 
-          spacing={{ xs: 4, md: 2 }}
-        >
+      <Container maxWidth="xl">
+        <FooterStack>
           {/* Logo and Social Media */}
-          <Box flex={{ md:4.5 }}>
+          <LogoAndSocialBox>
             <LogoContainer>
               <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
             </LogoContainer>
-            <SocialContainer>
+            <SocialBox>
               <SocialText variant="body2">Follow Us On Social Media</SocialText>
-              <Stack direction="row" spacing={0.8}>
+              <SocialIconsRow direction="row" spacing={0.8}>
                 <SocialIconButton color="inherit"><LinkedInIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><FacebookIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><InstagramIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><XIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><YouTubeIcon /></SocialIconButton>
-              </Stack>
-            </SocialContainer>
+              </SocialIconsRow>
+            </SocialBox>
             <CopyrightText variant="body2">©Copyright 2025 Dispatch AI</CopyrightText>
-          </Box>
+          </LogoAndSocialBox>
 
           {/* Navigation Links */}
-          <Box
-            flex={{ md: 8 }}
-            sx={{ 
-              display: { xs: 'none', lg: 'block' }
-            }}
-          >
-            <NavLinksStack direction="row" spacing={5}>
+          <NavLinksBox>
+            <NavLinksStack>
               <NavLink href="/" color="inherit">Home</NavLink>
               <NavLink href="/products" color="inherit">Products</NavLink>
               <NavLink href="/pricing" color="inherit">Pricing</NavLink>
@@ -127,25 +195,19 @@ export default function Footer() {
                 </SupportLinksStack>
               </Box>
             </NavLinksStack>
-          </Box>
+          </NavLinksBox>
 
           {/* Free Trial Section */}
-          <Box 
-            flex={{ md: 3 }}
-            sx={{ 
-              marginLeft: { md: 4 },
-              gap: 3
-            }}
-          >
-            <ButtonTitle>Ready to Save Time?</ButtonTitle>
+          <FreeTrialBox>
+            <FreeTrialTitle variant="body1">Ready to Save Time?</FreeTrialTitle>
             <CommmonButton
               buttonVariant="black"
               endIcon={<ArrowForwardIcon sx={{ width: '20px', height: '20px' }} />}
             >
               Start Your Free Trial
             </CommmonButton>
-          </Box>
-        </Stack>
+          </FreeTrialBox>
+        </FooterStack>
       </Container>
     </FooterWrapper>
   );
