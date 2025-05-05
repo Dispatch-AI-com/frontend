@@ -43,13 +43,25 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   width: '100%',
-  maxWidth: 1920,
-  padding: '30px 30px',
+  maxWidth: '1920px',
   margin: '0 auto',
+  paddingLeft: '20px',
+  paddingRight: '20px',
+  paddingTop: '30px',
+  paddingBottom: '30px',
+
   [theme.breakpoints.up('md')]: {
-    paddingLeft: 50,
-    paddingRight: 50,
+    paddingLeft: '80px',
+    paddingRight: '80px',
   },
+
+  [theme.breakpoints.up('lg')]: {
+    paddingLeft: '240px',
+    paddingRight: '240px',
+  },
+
+  display: 'flex',
+  justifyContent: 'space-between',
 }));
 
 const LogoBox = styled(Box)({
@@ -124,7 +136,7 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
         {!isMobile && (
           <>
             <DesktopNavItems navItems={navItems} themeVariant={variant} />
-            <DesktopButtonGroup direction="row" spacing={0}>
+            <DesktopButtonGroup direction="row" spacing={1.5}>
               <AuthButton variant="login" themeVariant={variant} />
               <AuthButton variant="signup" themeVariant={variant} />
             </DesktopButtonGroup>
