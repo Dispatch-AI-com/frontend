@@ -10,7 +10,7 @@ import { Box, Container, IconButton, Link, Stack, Typography } from '@mui/materi
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 
-import CommmonButton from '@/components/ui/CommonButton';
+import CommonButton from '@/components/ui/CommonButton';
 
 const FooterWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(6),
@@ -198,12 +198,12 @@ export default function Footer() {
           {/* Free Trial Section */}
           <FreeTrialBox>
             <FreeTrialTitle variant="body1">Ready to Save Time?</FreeTrialTitle>
-            <CommmonButton
+            <CommonButton
               buttonVariant="black"
               endIcon={<ArrowForwardIcon sx={{ width: '20px', height: '20px' }} />}
             >
               Start Your Free Trial
-            </CommmonButton>
+            </CommonButton>
           </FreeTrialBox>
         </FooterStack>
       </Container>
