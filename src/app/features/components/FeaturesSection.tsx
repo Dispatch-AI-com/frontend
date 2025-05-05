@@ -12,7 +12,7 @@ const SectionRoot = styled('section')(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   [theme.breakpoints.up('md')]: {
-    paddingTop: theme.spacing(6),
+    paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(36),
   },
 }));
@@ -30,7 +30,7 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 900,
   marginBottom: theme.spacing(4),
   [theme.breakpoints.up('md')]: {
-    marginBottom: theme.spacing(10),
+    marginBottom: theme.spacing(12),
   },
 }));
 
@@ -57,6 +57,7 @@ const FeatureList = styled(Box)(({ theme }) => ({
   gap: theme.spacing(2),
   [theme.breakpoints.up('md')]: {
     marginLeft: theme.spacing(8),
+    gap: theme.spacing(8),
   },
 }));
 
