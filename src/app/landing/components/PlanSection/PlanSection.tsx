@@ -50,6 +50,7 @@ const SectionTitle = styled('h2')(({ theme }) => ({
   margin: '0 0 64px',
 }));
 
+
 const PlanGrid = styled('div')(({ theme }) => ({
   display: 'flex',
   flexWrap: 'nowrap',
@@ -65,18 +66,25 @@ const PlanGrid = styled('div')(({ theme }) => ({
     scrollSnapAlign: 'center',
   },
 
-  [theme.breakpoints.up('md')]: {
+  [theme.breakpoints.up(768)]: {
     flexWrap: 'wrap',
     justifyContent: 'center',
     overflowX: 'visible',
     padding: 0,
-    gap: theme.spacing(4), 
+    gap: theme.spacing(4),
+
     '& > *': {
+      flex: '0 0 calc(50% - 16px)', 
       minWidth: 0,
     },
   },
-}));
 
+  [theme.breakpoints.up('lg')]: {
+    '& > *': {
+      flex: '0 0 calc(33.333% - 16px)',
+    },
+  },
+}));
 
 
 export default function PlanSection() {

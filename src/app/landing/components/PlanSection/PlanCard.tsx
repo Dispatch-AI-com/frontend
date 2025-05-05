@@ -70,7 +70,7 @@ const BtnContainer = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   gap: theme.spacing(2, 1.5), 
 
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up(800)]: {
     flexWrap: 'nowrap', 
   },
 }));
