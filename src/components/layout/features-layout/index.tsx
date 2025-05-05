@@ -10,17 +10,11 @@ export default function MainLayout({
   }>) {
     return (
         <>
-            <Container maxWidth={false}>
-              <Navbar variant='dark'/>
-            </Container>
-            
+            <Navbar variant='dark'/>
             <Container maxWidth="xl" sx={{py: 4}} >
                 {children}
             </Container>
-            
-            <Container maxWidth={false}>
-                <Footer />
-            </Container>
+            <Footer />
         </>
     );
 }
