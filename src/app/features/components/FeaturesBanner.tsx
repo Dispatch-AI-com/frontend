@@ -48,7 +48,7 @@ const FeatureGrid = styled(Grid)(({ theme }) => ({
     marginTop: theme.spacing(4),
     columnGap: theme.spacing(4),
   },
-}));;
+}));
 
 const FeatureText = styled('div')(({ theme }) => ({
   fontSize: '18px',
