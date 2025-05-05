@@ -1,28 +1,29 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
-  Toolbar,
   Box,
-  Stack,
-  IconButton,
   Drawer,
+  IconButton,
+  Stack,
+  Toolbar,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import { NavItemProps } from './navbar/NavItem';
-import { MobileDrawer } from './navbar/MobileDrawer';
-import { DesktopNavItems } from './navbar/DesktopNavItems';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+
 import { AuthButton } from './navbar/AuthButton';
+import { DesktopNavItems } from './navbar/DesktopNavItems';
+import { MobileDrawer } from './navbar/MobileDrawer';
+import { NavItemProps } from './navbar/NavItem';
 
 const navItems: NavItemProps[] = [
-  { href: '/home', text: 'Home', width: 75, textWidth: 43 },
+  { href: '/', text: 'Home', width: 75, textWidth: 43 },
   { href: '/products', text: 'Products', width: 98, textWidth: 66 },
   { href: '/pricing', text: 'Pricing', width: 83, textWidth: 51 },
   { href: '/blogs', text: 'Blogs', width: 73, textWidth: 41 },
@@ -32,20 +33,22 @@ const navItems: NavItemProps[] = [
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
   height: 80,
-  backgroundColor: theme.palette.background.default,
-  marginBottom: '100px',
+  marginBottom: '0',
   zIndex: theme.zIndex.drawer + 1,
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   width: '100%',
   maxWidth: 1920,
-  padding: '20px 20px',
+  padding: '30px 30px',
   margin: '0 auto',
   [theme.breakpoints.up('md')]: {
-    paddingLeft: 240,
-    paddingRight: 240,
+    paddingLeft: 50,
+    paddingRight: 50,
   },
 }));
 
@@ -60,29 +63,31 @@ const DesktopButtonGroup = styled(Stack)({
   marginLeft: 'auto',
 });
 
-const MobileMenuButton = styled(IconButton)(({ theme }) => ({
+const MobileMenuButton = styled(IconButton)(({ }) => ({
   marginLeft: 'auto',
   transition: 'transform 0.3s ease',
-  backgroundColor: theme.palette.background.paper,
   borderRadius: 12,
   width: 40,
   height: 40,
-  '&:hover': { backgroundColor: theme.palette.background.paper },
 }));
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
   display: 'block',
   [theme.breakpoints.up('md')]: { display: 'none' },
   '& .MuiDrawer-paper': {
-    backgroundColor: theme.palette.background.default,
     boxSizing: 'border-box',
-    width: 240,
+    width: '100vw',
+    height: '100vh',
     padding: 20,
     transition: 'transform 0.3s ease-in-out',
   },
 }));
 
-export default function Navbar() {
+interface NavbarProps {
+  variant?: 'light' | 'dark';
+}
+
+export default function Navbar({ variant = 'light' }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -92,13 +97,20 @@ export default function Navbar() {
   };
 
   return (
-    <StyledAppBar color="transparent" elevation={0}>
+    <StyledAppBar 
+      color="transparent" 
+      elevation={0}
+      sx={{
+        backgroundColor: variant === 'light' ? theme.palette.background.default : '#060606',
+        color: variant === 'light' ? 'inherit' : '#ffffff',
+      }}
+    >
       <StyledToolbar disableGutters>
         {/* Logo */}
         <LogoBox>
           <Link href="/" aria-label="Dispatch AI Home">
             <Image
-              src="/logo.svg"
+              src={variant === 'light' ? "/logo.svg" : "/logo-dark.svg"}
               alt="Dispatch AI logo"
               width={152}
               height={36}
@@ -111,10 +123,10 @@ export default function Navbar() {
         {/* Desktop */}
         {!isMobile && (
           <>
-            <DesktopNavItems navItems={navItems} />
+            <DesktopNavItems navItems={navItems} themeVariant={variant} />
             <DesktopButtonGroup direction="row" spacing={0}>
-              <AuthButton variant="login" />
-              <AuthButton variant="signup" />
+              <AuthButton variant="login" themeVariant={variant} />
+              <AuthButton variant="signup" themeVariant={variant} />
             </DesktopButtonGroup>
           </>
         )}
@@ -126,7 +138,13 @@ export default function Navbar() {
             aria-label="toggle drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            style={{
+            sx={{
+              backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
+              color: variant === 'light' ? 'inherit' : '#ffffff',
+              '&:hover': {
+                backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
+                color: variant === 'light' ? 'inherit' : '#ffffff',
+              },
               transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
             }}
           >
@@ -146,10 +164,17 @@ export default function Navbar() {
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
+        sx={{
+          '& .MuiDrawer-paper': {
+            backgroundColor: variant === 'light' ? theme.palette.background.default : '#060606',
+            color: variant === 'light' ? 'inherit' : '#ffffff',
+          },
+        }}
       >
         <MobileDrawer
           handleDrawerToggle={handleDrawerToggle}
           navItems={navItems}
+          themeVariant={variant}
         />
       </StyledDrawer>
     </StyledAppBar>

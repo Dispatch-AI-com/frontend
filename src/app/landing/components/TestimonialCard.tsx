@@ -1,8 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
-import Image from 'next/image';
 
 interface TestimonialCardProps {
   quote: string;
@@ -52,7 +52,7 @@ const QuoteText = styled.p`
 
   @media (min-width: 768px) {
     font-size: 24px;
-    width: 576px;
+    max-width: 90vw;
   }
 `;
 

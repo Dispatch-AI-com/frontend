@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
 import styled from 'styled-components';
+
 import TestimonialCard from '@/app/landing/components/TestimonialCard';
 
 interface Testimonial {
@@ -51,15 +52,27 @@ const Title = styled.h2`
 // Card layout container
 const CardContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
+  overflow-x: auto;
+  padding: 0 16px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+
+  & > * {
+    flex: 0 0 auto;
+    min-width: 80vw;
+    scroll-snap-align: center;
+    margin-right: 16px;
+  }
 
   @media (min-width: 768px) {
-    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 0;
-    overflow-x: auto;
+    overflow-x: visible;
+    padding: 0;
+    & > * {
+      min-width: 0;
+      margin-right: 0;
+    }
   }
 `;
 

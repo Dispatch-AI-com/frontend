@@ -1,13 +1,14 @@
-import Navbar from '@/components/features/landing/Navbar';
-import HeroSection from '@/components/features/landing/HeroSection';
-import Footer from '@/components/features/landing/Footer';
+import MainLayout from "@/components/layout/main-layout";
+
+import Landing from "./landing/page";
+
 
 export default function Home() {
   return (
-    <>
-      <Navbar />
-      <HeroSection />
-      <Footer />
-    </>
+    <MainLayout>
+      <Landing />
+      <h1>test</h1>
+    </MainLayout>
   );
 }
+
