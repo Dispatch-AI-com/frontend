@@ -7,13 +7,13 @@ import Image from 'next/image';
 const SectionRoot = styled('section')(({ theme }) => ({
   background: theme.palette.background.default,
   paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(2),
+  paddingBottom: theme.spacing(12),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   [theme.breakpoints.up('md')]: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(36),
+    paddingTop: theme.spacing(10),
+    paddingBottom: theme.spacing(50),
   },
 }));
 
