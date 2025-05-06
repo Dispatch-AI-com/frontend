@@ -6,9 +6,10 @@ export const AboutHeader = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: theme.palette.background.dark,
-    padding: theme.spacing(10, 50),
+    padding: theme.spacing(10, 25),
+    marginTop: theme.spacing(10),
     color: theme.palette.text.primary,
-    gap: theme.spacing(5),
+    gap: theme.spacing(10),
     [theme.breakpoints.down('lg')]: {
         padding: theme.spacing(8, 20),
     },
@@ -50,11 +51,16 @@ export const HeaderText = styled('p')(({ theme }) => ({
     marginBottom: 0,
     fontSize: theme.typography.body1.fontSize,
     fontFamily: theme.typography.fontFamily,
+    wordBreak: 'break-word',
     whiteSpace: 'nowrap',
-    overflow: 'hidden',
+    overflow: 'visible',
+    [theme.breakpoints.down('lg')]: {
+        fontSize: theme.typography.body2.fontSize,
+        whiteSpace: 'normal',
+    },
     [theme.breakpoints.down('md')]: {
         fontSize: theme.typography.body2.fontSize,
-        whiteSpace: 'nowrap',
+        whiteSpace: 'normal',
     },
     [theme.breakpoints.down('sm')]: {
         fontSize: theme.typography.body2.fontSize,
