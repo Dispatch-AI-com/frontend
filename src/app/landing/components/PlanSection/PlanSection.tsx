@@ -39,7 +39,7 @@ function getDescription(tier: Plan['tier']): string {
 }
 
 const SectionContainer = styled('section')(({ theme }) => ({
-  padding: theme.spacing(5, 0),
+  padding: "120px 0 0 0",
   textAlign: 'center',
   backgroundColor: theme.palette.background.default,
 }));
@@ -59,33 +59,7 @@ const PlanGrid = styled('div')(({ theme }) => ({
   padding: `0 ${theme.spacing(2)}px`,
   scrollSnapType: 'x mandatory',
   WebkitOverflowScrolling: 'touch',
-
-  '& > *': {
-    flex: '0 0 auto',
-    minWidth: '80vw',
-    scrollSnapAlign: 'center',
-  },
-
-  [theme.breakpoints.up(768)]: {
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    overflowX: 'visible',
-    padding: 0,
-    gap: theme.spacing(4),
-
-    '& > *': {
-      flex: '0 0 calc(50% - 16px)', 
-      minWidth: 0,
-    },
-  },
-
-  [theme.breakpoints.up('lg')]: {
-    '& > *': {
-      flex: '0 0 calc(33.333% - 16px)',
-    },
-  },
 }));
-
 
 export default function PlanSection() {
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -93,7 +67,7 @@ export default function PlanSection() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await axios.get('/plan'); 
+        const res = await axios.get('api/plan'); 
         setPlans(res.data);
       } catch (err) {
         console.error('Failed to fetch plans:', err);
@@ -110,6 +84,7 @@ export default function PlanSection() {
       {plans.map((plan) => (
         <PlanCard
         key={plan._id}
+        tier={plan.tier}
         name={plan.name}
         description={getDescription(plan.tier)}
         buttons={getButtons(plan.tier)}

@@ -1,15 +1,23 @@
 'use client';
 
 import { styled } from '@mui/material/styles';
+import Image from 'next/image';
 
 import CommonButton from '@/components/ui/CommonButton';
 import { PlanButton } from '@/types/plan.types';
 
 interface PlanCardProps {
+  tier: 'FREE' | 'BASIC' | 'PRO';
   name: string;
   description: string;
   buttons: PlanButton[];
 }
+
+const imageSrcMap: Record<PlanCardProps['tier'], string> = {
+  FREE: '/plan/free.png',
+  BASIC: '/plan/basic.png',
+  PRO: '/plan/pro.png',
+};
 
 const CardContainer = styled('div')(() => ({
   display: 'flex',
@@ -33,7 +41,7 @@ const CardContent = styled('div')(() => ({
 const DemoBox = styled('div')(({ theme }) => ({
   width: '100%',
   height: 0,
-  paddingTop: '67%', 
+  paddingTop: '67%',
   borderRadius: '24px',
   border: '1px solid #d5d5d5',
   backgroundColor: '#e5e5e5',
@@ -45,9 +53,10 @@ const DemoBox = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 
   [theme.breakpoints.down('sm')]: {
-    paddingTop: '56.25%', 
+    paddingTop: '56.25%',
   },
 }));
+
 
 const CardTitle = styled('h3')(({ theme }) => ({
   fontWeight: theme.typography.fontWeightBold,
@@ -70,16 +79,23 @@ const BtnContainer = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   gap: theme.spacing(2, 1.5), 
 
-  [theme.breakpoints.up(800)]: {
+  [theme.breakpoints.up('lg')]: {
     flexWrap: 'nowrap', 
   },
 }));
 
-export default function PlanCard({ name, description, buttons }: PlanCardProps) {
+export default function PlanCard({ tier, name, description, buttons }: PlanCardProps) {
   return (
     <CardContainer>
       <CardContent>
-        <DemoBox></DemoBox>
+        <DemoBox>
+          <Image
+            src={imageSrcMap[tier]}
+            alt={`${name} plan image`}
+            fill
+            style={{ objectFit: 'contain', borderRadius: '24px' }}
+          />
+        </DemoBox>
         <CardTitle>{name}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardContent>
