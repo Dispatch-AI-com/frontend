@@ -19,9 +19,7 @@ const BannerSection = styled('section')(({ theme }) => ({
   },
 }));
 
-const BannerContainer = styled(Container)(({ theme }) => ({
-  maxWidth: theme.breakpoints.values.xl,
-}));
+const BannerContainer = styled(Container)(() => ({}));
 
 const BannerTitle = styled('h1')(({ theme }) => ({
   ...theme.typography.h1,
