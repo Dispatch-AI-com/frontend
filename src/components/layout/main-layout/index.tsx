@@ -8,19 +8,12 @@ export default function MainLayout({
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-    return (
-        <>
-            <Container maxWidth="xl">
-              <Navbar />
-            </Container>
-            
+    return (     <>
+            <Navbar />          
             <Container maxWidth="xl" sx={{py: 4}} >
                 {children}
             </Container>
-            
-            <Container maxWidth="xl">
-                <Footer />
-            </Container>
+            <Footer />
         </>
     );
 }
