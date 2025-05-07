@@ -1,9 +1,8 @@
+import Landing from "@/app/landing/page";
 import MainLayout from "@/components/layout/main-layout";
 
-import Landing from "./landing/page";
 
-
-export default function Home() {
+export default function LandingPage() {
   return (
     <MainLayout>
       <Landing />
@@ -11,3 +10,4 @@ export default function Home() {
     </MainLayout>
   );
 }
+

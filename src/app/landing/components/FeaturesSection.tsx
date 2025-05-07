@@ -49,7 +49,7 @@ const FeatureCard = styled(Card)(() => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   textAlign: 'left',
   marginLeft: '20px',
   marginBottom: '20px',
@@ -121,11 +121,10 @@ export default function FeaturesSection( ) {
   return (
     <FeaturesWrapper>
       <StyledContainer maxWidth="lg">
-        <Grid container spacing={6}>
-          <SectionTitle variant='h2'>
-            Automated Calls, Save Time, Grow Your Business
-          </SectionTitle>
-        </Grid>
+        <SectionTitle variant='h2'>
+          Automated Calls, Save Time, Grow Your Business
+        </SectionTitle>
+
         <Grid container spacing={6}>
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} key={index}>

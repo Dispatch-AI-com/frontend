@@ -1,7 +1,13 @@
 
 "use client"
 
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 import { Box, Container } from '@mui/material';
+
+import Footer from '@/components/layout/main-layout/Footer';
+import Navbar from '@/components/layout/main-layout/Navbar';
 
 import Banner from './components/Banner';
 import BlogFilterBar from './components/BlogFilterBar';
@@ -11,16 +17,18 @@ import SubscriptionSection from './components/SubscriptionSection';
 
 export default function BlogsPage() {
   return (
-    <Container maxWidth="lg" sx={{ pt: 6, pb: 12 }}>
-      <Banner />
-      <Box mt={4} mb={4}>
-        <BlogHighlightCard />
-      </Box>
-      <BlogFilterBar />
-      <Box >
-        <BlogList />
-      </Box>
-      <SubscriptionSection />
-    </Container>
+    <>
+        <Box>
+            <Navbar variant='dark'/>
+            <Banner/>
+            <Container>
+                <BlogHighlightCard />
+                <BlogFilterBar />
+                <BlogList />
+            </Container>
+            <SubscriptionSection/>
+            <Footer/>
+        </Box>
+    </>
   );
 }

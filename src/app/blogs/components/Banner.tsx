@@ -7,7 +7,6 @@ const BannerWrapper = styled(Box)(() => ({
   maxWidth: '1920px',
   height: 460,
   margin: '0 auto 120px auto',
-  padding: '0 0 100px 0',
   backgroundColor: '#060606',
   display: 'flex',
   flexDirection: 'column',
@@ -17,19 +16,21 @@ const BannerWrapper = styled(Box)(() => ({
 }));
 
 const Title = styled(Typography)(() => ({
-  color: '#A7FF9B',
+  color: '#a8f574',
   fontWeight: 700,
-  fontSize: 48,
+  fontSize: '64px',
   marginBottom: 24,
+  textAlign: 'center',
+  lineHeight:'76px',
 }));
 
 const Subtitle = styled(Typography)(() => ({
-  color: '#fff',
-  opacity: 0.8,
-  fontSize: 14,
+  color: '#ffffff',
+  fontSize: '16px',
   maxWidth: 650,
   textAlign: 'center',
   lineHeight: 1.7,
+  opacity: 0.8,
 }));
 
 export default function Banner() {

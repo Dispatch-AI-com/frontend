@@ -2,20 +2,20 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 let theme = createTheme({
-  spacing: 8, 
+  spacing: 8,
 
   shape: {
-    borderRadius: 12, 
+    borderRadius: 12,
   },
 
   palette: {
     background: {
-      default: '#ffffff',
-      paper: '#fafafa',
+      default: '#ffffff', // white
+      paper: '#fafafa', // light grey
     },
     text: {
-      primary: '#060606',
-      secondary: '#6d6d6d',
+      primary: '#060606', // black
+      secondary: '#6d6d6d', // grey
     },
   },
 

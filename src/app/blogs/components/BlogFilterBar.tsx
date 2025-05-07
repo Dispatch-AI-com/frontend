@@ -6,7 +6,7 @@ const FilterBarWrapper = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   gap: 24,
-  margin: '32px 0',
+  margin: '32px 0px',
   justifyContent: 'flex-start',
 }));
 
