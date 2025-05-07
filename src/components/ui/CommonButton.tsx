@@ -23,6 +23,7 @@ const StyledButton = styled(Button, {
   fontSize: theme.typography.button.fontSize,
   textTransform: 'none',
   fontWeight: theme.typography.button.fontWeight,
+  whiteSpace: 'nowrap',
   backgroundColor: buttonVariant === 'black' ? '#060606' : '#a8f574',
   color: buttonVariant === 'black' ? '#ffffff' : '#060606',
   '&:hover': {
