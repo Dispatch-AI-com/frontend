@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import { Typography } from '@mui/material';
+import React from 'react';
 
 interface SectionTitleProps {
   children: React.ReactNode;
