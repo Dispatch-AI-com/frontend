@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import CommonButton from '@/components/ui/CommonButton';
+import theme from '@/theme';
 
 const StyledContainer = styled('div')`
   display: flex;
@@ -33,7 +34,6 @@ const StyledHeader = styled('h1')`
   margin: 0;
   text-align: center;
   word-break: normal;
-  margin-top: ${({ theme }) => theme.spacing(12)};
 
   @media (max-width: ${({ theme }) => theme.breakpoints.values.md}px) {
     font-size: ${({ theme }) => theme.typography.h1.fontSize};
@@ -100,7 +100,7 @@ export default function HeroSection() {
   return (
     <StyledContainer>
       <StyledStack>
-        <StyledHeader>
+        <StyledHeader sx={{marginTop: theme.spacing(15)}}>
           Let AI Handle Your Calls
         </StyledHeader>
         <StyledHeader>
@@ -112,10 +112,10 @@ export default function HeroSection() {
           Answer calls, schedule follow-ups, and automate workflows&nbsp;—&nbsp;no human effort needed.
         </StyledTypographyBody>
         <ButtonStack>
-          <CommonButton buttonVariant="black" endIcon={<ArrowForwardIcon />}>
+          <CommonButton buttonVariant="black" endIcon={<ArrowForwardIcon />} sx={{height: '48px'}}>
             Start Your Free Trial
           </CommonButton>
-          <CommonButton buttonVariant="green" endIcon={<ArrowForwardIcon />}>
+          <CommonButton buttonVariant="green" endIcon={<ArrowForwardIcon />} sx={{height: '48px'}}>
             Request a Demo
           </CommonButton>
         </ButtonStack>
