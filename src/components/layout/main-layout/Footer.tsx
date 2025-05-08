@@ -102,7 +102,7 @@ const CopyrightText = styled(Typography)(({ theme }) => ({
 const NavLinksBox = styled(Box)(({ theme }) => ({
   flex: 7,
   display: 'none',
-  [theme.breakpoints.up('lg')]: {
+  [theme.breakpoints.up('xl')]: {
     display: 'block',
   },
 }));
