@@ -35,11 +35,16 @@ const NavItemContainer = styled(Box, {
   alignItems: 'center',
   justifyContent: 'center',
   textDecoration: 'none',
-  transition: 'background-color 0.3s ease, transform 0.1s ease',
+  transition: 'all 0.3s ease',
   '&:hover': { 
     backgroundColor: themeVariant === 'light' ? theme.palette.background.paper : '#060606',
   },
   '&:active': { transform: 'scale(0.97)' },
+  [theme.breakpoints.down('lg')]: {
+    width: 'auto',
+    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+    marginRight: theme.spacing(0.5),
+  },
 }));
 
 const NavItemText = styled(Typography, {
@@ -55,6 +60,10 @@ const NavItemText = styled(Typography, {
     },
     lineHeight: 1.25,
     color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
+    [theme.breakpoints.down('lg')]: {
+      fontSize: 14,
+      width: 'auto',
+    },
   })
 );
 

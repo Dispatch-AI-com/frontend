@@ -14,7 +14,10 @@ const DesktopNavContainer = styled(Stack)(({ theme }) => ({
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  marginLeft: theme.spacing(3.5), 
+  marginLeft: theme.spacing(3.5),
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: theme.spacing(2),
+  },
 }));
 
 export function DesktopNavItems({ navItems, themeVariant = 'light' }: DesktopNavItemsProps) {

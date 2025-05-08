@@ -55,6 +55,19 @@ let theme = createTheme({
       xl: 1536    // large screens
     },
   },
+
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          overflowX: 'hidden',
+        },
+        body: {
+          overflowX: 'hidden',
+        },
+      },
+    },
+  },
 });
 
 theme = responsiveFontSizes(theme);
