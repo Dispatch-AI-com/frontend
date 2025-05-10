@@ -1,0 +1,14 @@
+[
+    { "name": "Alan", "role": "Technology Lead", "linkedin": "https://www.linkedin.com/in/alan-qiming-liu/", "image": "/assets/images/team-members/Alan.jpeg" },
+    { "name": "Leo", "role": "Business Analyst", "linkedin": "https://www.linkedin.com/in/leo-yi-gu/", "image": "/assets/images/team-members/BA-Leo.jpeg" },
+    { "name": "Paco", "role": "Developer Lead", "linkedin": "https://www.linkedin.com/in/depeng-sun/", "image": "/assets/images/team-members/Paco.jpeg" },
+    { "name": "Chloe", "role": "Developer", "linkedin": "https://www.linkedin.com/in/mengying-xiao", "image": "/assets/images/team-members/Chloe.png" },
+    { "name": "Coco", "role": "Developer", "linkedin": "https://www.linkedin.com/in/coco-qianhui-huang/", "image": "/assets/images/team-members/Coco.jpeg" },
+    { "name": "Ethan", "role": "Developer", "linkedin": "https://www.linkedin.com/in/ethan-zichun-zhang/", "image": "/assets/images/team-members/Ethan.jpeg" },
+    { "name": "Ewan", "role": "Developer", "linkedin": "https://www.linkedin.com/in/ewan-yuanxiang-guo/", "image": "/assets/images/team-members/Ewan.jpeg" },
+    { "name": "Freya", "role": "Developer", "linkedin": "https://www.linkedin.com/in/freya-xuuu", "image": "/assets/images/team-members/Freya.jpeg" },
+    { "name": "Leo", "role": "Developer", "linkedin": "https://www.linkedin.com/in/leo-li-aus/", "image": "/assets/images/team-members/Dev-Leo.jpeg" },
+    { "name": "Mark", "role": "Developer", "linkedin": "https://www.linkedin.com/in/mark-yonico-wang/", "image": "/assets/images/team-members/Mark.jpeg" },
+    { "name": "Tim", "role": "Developer", "linkedin": "https://www.linkedin.com/in/tim-yichen-tian", "image": "/assets/images/team-members/Tim.jpeg" },
+    { "name": "David", "role": "Developer", "linkedin": "https://www.linkedin.com/in/shenghongzhong/", "image": "/assets/images/team-members/David.jpeg" }
+]
