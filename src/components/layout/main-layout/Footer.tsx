@@ -15,20 +15,8 @@ import CommonButton from '@/components/ui/CommonButton';
 const FooterWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(6),
-  paddingLeft: '20px',
-  paddingRight: '20px',
   backgroundColor: theme.palette.background.paper,
   width: '100%',
-
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: '50px',
-    paddingRight: '50px',
-  },
-
-  [theme.breakpoints.up('lg')]: {
-    paddingLeft: '80px',
-    paddingRight: '80px',
-  },
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
@@ -81,7 +69,6 @@ const SocialText = styled(Typography)(({ theme }) => ({
   whiteSpace: 'nowrap',
   [theme.breakpoints.up('sm')]: {
     textAlign: 'left',
-    marginRight: theme.spacing(0.5),
   },
 }));
 

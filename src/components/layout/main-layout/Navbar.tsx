@@ -5,6 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
   Box,
+  Container,
   Drawer,
   IconButton,
   Stack,
@@ -41,25 +42,12 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
 }));
 
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+const StyledToolbar = styled(Toolbar)(({ }) => ({
   width: '100%',
   maxWidth: '1920px',
   margin: '0 auto',
-  paddingLeft: '20px',
-  paddingRight: '20px',
   paddingTop: '30px',
   paddingBottom: '30px',
-
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: '80px',
-    paddingRight: '80px',
-  },
-
-  [theme.breakpoints.up('lg')]: {
-    paddingLeft: '240px',
-    paddingRight: '240px',
-  },
-
   display: 'flex',
   justifyContent: 'space-between',
 }));
@@ -117,57 +105,59 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
         color: variant === 'light' ? 'inherit' : '#ffffff',
       }}
     >
-      <StyledToolbar disableGutters>
-        {/* Logo */}
-        <LogoBox>
-          <Link href="/" aria-label="Dispatch AI Home">
-            <Image
-              src={variant === 'light' ? "/logo.svg" : "/logo-dark.svg"}
-              alt="Dispatch AI logo"
-              width={152}
-              height={36}
-              priority
-              style={{ cursor: 'pointer', display: 'block' }}
-            />
-          </Link>
-        </LogoBox>
+      <Container maxWidth="xl">
+        <StyledToolbar disableGutters>
+          {/* Logo */}
+          <LogoBox>
+            <Link href="/" aria-label="Dispatch AI Home">
+              <Image
+                src={variant === 'light' ? "/logo.svg" : "/logo-dark.svg"}
+                alt="Dispatch AI logo"
+                width={152}
+                height={36}
+                priority
+                style={{ cursor: 'pointer', display: 'block' }}
+              />
+            </Link>
+          </LogoBox>
 
-        {/* Desktop */}
-        {!isMobile && (
-          <>
-            <DesktopNavItems navItems={navItems} themeVariant={variant} />
-            <DesktopButtonGroup direction="row" spacing={1.5}>
-              <AuthButton variant="login" themeVariant={variant} />
-              <AuthButton variant="signup" themeVariant={variant} />
-            </DesktopButtonGroup>
-          </>
-        )}
+          {/* Desktop */}
+          {!isMobile && (
+            <>
+              <DesktopNavItems navItems={navItems} themeVariant={variant} />
+              <DesktopButtonGroup direction="row" spacing={1.5}>
+                <AuthButton variant="login" themeVariant={variant} />
+                <AuthButton variant="signup" themeVariant={variant} />
+              </DesktopButtonGroup>
+            </>
+          )}
 
-        {/* Mobile */}
-        {isMobile && (
-          <MobileMenuButton
-            color="inherit"
-            aria-label="toggle drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{
-              backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
-              color: variant === 'light' ? 'inherit' : '#ffffff',
-              '&:hover': {
+          {/* Mobile */}
+          {isMobile && (
+            <MobileMenuButton
+              color="inherit"
+              aria-label="toggle drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{
                 backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
                 color: variant === 'light' ? 'inherit' : '#ffffff',
-              },
-              transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-            }}
-          >
-            {mobileOpen ? (
-              <CloseIcon fontSize="medium" />
-            ) : (
-              <MenuIcon fontSize="medium" />
-            )}
-          </MobileMenuButton>
-        )}
-      </StyledToolbar>
+                '&:hover': {
+                  backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
+                  color: variant === 'light' ? 'inherit' : '#ffffff',
+                },
+                transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+              }}
+            >
+              {mobileOpen ? (
+                <CloseIcon fontSize="medium" />
+              ) : (
+                <MenuIcon fontSize="medium" />
+              )}
+            </MobileMenuButton>
+          )}
+        </StyledToolbar>
+      </Container>
 
       {/* Mobile Drawer */}
       <StyledDrawer
