@@ -18,7 +18,7 @@ const BannerWrapper = styled(Box)(() => ({
 const Title = styled(Typography)(() => ({
   color: '#a8f574',
   fontWeight: 700,
-  fontSize: '64px',
+  fontSize: '56px',
   marginBottom: 24,
   textAlign: 'center',
   lineHeight:'76px',
