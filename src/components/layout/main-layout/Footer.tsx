@@ -15,8 +15,20 @@ import CommonButton from '@/components/ui/CommonButton';
 const FooterWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(6),
+  paddingLeft: '20px',
+  paddingRight: '20px',
   backgroundColor: theme.palette.background.paper,
   width: '100%',
+
+  [theme.breakpoints.up('md')]: {
+    paddingLeft: '50px',
+    paddingRight: '50px',
+  },
+
+  [theme.breakpoints.up('lg')]: {
+    paddingLeft: '80px',
+    paddingRight: '80px',
+  },
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
@@ -42,7 +54,7 @@ const LogoAndSocialBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  flex: 4.5,
+  flex: 3,
   [theme.breakpoints.up('sm')]: {
     alignItems: 'flex-start',
   },
@@ -69,7 +81,7 @@ const SocialText = styled(Typography)(({ theme }) => ({
   whiteSpace: 'nowrap',
   [theme.breakpoints.up('sm')]: {
     textAlign: 'left',
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(0.5),
   },
 }));
 
@@ -100,9 +112,9 @@ const CopyrightText = styled(Typography)(({ theme }) => ({
 }));
 
 const NavLinksBox = styled(Box)(({ theme }) => ({
-  flex: 7,
+  flex: 6,
   display: 'none',
-  [theme.breakpoints.up('xl')]: {
+  [theme.breakpoints.up('lg')]: {
     display: 'block',
   },
 }));
@@ -110,7 +122,7 @@ const NavLinksBox = styled(Box)(({ theme }) => ({
 const NavLinksStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
   marginRight: theme.spacing(2),
-  gap: theme.spacing(5),
+  gap: theme.spacing(4),
   whiteSpace: 'nowrap',
 }));
 
@@ -133,7 +145,7 @@ const SupportLink = styled(Link)(({ theme }) => ({
 }));
 
 const FreeTrialBox = styled(Box)(({ theme }) => ({
-  flex: 3,
+  flex: 2,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
