@@ -3,11 +3,11 @@ import { Button, Grid , styled} from '@mui/material';
 
 import BlogCard from './BlogCard';
 
-const mockBlogs = Array.from({ length: 12 }).map((_, i) => ({
-  title: `AI 如何提升运营效率 ${i + 1}`,
-  summary: '探索 AI 在调度和运营中的实际应用，助力企业降本增效。',
+const mockBlogs = Array.from({ length: 12 }).map(() => ({
+  title: `Lucy Now Speaks More Languages- the product update you've been the product update you've …`,
+  summary: 'Why limit your customer experience to just one language? When all the important people in your life...',
   date: '2024-05-01',
-  tag: 'AI',
+  tag: 'Small And Medium Businesses',
 }));
 
 const NextButton = styled(Button)(() => ({
@@ -16,9 +16,10 @@ const NextButton = styled(Button)(() => ({
   fontWeight: 700,
   borderRadius: 8,
   boxShadow: 'none',
-  minWidth: 80,
-  minheight: 36,
-  margin: 24,
+  width: '114px',
+  height: '48px',
+  marginTop: '40px',
+  marginBottom: '72px',
   textTransform: 'none',
   '&:hover': {
     background: '#222',
@@ -29,7 +30,7 @@ const NextButton = styled(Button)(() => ({
 
 export default function BlogList() {
   return (
-    <Grid container spacing={4} justifyContent="center" alignItems="stretch" sx={{ my: 6 }} >
+    <Grid container spacing={4} justifyContent="center" alignItems="stretch" sx={{ mb: 6, mt:1 }} >
       {mockBlogs.map((blog, idx) => (
         <Grid item xs={12} sm={6} md={4} key={idx} >
           <BlogCard {...blog} />

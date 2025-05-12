@@ -6,21 +6,19 @@ const FilterBarWrapper = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   gap: 24,
-  margin: '32px 0px',
+  marginTop: '32px',
   justifyContent: 'flex-start',
 }));
 
 const SearchBox = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'space-between',
   background: '#fff',
   border: '1px solid #E0E0E0',
   borderRadius: 12,
-  padding: '0 8px 0 16px',
-  height: 44,
-  minWidth: 380,
-  flex: 1,
-  maxWidth: 480,
+  height: '36px',
+  width: '360px',
 }));
 
 const StyledInput = styled(TextField)(() => ({
@@ -39,11 +37,12 @@ const SearchButton = styled(Button)(() => ({
   background: '#111',
   color: '#fff',
   fontWeight: 700,
+  fontSize: 13,
   borderRadius: 8,
   boxShadow: 'none',
+  marginRight: 4,
   minWidth: 80,
-  height: 36,
-  marginLeft: 12,
+  height: 30,
   textTransform: 'none',
   '&:hover': {
     background: '#222',
@@ -52,21 +51,20 @@ const SearchButton = styled(Button)(() => ({
 }));
 
 const TopicBox = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'center',
   background: '#fff',
   border: '1px solid #E0E0E0',
   borderRadius: 12,
-  height: 44,
-  minWidth: 320,
-  display: 'flex',
-  alignItems: 'center',
-  padding: '0 16px',
+  height: '36px',
+  width: '360px',
 }));
 
 const TopicLabel = styled(Typography)(() => ({
   color: '#222',
   fontWeight: 700,
-  marginRight: 8,
-  fontSize: 16,
+  marginLeft: 8,
+  fontSize: 13,
   minWidth: 64,
 }));
 
@@ -92,9 +90,9 @@ export default function BlogFilterBar() {
           disableUnderline
           defaultValue=""
           displayEmpty
-          sx={{ flex: 1, fontSize: 16 }}
+          sx={{ flex: 1, fontSize: 13 }}
         >
-          <MenuItem value="" disabled>
+          <MenuItem value="" disabled >
             Please Select
           </MenuItem>
           <MenuItem value="ai">AI</MenuItem>

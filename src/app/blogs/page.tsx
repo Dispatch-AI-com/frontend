@@ -6,9 +6,6 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import { Box, Container } from '@mui/material';
 
-import Footer from '@/components/layout/main-layout/Footer';
-import Navbar from '@/components/layout/main-layout/Navbar';
-
 import Banner from './components/Banner';
 import BlogFilterBar from './components/BlogFilterBar';
 import BlogHighlightCard from './components/BlogHighlightCard';
@@ -19,7 +16,6 @@ export default function BlogsPage() {
   return (
     <>
         <Box>
-            <Navbar variant='dark'/>
             <Banner/>
             <Container>
                 <BlogHighlightCard />
@@ -27,7 +23,6 @@ export default function BlogsPage() {
                 <BlogList />
             </Container>
             <SubscriptionSection/>
-            <Footer/>
         </Box>
     </>
   );

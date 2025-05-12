@@ -1,9 +1,11 @@
 "use client";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Box, Card, CardContent, Chip, styled, Typography } from '@mui/material';
 
 const BlogCardWrapper = styled(Card)(() => ({
   width: '100%',               // 占满 Grid 分配的宽度
-  height: 528,
+  aspectRatio: '448 / 528',  
   padding: '12px 12px 30px',
   borderRadius: 24,
   border: '1px solid #d5d5d5',
@@ -12,27 +14,28 @@ const BlogCardWrapper = styled(Card)(() => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
+  alignItems: 'flex-start',
 }));
 
 const ImageBox = styled(Box)(() => ({
   width: '100%',
-  height: 220,
+  aspectRatio: '424 / 238',
   background: '#e5e5e5',
   borderRadius: 18,
-  marginBottom: 28,
+  marginBottom: 20,
 }));
 
 const Title = styled(Typography)(() => ({
-  color: '#111',
+  color: '#060606',
   fontWeight: 700,
-  fontSize: 22,
-  lineHeight: 1.2,
+  fontSize: '14px',
+  lineHeight: '22px',
   marginBottom: 8,
 }));
 
 const Summary = styled(Typography)(() => ({
-  color: '#7a7a7a',
-  fontSize: 15,
+  color: '#6d6d6d',
+  fontSize: '10px',
   marginBottom: 12,
   lineHeight: 1.5,
 }));
@@ -45,13 +48,12 @@ const TagRow = styled(Box)(() => ({
 }));
 
 const StyledTag = styled(Chip)(() => ({
-  background: '#A7FF9B',
-  color: '#222',
+  background: '#a8f574',
+  color: '#060606',
   fontWeight: 600,
-  fontSize: 14,
+  fontSize: 10,
   borderRadius: 20,
-  padding: '0 10px',
-  height: 32,
+  height: 24,
 }));
 
 const FooterRow = styled(Box)(() => ({
@@ -67,7 +69,7 @@ const MetaInfo = styled(Box)(() => ({
   alignItems: 'center',
   gap: 16,
   color: '#7a7a7a',
-  fontSize: 15,
+  fontSize: 11,
 }));
 
 export interface BlogCardProps {
@@ -94,16 +96,16 @@ export default function BlogCard({ title, summary, date, tag, views = 2036 }: Bl
         </TagRow>
       </CardContent>
       <FooterRow>
-        <Typography sx={{ fontWeight: 700, color: '#111', fontSize: 17 }}>
+        <Typography sx={{ fontWeight: 700, color: '#060606', fontSize: '12px' }}>
           Read More&nbsp;→
         </Typography>
         <MetaInfo>
           <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span role="img" aria-label="date">🗓️</span>
+            <AccessTimeIcon fontSize="small" />
             {date}
           </Box>
           <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span role="img" aria-label="views">👁️</span>
+            <VisibilityIcon fontSize="small" />
             {views}
           </Box>
         </MetaInfo>
