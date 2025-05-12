@@ -42,7 +42,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
 }));
 
-const StyledToolbar = styled(Toolbar)(({ }) => ({
+const StyledToolbar = styled(Toolbar)(() => ({
   width: '100%',
   maxWidth: '1920px',
   margin: '0 auto',
