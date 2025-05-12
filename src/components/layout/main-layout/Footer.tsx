@@ -66,6 +66,7 @@ const SocialBox = styled(Box)(({ theme }) => ({
 const SocialText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   textAlign: 'center',
+  whiteSpace: 'nowrap',
   [theme.breakpoints.up('sm')]: {
     textAlign: 'left',
     marginRight: theme.spacing(1),
@@ -101,7 +102,7 @@ const CopyrightText = styled(Typography)(({ theme }) => ({
 const NavLinksBox = styled(Box)(({ theme }) => ({
   flex: 7,
   display: 'none',
-  [theme.breakpoints.up('lg')]: {
+  [theme.breakpoints.up('xl')]: {
     display: 'block',
   },
 }));
@@ -110,6 +111,7 @@ const NavLinksStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
   marginRight: theme.spacing(2),
   gap: theme.spacing(5),
+  whiteSpace: 'nowrap',
 }));
 
 const NavLink = styled(Link)(({ theme }) => ({

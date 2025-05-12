@@ -17,7 +17,7 @@ import React from 'react';
 // Styled Components
 const FeaturesWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(8),
-  paddingBottom: theme.spacing(8),
+  paddingBottom: theme.spacing(20),
   backgroundColor: theme.palette.background.default,
 }));
 
@@ -47,12 +47,11 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
 
 const FeatureCard = styled(Card)(() => ({
   height: '100%',
+  maxWidth: 440,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   textAlign: 'left',
-  marginLeft: '20px',
-  marginBottom: '20px',
   padding: 0,
   paddingLeft: 0,
   boxShadow: 'none',
@@ -60,8 +59,8 @@ const FeatureCard = styled(Card)(() => ({
 }));
 
 const FeatureIconContainer = styled(Box)(({ theme }) => ({
-  width: 80,
-  height: 80,
+  width: 64,
+  height: 64,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -125,7 +124,7 @@ export default function FeaturesSection( ) {
           Automated Calls, Save Time, Grow Your Business
         </SectionTitle>
 
-        <Grid container spacing={6}>
+        <Grid container spacing={10}>
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} key={index}>
               <FeatureCard>
