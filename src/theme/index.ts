@@ -55,8 +55,7 @@ const theme = createTheme(baseTheme, {
         root: {
           marginLeft: 'auto',
           marginRight: 'auto',
-          paddingLeft: baseTheme.spacing(2),
-          paddingRight: baseTheme.spacing(2),
+          
           [`@media (min-width:${baseTheme.breakpoints.values.sm}px)`]: {
             maxWidth: baseTheme.custom.containerWidth.sm,
           },
