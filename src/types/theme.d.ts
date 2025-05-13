@@ -1,3 +1,6 @@
+// types/theme.d.ts
+import '@mui/material/styles';
+
 declare module '@mui/material/styles' {
   interface Theme {
     custom: {
@@ -9,13 +12,14 @@ declare module '@mui/material/styles' {
       };
     };
   }
+
   interface ThemeOptions {
     custom?: {
-      containerWidth: {
-        sm: number;
-        md: number;
-        lg: number;
-        xl: number;
+      containerWidth?: {
+        sm?: number;
+        md?: number;
+        lg?: number;
+        xl?: number;
       };
     };
   }
