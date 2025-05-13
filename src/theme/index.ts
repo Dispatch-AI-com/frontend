@@ -23,11 +23,11 @@ let theme = createTheme({
     fontSize: 16,
     fontFamily: ['Roboto', 'sans-serif'].join(','),
     h1: {
-      fontSize: 64,
+      fontSize: 48,
       fontWeight: 900,
     },
     h2: {
-      fontSize: 32,
+      fontSize: 28,
       fontWeight: 900,
     },
     h3: {
@@ -35,13 +35,13 @@ let theme = createTheme({
       fontWeight: 700,
     },
     body1: {
-      fontSize: 16,
-    },
-    body2: {
       fontSize: 14,
     },
+    body2: {
+      fontSize: 13,
+    },
     button: {
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: 700,
     },
   },
