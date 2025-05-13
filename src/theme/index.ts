@@ -16,14 +16,30 @@ const baseTheme = createTheme({
     },
   },
   typography: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: ['Roboto', 'sans-serif'].join(','),
-    h1: { fontSize: 64, fontWeight: 900 },
-    h2: { fontSize: 32, fontWeight: 900 },
-    h3: { fontSize: 18, fontWeight: 700 },
-    body1: { fontSize: 16 },
-    body2: { fontSize: 14 },
-    button: { fontSize: 16, fontWeight: 700 },
+    h1: {
+      fontSize: 48,
+      fontWeight: 900,
+    },
+    h2: {
+      fontSize: 28,
+      fontWeight: 900,
+    },
+    h3: {
+      fontSize: 18,
+      fontWeight: 700,
+    },
+    body1: {
+      fontSize: 14,
+    },
+    body2: {
+      fontSize: 13,
+    },
+    button: {
+      fontSize: 14,
+      fontWeight: 700,
+    },
   },
   breakpoints: {
     values: {
