@@ -1,5 +1,17 @@
-// theme/index.ts
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import { createTheme, responsiveFontSizes } from '@mui/material';
+
+declare module '@mui/material/styles' {
+  interface Theme {
+    custom: {
+      containerWidth: {
+        sm: number;
+        md: number;
+        lg: number;
+        xl: number;
+      };
+    };
+  }
+}
 
 let theme = createTheme({
   spacing: 8,
@@ -52,7 +64,46 @@ let theme = createTheme({
       sm: 600,    // tablets
       md: 900,    // small laptop
       lg: 1200,   // desktop
-      xl: 1440    // large screens
+      xl: 1536    // large screens
+    },
+  },
+
+  custom: {
+    containerWidth: {
+      sm: 600,
+      md: 840,
+      lg: 1080,
+      xl: 1440,
+    },
+  },
+
+});
+
+
+theme = createTheme(theme, {
+  components: {
+    MuiContainer: {
+      defaultProps: {
+        maxWidth: false,
+      },
+      styleOverrides: {
+        root: {
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          [`@media (min-width:${theme.breakpoints.values.sm}px)`]: {
+            maxWidth: theme.custom.containerWidth.sm,
+          },
+          [`@media (min-width:${theme.breakpoints.values.md}px)`]: {
+            maxWidth: theme.custom.containerWidth.md,
+          },
+          [`@media (min-width:${theme.breakpoints.values.lg}px)`]: {
+            maxWidth: theme.custom.containerWidth.lg,
+          },
+          [`@media (min-width:${theme.breakpoints.values.xl}px)`]: {
+            maxWidth: theme.custom.containerWidth.xl,
+          },
+        },
+      },
     },
   },
 });
