@@ -45,23 +45,14 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   width: '100%',
   maxWidth: '1920px',
   margin: '0 auto',
-  paddingLeft: '20px',
-  paddingRight: '20px',
-  paddingTop: '30px',
-  paddingBottom: '30px',
-
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: '80px',
-    paddingRight: '80px',
-  },
-
-  [theme.breakpoints.up('lg')]: {
-    paddingLeft: '240px',
-    paddingRight: '240px',
-  },
-
+  padding: '30px 240px',
   display: 'flex',
   justifyContent: 'space-between',
+  transition: 'padding 0.3s ease',
+
+  [theme.breakpoints.down('xl')]: {
+    padding: '30px 20px',
+  },
 }));
 
 const LogoBox = styled(Box)({
