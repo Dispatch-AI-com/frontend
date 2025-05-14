@@ -11,7 +11,7 @@ const AboutBannerSection = () => {
             <HeaderImage src="/voice-ai.png" alt="Voice AI" />
             <Box>
                 <HeaderTitle>
-                    Building the future of <br></br> Voice AI
+                    Building the future of <br /> Voice AI
                 </HeaderTitle>
                 <HeaderText>
                     Transforming human-machine interaction through advanced voice technology.
