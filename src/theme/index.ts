@@ -8,13 +8,15 @@ const baseTheme = createTheme({
   palette: {
     background: {
       default: '#ffffff',
-      paper: '#fafafa',
+      paper: '#fafafa', 
+      dark: '#000000', 
     },
     text: {
-      primary: '#060606',
-      secondary: '#6d6d6d',
+      primary: '#060606', 
+      secondary: '#6d6d6d', 
     },
   },
+  
   typography: {
     fontSize: 14,
     fontFamily: ['Roboto', 'sans-serif'].join(','),
@@ -56,6 +58,19 @@ const baseTheme = createTheme({
       md: 840,
       lg: 1080,
       xl: 1440,
+    },
+  },
+
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          overflowX: 'hidden',
+        },
+        body: {
+          overflowX: 'hidden',
+        },
+      },
     },
   },
 });
