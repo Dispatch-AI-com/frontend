@@ -20,12 +20,12 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
-  width: '152px',
-  height: '36px',
+  width: '126px',
+  height: '30px',
   position: 'relative',
-  marginBottom: '40px',
+  marginBottom: theme.spacing(4),
   [theme.breakpoints.up('sm')]: {
-    marginBottom: '80px',
+    marginBottom: theme.spacing(11.5),
   },
 }));
 
@@ -42,14 +42,14 @@ const LogoAndSocialBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  flex: 4.5,
+  flex: 3,
   [theme.breakpoints.up('sm')]: {
     alignItems: 'flex-start',
   },
 }));
 
 const SocialBox = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2.75),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -58,18 +58,15 @@ const SocialBox = styled(Box)(({ theme }) => ({
     flexDirection: 'row',
     gap: theme.spacing(1),
   },
-  [theme.breakpoints.down('sm')]: {
-    marginBottom: theme.spacing(3),
-  },
 }));
 
 const SocialText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   textAlign: 'center',
   whiteSpace: 'nowrap',
+  marginRight: theme.spacing(0.5),
   [theme.breakpoints.up('sm')]: {
     textAlign: 'left',
-    marginRight: theme.spacing(1),
   },
 }));
 
@@ -100,17 +97,16 @@ const CopyrightText = styled(Typography)(({ theme }) => ({
 }));
 
 const NavLinksBox = styled(Box)(({ theme }) => ({
-  flex: 7,
+  flex: 5,
   display: 'none',
-  [theme.breakpoints.up('xl')]: {
+  [theme.breakpoints.up('lg')]: {
     display: 'block',
   },
 }));
 
 const NavLinksStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
-  marginRight: theme.spacing(2),
-  gap: theme.spacing(5),
+  gap: theme.spacing(4),
   whiteSpace: 'nowrap',
 }));
 
@@ -123,7 +119,7 @@ const NavLink = styled(Link)(({ theme }) => ({
 
 const SupportLinksStack = styled(Stack)(({ theme }) => ({
   position: 'absolute',
-  marginTop: theme.spacing(3),
+  marginTop: theme.spacing(4),
 }));
 
 const SupportLink = styled(Link)(({ theme }) => ({
@@ -133,14 +129,12 @@ const SupportLink = styled(Link)(({ theme }) => ({
 }));
 
 const FreeTrialBox = styled(Box)(({ theme }) => ({
-  flex: 3,
+  flex: 2,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: theme.spacing(1),
   [theme.breakpoints.up('sm')]: {
     alignItems: 'flex-start',
-    gap: theme.spacing(2),
   },
 }));
 
@@ -148,7 +142,7 @@ const FreeTrialTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   textAlign: 'center',
   [theme.breakpoints.up('sm')]: {
-    marginBottom: theme.spacing(1.5),
+    marginBottom: theme.spacing(4),
     textAlign: 'left',
   },
 }));
@@ -164,7 +158,7 @@ export default function Footer() {
               <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
             </LogoContainer>
             <SocialBox>
-              <SocialText variant="body2">Follow Us On Social Media</SocialText>
+              <SocialText>Follow Us On Social Media</SocialText>
               <SocialIconsRow direction="row" spacing={0.8}>
                 <SocialIconButton color="inherit"><LinkedInIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><FacebookIcon /></SocialIconButton>
@@ -173,7 +167,7 @@ export default function Footer() {
                 <SocialIconButton color="inherit"><YouTubeIcon /></SocialIconButton>
               </SocialIconsRow>
             </SocialBox>
-            <CopyrightText variant="body2">©Copyright 2025 Dispatch AI</CopyrightText>
+            <CopyrightText>©Copyright 2025 Dispatch AI</CopyrightText>
           </LogoAndSocialBox>
 
           {/* Navigation Links */}
@@ -187,7 +181,7 @@ export default function Footer() {
               <NavLink href="/about" color="inherit">About Us</NavLink>
               <Box>
                 <NavLink href="/support" color="inherit">Support</NavLink>
-                <SupportLinksStack spacing={2}>
+                <SupportLinksStack spacing={2.5}>
                   <SupportLink href="/support/documents">Documents</SupportLink>
                   <SupportLink href="/support/faqs">FAQs</SupportLink>
                   <SupportLink href="/support/help">Need Help</SupportLink>
