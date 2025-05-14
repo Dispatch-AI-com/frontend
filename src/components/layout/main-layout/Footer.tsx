@@ -134,16 +134,35 @@ const FreeTrialBox = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   [theme.breakpoints.up('sm')]: {
+    alignItems: 'flex-end',
+    marginLeft: 'auto',
+  },
+}));
+
+const FreeTrialContent = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: 'fit-content',
+  [theme.breakpoints.up('sm')]: {
     alignItems: 'flex-start',
   },
 }));
 
+const ButtonWrapper = styled(Box)({
+  width: '195px',
+  height: '40px',
+  '& > button': {
+    width: '100%',
+    height: '100%',
+  },
+});
+
 const FreeTrialTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
-  textAlign: 'center',
+  textAlign: 'left',
   [theme.breakpoints.up('sm')]: {
     marginBottom: theme.spacing(4),
-    textAlign: 'left',
   },
 }));
 
@@ -193,13 +212,17 @@ export default function Footer() {
 
           {/* Free Trial Section */}
           <FreeTrialBox>
-            <FreeTrialTitle variant="body1">Ready to Save Time?</FreeTrialTitle>
-            <CommonButton
-              buttonVariant="black"
-              endIcon={<ArrowForwardIcon sx={{ width: '20px', height: '20px' }} />}
-            >
-              Start Your Free Trial
-            </CommonButton>
+            <FreeTrialContent>
+              <FreeTrialTitle variant="body1">Ready to Save Time?</FreeTrialTitle>
+              <ButtonWrapper>
+                <CommonButton
+                  buttonVariant="black"
+                  endIcon={<ArrowForwardIcon sx={{ width: '20px', height: '20px' }} />}
+                >
+                  Start Your Free Trial
+                </CommonButton>
+              </ButtonWrapper>
+            </FreeTrialContent>
           </FreeTrialBox>
         </FooterStack>
       </Container>
