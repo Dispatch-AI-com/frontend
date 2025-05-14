@@ -20,8 +20,8 @@ const FooterWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
-  width: '152px',
-  height: '36px',
+  width: '126px',
+  height: '30px',
   position: 'relative',
   marginBottom: '40px',
   [theme.breakpoints.up('sm')]: {
