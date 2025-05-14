@@ -25,7 +25,7 @@ const LogoContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   marginBottom: '40px',
   [theme.breakpoints.up('sm')]: {
-    marginBottom: '80px',
+    marginBottom: '70px',
   },
 }));
 
