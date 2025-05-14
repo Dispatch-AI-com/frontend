@@ -2,6 +2,9 @@ import { Container } from '@mui/material';
 
 import Footer from "../main-layout/Footer"
 import Navbar from "../main-layout/Navbar"
+import AboutBannerSection from './Banner/AboutBannerSection';
+import CallToActionSection from "./CallToAction/CallToActionSection"
+
 
 export default function AboutUsLayout({
     children,
@@ -10,17 +13,13 @@ export default function AboutUsLayout({
 }>) {
     return (
         <>
-            <Container maxWidth="xl">
             <Navbar variant='dark'/>
-            </Container>
-            
+            <AboutBannerSection />
             <Container maxWidth="xl">
                 {children}
             </Container>
-            
-            <Container maxWidth="xl">
-                <Footer />
-            </Container>
+            <CallToActionSection />
+            <Footer />
         </>
     );
 }

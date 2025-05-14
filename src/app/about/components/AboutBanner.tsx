@@ -6,7 +6,7 @@ export const AboutHeader = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: theme.palette.background.dark,
-    padding: theme.spacing(10, 25),
+    padding: theme.spacing(10, 50),
     marginTop: theme.spacing(10),
     color: theme.palette.text.primary,
     gap: theme.spacing(10),
