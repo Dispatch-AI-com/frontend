@@ -25,7 +25,7 @@ const LogoContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   marginBottom: '40px',
   [theme.breakpoints.up('sm')]: {
-    marginBottom: '70px',
+    marginBottom: theme.spacing(11),
   },
 }));
 
@@ -49,7 +49,7 @@ const LogoAndSocialBox = styled(Box)(({ theme }) => ({
 }));
 
 const SocialBox = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
+  marginBottom: theme.spacing(2.75),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -57,9 +57,6 @@ const SocialBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     flexDirection: 'row',
     gap: theme.spacing(1),
-  },
-  [theme.breakpoints.down('sm')]: {
-    marginBottom: theme.spacing(3),
   },
 }));
 
@@ -122,7 +119,7 @@ const NavLink = styled(Link)(({ theme }) => ({
 
 const SupportLinksStack = styled(Stack)(({ theme }) => ({
   position: 'absolute',
-  marginTop: theme.spacing(3),
+  marginTop: theme.spacing(4),
 }));
 
 const SupportLink = styled(Link)(({ theme }) => ({
@@ -136,10 +133,8 @@ const FreeTrialBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: theme.spacing(1),
   [theme.breakpoints.up('sm')]: {
     alignItems: 'flex-start',
-    gap: theme.spacing(2),
   },
 }));
 
@@ -147,7 +142,7 @@ const FreeTrialTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   textAlign: 'center',
   [theme.breakpoints.up('sm')]: {
-    marginBottom: theme.spacing(1.5),
+    marginBottom: theme.spacing(4),
     textAlign: 'left',
   },
 }));
