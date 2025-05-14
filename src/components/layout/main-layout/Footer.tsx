@@ -25,7 +25,7 @@ const LogoContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   marginBottom: theme.spacing(4),
   [theme.breakpoints.up('sm')]: {
-    marginBottom: theme.spacing(12),
+    marginBottom: theme.spacing(11.5),
   },
 }));
 
@@ -158,7 +158,7 @@ export default function Footer() {
               <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
             </LogoContainer>
             <SocialBox>
-              <SocialText variant="body2">Follow Us On Social Media</SocialText>
+              <SocialText>Follow Us On Social Media</SocialText>
               <SocialIconsRow direction="row" spacing={0.8}>
                 <SocialIconButton color="inherit"><LinkedInIcon /></SocialIconButton>
                 <SocialIconButton color="inherit"><FacebookIcon /></SocialIconButton>
@@ -167,7 +167,7 @@ export default function Footer() {
                 <SocialIconButton color="inherit"><YouTubeIcon /></SocialIconButton>
               </SocialIconsRow>
             </SocialBox>
-            <CopyrightText variant="body2">©Copyright 2025 Dispatch AI</CopyrightText>
+            <CopyrightText>©Copyright 2025 Dispatch AI</CopyrightText>
           </LogoAndSocialBox>
 
           {/* Navigation Links */}
