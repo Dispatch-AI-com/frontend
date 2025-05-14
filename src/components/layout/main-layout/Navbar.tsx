@@ -24,12 +24,12 @@ import { MobileDrawer } from './navbar/MobileDrawer';
 import { NavItemProps } from './navbar/NavItem';
 
 const navItems: NavItemProps[] = [
-  { href: '/', text: 'Home', width: 75, textWidth: 43 },
-  { href: '/products', text: 'Products', width: 98, textWidth: 66 },
-  { href: '/pricing', text: 'Pricing', width: 83, textWidth: 51 },
-  { href: '/blogs', text: 'Blogs', width: 73, textWidth: 41 },
-  { href: '/features', text: 'Features', width: 95, textWidth: 63 },
-  { href: '/about', text: 'About Us', width: 98, textWidth: 66 },
+  { href: '/', text: 'Home', width: 70, textWidth: 38 },
+  { href: '/products', text: 'Products', width: 90, textWidth: 58 },
+  { href: '/pricing', text: 'Pricing', width: 77, textWidth: 45 },
+  { href: '/blogs', text: 'Blogs', width: 68, textWidth: 36 },
+  { href: '/features', text: 'Features', width: 87, textWidth: 55 },
+  { href: '/about', text: 'About Us', width: 90, textWidth: 58 },
 ];
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -37,7 +37,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   top: 0,
   left: 0,
   right: 0,
-  height: 80,
+  height: 72,
   marginBottom: '0',
   zIndex: theme.zIndex.drawer + 1,
 }));
@@ -47,7 +47,7 @@ const StyledToolbar = styled(Toolbar)(() => ({
   maxWidth: '1920px',
   display: 'flex',
   justifyContent: 'space-between',
-  height: '80px',
+  height: '72px',
   transition: 'padding 0.3s ease',
 }));
 
@@ -112,8 +112,8 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
                 <Image
                   src={variant === 'light' ? "/logo.svg" : "/logo-dark.svg"}
                   alt="Dispatch AI logo"
-                  width={152}
-                  height={36}
+                  width={126}
+                  height={30}
                   priority
                   style={{ cursor: 'pointer', display: 'block' }}
                 />
