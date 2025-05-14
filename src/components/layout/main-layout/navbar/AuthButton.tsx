@@ -13,15 +13,11 @@ interface AuthButtonProps {
 
 const BaseAuthButton = styled(CommonButton, {
   shouldForwardProp: (prop) => !['isMobile', 'themeVariant'].includes(prop as string),
-})<{ isMobile?: boolean; themeVariant?: 'light' | 'dark' }>(({ isMobile }) => ({
-  '&&': { 
-    fontSize: isMobile ? 20 : 16,
-    fontWeight: 'bold',
-  },
-  padding: isMobile ? '12px 24px' : '8px 16px',
-  borderRadius: 12,
-  textTransform: 'none',
-}));
+})<{ isMobile?: boolean; themeVariant?: 'light' | 'dark' }>(
+  ({ isMobile }) => ({
+    ...(isMobile ? { fontSize: 20, fontWeight: 'bold', padding: '12px 24px' } : {}),
+  })
+);
 
 const LoginButton = styled(BaseAuthButton)(({ theme, themeVariant = 'light' }) => ({
   backgroundColor: themeVariant === 'light' ? theme.palette.background.default : '#060606',
