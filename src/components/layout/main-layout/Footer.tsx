@@ -25,7 +25,7 @@ const LogoContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   marginBottom: theme.spacing(4),
   [theme.breakpoints.up('sm')]: {
-    marginBottom: theme.spacing(11),
+    marginBottom: theme.spacing(12),
   },
 }));
 
@@ -64,6 +64,7 @@ const SocialText = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   textAlign: 'center',
   whiteSpace: 'nowrap',
+  marginRight: theme.spacing(0.5),
   [theme.breakpoints.up('sm')]: {
     textAlign: 'left',
   },
@@ -180,7 +181,7 @@ export default function Footer() {
               <NavLink href="/about" color="inherit">About Us</NavLink>
               <Box>
                 <NavLink href="/support" color="inherit">Support</NavLink>
-                <SupportLinksStack spacing={2}>
+                <SupportLinksStack spacing={2.5}>
                   <SupportLink href="/support/documents">Documents</SupportLink>
                   <SupportLink href="/support/faqs">FAQs</SupportLink>
                   <SupportLink href="/support/help">Need Help</SupportLink>
