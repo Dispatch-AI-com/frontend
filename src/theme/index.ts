@@ -55,9 +55,9 @@ const baseTheme = createTheme({
   custom: {
     containerWidth: {
       sm: 600,
-      md: 840,
-      lg: 1080,
-      xl: 1440,
+      md: 888,
+      lg: 1188,
+      xl: 1488,
     },
   },
 
