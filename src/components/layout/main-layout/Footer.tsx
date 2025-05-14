@@ -23,7 +23,7 @@ const LogoContainer = styled(Box)(({ theme }) => ({
   width: '126px',
   height: '30px',
   position: 'relative',
-  marginBottom: '40px',
+  marginBottom: theme.spacing(4),
   [theme.breakpoints.up('sm')]: {
     marginBottom: theme.spacing(11),
   },
@@ -105,7 +105,6 @@ const NavLinksBox = styled(Box)(({ theme }) => ({
 
 const NavLinksStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
-  marginRight: theme.spacing(2),
   gap: theme.spacing(4),
   whiteSpace: 'nowrap',
 }));
