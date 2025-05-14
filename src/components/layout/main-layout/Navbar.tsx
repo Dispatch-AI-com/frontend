@@ -45,8 +45,6 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const StyledToolbar = styled(Toolbar)(() => ({
   width: '100%',
   maxWidth: '1920px',
-  paddingTop: '30px',
-  paddingBottom: '30px',
   display: 'flex',
   justifyContent: 'space-between',
   height: '80px',
