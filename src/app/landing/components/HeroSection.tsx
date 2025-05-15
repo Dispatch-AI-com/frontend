@@ -13,7 +13,7 @@ const StyledContainer = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
-    padding-top: ${({ theme }) => theme.spacing(12)};
+  padding-top: ${({ theme }) => theme.spacing(12)};
   padding-bottom: ${({ theme }) => theme.spacing(12)};
   
   @media (min-width: ${({ theme }) => theme.breakpoints.values.xs}px) {
@@ -48,13 +48,8 @@ const StyledHeader = styled(Typography)`
 
 const StyledTypographyBody = styled(Typography)`
   text-align: center;
-  color: ${({ theme }) => theme.palette.text.primary};
   margin: 32px 0;
-
-  @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
-    font-size: ${({ theme }) => theme.typography.body2.fontSize};
-    min-width: 1000px;
-  }
+  word-break: break-word;
 `;
 
 const ButtonStack = styled('div')`
@@ -110,7 +105,7 @@ export default function HeroSection() {
           <CommonButton buttonVariant="black" endIcon={<ArrowForwardIcon />} sx={{height: '48px'}}>
             Start Your Free Trial
           </CommonButton>
-          <CommonButton buttonVariant="green" endIcon={<ArrowForwardIcon />} sx={{height: '48px'}}>
+          <CommonButton buttonVariant="green" endIcon={<ArrowForwardIcon />} sx={{height: '48px', marginBottom: { xs: '50px', sm: '0' }}}>
             Request a Demo
           </CommonButton>
         </ButtonStack>
