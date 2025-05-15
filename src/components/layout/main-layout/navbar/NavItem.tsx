@@ -4,7 +4,6 @@ import type { BoxProps } from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import NextLink, { LinkProps } from 'next/link';
 
-
 interface ExtraNavProps {
   width: number;
   textWidth: number;
@@ -48,22 +47,19 @@ const NavItemContainer = styled(Box, {
 }));
 
 const NavItemText = styled(Typography, {
-  shouldForwardProp: (prop) => !['textWidth', 'themeVariant', 'isMobile'].includes(prop as string),
+  shouldForwardProp: (prop) =>
+     !['textWidth', 'themeVariant', 'isMobile'].includes(prop as string),
 })<{ textWidth: number; themeVariant?: 'light' | 'dark'; isMobile?: boolean }>(
   ({ theme, textWidth, themeVariant = 'light', isMobile }) => ({
     width: isMobile ? 'auto' : textWidth,
-    height: isMobile ? 24 : 20,
-    '&&': { 
-      fontSize: isMobile ? 20 : 16,
-      fontWeight: isMobile ? 500 : 400,
-      whiteSpace: 'nowrap',
-    },
+    height: isMobile ? 24 : undefined,
     lineHeight: 1.25,
+    whiteSpace: 'nowrap',
     color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
-    [theme.breakpoints.down('lg')]: {
-      fontSize: 14,
-      width: 'auto',
-    },
+    ...(isMobile && {
+      fontSize: 20,
+      fontWeight: 500,
+    }),
   })
 );
 
@@ -83,13 +79,14 @@ export function NavItem({
       width={width}
       textWidth={textWidth}
       themeVariant={themeVariant}
+      isMobile={isMobile}
       onClick={() => handleDrawerToggle?.()}
     >
-      <NavItemText 
-        textWidth={textWidth} 
-        themeVariant={themeVariant} 
-        variant="body2"
+      <NavItemText
+        textWidth={textWidth}
+        themeVariant={themeVariant}
         isMobile={isMobile}
+        variant="body1"
       >
         {text}
       </NavItemText>
