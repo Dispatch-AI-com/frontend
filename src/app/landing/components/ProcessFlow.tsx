@@ -87,6 +87,8 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  aspectRatio: '4 / 3',
+  position: 'relative',
   backgroundColor: theme.palette.common.white,
   borderRadius: theme.shape.borderRadius * 3,
   marginBottom: theme.spacing(2),
@@ -101,6 +103,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
 const StepsGrid = styled(Box)(({ theme }) => ({
   display: 'grid',
   gap: theme.spacing(2),
+  alignItems: 'stretch',
   [theme.breakpoints.up('xs')]: {
     gridTemplateColumns: 'repeat(2, 1fr)',
   },
@@ -117,18 +120,17 @@ const StepPaper = styled(Paper, {
   shouldForwardProp: (prop) => prop !== 'isActive',
 })<{ isActive?: boolean }>(({ theme, isActive }) => ({
   width: '100%',
-  maxWidth: '300px',
-  marginLeft: 'auto',
-  marginRight: 'auto',
+  height: '100%', 
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
   padding: theme.spacing(2),
   backgroundColor: isActive ? '#a8f574' : 'transparent',
   color: isActive ? theme.palette.common.black : '#fff',
   borderRadius: theme.shape.borderRadius * 2,
   cursor: 'pointer',
   transition: 'background-color 0.3s',
-  [theme.breakpoints.up('md')]: {
-    minHeight: '146px',
-  },
 }));
 
 const StepTitle = styled(Typography)({
@@ -218,8 +220,7 @@ export default function ProcessFlow() {
             <Image
               src={current.imageUrl}
               alt={current.title}
-              width={400}
-              height={300}
+              fill
               className="object-contain"
             />
           )}
