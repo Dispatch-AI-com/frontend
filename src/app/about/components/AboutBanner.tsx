@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const AboutHeader = styled(Box)(({ theme }) => ({
@@ -6,16 +6,30 @@ export const AboutHeader = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: theme.palette.background.dark,
-    padding: theme.spacing(10, 25),
-    marginTop: theme.spacing(10),
+    padding: theme.spacing(10, 50),
+    marginTop: theme.spacing(8),
     color: theme.palette.text.primary,
     gap: theme.spacing(10),
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('xl')]: {
         padding: theme.spacing(8, 20),
     },
-    [theme.breakpoints.down('md')]: {
-        padding: theme.spacing(8, 20),
+    [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(5, 5),
+        flexDirection: 'column',
+        textAlign: 'center',
     },
+    [theme.breakpoints.only('sm')]: {
+        padding: theme.spacing(5, 5),
+        flexDirection: 'column',
+        textAlign: 'center',
+    },
+}));
+
+export const HeaderContainer = styled(Container)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing(10),
     [theme.breakpoints.down('sm')]: {
         padding: theme.spacing(5, 5),
         flexDirection: 'column',
