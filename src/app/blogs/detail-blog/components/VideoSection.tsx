@@ -12,7 +12,7 @@ const VideoContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%', 
   height: 0,
-  paddingBottom: '56.25%', // 16:9 aspect ratio
+  paddingBottom: '56.25%', 
 }));
 
 const VideoPaper = styled(Paper)(({ theme }) => ({
@@ -34,17 +34,6 @@ const VideoSection = () => {
       <VideoPaper>
         <Typography variant="body1">Video Placeholder</Typography>
         {/* Actual video component will go here */}
-        {/* 
-        <video 
-          controls 
-          width="100%" 
-          height="100%" 
-          poster="/images/video-poster.jpg"
-        >
-          <source src="/videos/lucy-demo.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video> 
-        */}
       </VideoPaper>
     </VideoContainer>
   );

@@ -1,17 +1,7 @@
-// /blogs/detail-blog/components/Header.tsx
 'use client';
 
-import React, { useState } from 'react';
-import { 
-  Box, 
-  Typography, 
-  IconButton,
-  useMediaQuery,
-  useTheme
-} from '@mui/material';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
+import React from 'react';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 // Styled components
@@ -20,6 +10,7 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   gap: theme.spacing(2),
   marginBottom: theme.spacing(3),
+  marginTop: theme.spacing(4),
 }));
 
 const TitleRow = styled(Box)(({ theme }) => ({
@@ -30,18 +21,6 @@ const TitleRow = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'flex-start',
     gap: theme.spacing(2),
-  },
-}));
-
-const SocialContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-}));
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.primary.main,
-  '&:hover': {
-    backgroundColor: 'rgba(0, 0, 0, 0.04)',
   },
 }));
 
@@ -71,55 +50,13 @@ const DateText = styled(Typography)(({ theme }) => ({
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [shareType, setShareType] = useState<string | null>(null);
-
-  // Handle social sharing clicks
-  const handleShare = (platform: string) => {
-    setShareType(platform);
-    
-    const url = window.location.href;
-    const title = "New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way";
-    
-    let shareUrl = '';
-    
-    switch(platform) {
-      case 'linkedin':
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-        break;
-      case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-        break;
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
-        break;
-      default:
-        break;
-    }
-    
-    if (shareUrl) {
-      window.open(shareUrl, '_blank', 'width=600,height=400');
-    }
-  };
 
   return (
     <HeaderContainer>
       <TitleRow>
-        <PageTitle variant="h4">
+        <PageTitle variant="h6">
           New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way
         </PageTitle>
-        
-        <SocialContainer>
-          <Typography variant="subtitle2" sx={{ mr: 1 }}>Social Sharing</Typography>
-          <StyledIconButton onClick={() => handleShare('linkedin')}>
-            <LinkedInIcon />
-          </StyledIconButton>
-          <StyledIconButton onClick={() => handleShare('facebook')}>
-            <FacebookIcon />
-          </StyledIconButton>
-          <StyledIconButton onClick={() => handleShare('twitter')}>
-            <TwitterIcon />
-          </StyledIconButton>
-        </SocialContainer>
       </TitleRow>
       
       <AuthorRow>

@@ -57,28 +57,28 @@ const FaqSection = () => {
       <StyledList>
         <CheckListItem>
           <StyledListItemIcon>
-            <CheckCircleOutlineIcon color="primary" />
+            <span role="img" aria-label="check">✅</span>
           </StyledListItemIcon>
           <ListItemText primary="Upload significantly larger FAQ documents" />
         </CheckListItem>
         
         <CheckListItem>
           <StyledListItemIcon>
-            <CheckCircleOutlineIcon color="primary" />
+            <span role="img" aria-label="check">✅</span>
           </StyledListItemIcon>
           <ListItemText primary="Import FAQs from a webpage—just paste the link, and Lucy pulls in the details" />
         </CheckListItem>
         
         <CheckListItem>
           <StyledListItemIcon>
-            <CheckCircleOutlineIcon color="primary" />
+            <span role="img" aria-label="check">✅</span>
           </StyledListItemIcon>
           <ListItemText primary="Easier manual entry—copy and paste everything into a single document and upload it" />
         </CheckListItem>
       </StyledList>
       
       <HowItHelps variant="body1">
-        <Pointer>👉</Pointer> How it helps: Instead of spending time manually inputting FAQ responses, 
+        <Pointer>💡</Pointer> How it helps: Instead of spending time manually inputting FAQ responses, 
         just upload or link to your existing FAQ content, and Lucy will do the rest, ensuring customers 
         get quick and accurate answers every time.
       </HowItHelps>
