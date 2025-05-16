@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import React from 'react';
 
 // Styled components
 const HeaderContainer = styled(Box)(({ theme }) => ({
@@ -24,7 +24,7 @@ const TitleRow = styled(Box)(({ theme }) => ({
   },
 }));
 
-const PageTitle = styled(Typography)(({ theme }) => ({
+const PageTitle = styled(Typography)(({ }) => ({
   fontWeight: 700,
 }));
 
@@ -48,8 +48,6 @@ const DateText = styled(Typography)(({ theme }) => ({
 }));
 
 const Header = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <HeaderContainer>

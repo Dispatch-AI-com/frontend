@@ -1,9 +1,9 @@
 // /blogs/detail-blog/components/VideoSection.tsx
 'use client';
 
-import React from 'react';
 import { Box, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import React from 'react';
 
 // Styled components
 const VideoContainer = styled(Box)(({ theme }) => ({
@@ -15,7 +15,7 @@ const VideoContainer = styled(Box)(({ theme }) => ({
   paddingBottom: '56.25%', 
 }));
 
-const VideoPaper = styled(Paper)(({ theme }) => ({
+const VideoPaper = styled(Paper)(({ }) => ({
   position: 'absolute',
   top: 0,
   left: 0,

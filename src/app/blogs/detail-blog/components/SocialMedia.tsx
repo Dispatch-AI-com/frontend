@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Box, Typography, IconButton } from '@mui/material';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { Box, IconButton,Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
+import React from 'react';
 
 // Styled components
 const SocialContainer = styled(Box)(({ theme }) => ({
@@ -39,11 +39,7 @@ const SocialLabel = styled(Typography)(({ theme }) => ({
 
 
 const SocialMedia = () => {
-  const [shareType, setShareType] = useState<string | null>(null);
-
   const handleShare = (platform: string) => {
-    setShareType(platform);
-
     const url = window.location.href;
     const title = "New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way";
 

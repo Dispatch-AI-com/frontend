@@ -1,10 +1,9 @@
 // /blogs/detail-blog/components/HeroSection.tsx
 'use client';
 
-import React from 'react';
-import { Box, Typography, Paper } from '@mui/material';
+import { Box, Paper,Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Image from 'next/image';
+import React from 'react';
 
 // Styled components
 const GradientPaper = styled(Paper)(({ theme }) => ({

@@ -1,13 +1,14 @@
 'use client';
 
-import React from 'react';
 import { Box, Container } from '@mui/material';
+import React from 'react';
+
+import FaqSection from './components/FaqSection';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import IntroSection from './components/IntroSection';
-import FaqSection from './components/FaqSection';
-import VideoSection from './components/VideoSection';
 import SocialMedia from './components/SocialMedia';
+import VideoSection from './components/VideoSection';
 
 const BlogDetailPage = () => {
   return (
