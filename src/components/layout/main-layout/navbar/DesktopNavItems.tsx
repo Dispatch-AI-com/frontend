@@ -10,11 +10,10 @@ interface DesktopNavItemsProps {
   themeVariant?: 'light' | 'dark';
 }
 
-const DesktopNavContainer = styled(Stack)(({ theme }) => ({
+const DesktopNavContainer = styled(Stack)(() => ({
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  marginLeft: theme.spacing(3.5), 
 }));
 
 export function DesktopNavItems({ navItems, themeVariant = 'light' }: DesktopNavItemsProps) {
