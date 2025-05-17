@@ -1,6 +1,7 @@
 "use client"
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Button, MenuItem, Select, styled, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
 
 const FilterBarWrapper = styled(Box)(() => ({
   display: 'flex',
@@ -69,6 +70,13 @@ const TopicLabel = styled(Typography)(() => ({
 }));
 
 export default function BlogFilterBar() {
+  const [keyword, setKeyword] = useState('');
+  const [topic, setTopic] = useState('');
+
+  const handleSearch = () => {
+
+  }
+
   return (
     <FilterBarWrapper>
       <SearchBox>
@@ -77,16 +85,22 @@ export default function BlogFilterBar() {
           variant="outlined"
           placeholder="Keywords"
           size="small"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
           InputProps={{
             sx: { fontSize: 16, background: 'transparent' },
           }}
         />
-        <SearchButton disableElevation>Search</SearchButton>
+        <SearchButton disableElevation onClick={handleSearch}>
+          Search
+        </SearchButton>
       </SearchBox>
       <TopicBox>
         <TopicLabel>Topic:</TopicLabel>
         <Select
           variant="standard"
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
           disableUnderline
           defaultValue=""
           displayEmpty

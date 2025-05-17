@@ -1,14 +1,10 @@
 "use client"
-import { Button, Grid , styled} from '@mui/material';
+import { Button, Grid , styled,Typography} from '@mui/material';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
+import type { Blog } from '../../../types/blog'; 
 import BlogCard from './BlogCard';
-
-const mockBlogs = Array.from({ length: 12 }).map(() => ({
-  title: `Lucy Now Speaks More Languages- the product update you've been the product update you've …`,
-  summary: 'Why limit your customer experience to just one language? When all the important people in your life...',
-  date: '2024-05-01',
-  tag: 'Small And Medium Businesses',
-}));
 
 const NextButton = styled(Button)(() => ({
   background: '#111',
@@ -29,13 +25,44 @@ const NextButton = styled(Button)(() => ({
 
 
 export default function BlogList() {
+
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get('http://localhost:4000/api/blogs?limit=12&page=1');
+        const fetched = res.data.data;
+
+        if (fetched.length > 0 && fetched.length < 9) {
+          const base = fetched[0]; 
+          while (fetched.length < 9) {
+            fetched.push({ ...base, _id: `${base._id}-dup${fetched.length}` });
+          }
+        }
+        setBlogs(fetched); 
+      } catch (err) {
+        console.error('Failed to fetch blogs:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
   return (
     <Grid container spacing={4} justifyContent="center" alignItems="stretch" sx={{ mb: 6, mt:1 }} >
-      {mockBlogs.map((blog, idx) => (
-        <Grid item xs={12} sm={6} md={4} key={idx} >
-          <BlogCard {...blog} />
-        </Grid>
-      ))}
+      {loading ? (
+        <Typography variant="body1">Loading...</Typography>
+      ) : (
+        blogs.map((blog) => (
+          <Grid item xs={12} sm={6} md={4} key={blog._id}>
+            <BlogCard {...blog} />
+          </Grid>
+        ))
+      )}
       <NextButton>Next →</NextButton>
     </Grid>
   );
