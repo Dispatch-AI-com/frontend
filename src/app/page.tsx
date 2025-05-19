@@ -6,7 +6,6 @@ export default function LandingPage() {
   return (
     <MainLayout>
       <Landing />
-      <h1>test</h1>
     </MainLayout>
   );
 }
