@@ -1,7 +1,8 @@
 "use client"
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Button, MenuItem, Select, styled, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const FilterBarWrapper = styled(Box)(() => ({
   display: 'flex',
@@ -72,10 +73,20 @@ const TopicLabel = styled(Typography)(() => ({
 export default function BlogFilterBar() {
   const [keyword, setKeyword] = useState('');
   const [topic, setTopic] = useState('');
+  const router = useRouter();
 
   const handleSearch = () => {
+    const params = new URLSearchParams();
 
+    if (keyword.trim()) params.set('keyword', keyword.trim());
+    if (topic) params.set('topic', topic);
+
+    router.push(`/blogs?${params.toString()}`, { scroll: false });
   }
+
+  useEffect(
+    handleSearch
+  , [topic, keyword, router]);
 
   return (
     <FilterBarWrapper>
@@ -100,17 +111,18 @@ export default function BlogFilterBar() {
         <Select
           variant="standard"
           value={topic}
-          onChange={(e) => setTopic(e.target.value)}
+          onChange={(e) => {
+            setTopic(e.target.value);
+          }}
           disableUnderline
-          defaultValue=""
           displayEmpty
           sx={{ flex: 1, fontSize: 13 }}
         >
           <MenuItem value="" disabled >
             Please Select
           </MenuItem>
-          <MenuItem value="ai">AI</MenuItem>
-          <MenuItem value="dispatch">Dispatch</MenuItem>
+          <MenuItem value="Small And Medium Businesses">Small And Medium Businesses</MenuItem>
+          <MenuItem value="Small Businesses">Small Businesses</MenuItem>
           <MenuItem value="other">Other</MenuItem>
         </Select>
       </TopicBox>

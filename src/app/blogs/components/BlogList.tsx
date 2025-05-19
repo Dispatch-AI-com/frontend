@@ -1,6 +1,7 @@
 "use client"
-import { Button, Grid , styled,Typography} from '@mui/material';
+import { Box,Button, Grid , styled, Typography} from '@mui/material';
 import axios from 'axios';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import type { Blog } from '../../../types/blog'; 
@@ -24,15 +25,29 @@ const NextButton = styled(Button)(() => ({
 }));
 
 
-export default function BlogList() {
-
+export default function BlogList() {  
+  const searchParams = useSearchParams();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const keyword = searchParams.get('keyword');
+  const topic = searchParams.get('topic');
+  const limit = 12;
+  const page = 1;
+
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get('http://localhost:4000/api/blogs?limit=12&page=1');
+        let url = `http://localhost:4000/api/blogs?limit=${limit}&page=${page}`;
+
+        if (keyword) {
+          url = `http://localhost:4000/api/blogs/search?keyword=${encodeURIComponent(keyword)}&limit=${limit}&page=${page}`;
+        } else if (topic) {
+          url = `http://localhost:4000/api/blogs/tag/${encodeURIComponent(topic)}?limit=${limit}&page=${page}`;
+        }
+
+        const res = await axios.get(url);
         const fetched = res.data.data;
 
         if (fetched.length > 0 && fetched.length < 9) {
@@ -50,20 +65,35 @@ export default function BlogList() {
     };
 
     fetchBlogs();
-  }, []);
+  }, [keyword, topic, page]);
 
   return (
-    <Grid container spacing={4} justifyContent="center" alignItems="stretch" sx={{ mb: 6, mt:1 }} >
-      {loading ? (
-        <Typography variant="body1">Loading...</Typography>
-      ) : (
-        blogs.map((blog) => (
-          <Grid item xs={12} sm={6} md={4} key={blog._id}>
-            <BlogCard {...blog} />
-          </Grid>
-        ))
-      )}
-      <NextButton>Next →</NextButton>
-    </Grid>
-  );
+    <>
+      <Grid container spacing={4} justifyContent="center" alignItems="stretch" sx={{ mb: 6, mt:1 }} >
+        
+        {loading ? (
+          <Typography variant="body1">Loading...</Typography>
+        ) : blogs.length === 0 ? (
+          <Box sx={{ textAlign: 'center', mt: 4 }}>
+            <Typography variant="h6" fontWeight="bold" color="text.secondary" gutterBottom>
+              😕 No results found
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              We could not find any blogs matching <strong>{keyword}</strong>
+            </Typography>
+          </Box>
+        ) : (
+          blogs.map((blog) => (
+            <Grid item xs={12} sm={6} md={4} key={blog._id}>
+              <BlogCard {...blog} />
+            </Grid>
+          ))
+        )}
+
+      </Grid>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <NextButton>Next →</NextButton>
+      </Box>
+    </>
+   );
 }

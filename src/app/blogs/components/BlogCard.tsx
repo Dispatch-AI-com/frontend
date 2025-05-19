@@ -4,7 +4,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Box, Card, CardContent, Chip, styled, Typography } from '@mui/material';
 
 const BlogCardWrapper = styled(Card)(() => ({
-  width: '100%',               // 占满 Grid 分配的宽度
+  width: '100%',
   aspectRatio: '448 / 528',  
   padding: '12px 12px 30px',
   borderRadius: 24,
@@ -102,7 +102,7 @@ export default function BlogCard({ title, summary, date, tag, views = 2036 }: Bl
         <MetaInfo>
           <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <AccessTimeIcon fontSize="small" />
-            {date}
+            {new Date(date).toLocaleDateString('en-CA')}
           </Box>
           <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <VisibilityIcon fontSize="small" />
