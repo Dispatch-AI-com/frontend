@@ -6,7 +6,7 @@ pipeline {
         ECR_REPO = 'dispatchai-frontend'
         IMAGE_TAG = "${env.BUILD_ID}"
         IMAGE_NAME = "${ECR_REPO}:${IMAGE_TAG}"
-        ECR_REGISTRY = ''
+        ECR_REGISTRY = "893774231297.dkr.ecr.${AWS_REGION}.amazonaws.com"
     }
 
     stages {
@@ -22,10 +22,7 @@ pipeline {
         stage('Get ECR Login') {
             steps {
                 script {
-                    // 这里你不再自动获取账号 ID，而是直接用目标账号的 ECR 地址
-                    ECR_REGISTRY = "893774231297.dkr.ecr.${AWS_REGION}.amazonaws.com"
                     env.ECR_REGISTRY = ECR_REGISTRY
-
                     sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
                 }
             }
