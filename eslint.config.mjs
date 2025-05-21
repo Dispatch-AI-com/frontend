@@ -48,34 +48,34 @@ export default tseslint.config(
       },
     },
     rules: {
-      // 通用风格
-      "prettier/prettier": "error",
-      "no-console": "warn",
-      "no-debugger": "error",
+      // 通用风格规范
+      "prettier/prettier": "error", // 强制格式正确
+      "no-console": "warn", // 警告未清除的 console
+      "no-debugger": "error", // 禁止 debugger 留在代码中
 
       // TS 风格
-      "@typescript-eslint/explicit-function-return-type": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/explicit-function-return-type": "warn", // 要求函数显式返回类型
+      "@typescript-eslint/no-explicit-any": "warn", // 不推荐使用 any
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/consistent-type-imports": "error", // 使用 import type
 
       // React 相关
       "react/react-in-jsx-scope": "off", // Next.js 无需 import React
       "react/jsx-uses-react": "off",
-      "react/jsx-uses-vars": "warn",
+      "react/jsx-uses-vars": "warn", // 确保 JSX 变量未被误删
 
       // React Hooks
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/rules-of-hooks": "error", // Hook 用法必须正确
+      "react-hooks/exhaustive-deps": "warn", // useEffect 等依赖数组必须完整
 
       // MUI / JSX 可访问性建议
-      "jsx-a11y/alt-text": "warn",
-      "jsx-a11y/anchor-is-valid": "warn",
-      "jsx-a11y/click-events-have-key-events": "warn",
+      "jsx-a11y/alt-text": "warn", // 检查 img 或 Image 是否有 alt 属性
+      "jsx-a11y/anchor-is-valid": "warn", // 确保 <a> 使用合理
+      "jsx-a11y/click-events-have-key-events": "warn", // 保证点击事件同时支持键盘
 
       // Next.js 推荐设置
-      "@next/next/no-img-element": "warn", // 建议用 <Image />
-      "@next/next/no-html-link-for-pages": "off", // 已弃用
+      "@next/next/no-img-element": "warn", // 建议用 <Image /> 替代 <img />
+      "@next/next/no-html-link-for-pages": "off",  // 忽略 pages 路由跳转旧规则（现代项目已弃用）
 
       // 导入排序
       "simple-import-sort/imports": "error",
@@ -90,8 +90,8 @@ export default tseslint.config(
       globals: { ...globals.jest },
     },
     rules: {
-      "jest/no-disabled-tests": "warn",
-      "jest/expect-expect": "warn",
+      "jest/no-disabled-tests": "warn", // 避免忘记移除 test.skip
+      "jest/expect-expect": "warn",  // 每个测试必须有 expect
     },
   }
 );
