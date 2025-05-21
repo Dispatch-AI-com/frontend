@@ -10,7 +10,7 @@
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
     "test": "echo \"No tests yet\"",
-    "prepare": "husky install && chmod -R +x .husky || true"
+    "prepare": "husky install && (chmod -R +x .husky || echo 'Skipping chmod')"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
