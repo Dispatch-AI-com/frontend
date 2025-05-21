@@ -61,7 +61,7 @@ export default tseslint.config(
 
       // React 相关
       "react/react-in-jsx-scope": "off", // Next.js 无需 import React
-      "react/jsx-uses-react": "off",
+      "react/jsx-uses-react": "off",   // Outdated React 17 规则
       "react/jsx-uses-vars": "warn", // 确保 JSX 变量未被误删
 
       // React Hooks
