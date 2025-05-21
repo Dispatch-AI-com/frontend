@@ -24,19 +24,27 @@ const CallToActionSection = () => {
                 Address
             </HeaderText>
             <CallToActionText>
-                Address
+                217 Flinders St, Adelaide, South Australia 5000, AU
             </CallToActionText>
             <HeaderText>
                 Phone
             </HeaderText>
-            <CallToActionText>
+            <CallToActionText style={{ whiteSpace: 'nowrap' }}>
                 +63 4233365542
             </CallToActionText>
             <HeaderText>
                 Find us on social media
             </HeaderText>
             <Stack direction="row" spacing={0}>
-                <SocialMediaButton color="inherit"><LinkedInIcon /></SocialMediaButton>
+                <a
+                    href="https://www.linkedin.com/company/get-dispatch-ai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <SocialMediaButton color="inherit">
+                        <LinkedInIcon />
+                    </SocialMediaButton>
+                </a>
                 <SocialMediaButton color="inherit"><FacebookIcon /></SocialMediaButton>
                 <SocialMediaButton color="inherit"><InstagramIcon /></SocialMediaButton>
                 <SocialMediaButton color="inherit"><XIcon /></SocialMediaButton>
