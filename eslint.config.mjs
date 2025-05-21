@@ -8,8 +8,8 @@ import importSort from "eslint-plugin-simple-import-sort";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
-import nextPlugin from "@next/eslint-plugin-next";
 import jestPlugin from "eslint-plugin-jest";
+import nextPlugin from "@next/eslint-plugin-next";
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -54,7 +54,6 @@ export default tseslint.config(
       "no-debugger": "error", // 禁止 debugger 留在代码中
 
       // TS 风格
-      "@typescript-eslint/explicit-function-return-type": "warn", // 要求函数显式返回类型
       "@typescript-eslint/no-explicit-any": "warn", // 不推荐使用 any
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/consistent-type-imports": "error", // 使用 import type
@@ -76,6 +75,11 @@ export default tseslint.config(
       // Next.js 推荐设置
       "@next/next/no-img-element": "warn", // 建议用 <Image /> 替代 <img />
       "@next/next/no-html-link-for-pages": "off",  // 忽略 pages 路由跳转旧规则（现代项目已弃用）
+      "@next/next/no-sync-scripts": "error",
+      "@next/next/no-title-in-document-head": "error",
+      "@next/next/no-document-import-in-page": "error",
+      "@next/next/no-script-in-document": "error",
+      "@next/next/no-head-element": "error",
 
       // 导入排序
       "simple-import-sort/imports": "error",
