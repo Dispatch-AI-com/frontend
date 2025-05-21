@@ -73,13 +73,12 @@ export default tseslint.config(
       "jsx-a11y/click-events-have-key-events": "warn", // 保证点击事件同时支持键盘
 
       // Next.js 推荐设置
-      "@next/next/no-img-element": "warn", // 建议用 <Image /> 替代 <img />
-      "@next/next/no-html-link-for-pages": "off",  // 忽略 pages 路由跳转旧规则（现代项目已弃用）
-      "@next/next/no-sync-scripts": "error",
-      "@next/next/no-title-in-document-head": "error",
-      "@next/next/no-document-import-in-page": "error",
-      "@next/next/no-script-in-document": "error",
-      "@next/next/no-head-element": "error",
+      "@next/next/no-img-element": "warn", // 建议用 <Image /> 替代 <img />，以获得更好的性能和安全性
+      "@next/next/no-html-link-for-pages": "off",  // 允许 <a href> 跳转
+      "@next/next/no-sync-scripts": "error", // 禁止同步 <script>
+      "@next/next/no-title-in-document-head": "error", // 禁止在 _document.js 里设置 <title>，应在 _app.js 或页面组件设置
+      "@next/next/no-document-import-in-page": "error", // 禁止在页面组件中导入 _document.js，防止 SSR 问题
+      "@next/next/no-head-element": "error", // 禁止在 _document.js 里直接使用 <head>，应使用 <Head /> 组件
 
       // 导入排序
       "simple-import-sort/imports": "error",
