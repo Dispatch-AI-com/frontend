@@ -34,15 +34,21 @@ const LogoBox = styled(Box)({
     minHeight: theme.spacing(6),
 });
 
+const NavIcon = styled(Image)({
+    display: 'block',
+});
+
+const ICON_SIZE = 16;
+
 const navItems = [
-    { label: 'Overview', icon: <Image src="/dashboard/overview.svg" alt="Overview" width={24} height={24} /> },
-    { label: 'Inbox', icon: <Image src="/dashboard/inbox.svg" alt="Inbox" width={24} height={24} />, active: true },
-    { label: 'Tasks', icon: <Image src="/dashboard/task.svg" alt="Tasks" width={24} height={24} /> },
-    { label: 'Calendar', icon: <Image src="/dashboard/calendar.svg" alt="Calendar" width={24} height={24} /> },
-    { label: 'Plan', icon: <Image src="/dashboard/plan.svg" alt="Plan" width={24} height={24} /> },
-    { label: 'Payments', icon: <Image src="/dashboard/payment.svg" alt="Payments" width={24} height={24} /> },
-    { label: 'Dispatch AI Setup', icon: <Image src="/dashboard/AI-setup.svg" alt="Dispatch AI Setup" width={24} height={24} /> },
-    { label: 'Settings', icon: <Image src="/dashboard/settings.svg" alt="Settings" width={24} height={24} /> },
+    { label: 'Overview', icon: <NavIcon src="/dashboard/overview.svg" alt="Overview" width={ICON_SIZE} height={ICON_SIZE} /> },
+    { label: 'Inbox', icon: <NavIcon src="/dashboard/inbox.svg" alt="Inbox" width={ICON_SIZE} height={ICON_SIZE} />, active: true },
+    { label: 'Tasks', icon: <NavIcon src="/dashboard/task.svg" alt="Tasks" width={ICON_SIZE} height={ICON_SIZE} /> },
+    { label: 'Calendar', icon: <NavIcon src="/dashboard/calendar.svg" alt="Calendar" width={ICON_SIZE} height={ICON_SIZE} /> },
+    { label: 'Plan', icon: <NavIcon src="/dashboard/plan.svg" alt="Plan" width={ICON_SIZE} height={ICON_SIZE} /> },
+    { label: 'Payments', icon: <NavIcon src="/dashboard/payment.svg" alt="Payments" width={ICON_SIZE} height={ICON_SIZE} /> },
+    { label: 'Dispatch AI Setup', icon: <NavIcon src="/dashboard/AI-setup.svg" alt="Dispatch AI Setup" width={ICON_SIZE} height={ICON_SIZE} /> },
+    { label: 'Settings', icon: <NavIcon src="/dashboard/settings.svg" alt="Settings" width={ICON_SIZE} height={ICON_SIZE} /> },
 ];
 
 export default function Sidebar() {
