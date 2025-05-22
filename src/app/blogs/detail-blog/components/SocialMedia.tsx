@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import FacebookIcon from '@mui/icons-material/Facebook';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { Box, IconButton,Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import Image from 'next/image';
-import React from 'react';
+import FacebookIcon from "@mui/icons-material/Facebook";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { Box, IconButton, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Image from "next/image";
+import React from "react";
 
 // Styled components
 const SocialContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
   gap: theme.spacing(1),
 }));
 
@@ -21,14 +21,14 @@ const StyledLabelWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const StyledIconRow = styled(Box)(({ theme }) => ({
-  display: 'flex',
+  display: "flex",
   gap: theme.spacing(1),
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.common.black,
-  '&:hover': {
-    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+  "&:hover": {
+    backgroundColor: "rgba(0, 0, 0, 0.04)",
   },
 }));
 
@@ -36,23 +36,22 @@ const SocialLabel = styled(Typography)(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
-
-
 const SocialMedia = () => {
   const handleShare = (platform: string) => {
     const url = window.location.href;
-    const title = "New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way";
+    const title =
+      "New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way";
 
-    let shareUrl = '';
+    let shareUrl = "";
 
     switch (platform) {
-      case 'linkedin':
+      case "linkedin":
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
         break;
-      case 'facebook':
+      case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
         break;
-      case 'twitter':
+      case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
         break;
       default:
@@ -60,7 +59,7 @@ const SocialMedia = () => {
     }
 
     if (shareUrl) {
-      window.open(shareUrl, '_blank', 'width=600,height=400');
+      window.open(shareUrl, "_blank", "width=600,height=400");
     }
   };
 
@@ -70,13 +69,25 @@ const SocialMedia = () => {
         <SocialLabel variant="subtitle2">Social Sharing</SocialLabel>
       </StyledLabelWrapper>
       <StyledIconRow>
-        <StyledIconButton onClick={() => handleShare('linkedin')}>
+        <StyledIconButton
+          onClick={() => {
+            handleShare("linkedin");
+          }}
+        >
           <LinkedInIcon />
         </StyledIconButton>
-        <StyledIconButton onClick={() => handleShare('facebook')}>
+        <StyledIconButton
+          onClick={() => {
+            handleShare("facebook");
+          }}
+        >
           <FacebookIcon />
         </StyledIconButton>
-        <StyledIconButton onClick={() => handleShare('twitter')}>
+        <StyledIconButton
+          onClick={() => {
+            handleShare("twitter");
+          }}
+        >
           <Image src="/icons/xlogo.svg" alt="X" width={24} height={24} />
         </StyledIconButton>
       </StyledIconRow>

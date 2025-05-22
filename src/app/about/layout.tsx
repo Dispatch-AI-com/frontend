@@ -1,13 +1,9 @@
-import AboutUsLayoutStyled from '@/components/layout/aboutus-layout';
+import AboutUsLayoutStyled from "@/components/layout/aboutus-layout";
 
 export default function AboutUsLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <AboutUsLayoutStyled>
-            {children}
-        </AboutUsLayoutStyled>
-    );
+  return <AboutUsLayoutStyled>{children}</AboutUsLayoutStyled>;
 }

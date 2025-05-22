@@ -1,19 +1,20 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import TestimonialCard from '@/app/landing/components/TestimonialCard';
+import TestimonialCard from "@/app/landing/components/TestimonialCard";
 
 const testimonials = [
   {
-    quote: 'SmartAgent cut our missed calls by 80%. Lifesaver for my plumbing business!',
-    name: 'Josn',
-    title: 'CEO of ABC Company',
+    quote:
+      "SmartAgent cut our missed calls by 80%. Lifesaver for my plumbing business!",
+    name: "Josn",
+    title: "CEO of ABC Company",
   },
   {
-    quote: 'Automated follow-ups saved me 10+ hours a week managing rentals.',
-    name: 'Jena',
-    title: 'Rental Manager',
+    quote: "Automated follow-ups saved me 10+ hours a week managing rentals.",
+    name: "Jena",
+    title: "Rental Manager",
   },
 ];
 

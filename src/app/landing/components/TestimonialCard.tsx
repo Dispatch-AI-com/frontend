@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import React from 'react';
-import styled from 'styled-components';
+import Image from "next/image";
+import React from "react";
+import styled from "styled-components";
 
 interface TestimonialCardProps {
   quote: string;
@@ -68,12 +68,21 @@ const TitleText = styled.p`
   margin: 0;
 `;
 
-export default function TestimonialCard({ quote, name, title }: TestimonialCardProps) {
+export default function TestimonialCard({
+  quote,
+  name,
+  title,
+}: TestimonialCardProps) {
   return (
     <StyledCard>
       <QuoteRow>
         <QuoteIconBox>
-          <Image src="/invalid-name.svg" alt="Quote Icon" width={22} height={20} />
+          <Image
+            src="/invalid-name.svg"
+            alt="Quote Icon"
+            width={22}
+            height={20}
+          />
         </QuoteIconBox>
         <QuoteText>{quote}</QuoteText>
       </QuoteRow>
