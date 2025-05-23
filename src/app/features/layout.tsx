@@ -5,9 +5,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <FeaturesLayout>
-        {children}
-    </FeaturesLayout>
-  );
+  return <FeaturesLayout>{children}</FeaturesLayout>;
 }

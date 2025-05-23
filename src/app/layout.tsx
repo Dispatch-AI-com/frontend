@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import ThemeProvider from '@/components/providers/ThemeProvider';
+import ThemeProvider from "@/components/providers/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Dispatch AI",
@@ -15,9 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

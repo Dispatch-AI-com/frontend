@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import { Button, ButtonProps, SxProps, Theme} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import React from 'react';
+import type { ButtonProps, SxProps, Theme } from "@mui/material";
+import { Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import React from "react";
 
-type ButtonVariant = 'black' | 'green';
+type ButtonVariant = "black" | "green";
 
-interface CommonButtonProps extends Omit<ButtonProps, 'variant'> {
+interface CommonButtonProps extends Omit<ButtonProps, "variant"> {
   children: React.ReactNode;
   buttonVariant?: ButtonVariant;
   href?: string;
@@ -15,19 +16,19 @@ interface CommonButtonProps extends Omit<ButtonProps, 'variant'> {
 }
 
 const StyledButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'buttonVariant',
-})<{ buttonVariant?: ButtonVariant }>(({ theme, buttonVariant = 'black' }) => ({
+  shouldForwardProp: (prop) => prop !== "buttonVariant",
+})<{ buttonVariant?: ButtonVariant }>(({ theme, buttonVariant = "black" }) => ({
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(1, 2),
   fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.button.fontSize,
-  textTransform: 'none',
+  textTransform: "none",
   fontWeight: theme.typography.button.fontWeight,
-  whiteSpace: 'nowrap',
-  backgroundColor: buttonVariant === 'black' ? '#060606' : '#a8f574',
-  color: buttonVariant === 'black' ? '#ffffff' : '#060606',
-  '&:hover': {
-    backgroundColor: buttonVariant === 'black' ? '#060606' : '#a8f574',
+  whiteSpace: "nowrap",
+  backgroundColor: buttonVariant === "black" ? "#060606" : "#a8f574",
+  color: buttonVariant === "black" ? "#ffffff" : "#060606",
+  "&:hover": {
+    backgroundColor: buttonVariant === "black" ? "#060606" : "#a8f574",
     opacity: 0.9,
   },
 }));
@@ -37,7 +38,7 @@ export default function CommonButton({
   onClick,
   href,
   endIcon,
-  buttonVariant = 'black',
+  buttonVariant = "black",
   sx,
   ...rest
 }: CommonButtonProps) {
@@ -55,4 +56,3 @@ export default function CommonButton({
     </StyledButton>
   );
 }
-
