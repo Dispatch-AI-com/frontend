@@ -1,7 +1,6 @@
 'use client';
 
 import styled from 'styled-components';
-
 import TestimonialCard from '@/app/landing/components/TestimonialCard';
 
 const testimonials = [
@@ -46,7 +45,7 @@ const CardContainer = styled.div`
     padding: 0 240px;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 899px) {
     flex-direction: column;
     gap: 32px;
     padding: 0 16px;
