@@ -57,6 +57,7 @@ export default tseslint.config(
       "@typescript-eslint/no-explicit-any": "warn", // 不推荐使用 any
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/consistent-type-imports": "error", // 使用 import type
+      "@typescript-eslint/no-deprecated": "off",
 
       // React 相关
       "react/react-in-jsx-scope": "off", // Next.js 无需 import React
