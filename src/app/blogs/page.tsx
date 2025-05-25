@@ -1,3 +1,27 @@
-export default function TestPage() {
-  return <div>Test page is working</div>;
+
+"use client"
+
+import { Box, Container } from '@mui/material';
+import { Suspense } from 'react';
+
+import Banner from './components/Banner';
+import BlogFilterBar from './components/BlogFilterBar';
+import BlogHighlightCard from './components/BlogHighlightCard';
+import BlogList from './components/BlogList';
+import SubscriptionSection from './components/SubscriptionSection';
+
+export default function BlogsPage() {
+  return (
+    <>
+        <Box>
+            <Banner/>
+            <Container>
+                <BlogHighlightCard />
+                <BlogFilterBar />
+                <Suspense fallback={<p>Loading blogs...</p>}><BlogList /></Suspense>
+            </Container>
+            <SubscriptionSection/>
+        </Box>
+    </>
+  );
 }
