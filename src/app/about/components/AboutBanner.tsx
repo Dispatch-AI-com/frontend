@@ -65,9 +65,7 @@ export const HeaderText = styled('p')(({ theme }) => ({
     marginBottom: 0,
     fontSize: theme.typography.body1.fontSize,
     fontFamily: theme.typography.fontFamily,
-    wordBreak: 'break-word',
     whiteSpace: 'nowrap',
-    overflow: 'visible',
     [theme.breakpoints.down('lg')]: {
         fontSize: theme.typography.body2.fontSize,
         whiteSpace: 'normal',
