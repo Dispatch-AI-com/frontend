@@ -2,6 +2,7 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Box, Card, CardContent, Chip, styled, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 const BlogCardWrapper = styled(Card)(() => ({
   width: '100%',
@@ -15,6 +16,12 @@ const BlogCardWrapper = styled(Card)(() => ({
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
+  cursor: 'pointer',
+  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+  '&:hover': {
+    transform: 'scale(1.02)',
+    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.08)',
+  },
 }));
 
 const ImageBox = styled(Box)(() => ({
@@ -73,6 +80,7 @@ const MetaInfo = styled(Box)(() => ({
 }));
 
 export interface BlogCardProps {
+  _id: string;
   title: string;
   summary: string;
   date: string;
@@ -80,11 +88,17 @@ export interface BlogCardProps {
   views?: number;
 }
 
-export default function BlogCard({ title, summary, date, tag, views = 2036 }: BlogCardProps) {
+export default function BlogCard({ _id, title, summary, date, tag, views = 0 }: BlogCardProps) {
   //change tag into an array
   const tags = Array.isArray(tag) ? tag : (typeof tag === 'string' && tag ? [tag] : []);
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/blogs/detail-blog/${encodeURIComponent(_id)}`);
+  };
+
   return (
-    <BlogCardWrapper>
+    <BlogCardWrapper onClick={handleClick} >
       <ImageBox />
       <CardContent sx={{ p: 0 }}>
         <Title>{title}</Title>

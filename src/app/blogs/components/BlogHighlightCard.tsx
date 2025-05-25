@@ -1,56 +1,52 @@
 'use client';
 
-import { Avatar, Box, Button, Card, Typography } from '@mui/material';
+import { Box, Card } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 const items = [
-  { 
-    title: 'Lucy March Update',
+  {
+    title: 'Automated Call Handling',
     content: (
-      <Box>
-        <Typography variant="h6" fontWeight="bold" color="primary">
-          Enhanced FAQs
-        </Typography>
-        <Typography variant="body2" mt={1}>
-          Get Call Notifications Your Way
-        </Typography>
-        <Button variant="contained" sx={{ mt: 2 }}>
-          Learn More
-        </Button>
-      </Box>
+      <Image
+        src="/blog/call_handling.png"
+        alt="call_handling"
+        fill
+        style={{ objectFit: 'fill', borderRadius: '24px' }}
+      />
     ),
-    bg: '#a18cd1' 
   },
-  { 
-    title: 'Lucy Now Speaks More Languages',
+  {
+    title: 'Follow-Up Actions',
     content: (
-      <Box sx={{ textAlign: 'center' }}>
-        <Avatar sx={{ width: 60, height: 60, mx: 'auto', mb: 2 }}>🌐</Avatar>
-        <Typography variant="subtitle1" fontStyle="italic">
-          Why limit your customer experience?
-        </Typography>
-      </Box>
+      <Image
+        src="/blog/follow_up.png"
+        alt="follow_up"
+        fill
+        style={{ objectFit: 'fill', borderRadius: '24px' }}
+      />
     ),
-    bg: '#ffffff' 
   },
-  { 
-    title: 'Exciting Deals Await!',
+  {
+    title: 'Trusted by Small Businesses',
     content: (
-      <Box sx={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
-        <Typography variant="h5" fontWeight="bold" sx={{ flexGrow: 1 }}>
-          Discover exclusive offers!
-        </Typography>
-        <Box sx={{ backgroundColor: 'rgba(0,0,0,0.1)', p: 1, borderRadius: 2 }}>
-          <Typography variant="caption">Limited time only</Typography>
-        </Box>
-      </Box>
+      <Image
+        src="/blog/testimonial.png"
+        alt="testimonial"
+        fill
+        style={{ objectFit: 'fill', borderRadius: '24px' }}
+      />
     ),
-    bg: '#fbc2eb' 
   },
 ];
 
 export default function BlogHighlightCard() {
   const [centerIndex, setCenterIndex] = useState(0);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -69,17 +65,17 @@ export default function BlogHighlightCard() {
       height: '300px',
       width: '100%',
       my: 6,
-      overflow: 'hidden' // 防止卡片溢出容器
+      overflow: 'hidden' 
     }}>
       {items.map((item, index) => {
         const isCenter = index === centerIndex;
         const isLeft = index === (centerIndex - 1 + items.length) % items.length;
         const isRight = index === (centerIndex + 1) % items.length;
 
-        const cardWidth = 741.6;
-        const cardHeight = 238.5;
-        const offset = 280; // 增大间距值（原为250）
-        const sideCardScale = 0.75; // 缩小侧边卡片的缩放比例（原为0.75）
+        const cardWidth = isMobile ? 280 : isTablet ? 380 : 741.6;
+        const cardHeight = isMobile ? 140 : isTablet ? 180 : 238.5;
+        const offset = isMobile ? 100 : isTablet ? 130 : 280;
+        const sideCardScale = isMobile ? 0.9 : 0.75;
 
         return (
           <Card
@@ -87,16 +83,14 @@ export default function BlogHighlightCard() {
             sx={{
               width: cardWidth,
               height: cardHeight,
-              p: 3,
               borderRadius: 3,
               boxShadow: 3,
-              backgroundColor: item.bg,
               position: 'absolute',
               left: `calc(50% - ${cardWidth/2}px ${isLeft ? `- ${offset}px` : isRight ? `+ ${offset}px` : ''})`,
               top: `calc(50% - ${cardHeight/2}px)`,
               transform: isCenter ? 'scale(1)' : `scale(${sideCardScale})`,
               zIndex: isCenter ? 3 : 1,
-              opacity: isCenter ? 1 : 0.7, // 提高侧边卡片透明度
+              opacity: isCenter ? 1 : 0.7, 
               transition: 'all 0.6s ease',
             }}
           >

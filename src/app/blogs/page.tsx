@@ -1,10 +1,8 @@
 
 "use client"
 
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-
 import { Box, Container } from '@mui/material';
+import { Suspense } from 'react';
 
 import Banner from './components/Banner';
 import BlogFilterBar from './components/BlogFilterBar';
@@ -20,7 +18,7 @@ export default function BlogsPage() {
             <Container>
                 <BlogHighlightCard />
                 <BlogFilterBar />
-                <BlogList />
+                <Suspense fallback={<p>Loading blogs...</p>}><BlogList /></Suspense>
             </Container>
             <SubscriptionSection/>
         </Box>
