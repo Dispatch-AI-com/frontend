@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Box, Typography } from '@mui/material';
@@ -15,7 +15,7 @@ const StyledContainer = styled('div')`
   align-items: center;
   padding-top: ${({ theme }) => theme.spacing(12)};
   padding-bottom: ${({ theme }) => theme.spacing(12)};
-  
+
   @media (min-width: ${({ theme }) => theme.breakpoints.values.xs}px) {
     padding-top: ${({ theme }) => theme.spacing(10)};
     padding-bottom: ${({ theme }) => theme.spacing(5)};
@@ -90,36 +90,43 @@ export default function HeroSection() {
   return (
     <StyledContainer>
       <StyledStack>
-        <StyledHeader sx={{marginTop: theme.spacing(10)}} variant="h1" color="text.primary">
+        <StyledHeader
+          sx={{ marginTop: theme.spacing(10) }}
+          variant="h1"
+          color="text.primary"
+        >
           Let AI Handle Your Calls
         </StyledHeader>
         <StyledHeader variant="h1" color="text.primary">
           Focus on Growing Your Business
         </StyledHeader>
-        <StyledTypographyBody variant='body1' color="text.primary">
-          SmartAgent is your 24/7 virtual phone assistant for rental managers, plumbers, contractors,
-          and small businesses.<br />
-          Answer calls, schedule follow-ups, and automate workflows&nbsp;—&nbsp;no human effort needed.
+        <StyledTypographyBody variant="body1" color="text.primary">
+          SmartAgent is your 24/7 virtual phone assistant for rental managers,
+          plumbers, contractors, and small businesses.
+          <br />
+          Answer calls, schedule follow-ups, and automate
+          workflows&nbsp;—&nbsp;no human effort needed.
         </StyledTypographyBody>
         <ButtonStack>
-          <CommonButton buttonVariant="black" endIcon={<ArrowForwardIcon />} sx={{height: '48px'}}>
+          <CommonButton
+            buttonVariant="black"
+            endIcon={<ArrowForwardIcon />}
+            sx={{ height: '48px' }}
+          >
             Start Your Free Trial
           </CommonButton>
-          <CommonButton buttonVariant="green" endIcon={<ArrowForwardIcon />} sx={{height: '48px', marginBottom: { xs: '50px', sm: '0' }}}>
+          <CommonButton
+            buttonVariant="green"
+            endIcon={<ArrowForwardIcon />}
+            sx={{ height: '48px', marginBottom: { xs: '50px', sm: '0' } }}
+          >
             Request a Demo
           </CommonButton>
         </ButtonStack>
       </StyledStack>
       <StyledDemoBox>
-        <Image
-          src="/demo-image.png"
-          alt="Demo"
-          width={1920}
-          height={1080}
-        />
+        <Image src="/demo-image.png" alt="Demo" width={1920} height={1080} />
       </StyledDemoBox>
     </StyledContainer>
   );
 }
-
-

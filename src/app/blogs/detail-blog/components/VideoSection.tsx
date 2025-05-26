@@ -10,12 +10,12 @@ const VideoContainer = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(4),
   position: 'relative',
-  width: '100%', 
+  width: '100%',
   height: 0,
-  paddingBottom: '56.25%', 
+  paddingBottom: '56.25%',
 }));
 
-const VideoPaper = styled(Paper)(({ }) => ({
+const VideoPaper = styled(Paper)(() => ({
   position: 'absolute',
   top: 0,
   left: 0,

@@ -6,7 +6,8 @@ import TestimonialCard from '@/app/landing/components/TestimonialCard';
 
 const testimonials = [
   {
-    quote: 'SmartAgent cut our missed calls by 80%. Lifesaver for my plumbing business!',
+    quote:
+      'SmartAgent cut our missed calls by 80%. Lifesaver for my plumbing business!',
     name: 'Josn',
     title: 'CEO of ABC Company',
   },

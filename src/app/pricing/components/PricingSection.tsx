@@ -3,7 +3,7 @@
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
-import { Plan, PlanButton } from '@/types/plan.types';
+import type { Plan, PlanButton } from '@/types/plan.types';
 import axios from '@/utils/axios';
 
 import PricingCard from './PricingCard';
@@ -13,13 +13,9 @@ function getButtons(tier: Plan['tier']): PlanButton[] {
     case 'FREE':
       return [{ label: 'Try for Free', variant: 'primary' }];
     case 'BASIC':
-      return [
-        { label: 'Get Basic', variant: 'primary' },
-        ];
+      return [{ label: 'Get Basic', variant: 'primary' }];
     case 'PRO':
-      return [
-        { label: 'Go Pro', variant: 'primary' },
-      ];
+      return [{ label: 'Go Pro', variant: 'primary' }];
   }
 }
 
@@ -30,25 +26,27 @@ function parseRRule(rrule: string): string {
   return '';
 }
 
-function getPrice(pricing: { rrule: string; price: number }[]): { priceDisplay: string; periodDisplay: string } {
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+function getPrice(pricing: { rrule: string; price: number }[]): {
+  priceDisplay: string;
+  periodDisplay: string;
+} {
   const matched = pricing[0];
-
   if (!matched) {
     return { priceDisplay: '--', periodDisplay: '' };
   }
-
   if (matched.price === 0) {
     return { priceDisplay: 'FREE', periodDisplay: '' };
   }
-
   return {
-    priceDisplay: `$${matched.price}`,
+    priceDisplay: `$${String(matched.price)}`,
     periodDisplay: ` /${parseRRule(matched.rrule)}`,
   };
 }
+/* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
 const PricingContainer = styled('section')(({ theme }) => ({
-  padding: "128px 0 68px 0",
+  padding: '128px 0 68px 0',
   textAlign: 'center',
   backgroundColor: theme.palette.background.default,
 }));
@@ -58,7 +56,6 @@ const SectionTitle = styled('h2')(({ theme }) => ({
   textAlign: 'center',
   margin: '0 0 80px',
 }));
-
 
 const PlanGrid = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -76,28 +73,27 @@ export default function PricingSection() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await axios.get('api/plan'); 
+        const res = await axios.get<Plan[]>('api/plan');
         setPlans(res.data);
-      } catch (err) {
-        console.error('Failed to fetch plans:', err);
+      } catch {
+        // console.error("Failed to fetch plans");
       }
     };
-
-    fetchPlans();
+    void fetchPlans();
   }, []);
 
   return (
     <PricingContainer>
       <SectionTitle>Choose the Right Plan for You</SectionTitle>
       <PlanGrid>
-      {plans.map((plan) => (
-        <PricingCard
-        key={plan._id}
-        features={plan.features}
-        pricing={getPrice(plan.pricing)}
-        buttons={getButtons(plan.tier)}
-        />
-      ))}
+        {plans.map(plan => (
+          <PricingCard
+            key={plan._id}
+            features={plan.features}
+            pricing={getPrice(plan.pricing)}
+            buttons={getButtons(plan.tier)}
+          />
+        ))}
       </PlanGrid>
     </PricingContainer>
   );

@@ -1,5 +1,11 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
 
+declare module '@mui/material/styles' {
+  interface TypeBackground {
+    dark?: string;
+  }
+}
+
 const baseTheme = createTheme({
   spacing: 8,
   shape: {
@@ -8,15 +14,15 @@ const baseTheme = createTheme({
   palette: {
     background: {
       default: '#ffffff',
-      paper: '#fafafa', 
-      dark: '#000000', 
+      paper: '#fafafa',
+      dark: '#000000',
     },
     text: {
-      primary: '#060606', 
-      secondary: '#6d6d6d', 
+      primary: '#060606',
+      secondary: '#6d6d6d',
     },
   },
-  
+
   typography: {
     fontSize: 14,
     fontFamily: ['Roboto', 'sans-serif'].join(','),
@@ -86,18 +92,18 @@ const theme = createTheme(baseTheme, {
         root: {
           marginLeft: 'auto',
           marginRight: 'auto',
-          
-          [`@media (min-width:${baseTheme.breakpoints.values.sm}px)`]: {
-            maxWidth: baseTheme.custom.containerWidth.sm,
+
+          [`@media (min-width:${String(baseTheme.breakpoints.values.sm)}px)`]: {
+            maxWidth: String(baseTheme.custom.containerWidth.sm),
           },
-          [`@media (min-width:${baseTheme.breakpoints.values.md}px)`]: {
-            maxWidth: baseTheme.custom.containerWidth.md,
+          [`@media (min-width:${String(baseTheme.breakpoints.values.md)}px)`]: {
+            maxWidth: String(baseTheme.custom.containerWidth.md),
           },
-          [`@media (min-width:${baseTheme.breakpoints.values.lg}px)`]: {
-            maxWidth: baseTheme.custom.containerWidth.lg,
+          [`@media (min-width:${String(baseTheme.breakpoints.values.lg)}px)`]: {
+            maxWidth: String(baseTheme.custom.containerWidth.lg),
           },
-          [`@media (min-width:${baseTheme.breakpoints.values.xl}px)`]: {
-            maxWidth: baseTheme.custom.containerWidth.xl,
+          [`@media (min-width:${String(baseTheme.breakpoints.values.xl)}px)`]: {
+            maxWidth: String(baseTheme.custom.containerWidth.xl),
           },
         },
       },

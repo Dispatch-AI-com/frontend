@@ -12,8 +12,8 @@ import VideoSection from './components/VideoSection';
 
 const BlogDetailPage = () => {
   return (
-    <Container maxWidth="lg" sx={{ display:'flex', py: 4, gap: 10 }}>
-      <Box >
+    <Container maxWidth="lg" sx={{ display: 'flex', py: 4, gap: 10 }}>
+      <Box>
         <Header />
         <HeroSection />
         <IntroSection />
@@ -24,7 +24,6 @@ const BlogDetailPage = () => {
         <SocialMedia />
       </Box>
     </Container>
-    
   );
 };
 

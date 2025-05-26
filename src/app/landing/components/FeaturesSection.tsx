@@ -4,13 +4,14 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BuildIcon from '@mui/icons-material/Build';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
-import { 
-  Box, 
-  Card, 
+import {
+  Box,
+  Card,
   CardContent,
-  Container, 
-  Grid, 
-  Typography} from '@mui/material';
+  Container,
+  Grid,
+  Typography,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -93,34 +94,44 @@ const FeatureDescription = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function FeaturesSection( ) {
-  const features = [
+interface Feature {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}
+
+export default function FeaturesSection() {
+  const features: Feature[] = [
     {
-      title: "Automated Call Handling",
-      description: "AI answers calls, takes down key information, and creates tickets for you.",
-      icon: <PhoneInTalkIcon sx={{ fontSize: 60 }} />
+      title: 'Automated Call Handling',
+      description:
+        'AI answers calls, takes down key information, and creates tickets for you.',
+      icon: <PhoneInTalkIcon sx={{ fontSize: 60 }} />,
     },
     {
-      title: "Follow-Up Actions",
-      description: "Text message or email conclusions, arrange service bookings, and calendar reminders automatically.",
-      icon: <NotificationsActiveIcon sx={{ fontSize: 60 }} />
+      title: 'Follow-Up Actions',
+      description:
+        'Text message or email conclusions, arrange service bookings, and calendar reminders automatically.',
+      icon: <NotificationsActiveIcon sx={{ fontSize: 60 }} />,
     },
     {
-      title: "24/7 Availability",
-      description: "Never miss a call, even after hours. Perfect for contractors and rental managers.",
-      icon: <AccessTimeIcon sx={{ fontSize: 60 }} />
+      title: '24/7 Availability',
+      description:
+        'Never miss a call, even after hours. Perfect for contractors and rental managers.',
+      icon: <AccessTimeIcon sx={{ fontSize: 60 }} />,
     },
     {
-      title: "No Tech Skills Needed",
-      description: "Set up in 3 minutes. Works with your existing phone number.",
-      icon: <BuildIcon sx={{ fontSize: 60 }} />
-    }
+      title: 'No Tech Skills Needed',
+      description:
+        'Set up in 3 minutes. Works with your existing phone number.',
+      icon: <BuildIcon sx={{ fontSize: 60 }} />,
+    },
   ];
-  
+
   return (
     <FeaturesWrapper>
       <StyledContainer maxWidth="lg">
-        <SectionTitle variant='h2'>
+        <SectionTitle variant="h2">
           Automated Calls, Save Time, Grow Your Business
         </SectionTitle>
 
@@ -128,12 +139,19 @@ export default function FeaturesSection( ) {
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} key={index}>
               <FeatureCard>
-                <FeatureIconContainer>
-                  {feature.icon}
-                </FeatureIconContainer>
-                <CardContent sx={{ padding: 0, paddingTop: 0, '&:last-child': { paddingBottom: 0 }, width: '100%' }}>
-                  <FeatureTitle variant='h3'>{feature.title}</FeatureTitle>
-                  <FeatureDescription variant='body2'>{feature.description}</FeatureDescription>
+                <FeatureIconContainer>{feature.icon}</FeatureIconContainer>
+                <CardContent
+                  sx={{
+                    padding: 0,
+                    paddingTop: 0,
+                    '&:last-child': { paddingBottom: 0 },
+                    width: '100%',
+                  }}
+                >
+                  <FeatureTitle variant="h3">{feature.title}</FeatureTitle>
+                  <FeatureDescription variant="body2">
+                    {feature.description}
+                  </FeatureDescription>
                 </CardContent>
               </FeatureCard>
             </Grid>
