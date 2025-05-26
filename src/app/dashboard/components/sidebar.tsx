@@ -44,14 +44,14 @@ const NavIcon = styled(Image)({
 const ICON_SIZE = 16;
 
 const navItems = [
-    { label: 'Overview', iconSrc: '/dashboard/overview.svg', iconAlt: 'Overview' },
-    { label: 'Inbox', iconSrc: '/dashboard/inbox.svg', iconAlt: 'Inbox', active: true },
-    { label: 'Tasks', iconSrc: '/dashboard/task.svg', iconAlt: 'Tasks' },
-    { label: 'Calendar', iconSrc: '/dashboard/calendar.svg', iconAlt: 'Calendar' },
-    { label: 'Plan', iconSrc: '/dashboard/plan.svg', iconAlt: 'Plan' },
-    { label: 'Payments', iconSrc: '/dashboard/payment.svg', iconAlt: 'Payments' },
-    { label: 'Dispatch AI Setup', iconSrc: '/dashboard/AI-setup.svg', iconAlt: 'Dispatch AI Setup' },
-    { label: 'Settings', iconSrc: '/dashboard/settings.svg', iconAlt: 'Settings' },
+    { label: 'Overview', iconSrc: '/dashboard/sidebar/overview.svg', iconAlt: 'Overview' },
+    { label: 'Inbox', iconSrc: '/dashboard/sidebar/inbox.svg', iconAlt: 'Inbox', active: true },
+    { label: 'Tasks', iconSrc: '/dashboard/sidebar/task.svg', iconAlt: 'Tasks' },
+    { label: 'Calendar', iconSrc: '/dashboard/sidebar/calendar.svg', iconAlt: 'Calendar' },
+    { label: 'Plan', iconSrc: '/dashboard/sidebar/plan.svg', iconAlt: 'Plan' },
+    { label: 'Payments', iconSrc: '/dashboard/sidebar/payment.svg', iconAlt: 'Payments' },
+    { label: 'Dispatch AI Setup', iconSrc: '/dashboard/sidebar/AI-setup.svg', iconAlt: 'Dispatch AI Setup' },
+    { label: 'Settings', iconSrc: '/dashboard/sidebar/settings.svg', iconAlt: 'Settings' },
 ];
 
 const dropdownOptions = [
@@ -126,7 +126,7 @@ export default function Sidebar() {
         {/* User Profile */}
         <Box px={3} py={2} mt="auto">
             <Box display="flex" alignItems="center" gap={1.5}>
-                <Avatar sx={{ width: 40, height: 40, bgcolor: '#e5fcd5', color: '#222', fontWeight: 600 }}>J</Avatar>
+                <Avatar sx={{ width: 40, height: 40, bgcolor: '#e5fcd5', color: '#222', fontWeight: 600, cursor: 'pointer' }}  onClick={handleMenuOpen}>J</Avatar>
                 <Box flex="1">
                     <Typography variant="body1" sx={{ fontWeight: 600 }}>
                     Jeon
@@ -135,8 +135,8 @@ export default function Sidebar() {
                     Free Plan
                     </Typography>
                 </Box>
-                <IconButton size="small" sx={{ ml: 1 }} onClick={handleMenuOpen}>
-                    <Image src="/dashboard/detail-arrow.svg" width={12} height={12} alt="Profile Details" />
+                <IconButton size="small" sx={{ ml: 1 }}>
+                    <Image src="/dashboard/sidebar/detail-arrow.svg" width={12} height={12} alt="Profile Details" />
                 </IconButton>
                 <Menu
                     anchorEl={anchorEl}
