@@ -1,4 +1,4 @@
-import AboutUsLayoutStyled from "@/components/layout/aboutus-layout";
+import AboutUsLayoutStyled from '@/components/layout/aboutus-layout';
 
 export default function AboutUsLayout({
   children,

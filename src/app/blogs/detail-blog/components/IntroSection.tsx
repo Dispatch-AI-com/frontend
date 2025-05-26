@@ -1,9 +1,9 @@
 // /blogs/detail-blog/components/IntroSection.tsx
-"use client";
+'use client';
 
-import { Box, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import React from "react";
+import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import React from 'react';
 
 // Styled components
 const SectionContainer = styled(Box)(({ theme }) => ({
@@ -20,8 +20,8 @@ const Paragraph = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-const Emoji = styled("span")(() => ({
-  display: "inline-block",
+const Emoji = styled('span')(() => ({
+  display: 'inline-block',
 }));
 
 const IntroSection = () => {

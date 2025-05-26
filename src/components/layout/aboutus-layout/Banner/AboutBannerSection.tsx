@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Box } from "@mui/material";
-import React from "react";
+import { Box } from '@mui/material';
+import React from 'react';
 
 import {
   AboutHeader,
@@ -9,7 +9,7 @@ import {
   HeaderImage,
   HeaderText,
   HeaderTitle,
-} from "@/app/about/components/AboutBanner";
+} from '@/app/about/components/AboutBanner';
 
 const AboutBannerSection = () => {
   return (

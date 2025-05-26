@@ -1,6 +1,6 @@
-import { createTheme, responsiveFontSizes } from "@mui/material";
+import { createTheme, responsiveFontSizes } from '@mui/material';
 
-declare module "@mui/material/styles" {
+declare module '@mui/material/styles' {
   interface TypeBackground {
     dark?: string;
   }
@@ -13,19 +13,19 @@ const baseTheme = createTheme({
   },
   palette: {
     background: {
-      default: "#ffffff",
-      paper: "#fafafa",
-      dark: "#000000",
+      default: '#ffffff',
+      paper: '#fafafa',
+      dark: '#000000',
     },
     text: {
-      primary: "#060606",
-      secondary: "#6d6d6d",
+      primary: '#060606',
+      secondary: '#6d6d6d',
     },
   },
 
   typography: {
     fontSize: 14,
-    fontFamily: ["Roboto", "sans-serif"].join(","),
+    fontFamily: ['Roboto', 'sans-serif'].join(','),
     h1: {
       fontSize: 48,
       fontWeight: 900,
@@ -71,10 +71,10 @@ const baseTheme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         html: {
-          overflowX: "hidden",
+          overflowX: 'hidden',
         },
         body: {
-          overflowX: "hidden",
+          overflowX: 'hidden',
         },
       },
     },
@@ -90,8 +90,8 @@ const theme = createTheme(baseTheme, {
       },
       styleOverrides: {
         root: {
-          marginLeft: "auto",
-          marginRight: "auto",
+          marginLeft: 'auto',
+          marginRight: 'auto',
 
           [`@media (min-width:${String(baseTheme.breakpoints.values.sm)}px)`]: {
             maxWidth: String(baseTheme.custom.containerWidth.sm),

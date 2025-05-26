@@ -1,5 +1,5 @@
 // /blogs/detail-blog/components/FaqSection.tsx
-"use client";
+'use client';
 
 import {
   Box,
@@ -8,9 +8,9 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import React from "react";
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import React from 'react';
 
 // Styled components
 const SectionContainer = styled(Box)(({ theme }) => ({
@@ -34,7 +34,7 @@ const StyledList = styled(List)(({ theme }) => ({
 }));
 
 const CheckListItem = styled(ListItem)(() => ({
-  padding: "4px 0",
+  padding: '4px 0',
 }));
 
 const StyledListItemIcon = styled(ListItemIcon)(() => ({
@@ -45,8 +45,8 @@ const HowItHelps = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }));
 
-const Pointer = styled("span")(() => ({
-  display: "inline-block",
+const Pointer = styled('span')(() => ({
+  display: 'inline-block',
 }));
 
 const FaqSection = () => {

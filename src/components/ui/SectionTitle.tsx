@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Typography } from "@mui/material";
-import React from "react";
+import { Typography } from '@mui/material';
+import React from 'react';
 
 interface SectionTitleProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ interface SectionTitleProps {
 const SectionTitle: React.FC<SectionTitleProps> = ({
   children,
   mb = 8,
-  color = "#060606",
+  color = '#060606',
   sx = {},
   ...rest
 }) => {
@@ -23,10 +23,10 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
       align="center"
       gutterBottom
       sx={{
-        lineHeight: "56px",
+        lineHeight: '56px',
         color: color,
         mb: mb,
-        mx: "auto",
+        mx: 'auto',
         ...sx,
       }}
       {...rest}

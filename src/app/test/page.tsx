@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import api from "@/lib/api";
+import api from '@/lib/api';
 
 interface HealthResponse {
   message: string;
 }
 
 export default function TestPage() {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     api
-      .get<HealthResponse>("/health/niubi")
-      .then((res) => {
+      .get<HealthResponse>('/health/niubi')
+      .then(res => {
         setMessage(res.data.message);
       })
       .catch((_error: unknown) => {
         // console.error("❌ Request failed:", error);
-        setMessage("connection failed");
+        setMessage('connection failed');
       });
   }, []);
 

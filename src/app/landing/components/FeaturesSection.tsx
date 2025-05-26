@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import BuildIcon from "@mui/icons-material/Build";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import BuildIcon from '@mui/icons-material/Build';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import {
   Box,
   Card,
@@ -11,9 +11,9 @@ import {
   Container,
   Grid,
   Typography,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import React from "react";
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import React from 'react';
 
 // Styled Components
 const FeaturesWrapper = styled(Box)(({ theme }) => ({
@@ -25,71 +25,71 @@ const FeaturesWrapper = styled(Box)(({ theme }) => ({
 const StyledContainer = styled(Container)(({ theme }) => ({
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up('sm')]: {
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
   },
-  [theme.breakpoints.up("md")]: {
+  [theme.breakpoints.up('md')]: {
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
   },
 }));
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
-  display: "block",
-  whiteSpace: "normal",
-  [theme.breakpoints.up("md")]: {
-    whiteSpace: "nowrap",
+  display: 'block',
+  whiteSpace: 'normal',
+  [theme.breakpoints.up('md')]: {
+    whiteSpace: 'nowrap',
   },
-  textAlign: "center",
+  textAlign: 'center',
   marginBottom: theme.spacing(8),
-  width: "100%",
+  width: '100%',
 }));
 
 const FeatureCard = styled(Card)(() => ({
-  height: "100%",
+  height: '100%',
   maxWidth: 440,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-start",
-  textAlign: "left",
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  textAlign: 'left',
   padding: 0,
   paddingLeft: 0,
-  boxShadow: "none",
-  backgroundColor: "transparent",
+  boxShadow: 'none',
+  backgroundColor: 'transparent',
 }));
 
 const FeatureIconContainer = styled(Box)(({ theme }) => ({
   width: 64,
   height: 64,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   backgroundColor: theme.palette.grey[100],
-  borderRadius: "12px",
+  borderRadius: '12px',
   marginBottom: theme.spacing(3),
-  alignSelf: "flex-start",
+  alignSelf: 'flex-start',
   marginLeft: 0,
 }));
 
 const FeatureTitle = styled(Typography)(({ theme }) => ({
-  lineHeight: "30px",
-  height: "30px",
-  maxWidth: "269px",
+  lineHeight: '30px',
+  height: '30px',
+  maxWidth: '269px',
   marginBottom: theme.spacing(3),
-  textAlign: "left",
-  whiteSpace: "nowrap",
+  textAlign: 'left',
+  whiteSpace: 'nowrap',
 }));
 
 const FeatureDescription = styled(Typography)(({ theme }) => ({
-  lineHeight: "20px",
-  maxWidth: "420px",
-  height: "40px",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  display: "-webkit-box",
+  lineHeight: '20px',
+  maxWidth: '420px',
+  height: '40px',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  display: '-webkit-box',
   WebkitLineClamp: 2,
-  WebkitBoxOrient: "vertical",
+  WebkitBoxOrient: 'vertical',
   marginTop: theme.spacing(2.5),
   color: theme.palette.text.secondary,
 }));
@@ -103,27 +103,27 @@ interface Feature {
 export default function FeaturesSection() {
   const features: Feature[] = [
     {
-      title: "Automated Call Handling",
+      title: 'Automated Call Handling',
       description:
-        "AI answers calls, takes down key information, and creates tickets for you.",
+        'AI answers calls, takes down key information, and creates tickets for you.',
       icon: <PhoneInTalkIcon sx={{ fontSize: 60 }} />,
     },
     {
-      title: "Follow-Up Actions",
+      title: 'Follow-Up Actions',
       description:
-        "Text message or email conclusions, arrange service bookings, and calendar reminders automatically.",
+        'Text message or email conclusions, arrange service bookings, and calendar reminders automatically.',
       icon: <NotificationsActiveIcon sx={{ fontSize: 60 }} />,
     },
     {
-      title: "24/7 Availability",
+      title: '24/7 Availability',
       description:
-        "Never miss a call, even after hours. Perfect for contractors and rental managers.",
+        'Never miss a call, even after hours. Perfect for contractors and rental managers.',
       icon: <AccessTimeIcon sx={{ fontSize: 60 }} />,
     },
     {
-      title: "No Tech Skills Needed",
+      title: 'No Tech Skills Needed',
       description:
-        "Set up in 3 minutes. Works with your existing phone number.",
+        'Set up in 3 minutes. Works with your existing phone number.',
       icon: <BuildIcon sx={{ fontSize: 60 }} />,
     },
   ];
@@ -144,8 +144,8 @@ export default function FeaturesSection() {
                   sx={{
                     padding: 0,
                     paddingTop: 0,
-                    "&:last-child": { paddingBottom: 0 },
-                    width: "100%",
+                    '&:last-child': { paddingBottom: 0 },
+                    width: '100%',
                   }}
                 >
                   <FeatureTitle variant="h3">{feature.title}</FeatureTitle>

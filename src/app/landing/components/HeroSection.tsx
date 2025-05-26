@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Box, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import Image from "next/image";
-import * as React from "react";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import Image from 'next/image';
+import * as React from 'react';
 
-import CommonButton from "@/components/ui/CommonButton";
-import theme from "@/theme";
+import CommonButton from '@/components/ui/CommonButton';
+import theme from '@/theme';
 
-const StyledContainer = styled("div")`
+const StyledContainer = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +22,7 @@ const StyledContainer = styled("div")`
   }
 `;
 
-const StyledStack = styled("div")`
+const StyledStack = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,7 +52,7 @@ const StyledTypographyBody = styled(Typography)`
   word-break: break-word;
 `;
 
-const ButtonStack = styled("div")`
+const ButtonStack = styled('div')`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -111,14 +111,14 @@ export default function HeroSection() {
           <CommonButton
             buttonVariant="black"
             endIcon={<ArrowForwardIcon />}
-            sx={{ height: "48px" }}
+            sx={{ height: '48px' }}
           >
             Start Your Free Trial
           </CommonButton>
           <CommonButton
             buttonVariant="green"
             endIcon={<ArrowForwardIcon />}
-            sx={{ height: "48px", marginBottom: { xs: "50px", sm: "0" } }}
+            sx={{ height: '48px', marginBottom: { xs: '50px', sm: '0' } }}
           >
             Request a Demo
           </CommonButton>

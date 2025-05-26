@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import XIcon from "@mui/icons-material/X";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import { Stack } from "@mui/material";
-import React from "react";
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import XIcon from '@mui/icons-material/X';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import { Stack } from '@mui/material';
+import React from 'react';
 
-import { HeaderText } from "@/app/about/components/AboutBanner";
+import { HeaderText } from '@/app/about/components/AboutBanner';
 import {
   CallToActionText,
   CallToActionTitle,
   CallToActionWrapper,
   SocialMediaButton,
-} from "@/app/about/components/CallToAction";
+} from '@/app/about/components/CallToAction';
 
 const CallToActionSection = () => {
   return (
     <CallToActionWrapper>
       <CallToActionTitle>Want to work with us?</CallToActionTitle>
       <HeaderText>
-        Email us at{" "}
+        Email us at{' '}
         <a
           href="mailto:hello@jiangren.com.au"
-          style={{ color: "#a8f574", textDecoration: "underline" }}
+          style={{ color: '#a8f574', textDecoration: 'underline' }}
         >
           hello@jiangren.com.au
-        </a>{" "}
+        </a>{' '}
         with your resume and tell us why you&apos;re a great fit!
       </HeaderText>
       <HeaderText>Address</HeaderText>
@@ -35,7 +35,7 @@ const CallToActionSection = () => {
         217 Flinders St, Adelaide, South Australia 5000, AU
       </CallToActionText>
       <HeaderText>Phone</HeaderText>
-      <CallToActionText style={{ whiteSpace: "nowrap" }}>
+      <CallToActionText style={{ whiteSpace: 'nowrap' }}>
         +63 4233365542
       </CallToActionText>
       <HeaderText>Find us on social media</HeaderText>

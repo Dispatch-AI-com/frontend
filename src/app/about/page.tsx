@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import { Box, CardContent, IconButton, Typography } from "@mui/material";
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { Box, CardContent, IconButton, Typography } from '@mui/material';
 
 import {
   SectionText,
   SectionTitle,
   SectionWrapper,
-} from "@/app/about/components/InfoBody";
+} from '@/app/about/components/InfoBody';
 import {
   TeamCardContainer,
   TeamMemberCard,
   TeamMemberImage,
-} from "@/app/about/components/TeamCard";
-import teamMembers from "@/data/teamMembers.json";
+} from '@/app/about/components/TeamCard';
+import teamMembers from '@/data/teamMembers.json';
 
 export default function AboutPage() {
   return (
@@ -54,7 +54,7 @@ export default function AboutPage() {
       </SectionWrapper>
 
       <TeamCardContainer>
-        {teamMembers.map((member) => (
+        {teamMembers.map(member => (
           <Box key={member.linkedin}>
             <TeamMemberCard>
               <TeamMemberImage backgroundImage={member.image} />
@@ -68,10 +68,10 @@ export default function AboutPage() {
                 href={member.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ textDecoration: "none" }}
+                style={{ textDecoration: 'none' }}
               >
                 <IconButton>
-                  <LinkedInIcon sx={{ color: "black" }} />
+                  <LinkedInIcon sx={{ color: 'black' }} />
                 </IconButton>
               </a>
             </TeamMemberCard>

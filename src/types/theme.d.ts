@@ -1,7 +1,7 @@
 // types/theme.d.ts
-import type {} from "@mui/material/styles";
+import type {} from '@mui/material/styles';
 
-declare module "@mui/material/styles" {
+declare module '@mui/material/styles' {
   interface Theme {
     custom: {
       containerWidth: {
