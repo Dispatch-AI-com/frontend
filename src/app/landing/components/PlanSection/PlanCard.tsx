@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 
 import CommonButton from '@/components/ui/CommonButton';
-import { PlanButton } from '@/types/plan.types';
+import type { PlanButton } from '@/types/plan.types';
 
 interface PlanCardProps {
   tier: 'FREE' | 'BASIC' | 'PRO';
@@ -57,13 +57,11 @@ const DemoBox = styled('div')(({ theme }) => ({
   },
 }));
 
-
 const CardTitle = styled('h3')(({ theme }) => ({
   fontWeight: theme.typography.fontWeightBold,
   color: '#060606',
   margin: '0 0 20px',
   textAlign: 'left',
-
 }));
 
 const CardDescription = styled('p')(({ theme }) => ({
@@ -77,14 +75,19 @@ const BtnContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'center',
-  gap: theme.spacing(2, 1.5), 
+  gap: theme.spacing(2, 1.5),
 
   [theme.breakpoints.up('lg')]: {
-    flexWrap: 'nowrap', 
+    flexWrap: 'nowrap',
   },
 }));
 
-export default function PlanCard({ tier, name, description, buttons }: PlanCardProps) {
+export default function PlanCard({
+  tier,
+  name,
+  description,
+  buttons,
+}: PlanCardProps) {
   return (
     <CardContainer>
       <CardContent>
@@ -105,11 +108,12 @@ export default function PlanCard({ tier, name, description, buttons }: PlanCardP
             key={i}
             buttonVariant={btn.variant === 'primary' ? 'black' : 'green'}
             sx={{
-              width: buttons.length === 1
-                ? '388px'
-                : btn.variant === 'primary'
-                ? '216px'
-                : '160px',
+              width:
+                buttons.length === 1
+                  ? '388px'
+                  : btn.variant === 'primary'
+                    ? '216px'
+                    : '160px',
             }}
           >
             {btn.label}

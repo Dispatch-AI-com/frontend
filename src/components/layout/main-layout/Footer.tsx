@@ -6,7 +6,14 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import { Box, Container, IconButton, Link, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Container,
+  IconButton,
+  Link,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 
@@ -174,16 +181,32 @@ export default function Footer() {
           {/* Logo and Social Media */}
           <LogoAndSocialBox>
             <LogoContainer>
-              <Image src="/logo.svg" alt="DispatchAI Logo" layout="fill" objectFit="contain" priority />
+              <Image
+                src="/logo.svg"
+                alt="DispatchAI Logo"
+                layout="fill"
+                objectFit="contain"
+                priority
+              />
             </LogoContainer>
             <SocialBox>
               <SocialText>Follow Us On Social Media</SocialText>
               <SocialIconsRow direction="row" spacing={0.8}>
-                <SocialIconButton color="inherit"><LinkedInIcon /></SocialIconButton>
-                <SocialIconButton color="inherit"><FacebookIcon /></SocialIconButton>
-                <SocialIconButton color="inherit"><InstagramIcon /></SocialIconButton>
-                <SocialIconButton color="inherit"><XIcon /></SocialIconButton>
-                <SocialIconButton color="inherit"><YouTubeIcon /></SocialIconButton>
+                <SocialIconButton color="inherit">
+                  <LinkedInIcon />
+                </SocialIconButton>
+                <SocialIconButton color="inherit">
+                  <FacebookIcon />
+                </SocialIconButton>
+                <SocialIconButton color="inherit">
+                  <InstagramIcon />
+                </SocialIconButton>
+                <SocialIconButton color="inherit">
+                  <XIcon />
+                </SocialIconButton>
+                <SocialIconButton color="inherit">
+                  <YouTubeIcon />
+                </SocialIconButton>
               </SocialIconsRow>
             </SocialBox>
             <CopyrightText>©Copyright 2025 Dispatch AI</CopyrightText>
@@ -192,14 +215,28 @@ export default function Footer() {
           {/* Navigation Links */}
           <NavLinksBox>
             <NavLinksStack>
-              <NavLink href="/" color="inherit">Home</NavLink>
-              <NavLink href="/products" color="inherit">Products</NavLink>
-              <NavLink href="/pricing" color="inherit">Pricing</NavLink>
-              <NavLink href="/blogs" color="inherit">Blogs</NavLink>
-              <NavLink href="/features" color="inherit">Features</NavLink>
-              <NavLink href="/about" color="inherit">About Us</NavLink>
+              <NavLink href="/" color="inherit">
+                Home
+              </NavLink>
+              <NavLink href="/products" color="inherit">
+                Products
+              </NavLink>
+              <NavLink href="/pricing" color="inherit">
+                Pricing
+              </NavLink>
+              <NavLink href="/blogs" color="inherit">
+                Blogs
+              </NavLink>
+              <NavLink href="/features" color="inherit">
+                Features
+              </NavLink>
+              <NavLink href="/about" color="inherit">
+                About Us
+              </NavLink>
               <Box>
-                <NavLink href="/support" color="inherit">Support</NavLink>
+                <NavLink href="/support" color="inherit">
+                  Support
+                </NavLink>
                 <SupportLinksStack spacing={2.5}>
                   <SupportLink href="/support/documents">Documents</SupportLink>
                   <SupportLink href="/support/faqs">FAQs</SupportLink>
@@ -213,11 +250,15 @@ export default function Footer() {
           {/* Free Trial Section */}
           <FreeTrialBox>
             <FreeTrialContent>
-              <FreeTrialTitle variant="body1">Ready to Save Time?</FreeTrialTitle>
+              <FreeTrialTitle variant="body1">
+                Ready to Save Time?
+              </FreeTrialTitle>
               <ButtonWrapper>
                 <CommonButton
                   buttonVariant="black"
-                  endIcon={<ArrowForwardIcon sx={{ width: '20px', height: '20px' }} />}
+                  endIcon={
+                    <ArrowForwardIcon sx={{ width: '20px', height: '20px' }} />
+                  }
                 >
                   Start Your Free Trial
                 </CommonButton>

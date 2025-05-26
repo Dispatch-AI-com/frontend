@@ -3,11 +3,16 @@
 import { Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import { NavItem, NavItemProps } from './NavItem';
+import type { NavItemProps as OriginalNavItemProps } from './NavItem';
+import { NavItem } from './NavItem';
 
 interface DesktopNavItemsProps {
   navItems: NavItemProps[];
   themeVariant?: 'light' | 'dark';
+}
+
+interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {
+  href: string;
 }
 
 const DesktopNavContainer = styled(Stack)(() => ({
@@ -16,15 +21,14 @@ const DesktopNavContainer = styled(Stack)(() => ({
   alignItems: 'center',
 }));
 
-export function DesktopNavItems({ navItems, themeVariant = 'light' }: DesktopNavItemsProps) {
+export function DesktopNavItems({
+  navItems,
+  themeVariant = 'light',
+}: DesktopNavItemsProps) {
   return (
     <DesktopNavContainer direction="row" spacing={0}>
-      {navItems.map((item) => (
-        <NavItem
-          key={item.href.toString()}
-          {...item}
-          themeVariant={themeVariant}
-        />
+      {navItems.map(item => (
+        <NavItem key={item.href} {...item} themeVariant={themeVariant} />
       ))}
     </DesktopNavContainer>
   );
