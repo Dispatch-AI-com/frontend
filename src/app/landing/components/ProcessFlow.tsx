@@ -139,7 +139,7 @@ const StepPaper = styled(Paper, {
   '@media (min-width:351px) and (max-width:500px)': {
     height: '200px',
   },
-  '@media (min-width:501px) and (max-width:800px)': {
+  '@media (min-width:501px) and (max-width:600px)': {
     height: '150px',
   },
 }));
