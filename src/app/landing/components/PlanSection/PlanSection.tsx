@@ -66,8 +66,8 @@ export default function PlanSection() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await axios.get<{ data: Plan[] }>('api/plan');
-        setPlans(res.data.data);
+        const res = await axios.get<Plan[]>('api/plan');
+        setPlans(res.data);
       } catch {
         //console.error("Failed to fetch plans:");
       }
