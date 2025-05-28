@@ -1,6 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
+
 import TestimonialCard from '@/app/landing/components/TestimonialCard';
 
 const testimonials = [
