@@ -3,7 +3,7 @@
 import { styled } from '@mui/material/styles';
 
 import CommonButton from '@/components/ui/CommonButton';
-import { PlanButton } from '@/types/plan.types';
+import type { PlanButton } from '@/types/plan.types';
 
 interface PricingCardProps {
   features: {
@@ -60,7 +60,7 @@ const PriceRow = styled('div')(() => ({
   display: 'flex',
   alignItems: 'flex-start',
   gap: '10px',
-  margin: '96px 0 40px 0', 
+  margin: '96px 0 40px 0',
 }));
 
 const PriceText = styled('span')(() => ({
@@ -77,7 +77,7 @@ const PeriodText = styled('span')(() => ({
   fontWeight: 400,
   lineHeight: 1.25,
   color: '#060606',
-  marginTop: '18px', 
+  marginTop: '18px',
 }));
 
 const BtnContainer = styled('div')(({ theme }) => ({
@@ -87,7 +87,7 @@ const BtnContainer = styled('div')(({ theme }) => ({
   marginBottom: '40px',
 
   [theme.breakpoints.up('lg')]: {
-    flexWrap: 'nowrap', 
+    flexWrap: 'nowrap',
   },
 }));
 
@@ -121,16 +121,16 @@ const FeatureValue = styled('span')({
   margin: '2px 0 2px 0px',
 });
 
-export default function PricingCard({  features, pricing, buttons }: PricingCardProps) {
+export default function PricingCard({
+  features,
+  pricing,
+  buttons,
+}: PricingCardProps) {
   return (
     <CardContainer>
       <PriceRow>
-        <PriceText>
-          {pricing.priceDisplay}
-        </PriceText>
-        <PeriodText>
-          {pricing.periodDisplay}
-        </PeriodText>
+        <PriceText>{pricing.priceDisplay}</PriceText>
+        <PeriodText>{pricing.periodDisplay}</PeriodText>
       </PriceRow>
       <BtnContainer>
         {buttons.map((btn, i) => (
@@ -148,13 +148,17 @@ export default function PricingCard({  features, pricing, buttons }: PricingCard
       </BtnContainer>
 
       <FeatureItem>
-        <IconWrapper><CustomCheckIcon /></IconWrapper>
+        <IconWrapper>
+          <CustomCheckIcon />
+        </IconWrapper>
         <FeatureLabel>Call Minutes:</FeatureLabel>
         <FeatureValue>{features.callMinutes}</FeatureValue>
       </FeatureItem>
 
       <FeatureItem>
-        <IconWrapper><CustomCheckIcon /></IconWrapper>
+        <IconWrapper>
+          <CustomCheckIcon />
+        </IconWrapper>
         <FeatureLabel>Support:</FeatureLabel>
         <FeatureValue>{features.support}</FeatureValue>
       </FeatureItem>

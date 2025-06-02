@@ -11,8 +11,8 @@ interface TestimonialCardProps {
 }
 
 const StyledCard = styled.div`
-  width: 100%;
-  max-width: 696px;
+  width: 696px;
+  min-height: 306px;
   padding: 60px;
   border-radius: 24px;
   border: 1px solid #d5d5d5;
@@ -21,8 +21,12 @@ const StyledCard = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   gap: 40px;
+  word-break: break-word;
 
-  @media (max-width: 767px) {
+  @media (max-width: 899px) {
+    width: 100%;
+    max-width: 576px;
+    min-height: auto;
     padding: 40px 24px;
   }
 `;
@@ -47,8 +51,10 @@ const QuoteText = styled.p`
   line-height: 1.33;
   color: #060606;
   margin: 0;
-  max-width: 576px;
+  white-space: normal;
+  overflow-wrap: break-word;
   word-break: break-word;
+  hyphens: auto;
 `;
 
 const NameText = styled.p`
@@ -68,12 +74,21 @@ const TitleText = styled.p`
   margin: 0;
 `;
 
-export default function TestimonialCard({ quote, name, title }: TestimonialCardProps) {
+export default function TestimonialCard({
+  quote,
+  name,
+  title,
+}: TestimonialCardProps) {
   return (
     <StyledCard>
       <QuoteRow>
         <QuoteIconBox>
-          <Image src="/invalid-name.svg" alt="Quote Icon" width={22} height={20} />
+          <Image
+            src="/invalid-name.svg"
+            alt="Quote Icon"
+            width={22}
+            height={20}
+          />
         </QuoteIconBox>
         <QuoteText>{quote}</QuoteText>
       </QuoteRow>

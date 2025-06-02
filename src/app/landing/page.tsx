@@ -3,14 +3,14 @@ import TestimonialsSection from '@/app/landing/components/TestimonialsSection';
 
 import FeaturesSection from './components/FeaturesSection';
 import PlanSection from './components/PlanSection/PlanSection';
-import ProcessFlow from "./components/ProcessFlow";
+import ProcessFlow from './components/ProcessFlow';
 
 export default function Landing() {
   return (
     <>
       <HeroSection />
       <PlanSection />
-      <FeaturesSection/>
+      <FeaturesSection />
       <ProcessFlow />
       <TestimonialsSection />
     </>

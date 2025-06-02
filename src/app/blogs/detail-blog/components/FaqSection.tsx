@@ -1,7 +1,14 @@
 // /blogs/detail-blog/components/FaqSection.tsx
 'use client';
 
-import { Box, List, ListItem, ListItemIcon, ListItemText,Typography } from '@mui/material';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -45,41 +52,50 @@ const Pointer = styled('span')(() => ({
 const FaqSection = () => {
   return (
     <SectionContainer>
-      <SectionTitle variant="h6">Enhanced FAQs, Load Larger Documents & Webpages</SectionTitle>
-      
+      <SectionTitle variant="h6">
+        Enhanced FAQs, Load Larger Documents & Webpages
+      </SectionTitle>
+
       <Paragraph variant="body1">
-        Manually copying and pasting FAQs is a thing of the past. Lucy can now handle much larger 
-        FAQ documents and even pull information directly from your website so you can set up 
-        smarter responses with minimal effort.
+        Manually copying and pasting FAQs is a thing of the past. Lucy can now
+        handle much larger FAQ documents and even pull information directly from
+        your website so you can set up smarter responses with minimal effort.
       </Paragraph>
-      
+
       <StyledList>
         <CheckListItem>
           <StyledListItemIcon>
-            <span role="img" aria-label="check">✅</span>
+            <span role="img" aria-label="check">
+              ✅
+            </span>
           </StyledListItemIcon>
           <ListItemText primary="Upload significantly larger FAQ documents" />
         </CheckListItem>
-        
+
         <CheckListItem>
           <StyledListItemIcon>
-            <span role="img" aria-label="check">✅</span>
+            <span role="img" aria-label="check">
+              ✅
+            </span>
           </StyledListItemIcon>
           <ListItemText primary="Import FAQs from a webpage—just paste the link, and Lucy pulls in the details" />
         </CheckListItem>
-        
+
         <CheckListItem>
           <StyledListItemIcon>
-            <span role="img" aria-label="check">✅</span>
+            <span role="img" aria-label="check">
+              ✅
+            </span>
           </StyledListItemIcon>
           <ListItemText primary="Easier manual entry—copy and paste everything into a single document and upload it" />
         </CheckListItem>
       </StyledList>
-      
+
       <HowItHelps variant="body1">
-        <Pointer>💡</Pointer> How it helps: Instead of spending time manually inputting FAQ responses, 
-        just upload or link to your existing FAQ content, and Lucy will do the rest, ensuring customers 
-        get quick and accurate answers every time.
+        <Pointer>💡</Pointer> How it helps: Instead of spending time manually
+        inputting FAQ responses, just upload or link to your existing FAQ
+        content, and Lucy will do the rest, ensuring customers get quick and
+        accurate answers every time.
       </HowItHelps>
     </SectionContainer>
   );

@@ -24,7 +24,7 @@ const TitleRow = styled(Box)(({ theme }) => ({
   },
 }));
 
-const PageTitle = styled(Typography)(({ }) => ({
+const PageTitle = styled(Typography)(() => ({
   fontWeight: 700,
 }));
 
@@ -48,15 +48,15 @@ const DateText = styled(Typography)(({ theme }) => ({
 }));
 
 const Header = () => {
-
   return (
     <HeaderContainer>
       <TitleRow>
         <PageTitle variant="h6">
-          New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way
+          New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your
+          Way
         </PageTitle>
       </TitleRow>
-      
+
       <AuthorRow>
         <AuthorAvatar />
         <Typography variant="subtitle1">Jone</Typography>

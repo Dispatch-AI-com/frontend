@@ -1,7 +1,7 @@
 // /blogs/detail-blog/components/HeroSection.tsx
 'use client';
 
-import { Box, Paper,Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -70,9 +70,7 @@ const HeroSection = () => {
     <GradientPaper elevation={3}>
       <ContentContainer>
         <TextSection>
-          <HeroTitle>
-            LUCY MARCH UPDATE
-          </HeroTitle>
+          <HeroTitle>LUCY MARCH UPDATE</HeroTitle>
           <SubtitleBox>
             <Typography variant="h6" sx={{ color: 'white' }}>
               Enhanced FAQs & Get Call Notifications Your Way

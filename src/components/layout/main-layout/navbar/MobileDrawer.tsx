@@ -4,7 +4,12 @@ import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { AuthButton } from './AuthButton';
-import { NavItem, NavItemProps } from './NavItem';
+import type { NavItemProps as OriginalNavItemProps } from './NavItem';
+import { NavItem } from './NavItem';
+
+interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {
+  href: string;
+}
 
 interface MobileDrawerProps {
   handleDrawerToggle: () => void;
@@ -43,9 +48,9 @@ export function MobileDrawer({
   return (
     <MobileDrawerContainer>
       <MobileNavContainer spacing={2}>
-        {navItems.map((item) => (
+        {navItems.map(item => (
           <NavItem
-            key={item.href.toString()}
+            key={item.href}
             {...item}
             handleDrawerToggle={handleDrawerToggle}
             themeVariant={themeVariant}
@@ -55,8 +60,18 @@ export function MobileDrawer({
       </MobileNavContainer>
 
       <ActionArea>
-        <AuthButton variant="login" isMobile onClick={handleDrawerToggle} themeVariant={themeVariant} />
-        <AuthButton variant="signup" isMobile onClick={handleDrawerToggle} themeVariant={themeVariant} />
+        <AuthButton
+          variant="login"
+          isMobile
+          onClick={handleDrawerToggle}
+          themeVariant={themeVariant}
+        />
+        <AuthButton
+          variant="signup"
+          isMobile
+          onClick={handleDrawerToggle}
+          themeVariant={themeVariant}
+        />
       </ActionArea>
     </MobileDrawerContainer>
   );

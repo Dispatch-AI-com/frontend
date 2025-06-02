@@ -1,7 +1,7 @@
 export default function HeroSection() {
-    return (
-      <>
-          <p>features section</p>
-      </>
-    );
-  } 
+  return (
+    <>
+      <p>features section</p>
+    </>
+  );
+}

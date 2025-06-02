@@ -6,7 +6,8 @@ import TestimonialCard from '@/app/landing/components/TestimonialCard';
 
 const testimonials = [
   {
-    quote: 'SmartAgent cut our missed calls by 80%. Lifesaver for my plumbing business!',
+    quote:
+      'SmartAgent cut our missed calls by 80%. Lifesaver for my plumbing business!',
     name: 'Josn',
     title: 'CEO of ABC Company',
   },
@@ -36,25 +37,22 @@ const Title = styled.h2`
 const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 64px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: nowrap;
+  padding: 0 16px;
 
-  & > * {
-    flex: 0 0 auto;
-    scroll-snap-align: center;
+  @media (min-width: 1920px) {
+    justify-content: flex-start;
+    padding: 0 240px;
   }
 
-  @media (min-width: 768px) {
-    justify-content: center;
+  @media (max-width: 899px) {
+    flex-direction: column;
+    gap: 32px;
+    padding: 0 16px;
     flex-wrap: wrap;
-    overflow-x: visible;
-    scroll-snap-type: none;
-
-    & > * {
-      scroll-snap-align: unset;
-    }
+    align-items: center;
   }
 `;
 

@@ -2,7 +2,7 @@
 
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { Box, IconButton,Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 import React from 'react';
@@ -36,12 +36,11 @@ const SocialLabel = styled(Typography)(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
-
-
 const SocialMedia = () => {
   const handleShare = (platform: string) => {
     const url = window.location.href;
-    const title = "New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way";
+    const title =
+      'New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way';
 
     let shareUrl = '';
 
@@ -70,13 +69,25 @@ const SocialMedia = () => {
         <SocialLabel variant="subtitle2">Social Sharing</SocialLabel>
       </StyledLabelWrapper>
       <StyledIconRow>
-        <StyledIconButton onClick={() => handleShare('linkedin')}>
+        <StyledIconButton
+          onClick={() => {
+            handleShare('linkedin');
+          }}
+        >
           <LinkedInIcon />
         </StyledIconButton>
-        <StyledIconButton onClick={() => handleShare('facebook')}>
+        <StyledIconButton
+          onClick={() => {
+            handleShare('facebook');
+          }}
+        >
           <FacebookIcon />
         </StyledIconButton>
-        <StyledIconButton onClick={() => handleShare('twitter')}>
+        <StyledIconButton
+          onClick={() => {
+            handleShare('twitter');
+          }}
+        >
           <Image src="/icons/xlogo.svg" alt="X" width={24} height={24} />
         </StyledIconButton>
       </StyledIconRow>

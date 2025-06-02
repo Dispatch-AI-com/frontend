@@ -21,7 +21,7 @@ import { useState } from 'react';
 import { AuthButton } from './navbar/AuthButton';
 import { DesktopNavItems } from './navbar/DesktopNavItems';
 import { MobileDrawer } from './navbar/MobileDrawer';
-import { NavItemProps } from './navbar/NavItem';
+import type { NavItemProps } from './navbar/NavItem';
 
 const navItems: NavItemProps[] = [
   { href: '/', text: 'Home', width: 70, textWidth: 38 },
@@ -62,7 +62,7 @@ const DesktopButtonGroup = styled(Stack)({
   marginLeft: 'auto',
 });
 
-const MobileMenuButton = styled(IconButton)(({ }) => ({
+const MobileMenuButton = styled(IconButton)(() => ({
   marginLeft: 'auto',
   transition: 'transform 0.3s ease',
   borderRadius: 12,
@@ -96,66 +96,73 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
   };
 
   return (
-    <StyledAppBar 
-      color="transparent" 
+    <StyledAppBar
+      color="transparent"
       elevation={0}
       sx={{
-        backgroundColor: variant === 'light' ? theme.palette.background.default : '#060606',
+        backgroundColor:
+          variant === 'light' ? theme.palette.background.default : '#060606',
         color: variant === 'light' ? 'inherit' : '#ffffff',
       }}
     >
       <Container maxWidth="xl">
-          <StyledToolbar disableGutters>
-            {/* Logo */}
-            <LogoBox>
-              <Link href="/" aria-label="Dispatch AI Home">
-                <Image
-                  src={variant === 'light' ? "/logo.svg" : "/logo-dark.svg"}
-                  alt="Dispatch AI logo"
-                  width={126}
-                  height={30}
-                  priority
-                  style={{ cursor: 'pointer', display: 'block' }}
-                />
-              </Link>
-            </LogoBox>
+        <StyledToolbar disableGutters>
+          {/* Logo */}
+          <LogoBox>
+            <Link href="/" aria-label="Dispatch AI Home">
+              <Image
+                src={variant === 'light' ? '/logo.svg' : '/logo-dark.svg'}
+                alt="Dispatch AI logo"
+                width={126}
+                height={30}
+                priority
+                style={{ cursor: 'pointer', display: 'block' }}
+              />
+            </Link>
+          </LogoBox>
 
-            {/* Desktop */}
-            {!isMobile && (
-              <>
-                <DesktopNavItems navItems={navItems} themeVariant={variant} />
-                <DesktopButtonGroup direction="row" spacing={1.5}>
-                  <AuthButton variant="login" themeVariant={variant} />
-                  <AuthButton variant="signup" themeVariant={variant} />
-                </DesktopButtonGroup>
-              </>
-            )}
+          {/* Desktop */}
+          {!isMobile && (
+            <>
+              <DesktopNavItems navItems={navItems} themeVariant={variant} />
+              <DesktopButtonGroup direction="row" spacing={1.5}>
+                <AuthButton variant="login" themeVariant={variant} />
+                <AuthButton variant="signup" themeVariant={variant} />
+              </DesktopButtonGroup>
+            </>
+          )}
 
-            {/* Mobile */}
-            {isMobile && (
-              <MobileMenuButton
-                color="inherit"
-                aria-label="toggle drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{
-                  backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
+          {/* Mobile */}
+          {isMobile && (
+            <MobileMenuButton
+              color="inherit"
+              aria-label="toggle drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{
+                backgroundColor:
+                  variant === 'light'
+                    ? theme.palette.background.paper
+                    : '#060606',
+                color: variant === 'light' ? 'inherit' : '#ffffff',
+                '&:hover': {
+                  backgroundColor:
+                    variant === 'light'
+                      ? theme.palette.background.paper
+                      : '#060606',
                   color: variant === 'light' ? 'inherit' : '#ffffff',
-                  '&:hover': {
-                    backgroundColor: variant === 'light' ? theme.palette.background.paper : '#060606',
-                    color: variant === 'light' ? 'inherit' : '#ffffff',
-                  },
-                  transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-                }}
-              >
-                {mobileOpen ? (
-                  <CloseIcon fontSize="medium" />
-                ) : (
-                  <MenuIcon fontSize="medium" />
-                )}
-              </MobileMenuButton>
-            )}
-          </StyledToolbar>
+                },
+                transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+              }}
+            >
+              {mobileOpen ? (
+                <CloseIcon fontSize="medium" />
+              ) : (
+                <MenuIcon fontSize="medium" />
+              )}
+            </MobileMenuButton>
+          )}
+        </StyledToolbar>
       </Container>
 
       {/* Mobile Drawer */}
@@ -167,7 +174,10 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
         ModalProps={{ keepMounted: true }}
         sx={{
           '& .MuiDrawer-paper': {
-            backgroundColor: variant === 'light' ? theme.palette.background.default : '#060606',
+            backgroundColor:
+              variant === 'light'
+                ? theme.palette.background.default
+                : '#060606',
             color: variant === 'light' ? 'inherit' : '#ffffff',
           },
         }}
