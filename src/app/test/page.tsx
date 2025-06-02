@@ -12,12 +12,13 @@ export default function TestPage() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    api.get<HealthResponse>('/health/niubi')
-      .then((res) => {
+    api
+      .get<HealthResponse>('/health/niubi')
+      .then(res => {
         setMessage(res.data.message);
       })
-      .catch((error) => {
-        console.error('❌ Request failed:', error);
+      .catch((_error: unknown) => {
+        // console.error("❌ Request failed:", error);
         setMessage('connection failed');
       });
   }, []);

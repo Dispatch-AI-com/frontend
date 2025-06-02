@@ -10,9 +10,9 @@ interface SectionTitleProps {
   sx?: object;
 }
 
-const SectionTitle: React.FC<SectionTitleProps> = ({ 
-  children, 
-  mb = 8, 
+const SectionTitle: React.FC<SectionTitleProps> = ({
+  children,
+  mb = 8,
   color = '#060606',
   sx = {},
   ...rest
@@ -27,7 +27,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
         color: color,
         mb: mb,
         mx: 'auto',
-        ...sx
+        ...sx,
       }}
       {...rest}
     >
@@ -36,4 +36,4 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
   );
 };
 
-export default SectionTitle; 
+export default SectionTitle;

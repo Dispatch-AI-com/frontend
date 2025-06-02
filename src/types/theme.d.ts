@@ -1,5 +1,5 @@
 // types/theme.d.ts
-import '@mui/material/styles';
+import type {} from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -22,11 +22,5 @@ declare module '@mui/material/styles' {
         xl?: number;
       };
     };
-  }
-}
-
-declare module '@mui/material/styles/createPalette' {
-  interface TypeBackground {
-    dark: string;
   }
 }

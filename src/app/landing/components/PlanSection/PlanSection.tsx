@@ -3,7 +3,7 @@
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
-import { Plan, PlanButton } from '@/types/plan.types';
+import type { Plan, PlanButton } from '@/types/plan.types';
 import axios from '@/utils/axios';
 
 import PlanCard from './PlanCard';
@@ -39,7 +39,7 @@ function getDescription(tier: Plan['tier']): string {
 }
 
 const SectionContainer = styled('section')(({ theme }) => ({
-  padding: "120px 0 0 0",
+  padding: '120px 0 0 0',
   textAlign: 'center',
   backgroundColor: theme.palette.background.default,
 }));
@@ -49,7 +49,6 @@ const SectionTitle = styled('h2')(({ theme }) => ({
   textAlign: 'center',
   margin: '0 0 64px',
 }));
-
 
 const PlanGrid = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -67,29 +66,29 @@ export default function PlanSection() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await axios.get('api/plan'); 
+        const res = await axios.get<Plan[]>('plan');
         setPlans(res.data);
-      } catch (err) {
-        console.error('Failed to fetch plans:', err);
+      } catch {
+        //console.error("Failed to fetch plans:");
       }
     };
 
-    fetchPlans();
+    void fetchPlans();
   }, []);
 
   return (
     <SectionContainer id="LandingPlans">
       <SectionTitle>Flexible Plans to Match Your Needs</SectionTitle>
       <PlanGrid>
-      {plans.map((plan) => (
-        <PlanCard
-        key={plan._id}
-        tier={plan.tier}
-        name={plan.name}
-        description={getDescription(plan.tier)}
-        buttons={getButtons(plan.tier)}
-        />
-      ))}
+        {plans.map(plan => (
+          <PlanCard
+            key={plan._id}
+            tier={plan.tier}
+            name={plan.name}
+            description={getDescription(plan.tier)}
+            buttons={getButtons(plan.tier)}
+          />
+        ))}
       </PlanGrid>
     </SectionContainer>
   );

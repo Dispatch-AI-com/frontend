@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, ButtonProps, SxProps, Theme} from '@mui/material';
+import type { ButtonProps, SxProps, Theme } from '@mui/material';
+import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -15,7 +16,7 @@ interface CommonButtonProps extends Omit<ButtonProps, 'variant'> {
 }
 
 const StyledButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'buttonVariant',
+  shouldForwardProp: prop => prop !== 'buttonVariant',
 })<{ buttonVariant?: ButtonVariant }>(({ theme, buttonVariant = 'black' }) => ({
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(1, 2),
@@ -55,4 +56,3 @@ export default function CommonButton({
     </StyledButton>
   );
 }
-
