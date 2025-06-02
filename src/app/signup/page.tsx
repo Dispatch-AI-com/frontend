@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import styled from "styled-components";
+import Image from 'next/image';
+import styled from 'styled-components';
 
-import SignupForm from "@/app/signup/component/SignupForm";
+import SignupForm from '@/app/signup/component/SignupForm';
 
 const PageContainer = styled.div`
   min-height: 100vh;
   background-color: #fafafa;
   padding: 32px 16px;
-  
+
   @media (max-width: 768px) {
     padding: 16px 8px;
   }
-  
+
   @media (min-width: 1024px) {
     padding: 132px 16px 32px;
   }
@@ -26,7 +26,7 @@ const FormContainer = styled.div`
   border-radius: 24px;
   box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.03);
   background-color: white;
-  
+
   @media (max-width: 768px) {
     padding: 24px 16px 60px;
   }

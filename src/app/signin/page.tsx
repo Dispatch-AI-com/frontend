@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import styled from "styled-components";
+import Image from 'next/image';
+import styled from 'styled-components';
 
-import SigninForm from "@/app/signin/component/SigninForm";
+import SigninForm from '@/app/signin/component/SigninForm';
 
 const PageContainer = styled.div`
   min-height: 100vh;

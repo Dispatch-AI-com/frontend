@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import styled from "styled-components";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
 
-import { useAuth } from "@/app/signin/hooks/useAuth";
-import { defaultSignupValues } from "@/app/signin/schemas/defaultSigninValues";
+import { useAuth } from '@/app/signin/hooks/useAuth';
+import { defaultSignupValues } from '@/app/signin/schemas/defaultSigninValues';
 import {
   type SignupFormData,
   signupSchema,
-} from "@/app/signin/schemas/signinSchema";
-import Button from "@/app/signin/ui/Button";
-import ControllerInput from "@/app/signin/ui/controller/ControllerInput";
+} from '@/app/signin/schemas/signinSchema';
+import Button from '@/app/signin/ui/Button';
+import ControllerInput from '@/app/signin/ui/controller/ControllerInput';
 
-import FormField from "./FormField";
+import FormField from './FormField';
 
 const WelcomeText = styled.h1`
   text-align: center;
@@ -31,49 +31,23 @@ const ErrorMessage = styled.div`
 `;
 
 export default function SigninForm() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignupFormData>({
+  const { control, handleSubmit } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: defaultSignupValues,
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const { login, isLoading, error } = useAuth();
 
   const onSubmit = async (data: SignupFormData) => {
-    console.warn('Attempting login with data:', {
+    await login({
       email: data.workEmail,
-      password: '***' // 不记录实际密码
+      password: data.password,
     });
-
-    try {
-      const success = await login({
-        email: data.workEmail,
-        password: data.password,
-      });
-
-      if (!success) {
-        console.error("Login failed - no success response");
-      }
-    } catch (err) {
-      console.error("Login error details:", {
-        error: err,
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : undefined
-      });
-    }
   };
 
-  // 添加表单验证错误的日志
-  if (Object.keys(errors).length > 0) {
-    console.warn('Form validation errors:', errors);
-  }
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
       <WelcomeText>Welcome to Dispatch AI!</WelcomeText>
       <FormField label="Email address">
         <ControllerInput
@@ -93,12 +67,7 @@ export default function SigninForm() {
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
-      <Button 
-        type="submit" 
-        fullWidth 
-        sx={{ mt: 2 }}
-        disabled={isLoading}
-      >
+      <Button type="submit" fullWidth sx={{ mt: 2 }} disabled={isLoading}>
         {isLoading ? 'Signing in...' : 'Sign In'}
       </Button>
     </form>

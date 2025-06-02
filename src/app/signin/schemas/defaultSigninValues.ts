@@ -1,4 +1,4 @@
 export const defaultSignupValues = {
-  workEmail: "",
-  password: "",
+  workEmail: '',
+  password: '',
 };

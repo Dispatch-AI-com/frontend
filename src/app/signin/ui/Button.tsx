@@ -1,15 +1,12 @@
-import {
-  Button as MuiButton,
-  ButtonProps as MuiButtonProps,
-} from "@mui/material";
+import type { ButtonProps as MuiButtonProps } from '@mui/material';
+import { Button as MuiButton } from '@mui/material';
 
 interface ButtonProps extends MuiButtonProps {
   height?: string | number;
 }
 
 export default function Button({
-  height = "52px",
-  sx,
+  height = '52px',
   children,
   ...props
 }: ButtonProps) {
@@ -19,15 +16,14 @@ export default function Button({
       {...props}
       sx={{
         height,
-        borderRadius: "16px",
-        bgcolor: "#060606",
-        fontSize: "18px",
-        fontWeight: "bold",
-        color: "#fff",
-        "&:hover": {
-          bgcolor: "#060606",
+        borderRadius: '16px',
+        bgcolor: '#060606',
+        fontSize: '18px',
+        fontWeight: 'bold',
+        color: '#fff',
+        '&:hover': {
+          bgcolor: '#060606',
         },
-        ...sx,
       }}
     >
       {children}

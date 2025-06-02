@@ -1,5 +1,7 @@
-import { FormControl, MenuItem,Select, SelectProps } from "@mui/material";
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import type { SelectProps } from '@mui/material';
+import { FormControl, MenuItem, Select } from '@mui/material';
+import type { Control, FieldValues, Path } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 interface Option {
   value: string | number;
@@ -7,7 +9,7 @@ interface Option {
 }
 
 interface ControllerSelectProps<T extends FieldValues>
-  extends Omit<SelectProps, "name"> {
+  extends Omit<SelectProps, 'name'> {
   name: Path<T>;
   control: Control<T>;
   options: Option[];
@@ -31,23 +33,18 @@ export default function ControllerSelect<T extends FieldValues>({
             {...field}
             {...props}
             displayEmpty
-            renderValue={(selected) => {
+            renderValue={selected => {
               if (!selected) {
                 return (
-                  <span style={{ color: "rgba(0, 0, 0, 0.38)" }}>
+                  <span style={{ color: 'rgba(0, 0, 0, 0.38)' }}>
                     {placeholder}
                   </span>
                 );
               }
-              return options.find((option) => option.value === selected)?.label;
-            }}
-            sx={{
-              borderRadius: "12px",
-              backgroundColor: "white",
-              ...props.sx,
+              return options.find(option => option.value === selected)?.label;
             }}
           >
-            {options.map((option) => (
+            {options.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>

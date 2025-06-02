@@ -1,9 +1,10 @@
 import React from 'react';
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import type { Control, FieldValues, Path } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import styled from 'styled-components';
 
 interface ControllerCheckboxProps<T extends FieldValues>
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "name"> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> {
   name: Path<T>;
   control: Control<T>;
   label?: string;
@@ -26,13 +27,13 @@ const CustomCheckbox = styled.div<{ $checked: boolean; $disabled?: boolean }>`
   width: 20px;
   height: 20px;
   border-radius: 4px;
-  border: 1px solid ${({ $checked }) => $checked ? '#060606' : '#d5d5d5'};
-  background-color: ${({ $checked }) => $checked ? '#a8f574' : '#fff'};
+  border: 1px solid ${({ $checked }) => ($checked ? '#060606' : '#d5d5d5')};
+  background-color: ${({ $checked }) => ($checked ? '#a8f574' : '#fff')};
   position: relative;
   flex-shrink: 0;
   transition: all 0.2s ease-in-out;
-  opacity: ${({ $disabled }) => $disabled ? 0.5 : 1};
-  
+  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
+
   &::after {
     content: '';
     position: absolute;
@@ -43,7 +44,7 @@ const CustomCheckbox = styled.div<{ $checked: boolean; $disabled?: boolean }>`
     border: solid #060606;
     border-width: 0 2px 2px 0;
     transform: translate(-50%, -50%) rotate(45deg);
-    opacity: ${({ $checked }) => $checked ? 1 : 0};
+    opacity: ${({ $checked }) => ($checked ? 1 : 0)};
     transition: opacity 0.2s ease-in-out;
   }
 `;
@@ -51,8 +52,8 @@ const CustomCheckbox = styled.div<{ $checked: boolean; $disabled?: boolean }>`
 const Label = styled.label<{ $disabled?: boolean }>`
   font-size: 14px;
   line-height: 20px;
-  color: ${({ $disabled }) => $disabled ? '#999999' : '#060606'};
-  cursor: ${({ $disabled }) => $disabled ? 'not-allowed' : 'pointer'};
+  color: ${({ $disabled }) => ($disabled ? '#999999' : '#060606')};
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   user-select: none;
   margin: 0;
   padding: 0;
@@ -98,12 +99,11 @@ export default function ControllerCheckbox<T extends FieldValues>({
                 disabled={disabled}
                 readOnly
               />
-              <CustomCheckbox $checked={field.value || false} $disabled={disabled} />
-              {label && (
-                <Label $disabled={disabled}>
-                  {label}
-                </Label>
-              )}
+              <CustomCheckbox
+                $checked={field.value || false}
+                $disabled={disabled}
+              />
+              {label && <Label $disabled={disabled}>{label}</Label>}
             </CheckboxContainer>
             {error && <ErrorText>{error.message}</ErrorText>}
           </CheckboxWrapper>

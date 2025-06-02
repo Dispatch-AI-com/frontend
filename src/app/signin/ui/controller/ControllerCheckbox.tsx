@@ -1,13 +1,10 @@
-import {
-  Checkbox,
-  CheckboxProps,
-  FormControlLabel,
-  FormHelperText,
-} from "@mui/material";
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import type { CheckboxProps } from '@mui/material';
+import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
+import type { Control, FieldValues, Path } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 interface ControllerCheckboxProps<T extends FieldValues>
-  extends Omit<CheckboxProps, "name"> {
+  extends Omit<CheckboxProps, 'name'> {
   name: Path<T>;
   control: Control<T>;
   label?: string;
@@ -19,8 +16,8 @@ const UncheckedIcon = () => (
       width: 24,
       height: 24,
       borderRadius: 6,
-      border: "1px solid #d5d5d5",
-      backgroundColor: "#fff",
+      border: '1px solid #d5d5d5',
+      backgroundColor: '#fff',
     }}
   />
 );
@@ -31,21 +28,21 @@ const CheckedIcon = () => (
       width: 24,
       height: 24,
       borderRadius: 6,
-      border: "1px solid #060606",
-      backgroundColor: "#a8f574",
-      position: "relative",
+      border: '1px solid #060606',
+      backgroundColor: '#a8f574',
+      position: 'relative',
     }}
   >
     <div
       style={{
-        position: "absolute",
-        left: "50%",
-        top: "45%",
+        position: 'absolute',
+        left: '50%',
+        top: '45%',
         width: 5,
         height: 10,
-        border: "solid #060606",
-        borderWidth: "0 2px 2px 0",
-        transform: "translate(-50%, -50%) rotate(45deg)",
+        border: 'solid #060606',
+        borderWidth: '0 2px 2px 0',
+        transform: 'translate(-50%, -50%) rotate(45deg)',
       }}
     />
   </div>
@@ -65,8 +62,8 @@ export default function ControllerCheckbox<T extends FieldValues>({
         <>
           <FormControlLabel
             sx={{
-              "& .MuiFormControlLabel-label": {
-                lineHeight: "20px",
+              '& .MuiFormControlLabel-label': {
+                lineHeight: '20px',
               },
             }}
             control={

@@ -1,4 +1,5 @@
-import axios, { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -17,80 +18,88 @@ interface AuthState {
   error: string | null;
 }
 
+interface LoginResponse {
+  status?: string;
+  data?: {
+    access_token?: string;
+    token?: string;
+    user?: Record<string, unknown>;
+  };
+  access_token?: string;
+  token?: string;
+  user?: Record<string, unknown>;
+  message?: string;
+  error?: string;
+}
+
 const API_URL = 'http://localhost:4000/api/auth/login';
 
-const handleAuthSuccess = (response: Record<string, unknown>, router: ReturnType<typeof useRouter>) => {
+const handleAuthSuccess = (
+  response: LoginResponse,
+  router: ReturnType<typeof useRouter>,
+) => {
   let access_token: string | undefined;
   let user: Record<string, unknown> | undefined;
-  
-  const responseData = response.data as Record<string, unknown>;
+  const responseData = response.data;
   if (responseData?.access_token) {
-    access_token = responseData.access_token as string;
-    user = responseData.user as Record<string, unknown>;
+    access_token = responseData.access_token;
+    user = responseData.user;
   } else if (response.access_token) {
-    access_token = response.access_token as string;
-    user = response.user as Record<string, unknown>;
+    access_token = response.access_token;
+    user = response.user;
   } else if (responseData?.token) {
-    access_token = responseData.token as string;
-    user = responseData.user as Record<string, unknown>;
+    access_token = responseData.token;
+    user = responseData.user;
   } else if (response.token) {
-    access_token = response.token as string;
-    user = response.user as Record<string, unknown>;
+    access_token = response.token;
+    user = response.user;
   }
-  
   if (access_token) {
     localStorage.setItem('token', access_token);
   }
-  
   if (user) {
     localStorage.setItem('user', JSON.stringify(user));
   }
-  
   router.push('/dashboard');
 };
 
 const handleAuthError = (error: unknown): string => {
   if (!axios.isAxiosError(error)) {
-    return error instanceof Error ? error.message : 'An unexpected error occurred';
+    return error instanceof Error
+      ? error.message
+      : 'An unexpected error occurred';
   }
 
   const axiosError = error as AxiosError<ApiError>;
-  
-  if (axiosError.response?.data?.message) {
+  if (axiosError.response?.data.message) {
     return axiosError.response.data.message;
   }
-  
   if (axiosError.request) {
     return 'No response from server. Please check your connection.';
   }
-  
   return 'An error occurred while setting up the request.';
 };
 
-const isSuccessfulResponse = (response: { status: number; data: Record<string, unknown> }): boolean => {
+const isSuccessfulResponse = (response: {
+  status: number;
+  data: LoginResponse;
+}): boolean => {
   const { status, data } = response;
-  
   const isHttpSuccess = status === 200 || status === 201;
-  const hasValidData = data && typeof data === 'object';
-  
-  if (isHttpSuccess && hasValidData) {
-    if (data.status === 'success' && (data.data as Record<string, unknown>)?.access_token) {
+  if (isHttpSuccess) {
+    if (data.status === 'success' && data.data?.access_token) {
       return true;
     }
-    
-    if (data.access_token || data.token) {
+    if (data.access_token ?? data.token) {
       return true;
     }
-    
-    if ((data.data as Record<string, unknown>)?.access_token || (data.data as Record<string, unknown>)?.token) {
+    if (data.data?.access_token ?? data.data?.token) {
       return true;
     }
-    
-    if (data.user || (data.data as Record<string, unknown>)?.user) {
+    if (data.user ?? data.data?.user) {
       return true;
     }
   }
-  
   return false;
 };
 
@@ -114,39 +123,43 @@ export const useAuth = () => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        API_URL,
-        credentials,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          timeout: 10000,
-        }
-      );
+      const response = await axios.post<LoginResponse>(API_URL, credentials, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        timeout: 10000,
+      });
 
       if (isSuccessfulResponse(response)) {
         handleAuthSuccess(response.data, router);
         return true;
       }
 
-      const errorMessage = response.data?.message || response.data?.error || 'Login failed';
+      const errorMessage =
+        response.data.message ?? response.data.error ?? 'Login failed';
       setError(errorMessage);
       return false;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;
-        const errorData = error.response.data;
-        
+        const errorData = error.response.data as LoginResponse | undefined;
+
         if (status === 500) {
-          setError('服务器内部错误。请检查后端服务器是否正常运行，或联系管理员。');
+          setError('Something went wrong. Please try again later.');
         } else if (status === 401) {
-          setError('邮箱或密码错误，请检查您的登录信息。');
+          setError(
+            'Invalid email or password. Please check your login information.',
+          );
         } else if (status === 404) {
-          setError('登录接口不存在，请检查服务器配置。');
+          setError(
+            'Login endpoint not found. Please check server configuration.',
+          );
         } else {
-          const message = errorData?.message || errorData?.error || `服务器错误 (${status})`;
+          const message =
+            errorData?.message ??
+            errorData?.error ??
+            `Server error (${status.toString()})`;
           setError(message);
         }
       } else {
@@ -174,4 +187,4 @@ export const useAuth = () => {
     isLoading: state.isLoading,
     error: state.error,
   };
-}; 
+};

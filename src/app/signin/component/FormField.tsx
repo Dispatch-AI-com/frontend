@@ -1,20 +1,23 @@
-import { ReactNode } from "react";
-import styled from "styled-components";
+import type { ReactNode } from 'react';
+import styled from 'styled-components';
 
 interface FormFieldProps {
   label?: string;
   children: ReactNode;
-  size?: "small" | "normal" | "large";
+  size?: 'small' | 'normal' | 'large';
   mb?: number;
 }
 
 const sizeMap = {
-  small: "10px",
-  normal: "110px",
-  large: "150px",
+  small: '10px',
+  normal: '110px',
+  large: '150px',
 };
 
-const FieldContainer = styled.div<{ $size: "small" | "normal" | "large"; $mb: number }>`
+const FieldContainer = styled.div<{
+  $size: 'small' | 'normal' | 'large';
+  $mb: number;
+}>`
   width: 100%;
   min-height: ${props => sizeMap[props.$size]};
   margin-bottom: ${props => props.$mb * 8}px;
@@ -29,7 +32,7 @@ const Label = styled.div`
 export default function FormField({
   label,
   children,
-  size = "normal",
+  size = 'normal',
   mb = 0,
 }: FormFieldProps) {
   return (

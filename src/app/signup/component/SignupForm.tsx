@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import styled from "styled-components";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
 
-import { useRegister } from "@/app/signup/hooks/useRegister";
-import { defaultSignupValues } from "@/app/signup/schemas/defaultSignupValues";
+import { useRegister } from '@/app/signup/hooks/useRegister';
+import { defaultSignupValues } from '@/app/signup/schemas/defaultSignupValues';
 import {
   type SignupFormData,
   signupSchema,
-} from "@/app/signup/schemas/signupSchema";
-import Button from "@/app/signup/ui/Button";
-import ControllerCheckbox from "@/app/signup/ui/controller/ControllerCheckbox";
-import ControllerInput from "@/app/signup/ui/controller/ControllerInput";
+} from '@/app/signup/schemas/signupSchema';
+import Button from '@/app/signup/ui/Button';
+import ControllerCheckbox from '@/app/signup/ui/controller/ControllerCheckbox';
+import ControllerInput from '@/app/signup/ui/controller/ControllerInput';
 
-import FormField from "./FormField";
+import FormField from './FormField';
 
 const StyledForm = styled.form`
   width: 100%;
@@ -24,7 +24,7 @@ const FormRow = styled.div`
   display: flex;
   gap: 16px;
   justify-content: space-between;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 8px;
@@ -48,7 +48,7 @@ const SignInLink = styled.a`
   color: #060606;
   text-decoration: underline;
   cursor: pointer;
-  
+
   &:hover {
     color: #333;
   }
@@ -78,19 +78,15 @@ export default function SignupForm() {
   const { register, isLoading, error } = useRegister();
 
   const onSubmit = async (data: SignupFormData) => {
-    try {
-      await register(data);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
+    await register(data);
   };
 
   const isFormLoading = isSubmitting || isLoading;
 
   return (
-    <StyledForm onSubmit={handleSubmit(onSubmit)}>
+    <StyledForm onSubmit={e => void handleSubmit(onSubmit)(e)}>
       {error && <ErrorMessage>{error}</ErrorMessage>}
-      
+
       <FormRow>
         <FormField label="Last Name">
           <ControllerInput
@@ -110,7 +106,7 @@ export default function SignupForm() {
           />
         </FormField>
       </FormRow>
-      
+
       <FormField label="Work email address">
         <ControllerInput
           name="workEmail"
@@ -120,7 +116,7 @@ export default function SignupForm() {
           disabled={isFormLoading}
         />
       </FormField>
-      
+
       <FormField label="Password">
         <ControllerInput
           name="password"
@@ -130,7 +126,7 @@ export default function SignupForm() {
           disabled={isFormLoading}
         />
       </FormField>
-      
+
       <CheckboxContainer>
         <ControllerCheckbox
           name="agreeToPolicy"
@@ -139,16 +135,11 @@ export default function SignupForm() {
           disabled={isFormLoading}
         />
       </CheckboxContainer>
-  
-      <Button 
-        type="submit" 
-        fullWidth 
-        disabled={isFormLoading}
-        sx={{ mt: 2 }}
-      >
+
+      <Button type="submit" fullWidth disabled={isFormLoading} sx={{ mt: 2 }}>
         {isFormLoading ? 'Creating Account...' : 'Sign Up'}
       </Button>
-      
+
       <SignInContainer>
         Already Have an account? <SignInLink href="/signin">Sign in</SignInLink>
       </SignInContainer>
