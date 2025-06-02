@@ -73,7 +73,7 @@ export default function PricingSection() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await axios.get<Plan[]>('api/plan');
+        const res = await axios.get<Plan[]>('plan');
         setPlans(res.data);
       } catch {
         // console.error("Failed to fetch plans");

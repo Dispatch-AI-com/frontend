@@ -47,7 +47,7 @@ const CardContainer = styled.div`
     padding: 0 240px;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 899px) {
     flex-direction: column;
     gap: 32px;
     padding: 0 16px;

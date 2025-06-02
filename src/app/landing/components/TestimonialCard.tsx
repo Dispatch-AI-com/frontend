@@ -23,10 +23,11 @@ const StyledCard = styled.div`
   gap: 40px;
   word-break: break-word;
 
-  @media (max-width: 767px) {
+  @media (max-width: 899px) {
     width: 100%;
-    padding: 40px 24px;
+    max-width: 576px;
     min-height: auto;
+    padding: 40px 24px;
   }
 `;
 
