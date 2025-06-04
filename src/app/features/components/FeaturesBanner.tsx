@@ -1,7 +1,10 @@
 'use client';
 
-import { Container, Grid } from '@mui/material';
+import { AppBar, Toolbar, Button, Box, Container, Grid, Typography, Paper, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import PhoneIcon from '@mui/icons-material/Phone';
+import DescriptionIcon from '@mui/icons-material/Description';
+import NightsStayIcon from '@mui/icons-material/NightsStay';
 
 const BannerSection = styled('section')(({ theme }) => ({
   background: '#000',
@@ -18,8 +21,6 @@ const BannerSection = styled('section')(({ theme }) => ({
     paddingBottom: theme.spacing(15),
   },
 }));
-
-const BannerContainer = styled(Container)(() => ({}));
 
 const BannerTitle = styled('h1')(({ theme }) => ({
   ...theme.typography.h1,
@@ -38,43 +39,125 @@ const BannerTitle = styled('h1')(({ theme }) => ({
   },
 }));
 
-const FeatureGrid = styled(Grid)(({ theme }) => ({
-  marginTop: theme.spacing(12),
-  justifyContent: 'center',
-  columnGap: theme.spacing(16),
+const FeatureCard = styled(Paper)(({ theme }) => ({
+  borderRadius: 24,
+  boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)',
+  padding: theme.spacing(4, 3),
+  minWidth: 340,
+  maxWidth: 370,
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: theme.spacing(1.5),
   [theme.breakpoints.down('md')]: {
-    marginTop: theme.spacing(4),
-    columnGap: theme.spacing(4),
+    minWidth: 'unset',
+    maxWidth: 'unset',
+    width: '100%',
+    alignItems: 'center',
+    textAlign: 'center',
   },
 }));
 
-const FeatureText = styled('div')(({ theme }) => ({
-  fontSize: '18px',
+const FeatureIconBox = styled(Box)(({ theme }) => ({
+  color: '#222',
+  background: '#f6f6f6',
+  borderRadius: '50%',
+  width: 40,
+  height: 40,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: theme.spacing(1),
+}));
+
+const FeatureTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 700,
+  fontSize: 18,
+  color: '#222',
+}));
+
+const FeatureDesc = styled(Typography)(({ theme }) => ({
+  color: '#444',
+  fontSize: 15,
   fontWeight: 400,
-  fontFamily: theme.typography.fontFamily,
+  lineHeight: 1.5,
+}));
+
+const NavLogo = styled('span')(({ theme }) => ({
+  fontFamily: 'inherit',
+  fontWeight: 700,
+  fontSize: 28,
+  color: '#b8ff66',
+  fontStyle: 'italic',
+  marginRight: theme.spacing(2),
+  letterSpacing: 0.5,
+}));
+
+const NavLink = styled(Button)(({ theme }) => ({
   color: '#fff',
-  textAlign: 'center',
-  marginTop: theme.spacing(2),
+  fontWeight: 500,
+  fontSize: 16,
+  textTransform: 'none',
+  marginLeft: theme.spacing(2),
+  marginRight: theme.spacing(2),
 }));
 
 export default function FeaturesBanner() {
   return (
-    <BannerSection>
-      <BannerContainer maxWidth="xl">
-        <BannerTitle>Your 24/7 Phone Assistant</BannerTitle>
-        <BannerTitle>Let Us Answer While You Get the Job Done</BannerTitle>
-        <FeatureGrid container spacing={2}>
-          <Grid item xs={12} md="auto">
-            <FeatureText>Never Miss Customer Calls</FeatureText>
+    <>
+      <AppBar position="static" color="transparent" elevation={0} sx={{ background: 'transparent', boxShadow: 'none', pt: 2 }}>
+        <Toolbar sx={{ maxWidth: 1440, width: '100%', mx: 'auto', justifyContent: 'space-between' }}>
+          <Box display="flex" alignItems="center">
+            <NavLogo>DispatchAI</NavLogo>
+            <NavLink>Home</NavLink>
+            <NavLink>Products</NavLink>
+            <NavLink>Pricing</NavLink>
+            <NavLink>Blogs</NavLink>
+            <NavLink>Features</NavLink>
+            <NavLink>About Us</NavLink>
+          </Box>
+          <Box>
+            <NavLink>Login</NavLink>
+            <Button variant="contained" sx={{ borderRadius: 999, fontWeight: 700, ml: 2, background: '#fff', color: '#222', '&:hover': { background: '#b8ff66', color: '#222' } }}>Sign Up</Button>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <BannerSection>
+        <Container maxWidth="xl">
+          <BannerTitle>Your 24/7 Phone Assistant -</BannerTitle>
+          <BannerTitle>Let Us Answer While You Get the Job Done</BannerTitle>
+          <Grid container justifyContent="center" alignItems="stretch" spacing={0} sx={{ mt: { xs: 4, md: 12 } }} columnGap={{ xs: 2, md: 16 }}>
+            <Grid item>
+              <FeatureCard>
+                <FeatureIconBox>
+                  <PhoneIcon fontSize="medium" />
+                </FeatureIconBox>
+                <FeatureTitle>Never Miss Customer Calls</FeatureTitle>
+                <FeatureDesc>Dispatch AI ensures you never miss a potential customer call, capturing every opportunity.</FeatureDesc>
+              </FeatureCard>
+            </Grid>
+            <Grid item sx={{ ml: { md: '192px' } }}>
+              <FeatureCard>
+                <FeatureIconBox>
+                  <DescriptionIcon fontSize="medium" />
+                </FeatureIconBox>
+                <FeatureTitle>Auto-Handle Paperwork</FeatureTitle>
+                <FeatureDesc>Automate your paperwork with Dispatch AI, saving time and reducing administrative burdens.</FeatureDesc>
+              </FeatureCard>
+            </Grid>
+            <Grid item>
+              <FeatureCard>
+                <FeatureIconBox>
+                  <NightsStayIcon fontSize="medium" />
+                </FeatureIconBox>
+                <FeatureTitle>Works While You Sleep</FeatureTitle>
+                <FeatureDesc>Dispatch AI works around the clock, ensuring your business is always responsive, even while you rest.</FeatureDesc>
+              </FeatureCard>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md="auto">
-            <FeatureText>Auto-Handle Paperwork</FeatureText>
-          </Grid>
-          <Grid item xs={12} md="auto">
-            <FeatureText>Works While You Sleep</FeatureText>
-          </Grid>
-        </FeatureGrid>
-      </BannerContainer>
-    </BannerSection>
+        </Container>
+      </BannerSection>
+    </>
   );
 }
