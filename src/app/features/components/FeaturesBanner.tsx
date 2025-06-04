@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Container, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -77,4 +77,4 @@ export default function FeaturesBanner() {
       </BannerContainer>
     </BannerSection>
   );
-} 
+}

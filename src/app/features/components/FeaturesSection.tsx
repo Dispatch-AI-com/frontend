@@ -101,7 +101,9 @@ export default function FeaturesSection() {
             <FeatureList>
               <FeatureItem>
                 <FeatureTitle>Incoming Call</FeatureTitle>
-                <FeatureDesc>24/7 Auto-Answer & Smart Call Screening</FeatureDesc>
+                <FeatureDesc>
+                  24/7 Auto-Answer & Smart Call Screening
+                </FeatureDesc>
               </FeatureItem>
               <FeatureItem>
                 <FeatureTitle>AI Interaction</FeatureTitle>
@@ -117,7 +119,9 @@ export default function FeaturesSection() {
               </FeatureItem>
               <FeatureItem>
                 <FeatureTitle>History & Management</FeatureTitle>
-                <FeatureDesc>Job History Tracking + Auto-Organize Contacts</FeatureDesc>
+                <FeatureDesc>
+                  Job History Tracking + Auto-Organize Contacts
+                </FeatureDesc>
               </FeatureItem>
             </FeatureList>
           </Grid>
@@ -125,4 +129,4 @@ export default function FeaturesSection() {
       </SectionContainer>
     </SectionRoot>
   );
-} 
+}

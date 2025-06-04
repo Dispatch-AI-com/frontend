@@ -1,8 +1,7 @@
+import { Container } from '@mui/material';
 
-import { Container } from "@mui/material";
-
-import FeaturesBanner from "@/app/features/components/FeaturesBanner";
-import FeaturesSection from "@/app/features/components/FeaturesSection";
+import FeaturesBanner from '@/app/features/components/FeaturesBanner';
+import FeaturesSection from '@/app/features/components/FeaturesSection';
 
 export default function Features() {
   return (

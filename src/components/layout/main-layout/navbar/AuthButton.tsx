@@ -12,26 +12,27 @@ interface AuthButtonProps {
 }
 
 const BaseAuthButton = styled(CommonButton, {
-  shouldForwardProp: (prop) => !['isMobile', 'themeVariant'].includes(prop as string),
+  shouldForwardProp: prop =>
+    !['isMobile', 'themeVariant'].includes(prop as string),
 })<{ isMobile?: boolean; themeVariant?: 'light' | 'dark' }>(({ isMobile }) => ({
-  '&&': { 
-    fontSize: isMobile ? 20 : 16,
-    fontWeight: 'bold',
-  },
-  padding: isMobile ? '12px 24px' : '8px 16px',
-  borderRadius: 12,
-  textTransform: 'none',
+  ...(isMobile
+    ? { fontSize: 20, fontWeight: 'bold', padding: '12px 24px' }
+    : {}),
 }));
 
-const LoginButton = styled(BaseAuthButton)(({ theme, themeVariant = 'light' }) => ({
-  backgroundColor: themeVariant === 'light' ? theme.palette.background.default : '#060606',
-  color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
-  boxShadow: 'none',
-  border: 'none',
-  '&:hover': { 
-    backgroundColor: themeVariant === 'light' ? theme.palette.background.paper : '#060606',
-  },
-}));
+const LoginButton = styled(BaseAuthButton)(
+  ({ theme, themeVariant = 'light' }) => ({
+    backgroundColor:
+      themeVariant === 'light' ? theme.palette.background.default : '#060606',
+    color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
+    boxShadow: 'none',
+    border: 'none',
+    '&:hover': {
+      backgroundColor:
+        themeVariant === 'light' ? theme.palette.background.paper : '#060606',
+    },
+  }),
+);
 
 const SignupButton = styled(BaseAuthButton)(({ themeVariant = 'light' }) => ({
   whiteSpace: 'nowrap',
@@ -50,10 +51,12 @@ export function AuthButton({
 }: AuthButtonProps) {
   const isLogin = variant === 'login';
   const Btn = isLogin ? LoginButton : SignupButton;
-  
+
   return (
     <Btn
-      buttonVariant={themeVariant === 'light' ? (isLogin ? undefined : 'black') : undefined}
+      buttonVariant={
+        themeVariant === 'light' ? (isLogin ? undefined : 'black') : undefined
+      }
       href={`/${variant}`}
       isMobile={isMobile}
       onClick={onClick}

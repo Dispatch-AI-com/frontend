@@ -2,8 +2,8 @@
 import { Box, Typography } from '@mui/material';
 import type { BoxProps } from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import NextLink, { LinkProps } from 'next/link';
-
+import type { LinkProps } from 'next/link';
+import NextLink from 'next/link';
 
 interface ExtraNavProps {
   width: number;
@@ -16,46 +16,58 @@ type NavItemContainerProps = ExtraNavProps &
   BoxProps & { href: LinkProps['href'] };
 
 export interface NavItemProps extends ExtraNavProps {
-  href: LinkProps['href'];
+  href: string;
   text: string;
   handleDrawerToggle?: () => void;
 }
 
 const NavItemContainer = styled(Box, {
-  shouldForwardProp: (prop) =>
-    !['width', 'textWidth', 'themeVariant', 'isMobile'].includes(prop as string),
-})<NavItemContainerProps>(({ theme, width, themeVariant = 'light', isMobile }) => ({
-  width: isMobile ? 'auto' : width,
-  height: 36,
-  padding: `${theme.spacing(1)} ${theme.spacing(2)}`, 
-  borderRadius: 12,
-  marginRight: theme.spacing(1),
-  backgroundColor: themeVariant === 'light' ? theme.palette.background.default : '#060606',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textDecoration: 'none',
-  transition: 'background-color 0.3s ease, transform 0.1s ease',
-  '&:hover': { 
-    backgroundColor: themeVariant === 'light' ? theme.palette.background.paper : '#060606',
-  },
-  '&:active': { transform: 'scale(0.97)' },
-}));
+  shouldForwardProp: prop =>
+    !['width', 'textWidth', 'themeVariant', 'isMobile'].includes(
+      prop as string,
+    ),
+})<NavItemContainerProps>(
+  ({ theme, width, themeVariant = 'light', isMobile }) => ({
+    width: isMobile ? 'auto' : width,
+    height: 36,
+    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+    borderRadius: 12,
+    marginRight: theme.spacing(1),
+    backgroundColor:
+      themeVariant === 'light' ? theme.palette.background.default : '#060606',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textDecoration: 'none',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      backgroundColor:
+        themeVariant === 'light' ? theme.palette.background.paper : '#060606',
+    },
+    '&:active': { transform: 'scale(0.97)' },
+    [theme.breakpoints.down('lg')]: {
+      width: 'auto',
+      padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+      marginRight: theme.spacing(0.5),
+    },
+  }),
+);
 
 const NavItemText = styled(Typography, {
-  shouldForwardProp: (prop) => !['textWidth', 'themeVariant', 'isMobile'].includes(prop as string),
+  shouldForwardProp: prop =>
+    !['textWidth', 'themeVariant', 'isMobile'].includes(prop as string),
 })<{ textWidth: number; themeVariant?: 'light' | 'dark'; isMobile?: boolean }>(
   ({ theme, textWidth, themeVariant = 'light', isMobile }) => ({
     width: isMobile ? 'auto' : textWidth,
-    height: isMobile ? 24 : 20,
-    '&&': { 
-      fontSize: isMobile ? 20 : 16,
-      fontWeight: isMobile ? 500 : 400,
-      whiteSpace: 'nowrap',
-    },
+    height: isMobile ? 24 : undefined,
     lineHeight: 1.25,
+    whiteSpace: 'nowrap',
     color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
-  })
+    ...(isMobile && {
+      fontSize: 20,
+      fontWeight: 500,
+    }),
+  }),
 );
 
 export function NavItem({
@@ -74,13 +86,14 @@ export function NavItem({
       width={width}
       textWidth={textWidth}
       themeVariant={themeVariant}
+      isMobile={isMobile}
       onClick={() => handleDrawerToggle?.()}
     >
-      <NavItemText 
-        textWidth={textWidth} 
-        themeVariant={themeVariant} 
-        variant="body2"
+      <NavItemText
+        textWidth={textWidth}
+        themeVariant={themeVariant}
         isMobile={isMobile}
+        variant="body1"
       >
         {text}
       </NavItemText>
