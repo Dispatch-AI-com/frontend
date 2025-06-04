@@ -132,6 +132,16 @@ const StepPaper = styled(Paper, {
   borderRadius: theme.shape.borderRadius * 2,
   cursor: 'pointer',
   transition: 'background-color 0.3s',
+
+  '@media (min-width:295px) and (max-width:350px)': {
+    height: '250px',
+  },
+  '@media (min-width:351px) and (max-width:500px)': {
+    height: '200px',
+  },
+  '@media (min-width:501px) and (max-width:600px)': {
+    height: '150px',
+  },
 }));
 
 const StepTitle = styled(Typography)({
