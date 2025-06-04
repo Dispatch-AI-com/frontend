@@ -49,7 +49,7 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "prettier --write",
+      "prettier --write --end-of-line lf",
       "eslint --fix"
     ]
   }
