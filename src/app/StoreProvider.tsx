@@ -2,7 +2,7 @@
 
 import { Provider } from 'react-redux';
 
-import { store } from '@/state/store';
+import { store } from '@/redux/store';
 
 export default function StoreProvider({
   children,

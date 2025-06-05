@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import { logout, setToken } from '@/state/features/auth/slice';
-import { useAppDispatch, useAppSelector } from '@/state/hooks';
+import { logout, setToken } from '@/redux/features/auth/slice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
 export default function ReduxTestPage() {
   /** 标记 “已水合” */
@@ -21,10 +21,6 @@ export default function ReduxTestPage() {
       <h1>Redux Connectivity Test (see console)</h1>
 
       <p>当前，点击按钮测试 Redux / 持久化逻辑，具体值请看浏览器控制台。</p>
-
-      <button onClick={() => dispatch(setToken('dummy-token'))}>
-        Fake Login
-      </button>
     </main>
   );
 }
