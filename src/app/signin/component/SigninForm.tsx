@@ -1,17 +1,20 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { useAuth } from '@/app/signin/hooks/useAuth';
 import { defaultSignupValues } from '@/app/signin/schemas/defaultSigninValues';
 import {
-  type SignupFormData,
-  signupSchema,
+  type SigninFormData,
+  signinSchema,
 } from '@/app/signin/schemas/signinSchema';
 import Button from '@/app/signin/ui/Button';
 import ControllerInput from '@/app/signin/ui/controller/ControllerInput';
+import { useLoginUserMutation } from '@/features/auth/authApi';
+import { useAppSelector } from '@/redux/hooks';
 
 import FormField from './FormField';
 
@@ -31,19 +34,22 @@ const ErrorMessage = styled.div`
 `;
 
 export default function SigninForm() {
-  const { control, handleSubmit } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+  const { control, handleSubmit } = useForm<SigninFormData>({
+    resolver: zodResolver(signinSchema),
     defaultValues: defaultSignupValues,
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
+  const [loginUser, { isLoading, error, isSuccess }] = useLoginUserMutation();
 
-  const { login, isLoading, error } = useAuth();
+  const token = useAppSelector(s => s.auth.token);
+  const router = useRouter();
 
-  const onSubmit = async (data: SignupFormData) => {
-    await login({
-      email: data.workEmail,
-      password: data.password,
-    });
+  useEffect(() => {
+    if (token && isSuccess) router.push('/reduxtest');
+  }, [token, isSuccess, router]);
+
+  const onSubmit = async (data: SigninFormData) => {
+    await loginUser({ email: data.workEmail, password: data.password });
   };
 
   return (
@@ -65,10 +71,10 @@ export default function SigninForm() {
         />
       </FormField>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {Boolean(error) && <ErrorMessage>Invalid credentials</ErrorMessage>}
 
       <Button type="submit" fullWidth sx={{ mt: 2 }} disabled={isLoading}>
-        {isLoading ? 'Signing in...' : 'Sign In'}
+        {isLoading ? 'Signing in…' : 'Sign In'}
       </Button>
     </form>
   );

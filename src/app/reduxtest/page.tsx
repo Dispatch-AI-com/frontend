@@ -1,26 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import { logout, setToken } from '@/redux/features/auth/slice';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function ReduxTestPage() {
-  /** 标记 “已水合” */
+  // 只取关键的 auth 状态
+  const token = useAppSelector(state => state.auth.token);
+  const user = useAppSelector(state => state.auth.user);
 
-  const token = useAppSelector(s => s.auth.token);
-  const dispatch = useAppDispatch();
-
-  /** token 每次变化时打印到浏览器控制台 */
   useEffect(() => {
-    console.log('[ReduxTest] current token →', token);
-  }, [token]);
+    console.groupCollapsed('🔑 Auth State');
+    console.log('Token:', token);
+    console.log('User:', user);
+    console.groupEnd();
+  }, [token, user]);
 
   return (
     <main style={{ padding: 40 }}>
-      <h1>Redux Connectivity Test (see console)</h1>
-
-      <p>当前，点击按钮测试 Redux / 持久化逻辑，具体值请看浏览器控制台。</p>
+      <h1>Redux Key State Test (see console)</h1>
+      <p>登录成功后，打开控制台查看 Token 和 User 信息。</p>
     </main>
   );
 }
