@@ -1,3 +1,5 @@
+'use client';
+
 import BillingSection from '@/app/dashboard/settings/BillingSection';
 import GreetingSection from '@/app/dashboard/settings/GreetingSection';
 import NotificationsSection from '@/app/dashboard/settings/NotificationsSection';
