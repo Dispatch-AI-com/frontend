@@ -106,12 +106,12 @@ export default function SetupSteps() {
         px: { xs: 2, md: 0 },
       }}
     >
-      <Typography variant="h2" sx={{ textAlign: 'center', mb: 1 }}>
+      <Typography variant="h2" sx={{ textAlign: 'center', mb: 1, mt: 12 }}>
         Setup in 3 Minutes
       </Typography>
       <Typography
-        variant="body1"
-        sx={{ color: '#888', textAlign: 'center', mb: 4 }}
+        variant="subtitle1"
+        sx={{ color: '#888', textAlign: 'center', mb: 12, mt: 1 }}
       >
         No computer skills required — just talk.
       </Typography>
