@@ -2,22 +2,25 @@
 
 import { Box, Container, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Image from 'next/image';
+
+const CallIcon = () => (
+  <Image src="/features/call.svg" alt="Call" width={32} height={32} />
+);
+const PaperworkIcon = () => (
+  <Image src="/features/paperwork.svg" alt="Paperwork" width={32} height={32} />
+);
+const SleepIcon = () => (
+  <Image src="/features/sleep.svg" alt="Sleep" width={32} height={32} />
+);
 
 const BannerSection = styled('section')(({ theme }) => ({
   background: '#060606',
-  width: '100vw',
   position: 'relative',
-  left: '50%',
-  right: '50%',
-  marginLeft: '-50vw',
-  marginRight: '-50vw',
   paddingTop: theme.spacing(12),
-  paddingBottom: theme.spacing(8),
-  minHeight: 448,
+  minHeight: 450,
   [theme.breakpoints.up('xl')]: {
     paddingTop: theme.spacing(14),
-    paddingBottom: theme.spacing(20),
-    minHeight: 448,
   },
 }));
 
@@ -79,12 +82,12 @@ const FloatingCardsWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   width: '100%',
-  marginTop: theme.spacing(6),
+  paddingBottom: theme.spacing(6),
   zIndex: 2,
   bottom: 0,
   [theme.breakpoints.up('xl')]: {
     position: 'absolute',
-    bottom: -80,
+    bottom: '-145px',
   },
 }));
 
@@ -110,23 +113,6 @@ const CardsGrid = styled(Box)(({ theme }) => ({
     },
   },
 }));
-
-const NextSectionSpacer = styled(Box)(({ theme }) => ({
-  height: 0,
-  [theme.breakpoints.up('xl')]: {
-    height: 120,
-  },
-}));
-
-const CallIcon = () => (
-  <img src="/features/call.svg" alt="Call" width={32} height={32} />
-);
-const PaperworkIcon = () => (
-  <img src="/features/paperwork.svg" alt="Paperwork" width={32} height={32} />
-);
-const SleepIcon = () => (
-  <img src="/features/sleep.svg" alt="Sleep" width={32} height={32} />
-);
 
 export default function FeaturesBanner() {
   return (
@@ -171,7 +157,6 @@ export default function FeaturesBanner() {
           </CardsGrid>
         </FloatingCardsWrapper>
       </BannerSection>
-      <NextSectionSpacer />
     </>
   );
 }
