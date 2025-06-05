@@ -31,47 +31,48 @@ const StepContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
-  alignItems: 'flex-start',
-  gap: theme.spacing(3),
+  alignItems: 'stretch',
+  columnGap: theme.spacing(1.5),
+  rowGap: theme.spacing(6),
   marginTop: theme.spacing(6),
   flexWrap: 'wrap',
   [theme.breakpoints.down('md')]: {
-    gap: theme.spacing(2),
+    columnGap: theme.spacing(1),
     marginTop: theme.spacing(4),
   },
 }));
 
 const StepCard = styled(Box)(({ theme, bgcolor }) => ({
-  background: bgcolor === 'green' ? '#b8ff66' : '#060606',
-  color: bgcolor === 'green' ? '#060606' : '#fff',
-  borderRadius: 20,
-  minWidth: 220,
-  maxWidth: 260,
+  background: bgcolor === 'green' ? '#a8f574' : '#060606',
+  color: bgcolor === 'green' ? '#060606' : '#ffffff',
+  borderRadius: 24,
+  width: 262,
+  height: 132,
   padding: theme.spacing(4, 2.5, 3, 2.5),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   position: 'relative',
-  flex: '1 1 220px',
-  [theme.breakpoints.down('md')]: {
-    minWidth: 180,
+  flex: '0 0 262px',
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
     maxWidth: '100%',
+    minWidth: 0,
+    height: 132,
     padding: theme.spacing(3, 1.5, 2, 1.5),
     alignItems: 'center',
   },
 }));
 
-const StepNumber = styled(Box)(({ theme }) => ({
-  background: '#b8ff66',
-  color: '#060606',
+const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
+  background: bgcolor === 'green' ? '#060606' : '#a8f574',
+  color: bgcolor === 'green' ? '#a8f574' : '#060606',
   borderRadius: '50%',
   width: 36,
   height: 36,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontWeight: 700,
-  fontSize: 18,
   position: 'absolute',
   top: -22,
   left: 20,
@@ -84,13 +85,12 @@ const StepNumber = styled(Box)(({ theme }) => ({
 }));
 
 const Arrow = styled(Box)(({ theme }) => ({
-  color: '#b8ff66',
+  color: '#a8f574',
   fontWeight: 900,
-  fontSize: 28,
+  fontSize: 12,
   alignSelf: 'center',
-  margin: theme.spacing(0, 0.5),
   [theme.breakpoints.down('md')]: {
-    fontSize: 22,
+    fontSize: 8,
   },
 }));
 
@@ -106,14 +106,11 @@ export default function SetupSteps() {
         px: { xs: 2, md: 0 },
       }}
     >
-      <Typography
-        variant="h5"
-        sx={{ fontWeight: 700, textAlign: 'center', mb: 1 }}
-      >
+      <Typography variant="h2" sx={{ textAlign: 'center', mb: 1 }}>
         Setup in 3 Minutes
       </Typography>
       <Typography
-        variant="subtitle1"
+        variant="body1"
         sx={{ color: '#888', textAlign: 'center', mb: 4 }}
       >
         No computer skills required — just talk.
@@ -123,12 +120,20 @@ export default function SetupSteps() {
           <React.Fragment key={idx}>
             <StepCard bgcolor={step.color}>
               <StepNumber bgcolor={step.color}>
-                {'0' + String(idx + 1)}
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontWeight: 700,
+                    color: step.color === 'green' ? '#a8f574' : '#060606',
+                  }}
+                >
+                  {'0' + String(idx + 1)}
+                </Typography>
               </StepNumber>
               <Typography
-                variant="subtitle1"
+                variant="h3"
                 sx={{
-                  fontWeight: step.color === 'green' ? 700 : 400,
+                  color: step.color === 'green' ? '#060606' : '#ffffff',
                   textAlign: { xs: 'center', md: 'left' },
                   mt: { xs: 2, md: 3 },
                   mb: 0,

@@ -82,6 +82,7 @@ const FloatingCardsWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   width: '100%',
+  paddingTop: theme.spacing(6),
   paddingBottom: theme.spacing(6),
   zIndex: 2,
   bottom: 0,
