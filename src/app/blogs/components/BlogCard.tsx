@@ -94,7 +94,7 @@ export default function BlogCard({ _id, title, summary, date, tag, views = 0 }: 
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/blogs/detail-blog/${encodeURIComponent(_id)}`);
+    router.push(`/blogs/${encodeURIComponent(_id)}`);
   };
 
   return (
