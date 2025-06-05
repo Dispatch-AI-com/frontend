@@ -48,19 +48,19 @@ const StepCard = styled(Box)(({ theme, bgcolor }) => ({
   borderRadius: 24,
   width: 262,
   height: 132,
-  padding: theme.spacing(4, 2.5, 3, 2.5),
+  padding: theme.spacing(2.5),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
+  justifyContent: 'center',
   position: 'relative',
   flex: '0 0 262px',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     width: '100%',
     maxWidth: '100%',
     minWidth: 0,
     height: 132,
-    padding: theme.spacing(3, 1.5, 2, 1.5),
-    alignItems: 'center',
+    padding: theme.spacing(1.5),
   },
 }));
 
@@ -78,8 +78,6 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   left: 20,
   boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)',
   [theme.breakpoints.down('md')]: {
-    left: '50%',
-    transform: 'translateX(-50%)',
     top: -20,
   },
 }));
@@ -123,7 +121,6 @@ export default function SetupSteps() {
                 <Typography
                   variant="h3"
                   sx={{
-                    fontWeight: 700,
                     color: step.color === 'green' ? '#a8f574' : '#060606',
                   }}
                 >
@@ -134,9 +131,6 @@ export default function SetupSteps() {
                 variant="h3"
                 sx={{
                   color: step.color === 'green' ? '#060606' : '#ffffff',
-                  textAlign: { xs: 'center', md: 'left' },
-                  mt: { xs: 2, md: 3 },
-                  mb: 0,
                 }}
               >
                 {step.label}

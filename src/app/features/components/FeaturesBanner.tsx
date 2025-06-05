@@ -47,6 +47,11 @@ const FeatureCard = styled(Paper)(({ theme }) => ({
     alignItems: 'center',
     paddingBottom: theme.spacing(2),
   },
+  '@media (max-width: 500px)': {
+    width: '100%',
+    minWidth: 0,
+    maxWidth: '100%',
+  },
 }));
 
 const FeatureIconBox = styled(Box)(({ theme }) => ({

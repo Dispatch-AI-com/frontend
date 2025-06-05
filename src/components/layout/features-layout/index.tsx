@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
 
 import FeaturesBanner from '@/app/features/components/FeaturesBanner';
 import FeaturesSection from '@/app/features/components/FeaturesSection';
@@ -14,9 +14,22 @@ export default function MainLayout({
   return (
     <>
       <Navbar variant="dark" />
-      <FeaturesBanner />
-      <FeaturesSection />
-      <Container maxWidth="xl">{children}</Container>
+      {/* Banner 区块 */}
+      <Box sx={{ background: '#060606', width: '100%' }}>
+        <Container maxWidth="xl">
+          <FeaturesBanner />
+        </Container>
+      </Box>
+      {/* Features Section 区块 */}
+      <Box sx={{ background: '#fafafa', width: '100%' }}>
+        <Container maxWidth="xl">
+          <FeaturesSection />
+        </Container>
+      </Box>
+      {/* 其他 children 区块 */}
+      <Box sx={{ background: '#ffffff', width: '100%' }}>
+        <Container maxWidth="xl">{children}</Container>
+      </Box>
       <Footer />
     </>
   );
