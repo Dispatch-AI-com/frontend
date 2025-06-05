@@ -100,7 +100,6 @@ const CardsGrid = styled(Box)(({ theme }) => ({
     gridTemplateColumns: '1fr',
     gap: theme.spacing(4),
     width: '100%',
-    maxWidth: '100%',
   },
   '@media (max-width: 500px)': {
     gridTemplateColumns: '1fr',
