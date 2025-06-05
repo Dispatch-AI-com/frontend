@@ -1,5 +1,5 @@
 'use client';
-import { Box, Chip, Paper, Typography } from '@mui/material';
+import { Box, Chip, TextField, Typography } from '@mui/material';
 
 import SectionHeader from '@/app/dashboard/settings/components/SectionHeader';
 
@@ -19,16 +19,41 @@ export default function GreetingSection() {
       />
       <Box>
         <Box display="flex" flexDirection={'row'} gap={1} mb={2}>
-          <Typography variant="body1" sx={{ color: 'secondary.main' }}>
+          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
             Opening message:
           </Typography>
-          <Chip label="Default" color="success" size="small" />
+          <Chip
+            label="Default"
+            color="default"
+            size="small"
+            sx={{ backgroundColor: '#a8f574' }}
+          />
         </Box>
-        <Paper elevation={1} sx={{ width: 580, padding: 4, marginTop: 1 }}>
+        {/* <Paper elevation={1} sx={{ width: 580, padding: 4 }}>
           <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
             {greeting.message}
           </Typography>
-        </Paper>
+        </Paper> */}
+        <TextField
+          multiline
+          minRows={4}
+          fullWidth
+          variant="outlined"
+          value={greeting.message}
+          // onChange={e => {
+          //   /* handle change here */
+          // }}
+          sx={{
+            width: 580,
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: '#f7f7f7',
+              borderRadius: 2,
+              '& fieldset': {
+                border: 'none',
+              },
+            },
+          }}
+        />
       </Box>
     </>
   );

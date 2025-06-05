@@ -18,8 +18,8 @@ export default function SettingsPage() {
         flex={1}
         pt={3} // padding-top: 24px
         pb={3} // padding-bottom: 24px
-        pl={40} // padding-left: 320px
-        pr={40} // padding-right: 320px
+        pl={60} // padding-left: 320px
+        pr={60} // padding-right: 320px
       >
         <SettingsSection />
       </Box>
