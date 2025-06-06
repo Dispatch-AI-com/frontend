@@ -253,24 +253,13 @@ export default function FeaturesSection() {
                     sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}
                   >
                     {/* AI头像 */}
-                    <Box
-                      sx={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: '50%',
-                        background: '#060606',
-                        color: '#a8f574',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 700,
-                        fontSize: 20,
-                        mr: 1.5,
-                        flexShrink: 0,
-                      }}
-                    >
-                      D
-                    </Box>
+                    <Image
+                      src="/avatars/AI-avatar.svg"
+                      alt="AI Avatar"
+                      width={36}
+                      height={36}
+                      style={{ marginRight: 12, flexShrink: 0 }}
+                    />
                     {/* 气泡 */}
                     <Box
                       sx={theme => ({
@@ -334,36 +323,13 @@ export default function FeaturesSection() {
                       </Typography>
                     </Box>
                     {/* 用户头像 */}
-                    <Box
-                      sx={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: '50%',
-                        background: '#222',
-                        color: '#fff',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 700,
-                        fontSize: 14,
-                        flexShrink: 0,
-                      }}
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                      >
-                        <circle
-                          cx="10"
-                          cy="10"
-                          r="10"
-                          fill="#fff"
-                          fillOpacity="0.2"
-                        />
-                      </svg>
-                    </Box>
+                    <Image
+                      src="/avatars/user-avatar.jpg"
+                      alt="User Avatar"
+                      width={36}
+                      height={36}
+                      style={{ borderRadius: '50%' }}
+                    />
                   </Box>
                 </Box>
               </Box>
