@@ -31,6 +31,7 @@ const ErrorMessage = styled.div`
   font-size: 14px;
   margin-top: 8px;
   text-align: center;
+  margin-bottom: 16px;
 `;
 
 export default function SigninForm() {
@@ -39,14 +40,14 @@ export default function SigninForm() {
     defaultValues: defaultSignupValues,
     mode: 'onSubmit',
   });
-  const [loginUser, { isLoading, error, isSuccess }] = useLoginUserMutation();
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
 
   const token = useAppSelector(s => s.auth.token);
   const router = useRouter();
 
   useEffect(() => {
-    if (token && isSuccess) router.push('/reduxtest');
-  }, [token, isSuccess, router]);
+    if (token) router.push('/reduxtest');
+  }, [token, router]);
 
   const onSubmit = async (data: SigninFormData) => {
     await loginUser({ email: data.workEmail, password: data.password });

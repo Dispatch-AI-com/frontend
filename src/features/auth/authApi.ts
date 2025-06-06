@@ -1,9 +1,8 @@
-// src/features/auth/authApi.ts
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { logout, setCredentials } from '@/features/auth/authSlice';
 import { axiosBaseQuery } from '@/lib/axiosBaseQuery';
-import type { UserInfo } from '@/types/user.types';
+import type { UserInfo } from '@/types/user.d';
 
 interface LoginDTO {
   email: string;
