@@ -48,6 +48,9 @@
     "typescript-eslint": "^8.32.1"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --max-warnings=0"
+    "*.{js,ts,tsx}": [
+      "prettier --write --end-of-line lf",
+      "eslint --fix"
+    ]
   }
 }

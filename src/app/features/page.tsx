@@ -1,9 +1,11 @@
-import FeaturesSection from '@/app/features/components/FeaturesSection';
+import FeaturersComparison from '@/app/features/components/FeaturersComparison';
+import SetupSteps from '@/app/features/components/SetupSteps';
 
-export default function Landing() {
+export default function Features() {
   return (
     <>
-      <FeaturesSection />
+      <SetupSteps />
+      <FeaturersComparison />
     </>
   );
 }
