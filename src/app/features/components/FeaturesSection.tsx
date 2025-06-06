@@ -47,7 +47,6 @@ const CardDesc = styled(Typography)(({ theme }) => ({
   },
 }));
 
-// 大半圆 styled component
 const LargeHalfCircle = styled(Box)(() => ({
   width: '500px',
   height: '250px',
@@ -65,7 +64,6 @@ const LargeHalfCircle = styled(Box)(() => ({
   pointerEvents: 'none',
 }));
 
-// 小半圆 styled component
 const SmallCircle = styled(Box)(() => ({
   width: '400px',
   height: '200px',
@@ -83,7 +81,6 @@ const SmallCircle = styled(Box)(() => ({
   pointerEvents: 'none',
 }));
 
-// 第一行卡片 styled component
 const FirstRowCard = styled(Box)(({ theme }) => ({
   width: 690,
   height: 326,
@@ -108,7 +105,6 @@ const FirstRowCard = styled(Box)(({ theme }) => ({
   },
 }));
 
-// 第二行卡片 styled component
 const SecondRowCard = styled(Box)(({ theme }) => ({
   width: 450,
   minHeight: 420,
@@ -128,7 +124,6 @@ const SecondRowCard = styled(Box)(({ theme }) => ({
   },
 }));
 
-// 半圆背景容器 styled component
 const CircleBgContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
   right: 0,
@@ -248,11 +243,9 @@ export default function FeaturesSection() {
                     },
                   })}
                 >
-                  {/* AI气泡 */}
                   <Box
                     sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}
                   >
-                    {/* AI头像 */}
                     <Image
                       src="/avatars/AI-avatar.svg"
                       alt="AI Avatar"
@@ -260,7 +253,6 @@ export default function FeaturesSection() {
                       height={36}
                       style={{ marginRight: 12, flexShrink: 0 }}
                     />
-                    {/* 气泡 */}
                     <Box
                       sx={theme => ({
                         background: '#fff',
@@ -287,7 +279,6 @@ export default function FeaturesSection() {
                       </Typography>
                     </Box>
                   </Box>
-                  {/* 用户气泡 */}
                   <Box
                     sx={{
                       display: 'flex',
@@ -295,7 +286,6 @@ export default function FeaturesSection() {
                       justifyContent: 'flex-end',
                     }}
                   >
-                    {/* 气泡 */}
                     <Box
                       sx={theme => ({
                         background: '#a8f574',
@@ -322,7 +312,6 @@ export default function FeaturesSection() {
                         weather.
                       </Typography>
                     </Box>
-                    {/* 用户头像 */}
                     <Image
                       src="/avatars/user-avatar.jpg"
                       alt="User Avatar"
