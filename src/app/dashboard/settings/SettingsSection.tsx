@@ -1,6 +1,7 @@
 'use client';
 
-import BillingSection from '@/app/dashboard/settings/BillingSection';
+import BankAccountSection from '@/app/dashboard/settings/BankAccountSection';
+import BillingAddressSection from '@/app/dashboard/settings/BillingAddressSection';
 import GreetingSection from '@/app/dashboard/settings/GreetingSection';
 import NotificationsSection from '@/app/dashboard/settings/NotificationsSection';
 import UserProfileSection from '@/app/dashboard/settings/UserProfileSection';
@@ -12,7 +13,8 @@ export default function SettingsSection() {
       <GreetingSection />
       <UserProfileSection />
       <VerificationSection />
-      <BillingSection />
+      <BankAccountSection />
+      <BillingAddressSection />
       <NotificationsSection />
     </>
   );
