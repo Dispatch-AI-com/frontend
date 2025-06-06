@@ -117,7 +117,6 @@ export default function FeaturersComparison() {
       </Typography>
       {isSmall ? (
         <Box>
-          {/* DIY 单独表格 */}
           <TableContainer className="mb6">
             <TableRow className="diy">
               <TableCell className="center">
@@ -144,7 +143,6 @@ export default function FeaturersComparison() {
               </TableRow>
             ))}
           </TableContainer>
-          {/* AI Assistant 单独表格 */}
           <TableContainer>
             <TableRow className="ai">
               <TableCell className="center">
