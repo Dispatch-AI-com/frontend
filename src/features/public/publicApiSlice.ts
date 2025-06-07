@@ -11,6 +11,7 @@ export const publicApiSlice = createApi({
   reducerPath: 'publicApi',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    responseHandler: 'content-type',
   }),
   endpoints: builder => ({
     getPlans: builder.query<Plan[], undefined>({

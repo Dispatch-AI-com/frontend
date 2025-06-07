@@ -3,12 +3,12 @@
 import { useEffect } from 'react';
 
 import { logout } from '@/features/auth/authSlice';
+import { useLazyGetUnauthorizedQuery } from '@/features/test/testApiSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
 export default function ReduxTestPage() {
   const dispatch = useAppDispatch();
 
-  // 只取关键的 auth 状态
   const token = useAppSelector(state => state.auth.token);
   const user = useAppSelector(state => state.auth.user);
 
@@ -19,8 +19,15 @@ export default function ReduxTestPage() {
     console.groupEnd();
   }, [token, user]);
 
-  const handleClearAuth = () => {
-    dispatch(logout());
+  const [triggerUnauthorized, { isFetching, error }] =
+    useLazyGetUnauthorizedQuery();
+
+  const handleTrigger401 = async () => {
+    try {
+      await triggerUnauthorized(undefined).unwrap();
+    } catch {
+      // 错误已经被 axiosBaseQuery 处理（登出 + 跳转），不需要处理了
+    }
   };
 
   return (
@@ -28,9 +35,19 @@ export default function ReduxTestPage() {
       <h1>Redux Key State Test (see console)</h1>
       <p>登录成功后，打开控制台查看 Token 和 User 信息。</p>
 
-      <button onClick={handleClearAuth} style={{ marginTop: 24 }}>
-        Clear Auth State
+      <button onClick={() => dispatch(logout())} style={{ marginTop: 24 }}>
+        Clear Auth State (redux)
       </button>
+
+      <button
+        onClick={() => void handleTrigger401()}
+        style={{ marginTop: 24, marginLeft: 16 }}
+        disabled={isFetching}
+      >
+        Simulate 401 Error (axiosBaseQuery + redux)
+      </button>
+
+      {error && <p style={{ color: 'red' }}>401 Error Triggered</p>}
     </main>
   );
 }
