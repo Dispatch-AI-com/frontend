@@ -29,7 +29,7 @@ export const axiosBaseQuery = (): BaseQueryFn<
       const token = (getState() as RootState).auth.token;
 
       const result = await axios({
-        baseURL: process.env.NEXT_PUBLIC_API_URL,
+        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
         url,
         method,
         data,
