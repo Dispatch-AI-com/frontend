@@ -1,11 +1,25 @@
 'use client';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import EditModal from '@/app/dashboard/settings/components/EditModal';
+import LabeledTextField from '@/app/dashboard/settings/components/LabeledTextField';
 import LabelValue from '@/app/dashboard/settings/components/LabelValue';
 import SectionDivider from '@/app/dashboard/settings/components/SectionDivider';
 import SectionHeader from '@/app/dashboard/settings/components/SectionHeader';
+import theme from '@/theme';
+
+const InfoRow = styled(Box)({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: theme.spacing(4),
+  marginTop: theme.spacing(2),
+});
+
+const InfoCol = styled(Box)({
+  flex: 1,
+});
 
 export default function UserProfileSection() {
   // modal state
@@ -44,16 +58,16 @@ export default function UserProfileSection() {
     <>
       <SectionDivider />
       <SectionHeader title="User Profile" onEdit={handleEdit} />
-      <Box display="flex" flexWrap="wrap" gap={4} mt={2}>
-        <Box flex={1}>
+      <InfoRow>
+        <InfoCol>
           <LabelValue label="Name:" value={profile.name} />
           <LabelValue label="Role:" value={profile.role} />
-        </Box>
-        <Box flex={1}>
+        </InfoCol>
+        <InfoCol>
           <LabelValue label="Company:" value={profile.company} />
           <LabelValue label="Contact:" value={profile.contact} />
-        </Box>
-      </Box>
+        </InfoCol>
+      </InfoRow>
       <EditModal
         open={open}
         title="User Profile"
@@ -62,63 +76,39 @@ export default function UserProfileSection() {
         }}
         onSave={handleSaveProfile}
       >
-        <Box display="flex" flexDirection="column" gap={2} mt={1}>
-          <Box>
-            <Typography variant="body1" mb={0.5}>
-              Name
-            </Typography>
-            <TextField
-              value={name}
-              onChange={e => {
-                setName(e.target.value);
-              }}
-              placeholder="Name"
-              fullWidth
-              size="small"
-            />
-          </Box>
-          <Box>
-            <Typography variant="body1" mb={0.5}>
-              Company
-            </Typography>
-            <TextField
-              value={company}
-              onChange={e => {
-                setCompany(e.target.value);
-              }}
-              placeholder="Company"
-              fullWidth
-              size="small"
-            />
-          </Box>
-          <Box>
-            <Typography variant="body1" mb={0.5}>
-              Role
-            </Typography>
-            <TextField
-              value={role}
-              onChange={e => {
-                setRole(e.target.value);
-              }}
-              placeholder="Role"
-              fullWidth
-              size="small"
-            />
-          </Box>
-          <Box>
-            <Typography variant="body1" mb={0.5}>
-              Contact
-            </Typography>
-            <TextField
-              value={contact}
-              onChange={e => {
-                setContact(e.target.value);
-              }}
-              placeholder="Contact"
-              fullWidth
-              size="small"
-            />
-          </Box>
+        <Box display="flex" flexDirection="column" gap={2} p={2}>
+          <LabeledTextField
+            label="Name"
+            value={name}
+            onChange={e => {
+              setName(e.target.value);
+            }}
+            placeholder="Name"
+          />
+          <LabeledTextField
+            label="Company"
+            value={company}
+            onChange={e => {
+              setCompany(e.target.value);
+            }}
+            placeholder="Company"
+          />
+          <LabeledTextField
+            label="Role"
+            value={role}
+            onChange={e => {
+              setRole(e.target.value);
+            }}
+            placeholder="Role"
+          />
+          <LabeledTextField
+            label="Contact"
+            value={contact}
+            onChange={e => {
+              setContact(e.target.value);
+            }}
+            placeholder="Contact"
+          />
         </Box>
       </EditModal>
     </>
