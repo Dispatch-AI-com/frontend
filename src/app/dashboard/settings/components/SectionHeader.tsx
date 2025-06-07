@@ -22,9 +22,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
       alignItems="center"
       mb={2}
     >
-      <Typography variant="h6" fontWeight={600}>
-        {title}
-      </Typography>
+      <Typography variant="h3">{title}</Typography>
 
       {showEditIcon && onEdit && (
         <Tooltip title="Edit">
@@ -37,7 +35,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
               src="/dashboard/settings/edit.svg"
               width={16}
               height={16}
-              alt="Profile Details"
+              alt="Edit button"
             />
           </IconButton>
         </Tooltip>
