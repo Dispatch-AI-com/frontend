@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { authApi } from '@/features/auth/authApi';
+import { publicApiSlice } from '@/features/public/publicApiSlice';
 
 import { rootReducer } from './root-reducer';
 
@@ -30,7 +31,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(authApi.middleware),
+    }).concat(authApi.middleware, publicApiSlice.middleware),
 });
 
 export const persistor = persistStore(store);

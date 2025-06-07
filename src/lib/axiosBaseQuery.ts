@@ -1,48 +1,55 @@
 // src/lib/axiosBaseQuery.ts
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
-import { redirect } from 'next/navigation'; // Next.js App Router 的跳转
+import axios from 'axios';
+import { redirect } from 'next/navigation';
 
 import { logout } from '@/features/auth/authSlice';
-import api from '@/lib/api';
-import type { AppDispatch } from '@/redux/store';
-
-interface ApiResponse<T = unknown> {
-  data: T;
-}
+import type { AppDispatch, RootState } from '@/redux/store';
 
 interface ErrorResponse {
   message: string;
 }
 
-export const axiosBaseQuery =
-  (): BaseQueryFn<
-    {
-      url: string;
-      method?: AxiosRequestConfig['method'];
-      data?: unknown;
-      params?: unknown;
-    },
-    unknown,
-    { status?: number; data?: string }
-  > =>
-  async ({ url, method = 'GET', data, params }, { dispatch }) => {
+export const axiosBaseQuery = (): BaseQueryFn<
+  {
+    url: string;
+    method?: AxiosRequestConfig['method'];
+    data?: unknown;
+    params?: Record<string, unknown>;
+  },
+  unknown,
+  { status?: number; data?: string }
+> => {
+  return async (
+    { url, method = 'GET', data, params },
+    { dispatch, getState },
+  ) => {
     try {
-      const res = await api<ApiResponse>({ url, method, data, params });
-      return { data: res.data };
-    } catch (axiosErr) {
-      const err = axiosErr as AxiosError<ErrorResponse>;
-      // 如果后端返回 401，就自动清空 token + 跳转到登录
+      const token = (getState() as RootState).auth.token;
+
+      const result = await axios({
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+        url,
+        method,
+        data,
+        params,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+
+      return { data: result.data };
+    } catch (e) {
+      const err = e as AxiosError<ErrorResponse>;
       if (err.response?.status === 401) {
         dispatch(logout() as unknown as AppDispatch);
         redirect('/signin');
       }
-      const errorData = err.response?.data;
       return {
         error: {
           status: err.response?.status,
-          data: errorData?.message ?? err.message,
+          data: err.response?.data.message ?? err.message,
         },
       };
     }
   };
+};

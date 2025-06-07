@@ -1,27 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-import api from '@/lib/api';
-
-interface HealthResponse {
-  message: string;
-}
+import { useGetHealthQuery } from '@/features/public/publicApiSlice';
 
 export default function TestPage() {
-  const [message, setMessage] = useState('');
+  const { data, isLoading, isError } = useGetHealthQuery(undefined);
 
-  useEffect(() => {
-    api
-      .get<HealthResponse>('/health/niubi')
-      .then(res => {
-        setMessage(res.data.message);
-      })
-      .catch((_error: unknown) => {
-        // console.error("❌ Request failed:", error);
-        setMessage('connection failed');
-      });
-  }, []);
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Connection failed</p>;
 
-  return <div>{message}</div>;
+  return <div>{data?.status}</div>;
 }

@@ -1,10 +1,10 @@
 'use client';
 
 import { styled } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
+import { useGetPlansQuery } from '@/features/public/publicApiSlice';
 import type { Plan, PlanButton } from '@/types/plan.types';
-import axios from '@/utils/axios';
 
 import PricingCard from './PricingCard';
 
@@ -68,24 +68,14 @@ const PlanGrid = styled('div')(({ theme }) => ({
 }));
 
 export default function PricingSection() {
-  const [plans, setPlans] = useState<Plan[]>([]);
-
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const res = await axios.get<Plan[]>('plan');
-        setPlans(res.data);
-      } catch {
-        // console.error("Failed to fetch plans");
-      }
-    };
-    void fetchPlans();
-  }, []);
+  const { data: plans = [], isLoading, isError } = useGetPlansQuery(undefined);
 
   return (
     <PricingContainer>
       <SectionTitle>Choose the Right Plan for You</SectionTitle>
       <PlanGrid>
+        {isLoading && <p>Loading...</p>}
+        {isError && <p>Failed to load plans.</p>}
         {plans.map(plan => (
           <PricingCard
             key={plan._id}

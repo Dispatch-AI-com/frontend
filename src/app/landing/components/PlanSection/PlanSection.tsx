@@ -1,10 +1,10 @@
 'use client';
 
 import { styled } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
+import { useGetPlansQuery } from '@/features/public/publicApiSlice';
 import type { Plan, PlanButton } from '@/types/plan.types';
-import axios from '@/utils/axios';
 
 import PlanCard from './PlanCard';
 
@@ -61,20 +61,25 @@ const PlanGrid = styled('div')(({ theme }) => ({
 }));
 
 export default function PlanSection() {
-  const [plans, setPlans] = useState<Plan[]>([]);
+  const { data: plans = [], isLoading, isError } = useGetPlansQuery(undefined);
 
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const res = await axios.get<Plan[]>('plan');
-        setPlans(res.data);
-      } catch {
-        //console.error("Failed to fetch plans:");
-      }
-    };
+  if (isLoading) {
+    return (
+      <SectionContainer>
+        <SectionTitle>Flexible Plans to Match Your Needs</SectionTitle>
+        <p>Loading plans...</p>
+      </SectionContainer>
+    );
+  }
 
-    void fetchPlans();
-  }, []);
+  if (isError) {
+    return (
+      <SectionContainer>
+        <SectionTitle>Flexible Plans to Match Your Needs</SectionTitle>
+        <p>Failed to load plans. Please try again later.</p>
+      </SectionContainer>
+    );
+  }
 
   return (
     <SectionContainer id="LandingPlans">
