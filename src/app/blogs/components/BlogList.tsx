@@ -66,6 +66,7 @@ export default function BlogList() {
         }
         setBlogs(fetched);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Failed to fetch blogs:', err);
       } finally {
         setLoading(false);
