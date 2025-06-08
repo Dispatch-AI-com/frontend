@@ -25,16 +25,15 @@ export default function ReduxTestPage() {
   const handleTrigger401 = async () => {
     try {
       await triggerUnauthorized(undefined).unwrap();
-    } catch {
-      // 错误已经被 axiosBaseQuery 处理（登出 + 跳转），不需要处理了
+    } catch (err) {
+      console.error('❌ API Error:', JSON.stringify(err, null, 2));
     }
   };
 
   return (
     <main style={{ padding: 40 }}>
       <h1>Redux Key State Test (see console)</h1>
-      <p>登录成功后，打开控制台查看 Token 和 User 信息。</p>
-
+      <p>login success, see token and user info in console</p>
       <button onClick={() => dispatch(logout())} style={{ marginTop: 24 }}>
         Clear Auth State (redux)
       </button>

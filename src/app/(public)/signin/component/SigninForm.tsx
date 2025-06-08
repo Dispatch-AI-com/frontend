@@ -1,8 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
@@ -40,14 +40,20 @@ export default function SigninForm() {
     defaultValues: defaultSignupValues,
     mode: 'onSubmit',
   });
-  const [loginUser, { isLoading, error }] = useLoginUserMutation();
 
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirect') ?? '/dashboard';
   const token = useAppSelector(s => s.auth.token);
   const router = useRouter();
+  const hasRedirected = useRef(false);
 
   useEffect(() => {
-    if (token) router.push('/reduxtest');
-  }, [token, router]);
+    if (token && !hasRedirected.current) {
+      hasRedirected.current = true;
+      router.replace(redirectUrl);
+    }
+  }, [token, router, redirectUrl]);
 
   const onSubmit = async (data: SigninFormData) => {
     await loginUser({ email: data.workEmail, password: data.password });

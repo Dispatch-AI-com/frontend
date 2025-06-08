@@ -2,7 +2,6 @@
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
-import { redirect } from 'next/navigation';
 
 import { logout } from '@/features/auth/authSlice';
 import type { AppDispatch, RootState } from '@/redux/store';
