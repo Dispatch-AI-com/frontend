@@ -33,6 +33,7 @@ const Content = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius * 2,
   backgroundColor: '#fff',
   flex: 1,
+  marginTop: theme.spacing(2),
   minHeight: 'auto',
   display: 'flex',
   flexDirection: 'column',
