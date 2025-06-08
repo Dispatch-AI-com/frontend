@@ -15,6 +15,7 @@ import Button from '@/app/(public)/signin/ui/Button';
 import ControllerInput from '@/app/(public)/signin/ui/controller/ControllerInput';
 import { useLoginUserMutation } from '@/features/auth/authApi';
 import { useAppSelector } from '@/redux/hooks';
+import { parseRTKError } from '@/utils/parseRTKError';
 
 import FormField from './FormField';
 
@@ -78,7 +79,7 @@ export default function SigninForm() {
         />
       </FormField>
 
-      {Boolean(error) && <ErrorMessage>Invalid credentials</ErrorMessage>}
+      {error && <ErrorMessage>{parseRTKError(error)}</ErrorMessage>}
 
       <Button type="submit" fullWidth sx={{ mt: 2 }} disabled={isLoading}>
         {isLoading ? 'Signing in…' : 'Sign In'}
