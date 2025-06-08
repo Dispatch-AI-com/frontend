@@ -8,12 +8,16 @@ export default function BankAccountSection() {
     <EditableSection
       title="Bank Account"
       fields={[
-        { label: 'Account Name:', key: 'accname', placeholder: 'Jone Smith' },
-        { label: 'BSB:', key: 'bsb', placeholder: '123456' },
+        {
+          label: 'Account Name:',
+          key: 'accname',
+          placeholder: 'e.g. Jone Smith',
+        },
+        { label: 'BSB:', key: 'bsb', placeholder: 'e.g. 123456' },
         {
           label: 'Account Number:',
           key: 'accnum',
-          placeholder: '1234 1234 1234 1234',
+          placeholder: 'e.g. 1234 1234 1234 1234',
         },
       ]}
       initialValues={{
