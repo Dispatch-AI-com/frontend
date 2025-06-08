@@ -25,6 +25,13 @@ interface Field {
   label: string;
   key: string;
   placeholder?: string;
+  component?: (props: {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+    label: string;
+    name: string;
+  }) => React.ReactNode;
 }
 
 interface EditableSectionProps {
@@ -93,17 +100,31 @@ export default function EditableSection({
         onSave={handleSave}
       >
         <Box display="flex" flexDirection="column" gap={2} p={2}>
-          {fields.map(field => (
-            <LabeledTextField
-              key={field.key}
-              label={field.label}
-              value={formValues[field.key] || ''}
-              onChange={e => {
-                setFormValues(f => ({ ...f, [field.key]: e.target.value }));
-              }}
-              placeholder={field.placeholder ?? field.label}
-            />
-          ))}
+          {fields.map(field =>
+            field.component ? (
+              <React.Fragment key={field.key}>
+                {field.component({
+                  value: formValues[field.key] || '',
+                  onChange: (value: string) => {
+                    setFormValues(f => ({ ...f, [field.key]: value }));
+                  },
+                  placeholder: field.placeholder ?? field.label,
+                  label: field.label,
+                  name: field.key,
+                })}
+              </React.Fragment>
+            ) : (
+              <LabeledTextField
+                key={field.key}
+                label={field.label}
+                value={formValues[field.key] || ''}
+                onChange={e => {
+                  setFormValues(f => ({ ...f, [field.key]: e.target.value }));
+                }}
+                placeholder={field.placeholder ?? field.label}
+              />
+            ),
+          )}
         </Box>
       </EditModal>
     </>
