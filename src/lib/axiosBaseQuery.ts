@@ -42,7 +42,6 @@ export const axiosBaseQuery = (): BaseQueryFn<
       const err = e as AxiosError<ErrorResponse>;
       if (err.response?.status === 401) {
         dispatch(logout() as unknown as AppDispatch);
-        redirect('/signin');
       }
       return {
         error: {
