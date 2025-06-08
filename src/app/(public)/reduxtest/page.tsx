@@ -26,7 +26,7 @@ export default function ReduxTestPage() {
     try {
       await triggerUnauthorized(undefined).unwrap();
     } catch (err) {
-      console.error('❌ API Error:', JSON.stringify(err, null, 2));
+      console.log('❌ API Error:', JSON.stringify(err, null, 2));
     }
   };
 

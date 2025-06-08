@@ -1,28 +1,25 @@
 // app/(protected)/layout.tsx
 'use client';
-
-import { redirect, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { type ReactNode, useEffect, useState } from 'react';
 
 import { useAppSelector } from '@/redux/hooks';
 
-interface ProtectedLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
-  const token = useAppSelector(state => state.auth.token);
+export default function ProtectedLayout({ children }: { children: ReactNode }) {
+  const [ready, setReady] = useState(false);
+  const token = useAppSelector(s => s.auth.token);
+  const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!token) {
-      redirect(`/signin?redirect=${encodeURIComponent(pathname)}`);
+    setReady(true);
+  }, []);
+  useEffect(() => {
+    if (ready && !token) {
+      router.replace(`/signin?redirect=${encodeURIComponent(pathname)}`);
     }
-  }, [token, pathname]);
+  }, [ready, token, pathname, router]);
 
-  if (!token) {
-    return null;
-  }
-
+  if (!ready || !token) return null;
   return <>{children}</>;
 }
