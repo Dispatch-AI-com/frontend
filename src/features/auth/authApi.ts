@@ -14,6 +14,16 @@ interface LoginResp {
   user: UserInfo;
 }
 
+interface SignupDTO {
+  name: string;
+  email: string;
+  password: string;
+}
+interface SignupResp {
+  token: string;
+  user: UserInfo;
+}
+
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: axiosBaseQuery(),
@@ -21,6 +31,21 @@ export const authApi = createApi({
     loginUser: builder.mutation<LoginResp, LoginDTO>({
       query: body => ({
         url: '/auth/login',
+        method: 'POST',
+        data: body,
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCredentials(data));
+        } catch {
+          return;
+        }
+      },
+    }),
+    signupUser: builder.mutation<SignupResp, SignupDTO>({
+      query: body => ({
+        url: '/auth/signup',
         method: 'POST',
         data: body,
       }),
@@ -42,4 +67,8 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginUserMutation, useLogoutUserMutation } = authApi;
+export const {
+  useLoginUserMutation,
+  useLogoutUserMutation,
+  useSignupUserMutation,
+} = authApi;

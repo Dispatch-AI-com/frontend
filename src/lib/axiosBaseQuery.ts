@@ -39,7 +39,11 @@ export const axiosBaseQuery = (): BaseQueryFn<
       return { data: result.data };
     } catch (e) {
       const err = e as AxiosError<ErrorResponse>;
-      if (err.response?.status === 401 && url !== '/auth/signup') {
+      if (
+        err.response?.status === 401 &&
+        url !== '/auth/signup' &&
+        url !== '/auth/login'
+      ) {
         dispatch(logout() as unknown as AppDispatch);
       }
       return {
