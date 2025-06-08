@@ -2,7 +2,7 @@
 
 import styled from 'styled-components';
 
-import TestimonialCard from '@/app/landing/components/TestimonialCard';
+import TestimonialCard from '@/app/(public)/landing/components/TestimonialCard';
 
 const testimonials = [
   {

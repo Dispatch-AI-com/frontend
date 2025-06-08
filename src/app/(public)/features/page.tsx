@@ -1,4 +1,4 @@
-import FeaturesSection from '@/app/features/components/FeaturesSection';
+import FeaturesSection from '@/app/(public)/features/components/FeaturesSection';
 
 export default function Landing() {
   return (

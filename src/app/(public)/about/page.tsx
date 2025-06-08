@@ -7,12 +7,12 @@ import {
   SectionText,
   SectionTitle,
   SectionWrapper,
-} from '@/app/about/components/InfoBody';
+} from '@/app/(public)/about/components/InfoBody';
 import {
   TeamCardContainer,
   TeamMemberCard,
   TeamMemberImage,
-} from '@/app/about/components/TeamCard';
+} from '@/app/(public)/about/components/TeamCard';
 import teamMembers from '@/data/teamMembers.json';
 
 export default function AboutPage() {

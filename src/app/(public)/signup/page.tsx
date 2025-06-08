@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import styled from 'styled-components';
 
-import SignupForm from '@/app/signup/component/SignupForm';
+import SignupForm from '@/app/(public)/signup/component/SignupForm';
 
 const PageContainer = styled.div`
   min-height: 100vh;

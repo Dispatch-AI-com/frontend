@@ -6,13 +6,13 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { defaultSignupValues } from '@/app/signin/schemas/defaultSigninValues';
+import { defaultSignupValues } from '@/app/(public)/signin/schemas/defaultSigninValues';
 import {
   type SigninFormData,
   signinSchema,
-} from '@/app/signin/schemas/signinSchema';
-import Button from '@/app/signin/ui/Button';
-import ControllerInput from '@/app/signin/ui/controller/ControllerInput';
+} from '@/app/(public)/signin/schemas/signinSchema';
+import Button from '@/app/(public)/signin/ui/Button';
+import ControllerInput from '@/app/(public)/signin/ui/controller/ControllerInput';
 import { useLoginUserMutation } from '@/features/auth/authApi';
 import { useAppSelector } from '@/redux/hooks';
 

@@ -4,15 +4,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { useRegister } from '@/app/signup/hooks/useRegister';
-import { defaultSignupValues } from '@/app/signup/schemas/defaultSignupValues';
+import { useRegister } from '@/app/(public)/signup/hooks/useRegister';
+import { defaultSignupValues } from '@/app/(public)/signup/schemas/defaultSignupValues';
 import {
   type SignupFormData,
   signupSchema,
-} from '@/app/signup/schemas/signupSchema';
-import Button from '@/app/signup/ui/Button';
-import ControllerCheckbox from '@/app/signup/ui/controller/ControllerCheckbox';
-import ControllerInput from '@/app/signup/ui/controller/ControllerInput';
+} from '@/app/(public)/signup/schemas/signupSchema';
+import Button from '@/app/(public)/signup/ui/Button';
+import ControllerCheckbox from '@/app/(public)/signup/ui/controller/ControllerCheckbox';
+import ControllerInput from '@/app/(public)/signup/ui/controller/ControllerInput';
 
 import FormField from './FormField';
 
