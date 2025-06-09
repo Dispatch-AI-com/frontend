@@ -6,13 +6,13 @@ import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { defaultSignupValues } from '@/app/(public)/signin/schemas/defaultSigninValues';
+import { defaultLoginValues } from '@/app/(public)/login/schemas/defaultLoginValues';
 import {
-  type SigninFormData,
-  signinSchema,
-} from '@/app/(public)/signin/schemas/signinSchema';
-import Button from '@/app/(public)/signin/ui/Button';
-import ControllerInput from '@/app/(public)/signin/ui/controller/ControllerInput';
+  type LoginFormData,
+  loginSchema,
+} from '@/app/(public)/login/schemas/loginSchema';
+import Button from '@/app/(public)/login/ui/Button';
+import ControllerInput from '@/app/(public)/login/ui/controller/ControllerInput';
 import { useLoginUserMutation } from '@/features/auth/authApi';
 import { useAppSelector } from '@/redux/hooks';
 import { parseRTKError } from '@/utils/parseRTKError';
@@ -35,10 +35,10 @@ const ErrorMessage = styled.div`
   margin-bottom: 16px;
 `;
 
-export default function SigninForm() {
-  const { control, handleSubmit } = useForm<SigninFormData>({
-    resolver: zodResolver(signinSchema),
-    defaultValues: defaultSignupValues,
+export default function LoginForm() {
+  const { control, handleSubmit } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: defaultLoginValues,
     mode: 'onSubmit',
   });
 
@@ -56,7 +56,7 @@ export default function SigninForm() {
     }
   }, [token, router, redirectUrl]);
 
-  const onSubmit = async (data: SigninFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     await loginUser({ email: data.workEmail, password: data.password });
   };
 
@@ -68,6 +68,7 @@ export default function SigninForm() {
           name="workEmail"
           control={control}
           placeholder="Email address"
+          disabled={isLoading}
         />
       </FormField>
       <FormField label="Password">
@@ -76,13 +77,14 @@ export default function SigninForm() {
           control={control}
           placeholder="Password"
           type="password"
+          disabled={isLoading}
         />
       </FormField>
 
       {error && <ErrorMessage>{parseRTKError(error)}</ErrorMessage>}
 
       <Button type="submit" fullWidth sx={{ mt: 2 }} disabled={isLoading}>
-        {isLoading ? 'Signing in…' : 'Sign In'}
+        {isLoading ? 'Logging in…' : 'Log In'}
       </Button>
     </form>
   );

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import styled from 'styled-components';
 
-import SigninForm from '@/app/(public)/signin/component/SigninForm';
+import LoginForm from '@/app/(public)/login/component/LoginForm';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -47,7 +47,7 @@ export default function SigninPage() {
         <LogoContainer>
           <Image src="/logo.svg" alt="Logo" width={200} height={100} />
         </LogoContainer>
-        <SigninForm />
+        <LoginForm />
       </FormContainer>
     </PageContainer>
   );

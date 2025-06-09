@@ -10,6 +10,7 @@ interface ControllerInputProps<T extends FieldValues> {
   placeholder?: string;
   type?: string;
   fullWidth?: boolean;
+  disabled?: boolean;
 }
 
 const StyledBox = styled(Box)<{ $fullWidth?: boolean }>`
@@ -44,6 +45,7 @@ export default function ControllerInput<T extends FieldValues>({
   placeholder,
   type = 'text',
   fullWidth = true,
+  disabled,
 }: ControllerInputProps<T>) {
   return (
     <Controller
@@ -63,6 +65,7 @@ export default function ControllerInput<T extends FieldValues>({
             placeholder={placeholder}
             type={type}
             $hasError={!!error}
+            disabled={disabled}
           />
           {error && <ErrorMessage>{error.message}</ErrorMessage>}
         </StyledBox>
