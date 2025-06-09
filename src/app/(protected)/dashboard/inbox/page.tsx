@@ -8,12 +8,15 @@ import InboxList from '@/app/(protected)/dashboard/inbox/components/InboxList';
 import InboxSearchBar from '@/app/(protected)/dashboard/inbox/components/InboxSearchBar';
 import useCallLogs from '@/app/(protected)/dashboard/inbox/hooks/useCallLogs';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function InboxPage() {
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [search, setSearch] = useState('');
   const [tag, setTag] = useState('all');
   const [sort, setSort] = useState('newest');
+
+  const user = useAppSelector(state => state.auth.user);
 
   // 这里可以根据实际需要传递search、tag、sort等参数
   const { data: calllogs, loading, error } = useCallLogs();
@@ -34,6 +37,16 @@ export default function InboxPage() {
     <Box display="flex">
       <Sidebar />
       <Box flex={1} display="flex" flexDirection="column" bgcolor="#F8FAF7">
+        {/* 显示用户信息 */}
+        <Box p={2} bgcolor="#e8f5e9" borderRadius={2} mb={2}>
+          {user ? (
+            <>
+              <strong>User:</strong> {user._id} ({user.email})
+            </>
+          ) : (
+            <span>No user info</span>
+          )}
+        </Box>
         {/* 顶部搜索栏 */}
         <InboxSearchBar
           search={search}
