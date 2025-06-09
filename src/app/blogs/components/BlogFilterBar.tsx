@@ -101,7 +101,13 @@ export default function BlogFilterBar() {
   return (
     <FilterBarWrapper>
       <SearchBox>
-        <SearchIcon sx={{ color: '#BDBDBD', mr: 1 }} />
+        <SearchIcon
+          sx={{
+            color: '#BDBDBD',
+            mr: 1,
+            display: { xs: 'none', sm: 'inline-flex' },
+          }}
+        />
         <StyledInput
           variant="outlined"
           placeholder="Keywords"
