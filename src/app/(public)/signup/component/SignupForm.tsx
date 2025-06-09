@@ -17,8 +17,54 @@ import ControllerCheckbox from '../ui/controller/ControllerCheckbox';
 import ControllerInput from '../ui/controller/ControllerInput';
 import FormField from './FormField';
 
-const Title = styled.h1`…`;
-const ErrorMessage = styled.div`…`;
+const StyledForm = styled.form`
+  width: 100%;
+`;
+
+const FormRow = styled.div`
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
+`;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 32px 0 40px 0;
+`;
+
+const SignInContainer = styled.div`
+  text-align: center;
+  margin-top: 24px;
+  color: #666;
+  font-size: 14px;
+`;
+
+const SignInLink = styled.a`
+  color: #060606;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: #333;
+  }
+`;
+
+const ErrorMessage = styled.div`
+  color: #f44336;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 16px;
+  padding: 8px;
+  background-color: rgba(244, 67, 54, 0.1);
+  border-radius: 6px;
+  border: 1px solid #f44336;
+`;
 
 export default function SignupForm() {
   const router = useRouter();
@@ -52,29 +98,27 @@ export default function SignupForm() {
   };
 
   return (
-    <form onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
-      <Title>Create your account</Title>
-
+    <StyledForm onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
       {error && <ErrorMessage>{parseRTKError(error)}</ErrorMessage>}
+      <FormRow>
+        <FormField label="First Name">
+          <ControllerInput
+            name="firstName"
+            control={control}
+            placeholder="First Name"
+            disabled={isLoading}
+          />
+        </FormField>
 
-      <FormField label="First Name">
-        <ControllerInput
-          name="firstName"
-          control={control}
-          placeholder="First Name"
-          disabled={isLoading}
-        />
-      </FormField>
-
-      <FormField label="Last Name">
-        <ControllerInput
-          name="lastName"
-          control={control}
-          placeholder="Last Name"
-          disabled={isLoading}
-        />
-      </FormField>
-
+        <FormField label="Last Name">
+          <ControllerInput
+            name="lastName"
+            control={control}
+            placeholder="Last Name"
+            disabled={isLoading}
+          />
+        </FormField>
+      </FormRow>
       <FormField label="Work Email Address">
         <ControllerInput
           name="workEmail"
@@ -94,28 +138,25 @@ export default function SignupForm() {
           disabled={isLoading}
         />
       </FormField>
-
-      <FormField>
+      <CheckboxContainer>
         <ControllerCheckbox
           name="agreeToPolicy"
           control={control}
           label="I agree to the Terms of Service and Privacy Policy."
           disabled={isLoading}
         />
-      </FormField>
-
-      <FormField>
+      </CheckboxContainer>
+      <CheckboxContainer>
         <ControllerCheckbox
           name="agreeToComms"
           control={control}
           label="Receive marketing communications (optional)"
           disabled={isLoading}
         />
-      </FormField>
-
+      </CheckboxContainer>
       <Button type="submit" fullWidth disabled={isLoading}>
         {isLoading ? 'Creating Account…' : 'Sign Up'}
       </Button>
-    </form>
+    </StyledForm>
   );
 }
