@@ -17,7 +17,6 @@ export default function BlogsPage() {
         <Container
           sx={{
             width: '80%',
-            mx: 'auto',
           }}
         >
           <BlogHighlightCard />

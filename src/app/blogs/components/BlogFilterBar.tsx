@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 const FilterBarWrapper = styled(Box)(() => ({
   display: 'flex',
@@ -83,16 +84,19 @@ export default function BlogFilterBar() {
   const [topic, setTopic] = useState('');
   const router = useRouter();
 
+  const [debouncedKeyword] = useDebounce(keyword, 1000);
+  const [debouncedTopic] = useDebounce(topic, 1000);
+
   const handleSearch = () => {
     const params = new URLSearchParams();
 
-    if (keyword.trim()) params.set('keyword', keyword.trim());
-    if (topic) params.set('topic', topic);
+    if (debouncedKeyword.trim()) params.set('keyword', debouncedKeyword.trim());
+    if (debouncedTopic) params.set('topic', debouncedTopic);
 
-    router.push(`/blogs?${params.toString()}`, { scroll: false });
+    router.replace(`/blogs?${params.toString()}`, { scroll: false });
   };
 
-  useEffect(handleSearch, [topic, keyword, router]);
+  useEffect(handleSearch, [debouncedKeyword, debouncedTopic, router]);
 
   return (
     <FilterBarWrapper>
@@ -126,9 +130,7 @@ export default function BlogFilterBar() {
           displayEmpty
           sx={{ flex: 1, fontSize: 13 }}
         >
-          <MenuItem value="" disabled>
-            Please Select
-          </MenuItem>
+          <MenuItem value="">All</MenuItem>
           <MenuItem value="Small And Medium Businesses">
             Small And Medium Businesses
           </MenuItem>

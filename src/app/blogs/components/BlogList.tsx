@@ -27,10 +27,9 @@ const NextButton = styled(Button)(() => ({
 export default function BlogList() {
   const searchParams = useSearchParams();
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  const keyword = searchParams.get('keyword');
-  const topic = searchParams.get('topic');
+  const keyword = searchParams.get('keyword') ?? '';
+  const topic = searchParams.get('topic') ?? '';
   const limit = 12;
   const page = 1;
 
@@ -42,33 +41,40 @@ export default function BlogList() {
           page: String(page),
         });
 
-        let url = `http://localhost:4000/api/blogs?${params.toString()}`;
-
-        if (keyword) {
+        if (keyword.trim() !== '') {
           params.set('keyword', keyword);
-          url = `http://localhost:4000/api/blogs/search?${params.toString()}`;
-        } else if (topic) {
-          params.set('topic', topic);
-          url = `http://localhost:4000/api/blogs/tag/${encodeURIComponent(topic)}?${params.toString()}`;
         }
 
-        const res = await axios.get<{ data: Blog[] }>(url);
+        if (topic.trim() !== '') {
+          params.set('topic', topic);
+        }
+
+        const url = `http://localhost:4000/api/blogs/search?${params.toString()}`;
+
+        const res = await axios.get<{
+          data: Blog[];
+          total: number;
+          page: number;
+          limit: number;
+        }>(url);
+
         const fetched = res.data.data;
 
-        if (fetched.length > 0 && fetched.length < 9) {
-          const base = fetched[0];
-          while (fetched.length < 9) {
-            fetched.push({
-              ...base,
-              _id: `${String(base._id)}-dup${String(fetched.length)}`,
-            });
+        if (!keyword && !topic) {
+          if (fetched.length > 0 && fetched.length < 9) {
+            const base = fetched[0];
+            while (fetched.length < 9) {
+              fetched.push({
+                ...base,
+                _id: `${String(base._id)}-dup${String(fetched.length)}`,
+              });
+            }
           }
         }
+
         setBlogs(fetched);
       } catch (err) {
         console.error('Failed to fetch blogs:', err);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -77,37 +83,36 @@ export default function BlogList() {
 
   return (
     <>
-      <Grid
-        container
-        spacing={4}
-        justifyContent="center"
-        alignItems="stretch"
-        sx={{ mb: 6, mt: 1 }}
-      >
-        {loading ? (
-          <Typography variant="body1">Loading...</Typography>
-        ) : blogs.length === 0 ? (
-          <Box sx={{ textAlign: 'center', mt: 4 }}>
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-              color="text.secondary"
-              gutterBottom
-            >
-              😕 No results found
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              We could not find any blogs matching <strong>{keyword}</strong>
-            </Typography>
-          </Box>
-        ) : (
-          blogs.map(blog => (
+      {blogs.length === 0 ? (
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            color="text.secondary"
+            gutterBottom
+          >
+            😕 No results found
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            We could not find any blogs matching <strong>{keyword}</strong>
+          </Typography>
+        </Box>
+      ) : (
+        <Grid
+          container
+          spacing={4}
+          justifyContent="flex-start"
+          alignItems="stretch"
+          sx={{ mb: 6, mt: 1 }}
+        >
+          {blogs.map(blog => (
             <Grid item xs={12} sm={6} md={4} key={blog._id}>
               <BlogCard {...blog} />
             </Grid>
-          ))
-        )}
-      </Grid>
+          ))}
+        </Grid>
+      )}
+
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <NextButton>Next →</NextButton>
       </Box>
