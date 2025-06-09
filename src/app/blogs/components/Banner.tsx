@@ -1,9 +1,8 @@
 'use client';
 import { Box, styled, Typography } from '@mui/material';
 
-const BannerWrapper = styled(Box)(() => ({
+const BannerWrapper = styled(Box)(({ theme }) => ({
   width: '100%',
-  minWidth: '1200px',
   maxWidth: '1920px',
   height: 400,
   margin: '0 auto 80px auto',
@@ -12,21 +11,21 @@ const BannerWrapper = styled(Box)(() => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
   boxSizing: 'border-box',
 }));
 
-const Title = styled(Typography)(() => ({
+const Title = styled(Typography)(({ theme }) => ({
+  ...theme.typography.h1,
   color: '#a8f574',
-  fontWeight: 700,
-  fontSize: '48px',
-  marginBottom: 24,
   textAlign: 'center',
-  lineHeight: '76px',
+  marginBottom: 24,
 }));
 
-const Subtitle = styled(Typography)(() => ({
+const Subtitle = styled(Typography)(({ theme }) => ({
+  ...theme.typography.body1,
   color: '#ffffff',
-  fontSize: '14px',
   maxWidth: 650,
   textAlign: 'center',
   lineHeight: 1.7,

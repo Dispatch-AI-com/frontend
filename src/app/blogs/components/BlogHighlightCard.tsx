@@ -70,7 +70,7 @@ export default function BlogHighlightCard() {
         height: '300px',
         width: '100%',
         my: 6,
-        overflow: 'hidden',
+        overflow: 'visible',
       }}
     >
       {items.map((item, index) => {
