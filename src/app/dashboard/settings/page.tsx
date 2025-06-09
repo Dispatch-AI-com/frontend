@@ -3,10 +3,11 @@ import { Box, styled } from '@mui/material';
 
 import SectionDivider from '@/app/dashboard/settings/components/SectionDivider';
 import SettingsSection from '@/app/dashboard/settings/SettingsSection';
+import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 
 const Root = styled(Box)({
   display: 'flex',
-  backgroundColor: '#e6f6d9',
+  backgroundColor: '#effbf5',
   minHeight: '100vh',
   flexDirection: 'column',
 
@@ -16,28 +17,17 @@ const Root = styled(Box)({
   },
 });
 
-const Sidebar = styled(Box)(({ theme }) => ({
-  width: '100%',
-  padding: theme.spacing(2, 3),
-  backgroundColor: '#e6f6d9',
-  minHeight: 'auto',
-  borderRight: 'none',
-  '@media (min-width:900px)': {
-    width: 220,
-    minHeight: '100vh',
-    borderRight: '1px solid #e6f6d9',
-  },
-}));
-
 const Content = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius * 2,
   backgroundColor: '#fff',
   flex: 1,
-  marginTop: theme.spacing(2),
+  marginTop: theme.spacing(1),
   minHeight: 'auto',
   display: 'flex',
   flexDirection: 'column',
-  '@media (min-width:900px)': {
+  marginLeft: 0, // default for mobile
+  [theme.breakpoints.up('md')]: {
+    marginLeft: theme.spacing(30), // 240px for desktop
     minHeight: 'calc(100vh - 48px)',
   },
 }));
@@ -54,12 +44,12 @@ const ContentInner = styled(Box)(({ theme }) => ({
   paddingLeft: theme.spacing(5),
   paddingRight: theme.spacing(5),
   [theme.breakpoints.up('sm')]: {
-    paddingLeft: theme.spacing(10),
-    paddingRight: theme.spacing(10),
+    paddingLeft: theme.spacing(15),
+    paddingRight: theme.spacing(15),
   },
   [theme.breakpoints.up('lg')]: {
-    paddingLeft: theme.spacing(20),
-    paddingRight: theme.spacing(20),
+    paddingLeft: theme.spacing(30),
+    paddingRight: theme.spacing(30),
   },
   [theme.breakpoints.up('xl')]: {
     paddingLeft: theme.spacing(60),
@@ -70,9 +60,7 @@ const ContentInner = styled(Box)(({ theme }) => ({
 export default function SettingsPage() {
   return (
     <Root>
-      <Sidebar>
-        <h2>Sidebar</h2>
-      </Sidebar>
+      <Sidebar />
       <Content>
         <SettingsHeader>
           <Box component="h2" sx={{ margin: 0, flex: 1 }}>
