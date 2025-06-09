@@ -96,10 +96,7 @@ const dropdownOptions = [
 ];
 
 export default function Sidebar() {
-  const [activeIndex, setActiveIndex] = React.useState(() => {
-    const initialIdx = navItems.findIndex(item => item.active);
-    return initialIdx !== -1 ? initialIdx : 0;
-  });
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
