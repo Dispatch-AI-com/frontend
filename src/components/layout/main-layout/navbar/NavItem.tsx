@@ -79,10 +79,11 @@ export function NavItem({
   themeVariant = 'light',
   isMobile,
 }: NavItemProps) {
+  const finalHref = text === 'Features' ? '/features#features-banner' : href;
   return (
     <NavItemContainer
       component={NextLink}
-      href={href}
+      href={finalHref}
       width={width}
       textWidth={textWidth}
       themeVariant={themeVariant}
