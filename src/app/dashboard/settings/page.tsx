@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/material';
 
 import SectionDivider from '@/app/dashboard/settings/components/SectionDivider';
 import SettingsSection from '@/app/dashboard/settings/SettingsSection';
-import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
+// import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 
 const Root = styled(Box)({
   display: 'flex',
@@ -60,7 +60,7 @@ const ContentInner = styled(Box)(({ theme }) => ({
 export default function SettingsPage() {
   return (
     <Root>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <Content>
         <SettingsHeader>
           <Box component="h2" sx={{ margin: 0, flex: 1 }}>

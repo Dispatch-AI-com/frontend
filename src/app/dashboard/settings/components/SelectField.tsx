@@ -4,6 +4,7 @@ import React from 'react';
 interface Option {
   label: string;
   value: string;
+  key?: string;
 }
 
 interface SelectFieldProps {
@@ -48,7 +49,7 @@ export default function SelectField({
           {placeholder}
         </MenuItem>
         {options.map(opt => (
-          <MenuItem key={opt.value} value={opt.value}>
+          <MenuItem key={opt.key ?? opt.value} value={opt.value}>
             {opt.label}
           </MenuItem>
         ))}

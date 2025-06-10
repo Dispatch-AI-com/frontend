@@ -36,7 +36,7 @@ interface Field {
 
 interface EditableSectionProps {
   title: string;
-  fields: Field[];
+  fields: Field[] | ((values: Record<string, string>) => Field[]);
   initialValues: Record<string, string>;
   columns?: number;
 }
@@ -71,8 +71,9 @@ export default function EditableSection({
     setValues(formValues);
     setOpen(false);
   };
-
-  const fieldColumns = splitFields(fields, columns);
+  const fieldsArray =
+    typeof fields === 'function' ? fields(open ? formValues : values) : fields;
+  const fieldColumns = splitFields(fieldsArray, columns);
 
   return (
     <>
@@ -100,7 +101,7 @@ export default function EditableSection({
         onSave={handleSave}
       >
         <Box display="flex" flexDirection="column" gap={2} p={2}>
-          {fields.map(field =>
+          {fieldsArray.map(field =>
             field.component ? (
               <React.Fragment key={field.key}>
                 {field.component({
