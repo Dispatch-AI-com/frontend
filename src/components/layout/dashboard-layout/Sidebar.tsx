@@ -3,6 +3,7 @@
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { Box, IconButton, Link, styled, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import theme from '@/theme';
@@ -12,6 +13,9 @@ import MobileSidebarDrawer from './MobileSidebarDrawer';
 import UserProfileMenu from './UserProfileMenu';
 
 const SidebarContainer = styled(Box)(({ theme }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
   width: 240,
   transition: 'width 0.2s',
   height: '100vh',
@@ -43,7 +47,6 @@ const navItems = [
     label: 'Inbox',
     iconSrc: '/dashboard/sidebar/inbox.svg',
     iconAlt: 'Inbox',
-    active: true,
     href: '/dashboard/inbox',
   },
   {
@@ -79,10 +82,6 @@ const navItems = [
 ];
 
 const dropdownOptions = [
-  // {
-  //   label: 'View Profile',
-  //   href: '/profile',
-  // },
   {
     label: 'Switch Account',
     iconSrc: '/dashboard/sidebar/account-switch.svg',
@@ -97,10 +96,7 @@ const dropdownOptions = [
 ];
 
 export default function Sidebar() {
-  const [activeIndex, setActiveIndex] = React.useState(() => {
-    const initialIdx = navItems.findIndex(item => item.active);
-    return initialIdx !== -1 ? initialIdx : 0;
-  });
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -121,6 +117,7 @@ export default function Sidebar() {
   };
 
   const [arrowUp, setArrowUp] = React.useState(false);
+  const router = useRouter();
 
   return (
     <>
@@ -154,6 +151,7 @@ export default function Sidebar() {
             onNavItemClick={index => {
               if (index >= 0 && index < navItems.length) {
                 setActiveIndex(index);
+                router.push(navItems[index].href);
               }
             }}
           />
