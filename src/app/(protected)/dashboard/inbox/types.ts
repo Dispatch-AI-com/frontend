@@ -12,6 +12,7 @@ export interface ICallLog {
   transcriptId?: string;
   createdAt?: string | Date;
   updatedAt?: string | Date;
+  summary?: string;
 }
 
 export interface ICallLogPagination {

@@ -1,4 +1,5 @@
 import { Box, Chip, Typography } from '@mui/material';
+import Image from 'next/image';
 
 import type { ICallLog } from '@/app/(protected)/dashboard/inbox/types';
 
@@ -35,16 +36,24 @@ export default function InboxListItem({
         fontSize={18}
         mr={1.5}
         flexShrink={0}
+        overflow="hidden"
       >
-        {item.callerNumber ? item.callerNumber.slice(-2) : '?'}
+        <Image
+          src="/avatars/user-avatar.jpg"
+          alt="avatar"
+          width={40}
+          height={40}
+        />
       </Box>
       <Box flex={1} minWidth={0}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography fontWeight={700} noWrap>
-            {item.callerNumber}
+            Jeon Chen
           </Typography>
           <Typography variant="caption" color="text.secondary" ml={2} noWrap>
-            {item.startAt ? new Date(item.startAt).toLocaleDateString() : ''}
+            {item.createdAt
+              ? new Date(item.createdAt).toLocaleDateString()
+              : ''}
           </Typography>
         </Box>
         <Box display="flex" alignItems="center" mb={0.5}>
@@ -56,14 +65,14 @@ export default function InboxListItem({
                 ? 'error'
                 : item.status === 'Completed'
                   ? 'success'
-                  : 'default'
+                  : 'warning'
             }
             sx={{ height: 20, fontSize: 12, mr: 1 }}
           />
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {item.serviceBookedId ? 'Service Booked' : 'No Service'}
-          </Typography>
         </Box>
+        <Typography variant="body2" color="text.secondary" noWrap>
+          {item.summary}
+        </Typography>
       </Box>
     </Box>
   );

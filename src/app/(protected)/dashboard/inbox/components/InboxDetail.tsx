@@ -1,4 +1,5 @@
 import { Box, Chip, Typography } from '@mui/material';
+import Image from 'next/image';
 
 import type { ICallLog } from '@/app/(protected)/dashboard/inbox/types';
 
@@ -25,20 +26,23 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
           fontWeight={700}
           fontSize={22}
           mr={2}
+          overflow="hidden"
         >
-          {item.callerNumber}
+          <Image
+            src="/avatars/user-avatar.jpg"
+            alt="avatar"
+            width={48}
+            height={48}
+          />
         </Box>
         <Box>
-          <Typography fontWeight={700}>{item.callerNumber}</Typography>
+          <Typography fontWeight={700}>Jeon Chen</Typography>
           <Typography variant="body2" color="text.secondary">
-            {item.companyId}
+            +61 481256866
           </Typography>
         </Box>
       </Box>
       <Box display="flex" alignItems="center" mb={1}>
-        <Typography fontWeight={700} mr={1}>
-          {item.serviceBookedId ? 'Service Booked' : 'No Service'}
-        </Typography>
         <Chip
           label={item.status}
           size="small"
@@ -47,14 +51,20 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
               ? 'error'
               : item.status === 'Completed'
                 ? 'success'
-                : 'default'
+                : 'warning'
           }
-          sx={{ height: 20, fontSize: 12 }}
+          sx={{ height: 20, fontSize: 12, mr: 1 }}
         />
         <Typography variant="caption" color="text.secondary" ml={2}>
-          {item.startAt ? new Date(item.startAt).toLocaleString() : ''}
+          {item.createdAt ? new Date(item.createdAt).toLocaleString() : ''}
         </Typography>
       </Box>
+      <Typography variant="body2" color="text.secondary" mb={1}>
+        {item.summary}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" mb={2}>
+        Service ID: {item.serviceBookedId ?? '-'}
+      </Typography>
       <Typography variant="subtitle2" color="text.secondary" mb={1}>
         Call Log Info
       </Typography>

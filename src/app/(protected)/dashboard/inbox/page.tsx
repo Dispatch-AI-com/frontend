@@ -21,6 +21,10 @@ export default function InboxPage() {
   // 这里可以根据实际需要传递search、tag、sort等参数
   const { data: calllogs, loading, error } = useCallLogs();
 
+  // 限制每页最多显示6个item
+  const pageSize = 6;
+  const pagedCalllogs = calllogs.slice(0, pageSize);
+
   // 默认选中第一条
   React.useEffect(() => {
     if (calllogs.length && !selectedId) {
@@ -30,8 +34,54 @@ export default function InboxPage() {
 
   const selectedItem = calllogs.find(item => item._id === selectedId);
 
-  if (loading || !calllogs.length) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
+  if (!calllogs.length) {
+    return (
+      <Box display="flex">
+        <Sidebar />
+        <Box flex={1} display="flex" flexDirection="column" bgcolor="#F8FAF7">
+          {/* 显示用户信息 */}
+          <Box p={2} bgcolor="#e8f5e9" borderRadius={2} mb={2}>
+            {user ? (
+              <>
+                <strong>User:</strong> {user._id} ({user.email})
+              </>
+            ) : (
+              <span>No user info</span>
+            )}
+          </Box>
+          {/* 顶部搜索栏 */}
+          <InboxSearchBar
+            search={search}
+            onSearchChange={setSearch}
+            tag={tag}
+            onTagChange={setTag}
+            sort={sort}
+            onSortChange={setSort}
+          />
+          {/* 主体内容 */}
+          <Box
+            flex={1}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Box textAlign="center">
+              <img
+                src="/dashboard/inbox/empty-inbox.svg"
+                alt="Empty inbox"
+                style={{ width: 100, height: 100, marginBottom: 24 }}
+              />
+              <Box fontSize={20} color="text.secondary" fontWeight={500}>
+                Your inbox is empty.
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box display="flex">
@@ -63,7 +113,7 @@ export default function InboxPage() {
             <InboxList
               selectedId={selectedId}
               onSelect={setSelectedId}
-              data={calllogs}
+              data={pagedCalllogs}
             />
           </Box>
           {/* 右侧详情 */}
