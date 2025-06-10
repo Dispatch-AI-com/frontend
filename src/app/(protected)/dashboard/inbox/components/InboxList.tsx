@@ -1,7 +1,12 @@
-import { Box } from '@mui/material';
+import styled from 'styled-components';
 
 import InboxListItem from '@/app/(protected)/dashboard/inbox/components/InboxListItem';
 import type { ICallLog } from '@/app/(protected)/dashboard/inbox/types';
+
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default function InboxList({
   selectedId,
@@ -13,7 +18,7 @@ export default function InboxList({
   data: ICallLog[];
 }) {
   return (
-    <Box>
+    <ListContainer>
       {data.map((item: ICallLog) => {
         const handleClick = () => {
           if (onSelect && item._id) {
@@ -29,6 +34,6 @@ export default function InboxList({
           />
         );
       })}
-    </Box>
+    </ListContainer>
   );
 }

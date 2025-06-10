@@ -1,7 +1,7 @@
 'use client';
 
-import { Box } from '@mui/material';
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
 import InboxDetail from '@/app/(protected)/dashboard/inbox/components/InboxDetail';
 import InboxList from '@/app/(protected)/dashboard/inbox/components/InboxList';
@@ -10,6 +10,63 @@ import useCallLogs from '@/app/(protected)/dashboard/inbox/hooks/useCallLogs';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import { useAppSelector } from '@/redux/hooks';
 
+const PageContainer = styled.div`
+  display: flex;
+`;
+
+const MainContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8faf7;
+`;
+
+const UserInfoBox = styled.div`
+  padding: 16px;
+  background-color: #e8f5e9;
+  border-radius: 8px;
+`;
+
+const ContentContainer = styled.div`
+  flex: 1;
+  display: flex;
+`;
+
+const ListContainer = styled.div`
+  width: 350px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+`;
+
+const DetailContainer = styled.div`
+  flex: 1;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+`;
+
+const EmptyStateContainer = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const EmptyStateContent = styled.div`
+  text-align: center;
+`;
+
+const EmptyStateImage = styled.img`
+  width: 100px;
+  height: 100px;
+  margin-bottom: 24px;
+`;
+
+const EmptyStateText = styled.div`
+  font-size: 20px;
+  color: #666;
+  font-weight: 500;
+`;
+
 export default function InboxPage() {
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [search, setSearch] = useState('');
@@ -17,32 +74,56 @@ export default function InboxPage() {
   const [sort, setSort] = useState('newest');
 
   const user = useAppSelector(state => state.auth.user);
-
-  // 这里可以根据实际需要传递search、tag、sort等参数
   const { data: calllogs, loading, error } = useCallLogs();
 
-  // 限制每页最多显示6个item
+  // 筛选和排序逻辑
+  const filteredCalllogs = calllogs
+    .filter(item => {
+      // tag filter
+      if (tag === 'all') return true;
+      if (tag === 'missed') return item.status === 'Missed';
+      if (tag === 'completed') return item.status === 'Completed';
+      if (tag === 'followup') return item.status === 'Follow-up';
+      return true;
+    })
+    .filter(item => {
+      // search filter
+      if (!search) return true;
+      const keyword = search.toLowerCase();
+      return [
+        item.callerName?.toLowerCase(),
+        item.callerNumber,
+        item.summary?.toLowerCase(),
+      ].some(field => field?.includes(keyword) ?? false);
+    })
+    .sort((a, b) => {
+      // sort
+      const dateA = new Date(a.createdAt ?? '').getTime();
+      const dateB = new Date(b.createdAt ?? '').getTime();
+      if (sort === 'newest') return dateB - dateA;
+      if (sort === 'oldest') return dateA - dateB;
+      return 0;
+    });
+
   const pageSize = 6;
-  const pagedCalllogs = calllogs.slice(0, pageSize);
+  const pagedCalllogs = filteredCalllogs.slice(0, pageSize);
 
-  // 默认选中第一条
   React.useEffect(() => {
-    if (calllogs.length && !selectedId) {
-      setSelectedId(calllogs[0]._id);
+    if (filteredCalllogs.length && !selectedId) {
+      setSelectedId(filteredCalllogs[0]._id);
     }
-  }, [calllogs, selectedId]);
+  }, [filteredCalllogs, selectedId]);
 
-  const selectedItem = calllogs.find(item => item._id === selectedId);
+  const selectedItem = filteredCalllogs.find(item => item._id === selectedId);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
-  if (!calllogs.length) {
+  if (!filteredCalllogs.length) {
     return (
-      <Box display="flex">
+      <PageContainer>
         <Sidebar />
-        <Box flex={1} display="flex" flexDirection="column" bgcolor="#F8FAF7">
-          {/* 显示用户信息 */}
-          <Box p={2} bgcolor="#e8f5e9" borderRadius={2} mb={2}>
+        <MainContent>
+          <UserInfoBox>
             {user ? (
               <>
                 <strong>User:</strong> {user._id} ({user.email})
@@ -50,8 +131,7 @@ export default function InboxPage() {
             ) : (
               <span>No user info</span>
             )}
-          </Box>
-          {/* 顶部搜索栏 */}
+          </UserInfoBox>
           <InboxSearchBar
             search={search}
             onSearchChange={setSearch}
@@ -60,35 +140,25 @@ export default function InboxPage() {
             sort={sort}
             onSortChange={setSort}
           />
-          {/* 主体内容 */}
-          <Box
-            flex={1}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Box textAlign="center">
-              <img
+          <EmptyStateContainer>
+            <EmptyStateContent>
+              <EmptyStateImage
                 src="/dashboard/inbox/empty-inbox.svg"
                 alt="Empty inbox"
-                style={{ width: 100, height: 100, marginBottom: 24 }}
               />
-              <Box fontSize={20} color="text.secondary" fontWeight={500}>
-                Your inbox is empty.
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
+              <EmptyStateText>Your inbox is empty.</EmptyStateText>
+            </EmptyStateContent>
+          </EmptyStateContainer>
+        </MainContent>
+      </PageContainer>
     );
   }
 
   return (
-    <Box display="flex">
+    <PageContainer>
       <Sidebar />
-      <Box flex={1} display="flex" flexDirection="column" bgcolor="#F8FAF7">
-        {/* 显示用户信息 */}
-        <Box p={2} bgcolor="#e8f5e9" borderRadius={2} mb={2}>
+      <MainContent>
+        <UserInfoBox>
           {user ? (
             <>
               <strong>User:</strong> {user._id} ({user.email})
@@ -96,8 +166,7 @@ export default function InboxPage() {
           ) : (
             <span>No user info</span>
           )}
-        </Box>
-        {/* 顶部搜索栏 */}
+        </UserInfoBox>
         <InboxSearchBar
           search={search}
           onSearchChange={setSearch}
@@ -106,22 +175,19 @@ export default function InboxPage() {
           sort={sort}
           onSortChange={setSort}
         />
-        {/* 主体内容 */}
-        <Box flex={1} display="flex">
-          {/* 左侧列表 */}
-          <Box width={350} bgcolor="#fff" borderRadius={3} m={2} boxShadow={1}>
+        <ContentContainer>
+          <ListContainer>
             <InboxList
               selectedId={selectedId}
               onSelect={setSelectedId}
               data={pagedCalllogs}
             />
-          </Box>
-          {/* 右侧详情 */}
-          <Box flex={1} bgcolor="#fff" borderRadius={3} m={2} boxShadow={1}>
+          </ListContainer>
+          <DetailContainer>
             <InboxDetail item={selectedItem} />
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+          </DetailContainer>
+        </ContentContainer>
+      </MainContent>
+    </PageContainer>
   );
 }

@@ -1,6 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
 import {
-  Box,
   FormControl,
   InputAdornment,
   MenuItem,
@@ -8,6 +7,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import styled from 'styled-components';
 
 interface InboxSearchBarProps {
   search: string;
@@ -18,6 +18,20 @@ interface InboxSearchBarProps {
   onSortChange: (value: string) => void;
 }
 
+const SearchBarContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 16px 32px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+`;
+
+const Title = styled.div`
+  font-weight: 700;
+  font-size: 22px;
+  flex: 1;
+`;
+
 export default function InboxSearchBar({
   search,
   onSearchChange,
@@ -27,18 +41,8 @@ export default function InboxSearchBar({
   onSortChange,
 }: InboxSearchBarProps) {
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      px={4}
-      py={2}
-      bgcolor="#fff"
-      borderBottom={1}
-      borderColor="#F0F0F0"
-    >
-      <Box fontWeight={700} fontSize={22} flex={1}>
-        Inbox
-      </Box>
+    <SearchBarContainer>
+      <Title>Inbox</Title>
       <FormControl size="small" sx={{ minWidth: 120, mr: 2 }}>
         <Select
           value={tag}
@@ -84,6 +88,6 @@ export default function InboxSearchBar({
           ),
         }}
       />
-    </Box>
+    </SearchBarContainer>
   );
 }
