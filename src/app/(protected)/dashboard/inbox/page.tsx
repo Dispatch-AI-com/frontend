@@ -1,5 +1,6 @@
 'use client';
 
+import { useTheme } from '@mui/material/styles';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -12,6 +13,10 @@ import { useAppSelector } from '@/redux/hooks';
 
 const PageContainer = styled.div`
   display: flex;
+  padding-left: 240px;
+  @media (max-width: 600px) {
+    padding-left: 0;
+  }
 `;
 
 const MainContent = styled.div`
