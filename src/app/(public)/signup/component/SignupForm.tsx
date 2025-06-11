@@ -38,14 +38,14 @@ const CheckboxContainer = styled.div`
   margin: 32px 0 40px 0;
 `;
 
-const SignInContainer = styled.div`
+const LoginContainer = styled.div`
   text-align: center;
   margin-top: 24px;
   color: #666;
   font-size: 14px;
 `;
 
-const SignInLink = styled.a`
+const LoginLink = styled.a`
   color: #060606;
   text-decoration: underline;
   cursor: pointer;
@@ -157,6 +157,9 @@ export default function SignupForm() {
       <Button type="submit" fullWidth disabled={isLoading}>
         {isLoading ? 'Creating Account…' : 'Sign Up'}
       </Button>
+      <LoginContainer>
+        Already have an account? <LoginLink href="/login">Login</LoginLink>
+      </LoginContainer>
     </StyledForm>
   );
 }
