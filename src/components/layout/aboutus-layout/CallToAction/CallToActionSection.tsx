@@ -8,13 +8,13 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import { Stack } from '@mui/material';
 import React from 'react';
 
-import { HeaderText } from '@/app/about/components/AboutBanner';
+import { HeaderText } from '@/app/(public)/about/components/AboutBanner';
 import {
   CallToActionText,
   CallToActionTitle,
   CallToActionWrapper,
   SocialMediaButton,
-} from '@/app/about/components/CallToAction';
+} from '@/app/(public)/about/components/CallToAction';
 
 const CallToActionSection = () => {
   return (

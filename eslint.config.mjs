@@ -1,4 +1,3 @@
-// eslint.config.mjs
 // @ts-check
 import eslint from "@eslint/js";
 import globals from "globals";
@@ -17,7 +16,7 @@ export default tseslint.config(
   tseslint.configs.stylisticTypeChecked,
 
   {
-    files: ["src/**/*.{ts,tsx}"],
+    files: ["**/*.{ts,tsx}"],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -25,7 +24,7 @@ export default tseslint.config(
       },
       parser,
       parserOptions: {
-        project: true,
+        project: ["./tsconfig.json"],
         tsconfigRootDir: import.meta.dirname,
         ecmaVersion: 2022,
         sourceType: "module",
@@ -86,7 +85,6 @@ export default tseslint.config(
       "simple-import-sort/exports": "error",
     },
   },
-
   {
     files: ["**/*.test.tsx", "**/*.test.ts"],
     plugins: { jest: jestPlugin },

@@ -9,7 +9,7 @@ import {
   HeaderImage,
   HeaderText,
   HeaderTitle,
-} from '@/app/about/components/AboutBanner';
+} from '@/app/(public)/about/components/AboutBanner';
 
 const AboutBannerSection = () => {
   return (

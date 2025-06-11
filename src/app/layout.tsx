@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import StoreProvider from '@/app/StoreProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 
 export const metadata: Metadata = {
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );
