@@ -87,7 +87,7 @@ const StatusChip = styled(Chip)<{ status: string }>`
   font-weight: 500;
   .MuiChip-label {
     color: #000 !important;
-    padding: 16px 8px;
+    padding: 8px 12px;
   }
 `;
 
@@ -127,7 +127,7 @@ const ColMain = styled.div`
 const SummaryStatusRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
 `;
 
 const TranscriptContainer = styled.div`
