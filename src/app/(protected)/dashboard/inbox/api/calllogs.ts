@@ -10,7 +10,7 @@ export async function getCallLogs(
 ): Promise<ICallLog[]> {
   if (!baseURL) throw new Error('baseURL is not defined');
   if (!userId) throw new Error('userId is required');
-  const url = `${baseURL}/api/users/${userId}/calllogs`;
+  const url = `${baseURL}/users/${userId}/calllogs`;
   const res = await axios.get<{ data: ICallLog[] }>(url, { params });
   return res.data.data;
 }
@@ -20,8 +20,6 @@ export async function getTranscriptChunks(
 ): Promise<ICallLog[]> {
   if (!baseURL) throw new Error('baseURL is not defined');
   if (!transcriptId) throw new Error('transcriptId is required');
-  const res = await axios.get(
-    `${baseURL}/api/transcripts/${transcriptId}/chunks`,
-  );
+  const res = await axios.get(`${baseURL}/transcripts/${transcriptId}/chunks`);
   return res.data as ICallLog[];
 }

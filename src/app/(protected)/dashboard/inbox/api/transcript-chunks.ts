@@ -9,8 +9,6 @@ export async function getTranscriptChunks(
 ): Promise<ITranscriptChunk[]> {
   if (!baseURL) throw new Error('baseURL is not defined');
   if (!transcriptId) throw new Error('transcriptId is required');
-  const res = await axios.get(
-    `${baseURL}/api/transcripts/${transcriptId}/chunks`,
-  );
+  const res = await axios.get(`${baseURL}/transcripts/${transcriptId}/chunks`);
   return res.data as ITranscriptChunk[];
 }

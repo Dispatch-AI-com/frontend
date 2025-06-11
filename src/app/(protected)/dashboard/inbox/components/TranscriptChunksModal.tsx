@@ -1,8 +1,67 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import {
+  Avatar,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from '@mui/material';
+import styled from 'styled-components';
 
 import useTranscriptChunks from '../hooks/useTranscriptTrunks';
 
+interface TranscriptChunk {
+  text: string;
+  speaker?: string;
+}
+
+// Styled Components
+const ChatContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+`;
+
+const MessageRow = styled.div<{ $isUser: boolean }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: ${props => (props.$isUser ? 'flex-end' : 'flex-start')};
+  align-items: flex-end;
+`;
+
+const MessageBubble = styled.div<{ $isUser: boolean }>`
+  background: ${props => (props.$isUser ? '#a8f574' : '#fafafa')};
+  color: #222;
+  border-radius: 16px;
+  padding: 12px 16px;
+  max-width: 70%;
+  margin: 0 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  word-break: break-word;
+`;
+
+const ChatAvatar = styled(Avatar)<{ $isUser: boolean }>`
+  width: 32px;
+  height: 32px;
+  margin: ${props => (props.$isUser ? '0 0 0 8px' : '0 8px 0 0')};
+`;
+
+const StyledDialogTitle = styled(DialogTitle)`
+  && {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  & > span {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 700 !important;
+  }
+`;
+
+// Main Component
 interface TranscriptChunksModalProps {
   open: boolean;
   onClose: () => void;
@@ -16,9 +75,16 @@ export default function TranscriptChunksModal({
 }: TranscriptChunksModalProps) {
   const { data: chunks, loading, error } = useTranscriptChunks(transcriptId);
 
+  const getSpeaker = (chunk: TranscriptChunk, idx: number) => {
+    if (chunk.speaker) {
+      return chunk.speaker.toLowerCase() === 'user' ? 'user' : 'ai';
+    }
+    return idx % 2 === 1 ? 'ai' : 'user';
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
+      <StyledDialogTitle>
         Transcript
         <IconButton
           onClick={onClose}
@@ -26,7 +92,7 @@ export default function TranscriptChunksModal({
         >
           <CloseIcon />
         </IconButton>
-      </DialogTitle>
+      </StyledDialogTitle>
       <DialogContent dividers>
         {loading && <div>Loading...</div>}
         {error != null && (
@@ -34,13 +100,33 @@ export default function TranscriptChunksModal({
             Error loading transcript chunks for transcriptId: {transcriptId}
           </div>
         )}
-        {chunks.length > 0 ? (
-          <ul>
-            {chunks.map((chunk, idx) => (
-              <li key={idx}>{chunk.text}</li>
-            ))}
-          </ul>
-        ) : null}
+        {chunks.length > 0 && (
+          <ChatContainer>
+            {(chunks as TranscriptChunk[]).map((chunk, idx) => {
+              const speaker = getSpeaker(chunk, idx);
+              const isUser = speaker === 'user';
+              return (
+                <MessageRow key={idx} $isUser={isUser}>
+                  {!isUser && (
+                    <ChatAvatar
+                      $isUser={isUser}
+                      src="/avatars/AI-avatar.svg"
+                      alt="AI"
+                    />
+                  )}
+                  <MessageBubble $isUser={isUser}>{chunk.text}</MessageBubble>
+                  {isUser && (
+                    <ChatAvatar
+                      $isUser={isUser}
+                      src="/avatars/user-avatar.jpg"
+                      alt="User"
+                    />
+                  )}
+                </MessageRow>
+              );
+            })}
+          </ChatContainer>
+        )}
       </DialogContent>
     </Dialog>
   );

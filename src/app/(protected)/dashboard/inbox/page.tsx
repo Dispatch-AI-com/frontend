@@ -105,7 +105,7 @@ export default function InboxPage() {
       return 0;
     });
 
-  const pageSize = 6;
+  const pageSize = 5;
   const pagedCalllogs = filteredCalllogs.slice(0, pageSize);
 
   React.useEffect(() => {
