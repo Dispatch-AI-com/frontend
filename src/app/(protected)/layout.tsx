@@ -16,7 +16,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   }, []);
   useEffect(() => {
     if (ready && !token) {
-      router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+      router.replace(`/login`);
     }
   }, [ready, token, pathname, router]);
 

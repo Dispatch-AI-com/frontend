@@ -1,8 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
@@ -68,10 +68,7 @@ const ErrorMessage = styled.div`
 
 export default function SignupForm() {
   const router = useRouter();
-  const params = useSearchParams();
-  const redirectTo = params.get('redirect') ?? '/dashboard';
   const token = useAppSelector(s => s.auth.token);
-  const hasRedirected = useRef(false);
 
   const [signupUser, { isLoading, error }] = useSignupUserMutation();
   const { control, handleSubmit } = useForm<SignupFormData>({
@@ -81,11 +78,10 @@ export default function SignupForm() {
   });
 
   useEffect(() => {
-    if (token && !hasRedirected.current) {
-      hasRedirected.current = true;
-      router.replace(redirectTo);
+    if (token) {
+      router.replace('/dashboard');
     }
-  }, [token, redirectTo, router]);
+  }, [token, router]);
 
   const onSubmit = async (vals: SignupFormData) => {
     const payload = {
