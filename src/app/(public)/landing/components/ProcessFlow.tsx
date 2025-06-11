@@ -92,6 +92,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   backgroundColor: theme.palette.common.white,
   borderRadius: theme.shape.borderRadius * 3,
+  overflow: 'hidden',
   marginBottom: theme.spacing(2),
   display: 'flex',
   alignItems: 'center',

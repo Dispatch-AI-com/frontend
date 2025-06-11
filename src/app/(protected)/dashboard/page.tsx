@@ -1,10 +1,15 @@
-'use client';
+import { Box } from '@mui/material';
+
+import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 
 export default function DashboardPage() {
   return (
-    <div style={{ padding: 40 }}>
-      <h1>🔒 Dashboard Page</h1>
-      <p>only login can access this page</p>
-    </div>
+    <Box display="flex">
+      <Sidebar />
+      {/* Main content area can be added here */}
+      <Box flex={1} p={3}>
+        {/* Add your dashboard content here */}
+      </Box>
+    </Box>
   );
 }

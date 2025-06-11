@@ -1,7 +1,7 @@
 import { Box, Container } from '@mui/material';
 
-import FeaturesBanner from '@/app/(public)/features/components/FeaturesBanner';
-import FeaturesSection from '@/app/(public)/features/components/FeaturesSection';
+import FeaturesBanner from '@/app/(public)/(public)/features/components/FeaturesBanner';
+import FeaturesSection from '@/app/(public)/(public)/features/components/FeaturesSection';
 
 import Footer from '../main-layout/Footer';
 import Navbar from '../main-layout/Navbar';
