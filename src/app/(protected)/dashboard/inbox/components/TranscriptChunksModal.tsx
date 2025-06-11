@@ -61,6 +61,12 @@ const StyledDialogTitle = styled(DialogTitle)`
   }
 `;
 
+const StyledDialogContent = styled(DialogContent)`
+  && {
+    padding: 36px;
+  }
+`;
+
 // Main Component
 interface TranscriptChunksModalProps {
   open: boolean;
@@ -93,7 +99,7 @@ export default function TranscriptChunksModal({
           <CloseIcon />
         </IconButton>
       </StyledDialogTitle>
-      <DialogContent dividers>
+      <StyledDialogContent dividers>
         {loading && <div>Loading...</div>}
         {error != null && (
           <div>
@@ -127,7 +133,7 @@ export default function TranscriptChunksModal({
             })}
           </ChatContainer>
         )}
-      </DialogContent>
+      </StyledDialogContent>
     </Dialog>
   );
 }
