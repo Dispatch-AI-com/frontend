@@ -1,3 +1,4 @@
+import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import {
   FormControl,
@@ -30,6 +31,21 @@ const Title = styled.div`
   font-weight: 700;
   font-size: 22px;
   flex: 1;
+`;
+
+const FilterButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid #d5d5d5;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 16px;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
 `;
 
 export default function InboxSearchBar({
@@ -88,6 +104,9 @@ export default function InboxSearchBar({
           ),
         }}
       />
+      <FilterButton>
+        <FilterListIcon sx={{ color: '#060606', fontSize: 24 }} />
+      </FilterButton>
     </SearchBarContainer>
   );
 }

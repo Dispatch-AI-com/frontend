@@ -1,4 +1,6 @@
-import { Button, Typography } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { Button, IconButton, Typography } from '@mui/material';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -40,11 +42,79 @@ const ErrorText = styled(Typography)`
   margin-top: 16px;
 `;
 
-const ButtonRow = styled.div`
+const IconGroup = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin-top: 24px;
+  align-items: center;
+  gap: 6px;
 `;
+
+const OutlinedIconButton = styled(IconButton)`
+  border: 1.5px solid #d5d5d5 !important;
+  background: #fff !important;
+  border-radius: 12px !important;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SpeedButton = styled.div`
+  border: 1.5px solid #d5d5d5;
+  background: #fff;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #757575;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+`;
+
+const IconRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 128px;
+  margin-top: 48px;
+`;
+
+const Waveform = styled.div`
+  width: 400px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  margin: 0 0;
+`;
+
+function StaticWaveform() {
+  return (
+    <Waveform>
+      <svg width="400" height="40" viewBox="0 0 400 40">
+        {Array.from({ length: 36 }).map((_, i) => {
+          const x = i * 11;
+          const heights = [8, 16, 24, 16, 8, 12, 20, 12];
+          const y = 20 - heights[i % heights.length] / 2;
+          return (
+            <rect
+              key={i}
+              x={x}
+              y={y}
+              width="6"
+              height={heights[i % heights.length]}
+              fill="#bdbdbd"
+              rx="2"
+            />
+          );
+        })}
+      </svg>
+    </Waveform>
+  );
+}
 
 interface TranscriptSectionProps {
   calllogId: string;
@@ -82,7 +152,17 @@ export default function TranscriptSection({
           <SummaryBody>{transcript.summary}</SummaryBody>
         </>
       )}
-      <ButtonRow>
+      <IconRow>
+        <IconGroup>
+          <OutlinedIconButton>
+            <VolumeUpIcon sx={{ fontSize: 22, color: '#757575' }} />
+          </OutlinedIconButton>
+          <StaticWaveform />
+          <SpeedButton>2.5X</SpeedButton>
+          <OutlinedIconButton>
+            <DownloadIcon sx={{ fontSize: 22, color: '#757575' }} />
+          </OutlinedIconButton>
+        </IconGroup>
         <Button
           variant="outlined"
           sx={{
@@ -106,7 +186,7 @@ export default function TranscriptSection({
         >
           View Transcript
         </Button>
-      </ButtonRow>
+      </IconRow>
       <TranscriptChunksModal
         open={openChunksModal}
         onClose={() => {
