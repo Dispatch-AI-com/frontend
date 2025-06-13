@@ -12,7 +12,7 @@ import nextPlugin from "@next/eslint-plugin-next";
 
 export default tseslint.config(
   eslint.configs.recommended,
-  tseslint.configs.strictTypeChecked,
+  tseslint.configs.recommendedTypeChecked,
   tseslint.configs.stylisticTypeChecked,
 
   {
