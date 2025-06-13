@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import InboxListItem from '@/app/(protected)/dashboard/inbox/components/InboxListItem';
-import type { ICallLog } from '@/app/(protected)/dashboard/inbox/types';
+import InboxListItem from '@/app/(protected)/inbox/components/InboxListItem';
+import type { ICallLog } from '@/types/calllog.d';
 
 const ListContainer = styled.div`
   display: flex;

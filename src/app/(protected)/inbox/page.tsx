@@ -1,15 +1,15 @@
 'use client';
 
-import { useTheme } from '@mui/material/styles';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import InboxDetail from '@/app/(protected)/dashboard/inbox/components/InboxDetail';
-import InboxList from '@/app/(protected)/dashboard/inbox/components/InboxList';
-import InboxSearchBar from '@/app/(protected)/dashboard/inbox/components/InboxSearchBar';
-import useCallLogs from '@/app/(protected)/dashboard/inbox/hooks/useCallLogs';
+import InboxDetail from '@/app/(protected)/inbox/components/InboxDetail';
+import InboxList from '@/app/(protected)/inbox/components/InboxList';
+import InboxSearchBar from '@/app/(protected)/inbox/components/InboxSearchBar';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
+import useCallLogs from '@/hooks/useCallLog';
 import { useAppSelector } from '@/redux/hooks';
+import type { ICallLog } from '@/types/calllog.d';
 
 const PageContainer = styled.div`
   display: flex;
@@ -79,11 +79,17 @@ export default function InboxPage() {
   const [sort, setSort] = useState('newest');
 
   const user = useAppSelector(state => state.auth.user);
-  const { data: calllogs, loading, error } = useCallLogs();
+  const { data: calllogs = [], error } = useCallLogs();
 
-  // 筛选和排序逻辑
+  const errorMsg =
+    typeof error === 'string'
+      ? error
+      : error instanceof Error
+        ? error.message
+        : undefined;
+
   const filteredCalllogs = calllogs
-    .filter(item => {
+    .filter((item: ICallLog) => {
       // tag filter
       if (tag === 'all') return true;
       if (tag === 'missed') return item.status === 'Missed';
@@ -91,7 +97,7 @@ export default function InboxPage() {
       if (tag === 'followup') return item.status === 'Follow-up';
       return true;
     })
-    .filter(item => {
+    .filter((item: ICallLog) => {
       // search filter
       if (!search) return true;
       const keyword = search.toLowerCase();
@@ -101,7 +107,7 @@ export default function InboxPage() {
         item.summary?.toLowerCase(),
       ].some(field => field?.includes(keyword) ?? false);
     })
-    .sort((a, b) => {
+    .sort((a: ICallLog, b: ICallLog) => {
       // sort
       const dateA = new Date(a.createdAt ?? '').getTime();
       const dateB = new Date(b.createdAt ?? '').getTime();
@@ -119,10 +125,11 @@ export default function InboxPage() {
     }
   }, [filteredCalllogs, selectedId]);
 
-  const selectedItem = filteredCalllogs.find(item => item._id === selectedId);
+  const selectedItem = filteredCalllogs.find(
+    (item: ICallLog) => item._id === selectedId,
+  );
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
+  if (errorMsg) return <div>Error loading data: {errorMsg}</div>;
   if (!filteredCalllogs.length) {
     return (
       <PageContainer>

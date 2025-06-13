@@ -8,12 +8,8 @@ import {
 } from '@mui/material';
 import styled from 'styled-components';
 
-import useTranscriptChunks from '../hooks/useTranscriptTrunks';
-
-interface TranscriptChunk {
-  text: string;
-  speaker?: string;
-}
+import useTranscriptChunks from '@/hooks/useTranscriptChunk';
+import type { ITranscriptChunk } from '@/types/transcript-chunk.d';
 
 // Styled Components
 const ChatContainer = styled.div`
@@ -81,11 +77,8 @@ export default function TranscriptChunksModal({
 }: TranscriptChunksModalProps) {
   const { data: chunks, loading, error } = useTranscriptChunks(transcriptId);
 
-  const getSpeaker = (chunk: TranscriptChunk, idx: number) => {
-    if (chunk.speaker) {
-      return chunk.speaker.toLowerCase() === 'user' ? 'user' : 'ai';
-    }
-    return idx % 2 === 1 ? 'ai' : 'user';
+  const getSpeaker = (chunk: ITranscriptChunk) => {
+    return chunk.speakerType.toLowerCase() === 'user' ? 'user' : 'ai';
   };
 
   return (
@@ -106,33 +99,31 @@ export default function TranscriptChunksModal({
             Error loading transcript chunks for transcriptId: {transcriptId}
           </div>
         )}
-        {chunks.length > 0 && (
-          <ChatContainer>
-            {(chunks as TranscriptChunk[]).map((chunk, idx) => {
-              const speaker = getSpeaker(chunk, idx);
-              const isUser = speaker === 'user';
-              return (
-                <MessageRow key={idx} $isUser={isUser}>
-                  {!isUser && (
-                    <ChatAvatar
-                      $isUser={isUser}
-                      src="/avatars/AI-avatar.svg"
-                      alt="AI"
-                    />
-                  )}
-                  <MessageBubble $isUser={isUser}>{chunk.text}</MessageBubble>
-                  {isUser && (
-                    <ChatAvatar
-                      $isUser={isUser}
-                      src="/avatars/user-avatar.jpg"
-                      alt="User"
-                    />
-                  )}
-                </MessageRow>
-              );
-            })}
-          </ChatContainer>
-        )}
+        <ChatContainer>
+          {chunks.map((chunk, idx) => {
+            const speaker = getSpeaker(chunk);
+            const isUser = speaker === 'user';
+            return (
+              <MessageRow key={idx} $isUser={isUser}>
+                {!isUser && (
+                  <ChatAvatar
+                    $isUser={isUser}
+                    src="/avatars/AI-avatar.svg"
+                    alt="AI"
+                  />
+                )}
+                <MessageBubble $isUser={isUser}>{chunk.text}</MessageBubble>
+                {isUser && (
+                  <ChatAvatar
+                    $isUser={isUser}
+                    src="/avatars/user-avatar.jpg"
+                    alt="User"
+                  />
+                )}
+              </MessageRow>
+            );
+          })}
+        </ChatContainer>
       </StyledDialogContent>
     </Dialog>
   );

@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import Image from 'next/image';
 import styled from 'styled-components';
 
-import type { ICallLog } from '@/app/(protected)/dashboard/inbox/types';
+import type { ICallLog } from '@/types/calllog.d';
 
 import TranscriptSection from './TranscriptSection';
 

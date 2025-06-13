@@ -2,7 +2,7 @@ import { Box, Chip, Typography } from '@mui/material';
 import Image from 'next/image';
 import styled from 'styled-components';
 
-import type { ICallLog } from '@/app/(protected)/dashboard/inbox/types';
+import type { ICallLog } from '@/types/calllog.d';
 
 const ListItemContainer = styled(Box)<{ selected?: boolean }>`
   display: flex;

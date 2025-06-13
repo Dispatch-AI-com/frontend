@@ -2,7 +2,8 @@ import { Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import useTranscript from '../hooks/useTranscript';
+import useTranscript from '@/hooks/useTranscript';
+
 import TranscriptChunksModal from './TranscriptChunksModal';
 
 const SectionTitle = styled.div`

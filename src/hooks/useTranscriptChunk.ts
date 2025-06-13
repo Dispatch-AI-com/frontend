@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import { getTranscriptChunks } from '../api/transcript-chunks';
-import type { ITranscriptChunk } from '../types';
+import { getTranscriptChunks } from '@/features/callog/calllogApi';
+import { useAppDispatch } from '@/redux/hooks';
+import type { ITranscriptChunk } from '@/types/transcript-chunk.d';
 
-export default function useTranscriptTrunks(transcriptId?: string) {
+export default function useTranscriptChunks(transcriptId?: string) {
+  const dispatch = useAppDispatch();
   const [data, setData] = useState<ITranscriptChunk[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
@@ -11,13 +13,14 @@ export default function useTranscriptTrunks(transcriptId?: string) {
   useEffect(() => {
     if (!transcriptId) return;
     setLoading(true);
-    getTranscriptChunks(transcriptId)
+    dispatch(getTranscriptChunks(transcriptId))
+      .unwrap()
       .then(setData)
       .catch(setError)
       .finally(() => {
         setLoading(false);
       });
-  }, [transcriptId]);
+  }, [transcriptId, dispatch]);
 
   return { data, loading, error };
 }
