@@ -46,11 +46,27 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
+const AuthorContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  marginTop: theme.spacing(2),
+}));
+
+const AvatarImage = styled('img')(({ theme }) => ({
+  width: '20%',
+  height: 'auto',
+  paddingTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+}));
+
+const AuthorName = styled(Typography)({
+  fontWeight: 600,
+});
+
 const MetaInfo = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
-  marginBottom: theme.spacing(2),
-  // fontStyle: 'italic',
-
+  marginTop: theme.spacing(2),
   display: 'block',
   marginLeft: 'auto',
   width: 'fit-content',
@@ -67,18 +83,13 @@ export default function IntroSection({ blog }: IntroSectionProps) {
         <LeftContainer>
           <SectionTitle variant="h4">{blog.title}</SectionTitle>
           <HeaderContainer>
-            {blog.avatarUrl && (
-              <Box
-                component="img"
-                src={blog.avatarUrl}
-                alt={blog.title}
-                sx={{
-                  width: '13%',
-                  height: 'auto',
-                  marginBottom: theme => theme.spacing(3),
-                }}
-              />
-            )}
+            <AuthorContainer>
+              {blog.avatarUrl && (
+                <AvatarImage src={blog.avatarUrl} alt={blog.title} />
+              )}
+              <AuthorName>{blog.author}</AuthorName>
+            </AuthorContainer>
+
             <MetaInfo variant="caption">
               {new Date(blog.date).toLocaleDateString()}
             </MetaInfo>
