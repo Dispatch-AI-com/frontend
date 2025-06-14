@@ -27,6 +27,7 @@
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
     "styled-components": "^6.1.17",
+    "use-debounce": "^10.0.5",
     "zod": "^3.25.17"
   },
   "devDependencies": {
