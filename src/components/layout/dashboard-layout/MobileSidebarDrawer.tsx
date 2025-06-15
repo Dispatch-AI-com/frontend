@@ -81,16 +81,7 @@ export default function MobileSidebarDrawer({
         </LogoBox>
         {/* Navigation items */}
         <Box flex={1}>
-          <DesktopSidebarNav
-            navItems={navItems}
-            activeIndex={activeIndex}
-            onNavItemClick={index => {
-              if (index >= 0 && index < navItems.length) {
-                setActiveIndex(index);
-                onClose();
-              }
-            }}
-          />
+          <DesktopSidebarNav navItems={navItems} />
         </Box>
         {/* Profile at the bottom */}
         <UserProfileMenu
