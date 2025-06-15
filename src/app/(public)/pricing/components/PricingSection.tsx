@@ -26,7 +26,6 @@ function parseRRule(rrule: string): string {
   return '';
 }
 
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 function getPrice(pricing: { rrule: string; price: number }[]): {
   priceDisplay: string;
   periodDisplay: string;
@@ -43,7 +42,6 @@ function getPrice(pricing: { rrule: string; price: number }[]): {
     periodDisplay: ` /${parseRRule(matched.rrule)}`,
   };
 }
-/* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
 const PricingContainer = styled('section')(({ theme }) => ({
   padding: '128px 0 68px 0',

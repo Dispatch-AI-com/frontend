@@ -1,5 +1,6 @@
 'use client';
 
+import { useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,7 +9,6 @@ import InboxList from '@/app/(protected)/inbox/components/InboxList';
 import InboxSearchBar from '@/app/(protected)/inbox/components/InboxSearchBar';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import useCallLogs from '@/hooks/useCallLog';
-import { useAppSelector } from '@/redux/hooks';
 import type { ICallLog } from '@/types/calllog.d';
 
 const PageContainer = styled.div`
@@ -26,12 +26,6 @@ const MainContent = styled.div`
   background-color: #f8faf7;
 `;
 
-const UserInfoBox = styled.div`
-  padding: 16px;
-  background-color: #e8f5e9;
-  border-radius: 8px;
-`;
-
 const ContentContainer = styled.div`
   flex: 1;
   display: flex;
@@ -41,12 +35,51 @@ const ListContainer = styled.div`
   width: 350px;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  @media (max-width: 600px) {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+  }
+`;
+
+const ListContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+`;
+
+const LoadingSpinner = styled.div`
+  padding: 20px;
+  text-align: center;
+  color: #666;
 `;
 
 const DetailContainer = styled.div`
   flex: 1;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  @media (max-width: 600px) {
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const EmptyStateContainer = styled.div`
@@ -72,14 +105,21 @@ const EmptyStateText = styled.div`
   font-weight: 500;
 `;
 
+type TagOption = 'all' | 'Missed' | 'Completed' | 'Follow-up';
+type SortOption = 'newest' | 'oldest';
+
 export default function InboxPage() {
   const [selectedId, setSelectedId] = useState<string | undefined>();
-  const [search, setSearch] = useState('');
-  const [tag, setTag] = useState('all');
-  const [sort, setSort] = useState('newest');
+  const [showDetailMobile, setShowDetailMobile] = useState(false);
+  const [tag, setTag] = useState<TagOption>('all');
+  const [sort, setSort] = useState<SortOption>('newest');
 
-  const user = useAppSelector(state => state.auth.user);
-  const { data: calllogs = [], error } = useCallLogs();
+  const isMobile = useMediaQuery('(max-width:600px)');
+
+  const { data, error, isFetchingNextPage, isPending } = useCallLogs({
+    status: tag !== 'all' ? tag : undefined,
+    sort,
+  });
 
   const errorMsg =
     typeof error === 'string'
@@ -88,65 +128,46 @@ export default function InboxPage() {
         ? error.message
         : undefined;
 
-  const filteredCalllogs = calllogs
-    .filter((item: ICallLog) => {
-      // tag filter
-      if (tag === 'all') return true;
-      if (tag === 'missed') return item.status === 'Missed';
-      if (tag === 'completed') return item.status === 'Completed';
-      if (tag === 'followup') return item.status === 'Follow-up';
-      return true;
-    })
-    .filter((item: ICallLog) => {
-      // search filter
-      if (!search) return true;
-      const keyword = search.toLowerCase();
-      return [
-        item.callerName?.toLowerCase(),
-        item.callerNumber,
-        item.summary?.toLowerCase(),
-      ].some(field => field?.includes(keyword) ?? false);
-    })
-    .sort((a: ICallLog, b: ICallLog) => {
-      // sort
-      const dateA = new Date(a.createdAt ?? '').getTime();
-      const dateB = new Date(b.createdAt ?? '').getTime();
-      if (sort === 'newest') return dateB - dateA;
-      if (sort === 'oldest') return dateA - dateB;
-      return 0;
-    });
-
-  const pageSize = 5;
-  const pagedCalllogs = filteredCalllogs.slice(0, pageSize);
+  const allCallLogs = React.useMemo(
+    () => data?.pages.flatMap(page => page.data) ?? [],
+    [data],
+  );
 
   React.useEffect(() => {
-    if (filteredCalllogs.length && !selectedId) {
-      setSelectedId(filteredCalllogs[0]._id);
+    if (allCallLogs.length && !selectedId) {
+      setSelectedId(allCallLogs[0]._id);
     }
-  }, [filteredCalllogs, selectedId]);
+  }, [allCallLogs, selectedId]);
 
-  const selectedItem = filteredCalllogs.find(
+  const selectedItem = allCallLogs.find(
     (item: ICallLog) => item._id === selectedId,
   );
 
+  const handleSelect = (id: string) => {
+    setSelectedId(id);
+    if (isMobile) setShowDetailMobile(true);
+  };
+  const handleBack = () => {
+    setShowDetailMobile(false);
+  };
+
   if (errorMsg) return <div>Error loading data: {errorMsg}</div>;
-  if (!filteredCalllogs.length) {
+  if (isPending) {
     return (
       <PageContainer>
         <Sidebar />
         <MainContent>
-          <UserInfoBox>
-            {user ? (
-              <>
-                <strong>User:</strong> {user._id} ({user.email})
-              </>
-            ) : (
-              <span>No user info</span>
-            )}
-          </UserInfoBox>
+          <LoadingSpinner>Loading...</LoadingSpinner>
+        </MainContent>
+      </PageContainer>
+    );
+  }
+  if (!allCallLogs.length) {
+    return (
+      <PageContainer>
+        <Sidebar />
+        <MainContent>
           <InboxSearchBar
-            search={search}
-            onSearchChange={setSearch}
             tag={tag}
             onTagChange={setTag}
             sort={sort}
@@ -170,34 +191,67 @@ export default function InboxPage() {
     <PageContainer>
       <Sidebar />
       <MainContent>
-        <UserInfoBox>
-          {user ? (
-            <>
-              <strong>User:</strong> {user._id} ({user.email})
-            </>
-          ) : (
-            <span>No user info</span>
-          )}
-        </UserInfoBox>
         <InboxSearchBar
-          search={search}
-          onSearchChange={setSearch}
           tag={tag}
           onTagChange={setTag}
           sort={sort}
           onSortChange={setSort}
         />
         <ContentContainer>
-          <ListContainer>
-            <InboxList
-              selectedId={selectedId}
-              onSelect={setSelectedId}
-              data={pagedCalllogs}
-            />
-          </ListContainer>
-          <DetailContainer>
-            <InboxDetail item={selectedItem} />
-          </DetailContainer>
+          {!isMobile ? (
+            <>
+              <ListContainer>
+                <ListContent>
+                  <InboxList
+                    selectedId={selectedId}
+                    onSelect={handleSelect}
+                    data={allCallLogs}
+                    isLoading={isPending}
+                  />
+                  {isFetchingNextPage && (
+                    <LoadingSpinner>Loading more...</LoadingSpinner>
+                  )}
+                </ListContent>
+              </ListContainer>
+              <DetailContainer>
+                <InboxDetail item={selectedItem} />
+              </DetailContainer>
+            </>
+          ) : showDetailMobile ? (
+            <DetailContainer>
+              <div style={{ padding: '16px 0 0 16px' }}>
+                <button
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#1976d2',
+                    fontSize: 16,
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    marginBottom: 16,
+                  }}
+                  onClick={handleBack}
+                >
+                  ← Back
+                </button>
+              </div>
+              <InboxDetail item={selectedItem} />
+            </DetailContainer>
+          ) : (
+            <ListContainer style={{ width: '100%' }}>
+              <ListContent>
+                <InboxList
+                  selectedId={selectedId}
+                  onSelect={handleSelect}
+                  data={allCallLogs}
+                  isLoading={isPending}
+                />
+                {isFetchingNextPage && (
+                  <LoadingSpinner>Loading more...</LoadingSpinner>
+                )}
+              </ListContent>
+            </ListContainer>
+          )}
         </ContentContainer>
       </MainContent>
     </PageContainer>

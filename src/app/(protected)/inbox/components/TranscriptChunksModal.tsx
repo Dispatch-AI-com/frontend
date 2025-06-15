@@ -60,6 +60,8 @@ const StyledDialogTitle = styled(DialogTitle)`
 const StyledDialogContent = styled(DialogContent)`
   && {
     padding: 36px;
+    max-height: 60vh;
+    overflow-y: auto;
   }
 `;
 

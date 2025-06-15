@@ -1,46 +1,80 @@
-import { useEffect, useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
-import { getCallLogs } from '@/features/callog/calllogApi';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import type { RootState } from '@/redux/store';
+import { useAppSelector } from '@/redux/hooks';
 import type { ICallLog } from '@/types/calllog.d';
 
-export default function useCallLogs(params?: Record<string, string>) {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state: RootState) => state.auth.user);
-  const [data, setData] = useState<ICallLog[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<unknown>(null);
+type SortOption = 'newest' | 'oldest';
+type TagOption = 'all' | 'Missed' | 'Completed' | 'Follow-up';
 
-  useEffect(() => {
-    if (!user?._id) return;
-    setLoading(true);
-    dispatch(getCallLogs({ userId: user._id, params }))
-      .unwrap()
-      .then(res => {
-        if (Array.isArray(res)) {
-          setData(res);
-          return;
-        }
-        if (
-          typeof res === 'object' &&
-          'data' in res &&
-          Array.isArray((res as { data?: unknown }).data)
-        ) {
-          setData((res as { data: ICallLog[] }).data);
-          return;
-        }
-        setData([]);
-      })
-      .catch((err: unknown) => {
-        setError(err);
-        setData([]);
-      })
-      .finally(() => {
-        setLoading(false);
+interface UseCallLogsOptions {
+  search?: string;
+  status?: TagOption;
+  sort?: SortOption;
+}
+
+interface CallLogResponse {
+  data: ICallLog[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+}
+
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+export default function useCallLogs(options: UseCallLogsOptions = {}) {
+  const user = useAppSelector(state => state.auth.user);
+  const { search, status, sort = 'newest' } = options;
+
+  const fetchCallLogs = useCallback(
+    async ({ pageParam }: { pageParam: unknown }) => {
+      if (!user?._id) {
+        return {
+          data: [],
+          pagination: {
+            page: 1,
+            limit: 10,
+            total: 0,
+            totalPages: 0,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        };
+      }
+      const page = typeof pageParam === 'number' ? pageParam : 1;
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '10',
+        sort,
+        ...(search && { search: search.trim() }),
+        ...(status && status !== 'all' && { status }),
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?._id, JSON.stringify(params)]);
 
-  return { data, loading, error };
+      const response = await fetch(
+        `${API_URL}/users/${user._id}/calllogs?${params.toString()}`,
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch call logs');
+      }
+      return response.json() as Promise<CallLogResponse>;
+    },
+    [user?._id, search, status, sort],
+  );
+
+  return useInfiniteQuery<CallLogResponse, Error>({
+    queryKey: ['callLogs', user?._id, search, status, sort],
+    queryFn: fetchCallLogs,
+    getNextPageParam: lastPage => {
+      if (!lastPage) return undefined;
+      const { pagination } = lastPage;
+      return pagination.hasNextPage ? pagination.page + 1 : undefined;
+    },
+    initialPageParam: 1,
+    enabled: !!user?._id,
+  });
 }

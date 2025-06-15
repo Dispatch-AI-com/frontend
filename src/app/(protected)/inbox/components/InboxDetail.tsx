@@ -42,8 +42,12 @@ const UserInfo = styled.div`
 `;
 
 const UserName = styled(Typography)`
-  font-weight: 700;
-  font-size: 14px;
+  && {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #222;
+  }
 `;
 
 const UserPhone = styled(Typography)`
@@ -83,11 +87,27 @@ const StatusChip = styled(Chip)<{ status: string }>`
       : status === 'Completed'
         ? '#e7f8dc'
         : '#fff0e6'} !important;
-  color: #000 !important;
+  color: #060606 !important;
   font-weight: 500;
   .MuiChip-label {
-    color: #000 !important;
+    color: #060606 !important;
     padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 6px;
+      background-color: ${({ status }) =>
+        status === 'Missed'
+          ? '#c62828'
+          : status === 'Completed'
+            ? '#2e7d32'
+            : '#f57c00'};
+    }
   }
 `;
 
@@ -156,6 +176,14 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
     }
   }
 
+  function formatPhoneNumber(phone?: string) {
+    if (!phone) return '';
+    if (phone.startsWith('+61')) {
+      return '+61 ' + phone.slice(3);
+    }
+    return phone;
+  }
+
   return (
     <DetailContainer>
       <AvatarSection>
@@ -169,7 +197,7 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
         </AvatarImg>
         <UserInfo>
           <UserName>{item.callerName}</UserName>
-          <UserPhone>{item.callerNumber}</UserPhone>
+          <UserPhone>{formatPhoneNumber(item.callerNumber)}</UserPhone>
         </UserInfo>
       </AvatarSection>
       <Divider />
