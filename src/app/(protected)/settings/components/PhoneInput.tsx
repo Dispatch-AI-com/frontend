@@ -1,7 +1,7 @@
 import { InputAdornment, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import SelectField from '@/app/dashboard/settings/components/SelectField';
+import SelectField from '@/app/(protected)/settings/components/SelectField';
 
 interface Country {
   name: { common: string };

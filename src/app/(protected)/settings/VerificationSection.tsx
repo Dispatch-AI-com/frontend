@@ -2,10 +2,10 @@
 
 import { Box, Typography } from '@mui/material';
 
-import EditableSection from '@/app/dashboard/settings/components/EditableSection';
-import LabeledTextField from '@/app/dashboard/settings/components/LabeledTextField';
-import PhoneInput from '@/app/dashboard/settings/components/PhoneInput';
-import SelectField from '@/app/dashboard/settings/components/SelectField';
+import EditableSection from '@/app/(protected)/settings/components/EditableSection';
+import LabeledTextField from '@/app/(protected)/settings/components/LabeledTextField';
+import PhoneInput from '@/app/(protected)/settings/components/PhoneInput';
+import SelectField from '@/app/(protected)/settings/components/SelectField';
 
 const VERIFICATION_OPTIONS = [
   { label: 'Email', value: 'Email' },

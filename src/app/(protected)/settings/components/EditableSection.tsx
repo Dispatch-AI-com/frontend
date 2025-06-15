@@ -3,11 +3,11 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import EditModal from '@/app/dashboard/settings/components/EditModal';
-import LabeledTextField from '@/app/dashboard/settings/components/LabeledTextField';
-import LabelValue from '@/app/dashboard/settings/components/LabelValue';
-import SectionDivider from '@/app/dashboard/settings/components/SectionDivider';
-import SectionHeader from '@/app/dashboard/settings/components/SectionHeader';
+import EditModal from '@/app/(protected)/settings/components/EditModal';
+import LabeledTextField from '@/app/(protected)/settings/components/LabeledTextField';
+import LabelValue from '@/app/(protected)/settings/components/LabelValue';
+import SectionDivider from '@/app/(protected)/settings/components/SectionDivider';
+import SectionHeader from '@/app/(protected)/settings/components/SectionHeader';
 import theme from '@/theme';
 
 const InfoRow = styled(Box)({

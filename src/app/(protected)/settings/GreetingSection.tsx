@@ -1,7 +1,7 @@
 'use client';
 import { Box, Chip, TextField, Typography } from '@mui/material';
 
-import SectionHeader from '@/app/dashboard/settings/components/SectionHeader';
+import SectionHeader from '@/app/(protected)/settings/components/SectionHeader';
 
 const greeting = {
   message:

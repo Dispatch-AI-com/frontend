@@ -29,6 +29,7 @@ const EditModal: React.FC<EditModalProps> = ({
     onClose={onClose}
     maxWidth="xs"
     fullWidth
+    disableScrollLock
     PaperProps={{ sx: { pb: 1, pt: 1, pl: 2, pr: 2 } }}
   >
     <DialogTitle>
