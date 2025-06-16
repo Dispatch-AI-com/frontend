@@ -2,7 +2,7 @@ pipeline {
     agent {
         kubernetes {
             cloud 'EKS-Agent-UAT-lawrence'
-yaml """
+            yaml """
 apiVersion: v1
 kind: Pod
 spec:
@@ -33,6 +33,7 @@ spec:
     }
 
     environment {
+        
         AWS_ACCOUNT_ID = "893774231297"
         AWS_REGION = 'ap-southeast-2'
         ECR_REPO = 'dispatchai-frontend'
@@ -41,7 +42,7 @@ spec:
         BACKEND_URL = "https://backend.uat.getdispatch.ai/api"
         BRANCH_NAME = 'main'
         IMAGE_TAG = "${env.BUILD_ID}"
-        ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        ECR_REGISTRY = "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
     }
 
     stages {
@@ -55,7 +56,7 @@ spec:
                 }
                 dir('helm') {
                     container('dispatchai-jenkins-agent') {
-                        git branch: "${BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+                        git branch: "${env.BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
                     }
                 }
             }
@@ -70,7 +71,7 @@ spec:
                         sh "pnpm run type-check"
                         sh "pnpm run lint"
                         sh "pnpm test"
-                        sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
+                        sh "NEXT_PUBLIC_API_BASE_URL=${env.BACKEND_URL} pnpm build"
                     }
                 }
             }
@@ -81,14 +82,14 @@ spec:
                 dir('frontend') {
                     container('dispatchai-jenkins-agent') {
                         // Use BuildKit to build docker image and push to ECR
-                        sh '''
+                        sh """
                             docker-credential-ecr-login list
-                            buildctl --addr=tcp://localhost:1234 build \
-                              --frontend=dockerfile.v0 \
-                              --local context=. \
-                              --local dockerfile=. \
-                              --output type=image,name=${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG},push=true
-                        '''
+                            buildctl --addr=tcp://localhost:1234 build \\
+                              --frontend=dockerfile.v0 \\
+                              --local context=. \\
+                              --local dockerfile=. \\
+                              --output type=image,name=${env.ECR_REGISTRY}/${env.ECR_REPO}:${env.IMAGE_TAG},push=true
+                        """
                     }
                 }
             }
@@ -98,7 +99,7 @@ spec:
             steps {
                 dir('helm') {
                     container('dispatchai-jenkins-agent') {
-                        sh "bash deploy-frontend.sh ${IMAGE_TAG}"
+                        sh "bash deploy-frontend.sh ${env.IMAGE_TAG}"
                     }
                 }
             }
@@ -107,7 +108,7 @@ spec:
 
     post {
         success {
-            echo "✅ Docker image pushed: ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
+            echo "✅ Docker image pushed: ${env.ECR_REGISTRY}/${env.ECR_REPO}:${env.IMAGE_TAG}"
         }
         failure {
             echo '❌ Pipeline failed.'
