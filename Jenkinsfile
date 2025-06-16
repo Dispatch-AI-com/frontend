@@ -1,7 +1,6 @@
+// getEnvironmentConfig function to set environment variables
 def getEnvironmentConfig(branchName, tagName) {
-    echo "Function called with branchName='${branchName}', tagName='${tagName}'"
     def config = [:]
-    
     if (branchName == 'main' || (branchName != null && branchName.startsWith('DEVOPS-'))) {
         echo "Matched UAT condition"
         config.environment = "uat"
@@ -12,10 +11,10 @@ def getEnvironmentConfig(branchName, tagName) {
             config.environment = "prod"
             config.awsAccountId = "123456789012"
         } else {
-            error("Production builds require a tag.")
+            error("Production builds require a tag!")
         }
     } else {
-        echo "No condition matched, will error"
+        echo "No condition matched, will erro!!!"
         error("Branch '${branchName ?: 'unknown'}' is not allowed to run this pipeline.")
     }
     
@@ -27,7 +26,7 @@ def getEnvironmentConfig(branchName, tagName) {
     return config
 }
 
-// 全局变量来存储配置
+// globalEnv to store environment variables
 def globalEnv = [:]
 
 pipeline {
