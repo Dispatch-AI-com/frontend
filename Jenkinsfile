@@ -66,6 +66,7 @@ spec:
                     }
                     echo "ENVIRONMENT: ${env.ENVIRONMENT}"
                     echo "AWS_ACCOUNT_ID: ${env.AWS_ACCOUNT_ID}"
+                    echo "BACKEND_URL: ${env.BACKEND_URL}"
                     echo "EKS_CLUSTER_NAME: ${env.EKS_CLUSTER_NAME}"
                     echo "ECR_REGISTRY: ${env.ECR_REGISTRY}"
                 }
