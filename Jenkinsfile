@@ -27,6 +27,9 @@ def getEnvironmentConfig(branchName, tagName) {
     return config
 }
 
+// 全局变量来存储配置
+def globalConfig = [:]
+
 pipeline {
     agent {
         kubernetes {
@@ -61,14 +64,9 @@ spec:
         }
     }
     environment {
-        ENVIRONMENT = ""
-        AWS_ACCOUNT_ID = ""
         AWS_REGION = "ap-southeast-2"
         ECR_REPO = "dispatchai-frontend"
         K8S_VERSION = "v1.32.3"
-        EKS_CLUSTER_NAME = ""
-        ECR_REGISTRY = ""
-        BACKEND_URL = ""
         IMAGE_TAG = "${env.BUILD_ID}"
     }
     stages {
@@ -79,24 +77,11 @@ spec:
                     echo "🐛 DEBUG: BRANCH_NAME = '${env.BRANCH_NAME}'"
                     echo "🐛 DEBUG: TAG_NAME = '${env.TAG_NAME}'"
                     
-                    // 调用外部函数获取配置
-                    def config = getEnvironmentConfig(env.BRANCH_NAME, env.TAG_NAME)
+                    // 调用外部函数获取配置并存储到全局变量
+                    globalConfig = getEnvironmentConfig(env.BRANCH_NAME, env.TAG_NAME)
                     
-                    echo "🐛 DEBUG: Function returned, setting environment variables"
-                    
-                    // 设置环境变量
-                    env.ENVIRONMENT = config.environment
-                    env.AWS_ACCOUNT_ID = config.awsAccountId
-                    env.BACKEND_URL = config.backendUrl
-                    env.EKS_CLUSTER_NAME = config.eksClusterName
-                    env.ECR_REGISTRY = config.ecrRegistry
-                    
-                    echo "🐛 DEBUG: Environment variables set"
-                    echo "ENVIRONMENT: ${env.ENVIRONMENT}"
-                    echo "AWS_ACCOUNT_ID: ${env.AWS_ACCOUNT_ID}"
-                    echo "BACKEND_URL: ${env.BACKEND_URL}"
-                    echo "EKS_CLUSTER_NAME: ${env.EKS_CLUSTER_NAME}"
-                    echo "ECR_REGISTRY: ${env.ECR_REGISTRY}"
+                    echo "🐛 DEBUG: Function returned, config stored in global variable"
+                    echo "🐛 DEBUG: Global config: ${globalConfig}"
                 }
             }
         }
@@ -104,11 +89,13 @@ spec:
         stage('test') {
             steps {
                 container('dispatchai-jenkins-agent') {
-                    echo "ENVIRONMENT: ${env.ENVIRONMENT}"
-                    echo "AWS_ACCOUNT_ID: ${env.AWS_ACCOUNT_ID}"
-                    echo "BACKEND_URL: ${env.BACKEND_URL}"
-                    echo "EKS_CLUSTER_NAME: ${env.EKS_CLUSTER_NAME}"
-                    echo "ECR_REGISTRY: ${env.ECR_REGISTRY}"
+                    script {
+                        echo "ENVIRONMENT: ${globalConfig.environment}"
+                        echo "AWS_ACCOUNT_ID: ${globalConfig.awsAccountId}"
+                        echo "BACKEND_URL: ${globalConfig.backendUrl}"
+                        echo "EKS_CLUSTER_NAME: ${globalConfig.eksClusterName}"
+                        echo "ECR_REGISTRY: ${globalConfig.ecrRegistry}"
+                    }
                 }
             }
         }
@@ -116,11 +103,35 @@ spec:
         stage('testtest') {
             steps {
                 container('node') {
-                    echo "ENVIRONMENT: ${env.ENVIRONMENT}"
-                    echo "AWS_ACCOUNT_ID: ${env.AWS_ACCOUNT_ID}"
-                    echo "BACKEND_URL: ${env.BACKEND_URL}"
-                    echo "EKS_CLUSTER_NAME: ${env.EKS_CLUSTER_NAME}"
-                    echo "ECR_REGISTRY: ${env.ECR_REGISTRY}"
+                    script {
+                        echo "ENVIRONMENT: ${globalConfig.environment}"
+                        echo "AWS_ACCOUNT_ID: ${globalConfig.awsAccountId}"
+                        echo "BACKEND_URL: ${globalConfig.backendUrl}"
+                        echo "EKS_CLUSTER_NAME: ${globalConfig.eksClusterName}"
+                        echo "ECR_REGISTRY: ${globalConfig.ecrRegistry}"
+                        
+                        // 如果你需要在 shell 命令中使用这些值，可以这样做：
+                        sh """
+                            echo "Building with environment: ${globalConfig.environment}"
+                            echo "Using AWS Account: ${globalConfig.awsAccountId}"
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Build and Push') {
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    script {
+                        // 在需要的地方使用配置
+                        sh """
+                            echo "Building Docker image..."
+                            echo "ECR Registry: ${globalConfig.ecrRegistry}"
+                            echo "Environment: ${globalConfig.environment}"
+                            # 这里可以添加你的构建和推送逻辑
+                        """
+                    }
                 }
             }
         }
@@ -128,7 +139,9 @@ spec:
 
     post {
         success {
-            echo "✅ Docker image pushed: ${env.ECR_REGISTRY}/${env.ECR_REPO}:${env.IMAGE_TAG}"
+            script {
+                echo "✅ Docker image pushed: ${globalConfig.ecrRegistry}/${env.ECR_REPO}:${env.IMAGE_TAG}"
+            }
         }
         failure {
             echo '❌ Pipeline failed.'
