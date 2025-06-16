@@ -1,10 +1,13 @@
 def getEnvironmentConfig(branchName, tagName) {
+    echo "🐛 DEBUG: Function called with branchName='${branchName}', tagName='${tagName}'"
     def config = [:]
     
-    if (branchName == 'main' || branchName.startsWith('DEVOPS-')) {
+    if (branchName == 'main' || (branchName != null && branchName.startsWith('DEVOPS-'))) {
+        echo "🐛 DEBUG: Matched UAT condition"
         config.environment = "uat"
         config.awsAccountId = "893774231297"
     } else if (branchName == 'prod') {
+        echo "🐛 DEBUG: Matched PROD condition"
         if (tagName != null && tagName.trim() != '') {
             config.environment = "prod"
             config.awsAccountId = "123456789012"
@@ -12,13 +15,15 @@ def getEnvironmentConfig(branchName, tagName) {
             error("Production builds require a tag.")
         }
     } else {
-        error("Branch ${branchName} is not allowed to run this pipeline.")
+        echo "🐛 DEBUG: No condition matched, will error"
+        error("Branch '${branchName ?: 'unknown'}' is not allowed to run this pipeline.")
     }
     
     config.backendUrl = "https://backend.${config.environment}.getdispatch.ai/api"
     config.eksClusterName = "DispatchAI-${config.environment.toUpperCase()}-EKS-Cluster"
     config.ecrRegistry = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com"
     
+    echo "🐛 DEBUG: Config created: ${config}"
     return config
 }
 
@@ -70,8 +75,14 @@ spec:
         stage('Set Environment') {
             steps {
                 script {
+                    echo "🐛 DEBUG: Starting environment setup"
+                    echo "🐛 DEBUG: BRANCH_NAME = '${env.BRANCH_NAME}'"
+                    echo "🐛 DEBUG: TAG_NAME = '${env.TAG_NAME}'"
+                    
                     // 调用外部函数获取配置
                     def config = getEnvironmentConfig(env.BRANCH_NAME, env.TAG_NAME)
+                    
+                    echo "🐛 DEBUG: Function returned, setting environment variables"
                     
                     // 设置环境变量
                     env.ENVIRONMENT = config.environment
@@ -80,6 +91,7 @@ spec:
                     env.EKS_CLUSTER_NAME = config.eksClusterName
                     env.ECR_REGISTRY = config.ecrRegistry
                     
+                    echo "🐛 DEBUG: Environment variables set"
                     echo "ENVIRONMENT: ${env.ENVIRONMENT}"
                     echo "AWS_ACCOUNT_ID: ${env.AWS_ACCOUNT_ID}"
                     echo "BACKEND_URL: ${env.BACKEND_URL}"
@@ -112,7 +124,6 @@ spec:
                 }
             }
         }
-
     }
 
     post {
