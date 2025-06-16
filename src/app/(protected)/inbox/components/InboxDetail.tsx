@@ -163,7 +163,7 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
     );
   }
 
-  // 日期格式: Apr 15, 2025 at 07:16 PM
+  // Date format: Apr 15, 2025 at 07:16 PM
   let formattedDate = '';
   if (item.createdAt) {
     try {
