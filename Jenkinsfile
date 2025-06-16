@@ -1,3 +1,53 @@
+def getEnvironmentConfig(branchName, tagName) {
+    def config = [:]
+    
+    if (branchName == 'main' || branchName.startsWith('DEVOPS-')) {
+        config.environment = "uat"
+        config.awsAccountId = "893774231297"
+    } else if (branchName == 'prod') {
+        if (tagName != null && tagName.trim() != '') {
+            config.environment = "prod"
+            config.awsAccountId = "123456789012"
+        } else {
+            error("Production builds require a tag.")
+        }
+    } else {
+        error("Branch ${branchName} is not allowed to run this pipeline.")
+    }
+    
+    config.backendUrl = "https://backend.${config.environment}.getdispatch.ai/api"
+    config.eksClusterName = "DispatchAI-${config.environment.toUpperCase()}-EKS-Cluster"
+    config.ecrRegistry = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com"
+    
+    return config
+}
+
+def getEnvironmentConfig(branchName, tagName) {
+    def config = [:]
+    
+    if (branchName == 'main' || (branchName != null && branchName.startsWith('DEVOPS-'))) {
+        config.environment = "uat"
+        config.awsAccountId = "893774231297"
+    } else if (branchName == 'prod' && tagName != null && tagName.trim() != '') {
+        // production env needs a tag!!!
+        config.environment = "prod"
+        config.awsAccountId = "123456789012"
+    } else {
+        def errorMsg = "Branch '${branchName ?: 'unknown'}' is not allowed to run this pipeline."
+        if (branchName == 'prod') {
+            errorMsg += " Production builds require a tag."
+        }
+        error(errorMsg)
+    }
+    
+    config.backendUrl = "https://backend.${config.environment}.getdispatch.ai/api"
+    config.eksClusterName = "DispatchAI-${config.environment.toUpperCase()}-EKS-Cluster"
+    config.ecrRegistry = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com"
+    
+    return config
+}
+
+
 pipeline {
     agent {
         kubernetes {
@@ -46,22 +96,16 @@ spec:
         stage('Set Environment') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'main' || env.BRANCH_NAME.startsWith('DEVOPS-')) {
-                        env.ENVIRONMENT = "uat"
-                        env.AWS_ACCOUNT_ID = "893774231297"
-                        env.BACKEND_URL = "https://backend.${env.ENVIRONMENT}.getdispatch.ai/api"
-                        env.EKS_CLUSTER_NAME = "DispatchAI-${env.ENVIRONMENT.toUpperCase()}-EKS-Cluster"
-                        env.ECR_REGISTRY = "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
-                    } else if (env.BRANCH_NAME == 'prod' && env.TAG_NAME) {
-                        // production env needs a tag!!!
-                        env.ENVIRONMENT = "prod"
-                        env.AWS_ACCOUNT_ID = "123456789012"
-                        env.BACKEND_URL = "https://backend.${env.ENVIRONMENT}.getdispatch.ai/api"
-                        env.EKS_CLUSTER_NAME = "DispatchAI-${env.ENVIRONMENT.toUpperCase()}-EKS-Cluster"
-                        env.ECR_REGISTRY = "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
-                    } else {
-                        error("Branch ${env.BRANCH_NAME} is not allowed to run this pipeline.")
-                    }
+                    // 调用外部函数获取配置
+                    def config = getEnvironmentConfig(env.BRANCH_NAME, env.TAG_NAME)
+                    
+                    // 设置环境变量
+                    env.ENVIRONMENT = config.environment
+                    env.AWS_ACCOUNT_ID = config.awsAccountId
+                    env.BACKEND_URL = config.backendUrl
+                    env.EKS_CLUSTER_NAME = config.eksClusterName
+                    env.ECR_REGISTRY = config.ecrRegistry
+                    
                     echo "ENVIRONMENT: ${env.ENVIRONMENT}"
                     echo "AWS_ACCOUNT_ID: ${env.AWS_ACCOUNT_ID}"
                     echo "BACKEND_URL: ${env.BACKEND_URL}"
@@ -94,6 +138,20 @@ spec:
                 }
             }
         }
+
+    }
+
+    post {
+        success {
+            echo "✅ Docker image pushed: ${env.ECR_REGISTRY}/${env.ECR_REPO}:${env.IMAGE_TAG}"
+        }
+        failure {
+            echo '❌ Pipeline failed.'
+        }
+    }
+}
+
+
     //     stage('checkout helm repo') {
     //         steps {
     //             cleanWs()
@@ -152,14 +210,3 @@ spec:
     //             }
     //         }
     //     }
-    }
-
-    post {
-        success {
-            echo "✅ Docker image pushed: ${env.ECR_REGISTRY}/${env.ECR_REPO}:${env.IMAGE_TAG}"
-        }
-        failure {
-            echo '❌ Pipeline failed.'
-        }
-    }
-}
