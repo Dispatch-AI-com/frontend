@@ -22,32 +22,6 @@ def getEnvironmentConfig(branchName, tagName) {
     return config
 }
 
-def getEnvironmentConfig(branchName, tagName) {
-    def config = [:]
-    
-    if (branchName == 'main' || (branchName != null && branchName.startsWith('DEVOPS-'))) {
-        config.environment = "uat"
-        config.awsAccountId = "893774231297"
-    } else if (branchName == 'prod' && tagName != null && tagName.trim() != '') {
-        // production env needs a tag!!!
-        config.environment = "prod"
-        config.awsAccountId = "123456789012"
-    } else {
-        def errorMsg = "Branch '${branchName ?: 'unknown'}' is not allowed to run this pipeline."
-        if (branchName == 'prod') {
-            errorMsg += " Production builds require a tag."
-        }
-        error(errorMsg)
-    }
-    
-    config.backendUrl = "https://backend.${config.environment}.getdispatch.ai/api"
-    config.eksClusterName = "DispatchAI-${config.environment.toUpperCase()}-EKS-Cluster"
-    config.ecrRegistry = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com"
-    
-    return config
-}
-
-
 pipeline {
     agent {
         kubernetes {
