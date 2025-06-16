@@ -1,48 +1,105 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            cloud 'EKS-Agent-UAT-lawrence'
+yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  serviceAccountName: jenkins-agent
+  containers:
+    - name: node
+      image: node:20-alpine
+      command: ['sleep']
+      args: ['99d']
+      tty: true
+    - name: dispatchai-jenkins-agent
+      image: 893774231297.dkr.ecr.ap-southeast-2.amazonaws.com/dispatchai-jenkins-agent:lawrence
+      imagePullPolicy: Always
+      command: ['sleep']
+      args: ['99d']
+      tty: true
+    - name: buildkitd
+      image: moby/buildkit:v0.12.4
+      command: ["buildkitd"]
+      args: ["--addr=tcp://0.0.0.0:1234"]
+      ports:
+        - containerPort: 1234
+          name: buildkit
+      securityContext:
+        privileged: true
+""".stripIndent()
+        }
+    }
 
     environment {
+        AWS_ACCOUNT_ID = "893774231297"
         AWS_REGION = 'ap-southeast-2'
         ECR_REPO = 'dispatchai-frontend'
+        K8S_VERSION = 'v1.32.3'
+        EKS_CLUSTER_NAME = 'DispatchAI-UAT-EKS-Cluster'
+        BACKEND_URL = "https://backend.uat.getdispatch.ai/api"
+        BRANCH_NAME = 'main'
         IMAGE_TAG = "${env.BUILD_ID}"
-        IMAGE_NAME = "${ECR_REPO}:${IMAGE_TAG}"
-        ECR_REGISTRY = "893774231297.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
     }
 
     stages {
-        stage('Checkout') {
+        stage('checkout repos') {
             steps {
-                script {    
-                    cleanWs()
-                    sh 'git clone https://github.com/Dispatch-AI-com/frontend.git .'
-                }     
-            }
-        }
-
-        stage('Get ECR Login') {
-            steps {
-                script {
-                    //ECR_REGISTRY = "893774231297.dkr.ecr.${AWS_REGION}.amazonaws.com"
-                    env.ECR_REGISTRY = ECR_REGISTRY
-
-                    sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
+                cleanWs()
+                dir('frontend') {
+                    container('node') {
+                        git branch: "DEVOPS-27", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/frontend.git'
+                    }
+                }
+                dir('helm') {
+                    container('dispatchai-jenkins-agent') {
+                        git branch: "${BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+                    }
                 }
             }
         }
 
-        stage('Build Docker Image') {
+        stage('build and test') {
             steps {
-                script {
-                    sh "docker build -t ${IMAGE_NAME} ."
-                    sh "docker tag ${IMAGE_NAME} ${ECR_REGISTRY}/${IMAGE_NAME}"
+                dir('frontend') {
+                    container('node') {
+                        sh "npm install -g pnpm"
+                        sh "pnpm install"
+                        sh "pnpm run type-check"
+                        sh "pnpm run lint"
+                        sh "pnpm test"
+                        sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
+                    }
                 }
             }
         }
 
-        stage('Push to ECR') {
+        stage('build image for frontend') {
             steps {
-                script {
-                    sh "docker push ${ECR_REGISTRY}/${IMAGE_NAME}"
+                dir('frontend') {
+                    container('dispatchai-jenkins-agent') {
+                        // Use BuildKit to build docker image and push to ECR
+                        sh '''
+                            docker-credential-ecr-login list
+                            buildctl --addr=tcp://localhost:1234 build \
+                              --frontend=dockerfile.v0 \
+                              --local context=. \
+                              --local dockerfile=. \
+                              --output type=image,name=${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG},push=true
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('cd') {
+            steps {
+                dir('helm') {
+                    container('dispatchai-jenkins-agent') {
+                        sh "bash deploy-frontend.sh ${IMAGE_TAG}"
+                    }
                 }
             }
         }
@@ -50,7 +107,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Docker image pushed: ${ECR_REGISTRY}/${IMAGE_NAME}"
+            echo "✅ Docker image pushed: ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
         }
         failure {
             echo '❌ Pipeline failed.'
