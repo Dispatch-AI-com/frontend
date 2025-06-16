@@ -4,9 +4,9 @@ import { useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import InboxDetail from '@/app/(protected)/inbox/components/InboxDetail';
-import InboxList from '@/app/(protected)/inbox/components/InboxList';
-import InboxSearchBar from '@/app/(protected)/inbox/components/InboxSearchBar';
+import InboxDetail from '@/app/admin/inbox/components/InboxDetail';
+import InboxList from '@/app/admin/inbox/components/InboxList';
+import InboxSearchBar from '@/app/admin/inbox/components/InboxSearchBar';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import useCallLogs from '@/hooks/useCallLog';
 import type { ICallLog } from '@/types/calllog.d';
@@ -190,14 +190,16 @@ export default function InboxPage() {
   return (
     <PageContainer>
       <Sidebar />
-      <MainContent>
+      <MainContent
+        style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
+      >
         <InboxSearchBar
           tag={tag}
           onTagChange={setTag}
           sort={sort}
           onSortChange={setSort}
         />
-        <ContentContainer>
+        <ContentContainer style={{ flex: 1, overflow: 'hidden' }}>
           {!isMobile ? (
             <>
               <ListContainer>
@@ -205,8 +207,8 @@ export default function InboxPage() {
                   <InboxList
                     selectedId={selectedId}
                     onSelect={handleSelect}
-                    data={allCallLogs}
-                    isLoading={isPending}
+                    tag={tag}
+                    sort={sort}
                   />
                   {isFetchingNextPage && (
                     <LoadingSpinner>Loading more...</LoadingSpinner>
@@ -214,7 +216,7 @@ export default function InboxPage() {
                 </ListContent>
               </ListContainer>
               <DetailContainer>
-                <InboxDetail item={selectedItem} />
+                {selectedItem && <InboxDetail item={selectedItem} />}
               </DetailContainer>
             </>
           ) : showDetailMobile ? (
@@ -235,7 +237,7 @@ export default function InboxPage() {
                   ← Back
                 </button>
               </div>
-              <InboxDetail item={selectedItem} />
+              {selectedItem && <InboxDetail item={selectedItem} />}
             </DetailContainer>
           ) : (
             <ListContainer style={{ width: '100%' }}>
@@ -243,8 +245,8 @@ export default function InboxPage() {
                 <InboxList
                   selectedId={selectedId}
                   onSelect={handleSelect}
-                  data={allCallLogs}
-                  isLoading={isPending}
+                  tag={tag}
+                  sort={sort}
                 />
                 {isFetchingNextPage && (
                   <LoadingSpinner>Loading more...</LoadingSpinner>

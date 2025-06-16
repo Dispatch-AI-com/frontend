@@ -48,8 +48,6 @@ export default function MobileSidebarDrawer({
   open,
   onClose,
   navItems,
-  activeIndex,
-  setActiveIndex,
   dropdownOptions,
   anchorEl,
   openMenu,
@@ -75,22 +73,13 @@ export default function MobileSidebarDrawer({
       <SidebarContainer>
         {/* Logo at the top */}
         <LogoBox>
-          <Link href="/dashboard">
+          <Link href="/admin/overview">
             <Image src="/logo.svg" alt="DispatchAI" width={126} height={28} />
           </Link>
         </LogoBox>
         {/* Navigation items */}
         <Box flex={1}>
-          <DesktopSidebarNav
-            navItems={navItems}
-            activeIndex={activeIndex}
-            onNavItemClick={index => {
-              if (index >= 0 && index < navItems.length) {
-                setActiveIndex(index);
-                onClose();
-              }
-            }}
-          />
+          <DesktopSidebarNav navItems={navItems} />
         </Box>
         {/* Profile at the bottom */}
         <UserProfileMenu

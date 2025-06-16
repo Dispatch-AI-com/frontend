@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useAppSelector } from '@/redux/hooks';
 import type { ICallLog } from '@/types/calllog.d';
@@ -26,6 +26,8 @@ interface CallLogResponse {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const CACHE_TIME = 5 * 60 * 1000; // 5 minutes
+const STALE_TIME = 60 * 1000; // 1 minute
 
 export default function useCallLogs(options: UseCallLogsOptions = {}) {
   const user = useAppSelector(state => state.auth.user);
@@ -66,7 +68,7 @@ export default function useCallLogs(options: UseCallLogsOptions = {}) {
     [user?._id, search, status, sort],
   );
 
-  return useInfiniteQuery<CallLogResponse, Error>({
+  const query = useInfiniteQuery<CallLogResponse, Error>({
     queryKey: ['callLogs', user?._id, search, status, sort],
     queryFn: fetchCallLogs,
     getNextPageParam: lastPage => {
@@ -76,5 +78,28 @@ export default function useCallLogs(options: UseCallLogsOptions = {}) {
     },
     initialPageParam: 1,
     enabled: !!user?._id,
+    staleTime: STALE_TIME,
+    gcTime: CACHE_TIME,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
+
+  // Prefetch next page when current page is loaded
+  useEffect(() => {
+    if (
+      query.data?.pages.length &&
+      query.hasNextPage &&
+      !query.isFetchingNextPage
+    ) {
+      void query.fetchNextPage();
+    }
+  }, [
+    query.data?.pages.length,
+    query.hasNextPage,
+    query.isFetchingNextPage,
+    query.fetchNextPage,
+    query,
+  ]);
+
+  return query;
 }
