@@ -1,4 +1,4 @@
-// app/(protected)/layout.tsx
+// app/admin/layout.tsx
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';

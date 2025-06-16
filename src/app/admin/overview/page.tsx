@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 
-export default function DashboardPage() {
+export default function OverviewPage() {
   return (
     <Box display="flex">
       <Sidebar />

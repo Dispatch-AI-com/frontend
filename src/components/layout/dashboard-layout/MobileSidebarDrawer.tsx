@@ -75,7 +75,7 @@ export default function MobileSidebarDrawer({
       <SidebarContainer>
         {/* Logo at the top */}
         <LogoBox>
-          <Link href="/dashboard">
+          <Link href="/admin/overview">
             <Image src="/logo.svg" alt="DispatchAI" width={126} height={28} />
           </Link>
         </LogoBox>
