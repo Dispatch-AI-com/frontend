@@ -11,7 +11,6 @@ import styled from 'styled-components';
 import useTranscriptChunks from '@/hooks/useTranscriptChunk';
 import type { ITranscriptChunk } from '@/types/transcript-chunk.d';
 
-// Styled Components
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
