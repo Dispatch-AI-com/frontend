@@ -56,7 +56,7 @@ pipeline {
         stage('Setup global environment variables') {
             when {
                 anyOf {
-                    branch 'DEVOPS-'
+                    branch 'DEVOPS-*'
                     branch 'main'
                     branch 'prod'
                 }
