@@ -22,10 +22,11 @@ def getEnvironmentConfig(branchName, tagName) {
     
     config.backendUrl = "https://backend.${config.environment}.getdispatch.ai/api"
     config.eksClusterName = "DispatchAI-${config.environment.toUpperCase()}-EKS-Cluster"
-    // config.ecrRegistry = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com"
     config.imageName = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com/${env.ECR_REPO}"
     
-    echo "Config created: ${config}"
+    echo "Global environment variables stored in globalEnv successfully! \n${config}"
+        
+
     return config
 }
 
@@ -46,7 +47,7 @@ pipeline {
         IMAGE_TAG = "${env.BUILD_ID}"
     }
     stages {
-        stage('Setup Environment variables') {
+        stage('Setup global environment variables') {
             steps {
                 container('dispatchai-jenkins-agent') {
                     script {
@@ -56,7 +57,6 @@ pipeline {
                         
                         // Setup global environment
                         globalEnv = getEnvironmentConfig(env.BRANCH_NAME, env.TAG_NAME)
-                        echo "Global environment variables stored in globalEnv successfully!"
                         echo "globalEnv config: ${globalEnv}"
                         echo "ENVIRONMENT: ${globalEnv.environment}"
                         echo "AWS_ACCOUNT_ID: ${globalEnv.awsAccountId}"
@@ -64,27 +64,10 @@ pipeline {
                         echo "EKS_CLUSTER_NAME: ${globalEnv.eksClusterName}"
                         echo "imageName: ${globalEnv.imageName}"
                         echo "imageTag: ${globalEnv.imageTag}"
-                        // echo "ECR_REGISTRY: ${globalEnv.ecrRegistry}"
                     }
                 }
             }
         }
-
-        stage('Build and Push') {
-            steps {
-                container('dispatchai-jenkins-agent') {
-                    script {
-                        // 在需要的地方使用配置
-                        sh """
-                            echo "Building Docker image..."
-                            echo "Environment: ${globalEnv.environment}"
-                            # 这里可以添加你的构建和推送逻辑
-                        """
-                    }
-                }
-            }
-        }
-
 
 
         stage('build and test') {
@@ -119,24 +102,20 @@ pipeline {
             }
         }
 
-
         stage('helming to deploy frontend') {
             steps {
                 container('dispatchai-jenkins-agent') {
                     cleanWs()
                     dir('helm') {
                         script {
+                            // checkout helm repo
                             git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
-                            // sh "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
-                            sh "bash deploy-frontend-${globalEnv.environment}.sh 59"
+                            sh "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
                         }
                     }
                 }
             }
         }
-
-
-
     }
 
     post {
@@ -150,64 +129,3 @@ pipeline {
         }
     }
 }
-
-
-
-    //     stage('checkout helm repo') {
-    //         steps {
-    //             cleanWs()
-    //             // dir('frontend') {
-    //             //     container('node') {
-    //             //         git branch: "${env.BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/frontend.git'
-    //             //     }
-    //             // }
-    //             dir('helm') {
-    //                 container('dispatchai-jenkins-agent') {
-    //                     git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     stage('build and test') {
-    //         steps {
-    //             // dir('frontend') {
-    //                 container('node') {
-    //                     sh "npm install -g pnpm"
-    //                     sh "pnpm install"
-    //                     sh "pnpm run type-check"
-    //                     sh "pnpm run lint"
-    //                     sh "pnpm test"
-    //                     sh "NEXT_PUBLIC_API_BASE_URL=${env.BACKEND_URL} pnpm build"
-    //                 }
-    //             // }
-    //         }
-    //     }
-
-    //     stage('build image for frontend') {
-    //         steps {
-    //             // dir('frontend') {
-    //                 container('dispatchai-jenkins-agent') {
-    //                     // Use BuildKit to build docker image and push to ECR
-    //                     sh """
-    //                         docker-credential-ecr-login list
-    //                         buildctl --addr=tcp://localhost:1234 build \\
-    //                           --frontend=dockerfile.v0 \\
-    //                           --local context=. \\
-    //                           --local dockerfile=. \\
-    //                           --output type=image,name=${env.ECR_REGISTRY}/${env.ECR_REPO}:${env.IMAGE_TAG},push=true
-    //                     """
-    //                 }
-    //             // }
-    //         }
-    //     }
-
-    //     stage('cd') {
-    //         steps {
-    //             dir('helm') {
-    //                 container('dispatchai-jenkins-agent') {
-    //                     sh "bash deploy-frontend.sh ${env.IMAGE_TAG}"
-    //                 }
-    //             }
-    //         }
-    //     }
