@@ -62,6 +62,8 @@ pipeline {
                         echo "AWS_ACCOUNT_ID: ${globalEnv.awsAccountId}"
                         echo "BACKEND_URL: ${globalEnv.backendUrl}"
                         echo "EKS_CLUSTER_NAME: ${globalEnv.eksClusterName}"
+                        echo "imageName: ${globalEnv.imageName}"
+                        echo "imageTag: ${globalEnv.imageTag}"
                         // echo "ECR_REGISTRY: ${globalEnv.ecrRegistry}"
                     }
                 }
@@ -74,9 +76,7 @@ pipeline {
                     script {
                         // 在需要的地方使用配置
                         sh """
-                            echo "test webhook."
                             echo "Building Docker image..."
-                            // echo "ECR Registry: ${globalEnv.ecrRegistry}"
                             echo "Environment: ${globalEnv.environment}"
                             # 这里可以添加你的构建和推送逻辑
                         """
