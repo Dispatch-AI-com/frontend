@@ -1,107 +1,134 @@
 'use client';
 
 import { styled } from '@mui/material/styles';
-import Image from 'next/image';
 
 import CommonButton from '@/components/ui/CommonButton';
 import type { PlanButton } from '@/types/plan.types';
 
-interface PlanCardProps {
+interface PricingCardProps {
   tier: 'FREE' | 'BASIC' | 'PRO';
-  name: string;
-  description: string;
+  pricing: { priceDisplay: string; periodDisplay: string };
   buttons: PlanButton[];
 }
-
-const imageSrcMap: Record<PlanCardProps['tier'], string> = {
-  FREE: '/plan/free.png',
-  BASIC: '/plan/basic.png',
-  PRO: '/plan/pro.png',
-};
 
 const CardContainer = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-between',
-  width: '100%',
   maxWidth: '448px',
-  minWidth: '280px',
-  minHeight: '508px',
-  height: 'auto',
+  height: '336px',
+  width: '100%',
+  flexShrink: 0,
   padding: '30px',
   borderRadius: '24px',
   border: '1px solid #d5d5d5',
   backgroundColor: '#fff',
 }));
 
-const CardContent = styled('div')(() => ({
-  flexGrow: 1,
+const tierColors = {
+  FREE: '#e5fcd5',
+  BASIC: '#e1f0ff',
+  PRO: '#fff2d1',
+};
+
+const IconWrapper = styled('div')<{ tier: 'FREE' | 'BASIC' | 'PRO' }>(
+  ({ tier }) => ({
+    width: '36px',
+    height: '36px',
+    padding: '6px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '12px',
+    backgroundColor: tierColors[tier],
+  }),
+);
+
+const PriceTitle = styled('h3')(({ theme }) => ({
+  margin: '16px 0 0 0',
+  fontFamily: theme.typography.h3.fontFamily,
+  fontSize: theme.typography.h3.fontSize,
+  fontWeight: theme.typography.h3.fontWeight,
+  fontStretch: 'normal',
+  fontStyle: 'normal',
+  lineHeight: 1.33,
+  letterSpacing: 'normal',
+  color: '#060606',
+  textAlign: 'left',
 }));
 
-const DemoBox = styled('div')(({ theme }) => ({
-  width: '100%',
-  height: 0,
-  paddingTop: '67%',
-  borderRadius: '24px',
-  border: '1px solid #d5d5d5',
-  backgroundColor: '#e5e5e5',
-  position: 'relative',
-  marginBottom: theme.spacing(3),
-  overflow: 'hidden',
+const PriceDescription = styled('p')(() => ({
+  margin: '8px 0 0 0',
+  fontFamily: 'Roboto',
+  fontSize: '14px',
+  fontWeight: 'normal',
+  fontStretch: 'normal',
+  fontStyle: 'normal',
+  lineHeight: 'normal',
+  letterSpacing: 'normal',
+  color: '#6d6d6d',
+  textAlign: 'left',
+  minHeight: '28px',
+}));
+
+const PriceRow = styled('div')(() => ({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-
-  [theme.breakpoints.down('sm')]: {
-    paddingTop: '56.25%',
-  },
+  alignItems: 'flex-start',
+  gap: '10px',
+  margin: '40px 0 40px 0',
 }));
 
-const CardTitle = styled('h3')(({ theme }) => ({
-  fontWeight: theme.typography.fontWeightBold,
+const PriceText = styled('span')(() => ({
+  fontFamily: 'DINAlternate, sans-serif',
+  fontSize: '48px',
+  fontWeight: 'bold',
   color: '#060606',
-  margin: '0 0 20px',
-  textAlign: 'left',
+  lineHeight: 1,
 }));
 
-const CardDescription = styled('p')(({ theme }) => ({
-  fontSize: theme.typography.body2.fontSize,
+const PeriodText = styled('span')(() => ({
+  fontFamily: 'Roboto, sans-serif',
+  fontSize: '16px',
+  fontWeight: 400,
+  lineHeight: 1.25,
   color: '#060606',
-  textAlign: 'left',
-  margin: '0',
+  marginTop: '24px',
 }));
 
 const BtnContainer = styled('div')(({ theme }) => ({
   display: 'flex',
-  flexWrap: 'wrap',
+  flexWrap: 'nowrap',
   justifyContent: 'center',
-  gap: theme.spacing(2, 1.5),
-
-  [theme.breakpoints.up('lg')]: {
-    flexWrap: 'nowrap',
-  },
+  marginBottom: '40px',
+  gap: theme.spacing(1.5),
 }));
 
-export default function PlanCard({
-  tier,
-  name,
-  description,
-  buttons,
-}: PlanCardProps) {
+export default function PlanCard({ tier, pricing, buttons }: PricingCardProps) {
   return (
     <CardContainer>
-      <CardContent>
-        <DemoBox>
-          <Image
-            src={imageSrcMap[tier]}
-            alt={`${name} plan image`}
-            fill
-            style={{ objectFit: 'contain', borderRadius: '24px' }}
-          />
-        </DemoBox>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardContent>
+      <IconWrapper tier={tier}>
+        {tier === 'FREE' && <img src="/plan/free.svg" alt="Free Plan" />}
+        {tier === 'BASIC' && <img src="/plan/basic.svg" alt="Basic Plan" />}
+        {tier === 'PRO' && <img src="/plan/pro.svg" alt="Pro Plan" />}
+      </IconWrapper>
+
+      <PriceTitle>
+        {tier === 'FREE' && 'Free Plan'}
+        {tier === 'BASIC' && 'Basic Plan'}
+        {tier === 'PRO' && 'Pro Plan'}
+      </PriceTitle>
+
+      <PriceDescription>
+        {tier === 'FREE' && 'Unlimited calls'}
+        {tier === 'BASIC' &&
+          'Perfect for small businesses ready to automate calls and save time'}
+        {tier === 'PRO' && 'Enjoy unlimited and highly customizable features'}
+      </PriceDescription>
+
+      <PriceRow>
+        <PriceText>{pricing.priceDisplay}</PriceText>
+        <PeriodText>{pricing.periodDisplay}</PeriodText>
+      </PriceRow>
+
       <BtnContainer>
         {buttons.map((btn, i) => (
           <CommonButton
@@ -114,6 +141,7 @@ export default function PlanCard({
                   : btn.variant === 'primary'
                     ? '216px'
                     : '160px',
+              height: '40px',
             }}
           >
             {btn.label}
