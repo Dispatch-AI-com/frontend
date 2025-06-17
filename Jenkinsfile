@@ -82,7 +82,14 @@ pipeline {
             }
         }
 
-        stage('build and test') {
+        stage('install, test and build') {
+            when {
+                anyOf {
+                    branch 'DEVOPS-*'
+                    branch 'main'
+                    branch 'prod'
+                }
+            }
             steps {
                 container('node') {
                     sh "npm install -g pnpm"
@@ -95,7 +102,14 @@ pipeline {
             }
         }
 
-        stage('build docker image for frontend') {
+        stage('build docker image') {
+            when {
+                anyOf {
+                    branch 'DEVOPS-*'
+                    branch 'main'
+                    branch 'prod'
+                }
+            }
             steps {
                 container('dispatchai-jenkins-agent') {
                     script {
@@ -113,7 +127,14 @@ pipeline {
             }
         }
 
-        stage('helming to deploy frontend') {
+        stage('helm to deploy frontend') {
+            when {
+                anyOf {
+                    branch 'DEVOPS-*'
+                    branch 'main'
+                    branch 'prod'
+                }
+            }
             steps {
                 container('dispatchai-jenkins-agent') {
                     cleanWs()
@@ -132,12 +153,22 @@ pipeline {
 
     post {
         success {
-            script {
-                echo "✅ Frontend has benn deployed successfully with image: ${globalEnv.imageName}:${globalEnv.imageTag}"
-            }
+            echo "✅ Frontend has benn deployed successfully with image: ${globalEnv.imageName}:${globalEnv.imageTag}"
+            emailext(
+                to: "lawrence.wenboli@gmail.com",
+                subject: "DispatchAI Frontend pipeline succeeded.",
+                body: "Jenkins CICD Pipeline succeeded.\n\nEnvironment: ${env.BRANCH_NAME}.",
+                attachLog: false
+            )
         }
+
         failure {
-            echo "❌ Pipeline failed."
+            emailext(
+                to: "lawrence.wenboli@gmail.com",
+                subject: "DispatchAI Frontend pipeline failed.",
+                body: "Jenkins CICD Pipeline failed.\n\nEnvironment: ${BRANCH_NAME}.\n\nPlease check logfile for more details.",
+                attachLog: true
+            )
         }
     }
 }
