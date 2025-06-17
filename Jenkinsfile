@@ -1,16 +1,22 @@
 // getEnvironmentConfig function to set environment variables
 def getEnvironmentConfig(branchName, tagName) {
     def config = [:]
-    if (branchName == 'main' || (branchName != null && branchName.startsWith('DEVOPS-'))) {
+    if (branchName == 'main') {
         echo "Matched UAT environment."
         config.environment = "uat"
         config.awsAccountId = "893774231297"
-        config.imageTag = "${env.BUILD_ID}"
-    } else if (branchName == 'prod') {
+        config.imageTag = "uat-${env.BUILD_ID}"
+    } else if (branchName.startsWith('DEVOPS-')){
+        echo "Matched UAT environment."
+        config.environment = "uat"
+        config.awsAccountId = "893774231297"
+        config.imageTag = "${branchName.toLowerCase()}-${env.BUILD_ID}"
+    }
+    else if (branchName == 'prod') {
         echo "Matched PROD environment."
         if (tagName != null && tagName.trim() != '') {
             config.environment = "prod"
-            config.awsAccountId = "123456789012"
+            config.awsAccountId = "981349713333"
             config.imageTag = "${tagName}"
         } else {
             error("Production builds require a tag!")
@@ -26,7 +32,6 @@ def getEnvironmentConfig(branchName, tagName) {
     
     echo "Global environment variables stored in globalEnv successfully! \n${config}"
         
-
     return config
 }
 
@@ -40,14 +45,22 @@ pipeline {
             yamlFile 'jenkins-agent-uat.yaml'
         }
     }
+
     environment {
         AWS_REGION = "ap-southeast-2"
         ECR_REPO = "dispatchai-frontend"
         K8S_VERSION = "v1.32.3"
-        IMAGE_TAG = "${env.BUILD_ID}"
     }
+
     stages {
         stage('Setup global environment variables') {
+            when {
+                anyOf {
+                    branch 'DEVOPS-'
+                    branch 'main'
+                    branch 'prod'
+                }
+            }
             steps {
                 container('dispatchai-jenkins-agent') {
                     script {
@@ -69,15 +82,14 @@ pipeline {
             }
         }
 
-
         stage('build and test') {
             steps {
                 container('node') {
                     sh "npm install -g pnpm"
                     sh "pnpm install"
-                    // sh "pnpm run type-check"
-                    // sh "pnpm run lint"
-                    // sh "pnpm test"
+                    sh "pnpm run type-check"
+                    sh "pnpm run lint"
+                    sh "pnpm test"
                     sh "NEXT_PUBLIC_API_BASE_URL=${globalEnv.backendUrl} pnpm build"
                 }
             }
@@ -89,7 +101,6 @@ pipeline {
                     script {
                         // Use BuildKit to build docker image and push to ECR
                         sh """
-                            pwd
                             docker-credential-ecr-login list
                             buildctl --addr=tcp://localhost:1234 build \\
                               --frontend=dockerfile.v0 \\
@@ -109,7 +120,8 @@ pipeline {
                     dir('helm') {
                         script {
                             // checkout helm repo
-                            git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+                            git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+                            // deploy to eks
                             sh "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
                         }
                     }
@@ -125,7 +137,7 @@ pipeline {
             }
         }
         failure {
-            echo '❌ Pipeline failed.'
+            echo "❌ Pipeline failed."
         }
     }
 }
