@@ -15,7 +15,7 @@ export const publicApiSlice = createApi({
   }),
   endpoints: builder => ({
     getPlans: builder.query<Plan[], undefined>({
-      query: () => 'api/plan',
+      query: () => '/plan',
     }),
     getHealth: builder.query<HealthResponse, undefined>({
       query: () => '/health',
