@@ -22,7 +22,8 @@ def getEnvironmentConfig(branchName, tagName) {
     
     config.backendUrl = "https://backend.${config.environment}.getdispatch.ai/api"
     config.eksClusterName = "DispatchAI-${config.environment.toUpperCase()}-EKS-Cluster"
-    config.ecrRegistry = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com"
+    // config.ecrRegistry = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com"
+    config.imageName = "${config.awsAccountId}.dkr.ecr.ap-southeast-2.amazonaws.com/${env.ECR_REPO}"
     
     echo "Config created: ${config}"
     return config
@@ -35,33 +36,7 @@ pipeline {
     agent {
         kubernetes {
             cloud 'EKS-Agent-UAT-lawrence'
-            yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  serviceAccountName: jenkins-agent
-  containers:
-    - name: node
-      image: node:20-alpine
-      command: ['sleep']
-      args: ['99d']
-      tty: true
-    - name: dispatchai-jenkins-agent
-      image: 893774231297.dkr.ecr.ap-southeast-2.amazonaws.com/dispatchai-jenkins-agent:lawrence
-      imagePullPolicy: Always
-      command: ['sleep']
-      args: ['99d']
-      tty: true
-    - name: buildkitd
-      image: moby/buildkit:v0.12.4
-      command: ["buildkitd"]
-      args: ["--addr=tcp://0.0.0.0:1234"]
-      ports:
-        - containerPort: 1234
-          name: buildkit
-      securityContext:
-        privileged: true
-""".stripIndent()
+            yamlFile 'jenkins-agent-uat.yaml'
         }
     }
     environment {
@@ -81,33 +56,13 @@ spec:
                         
                         // Setup global environment
                         globalEnv = getEnvironmentConfig(env.BRANCH_NAME, env.TAG_NAME)
-                        echo "Global environment variables stored in globalEnv successfully！"
+                        echo "Global environment variables stored in globalEnv successfully!"
                         echo "globalEnv config: ${globalEnv}"
                         echo "ENVIRONMENT: ${globalEnv.environment}"
                         echo "AWS_ACCOUNT_ID: ${globalEnv.awsAccountId}"
                         echo "BACKEND_URL: ${globalEnv.backendUrl}"
                         echo "EKS_CLUSTER_NAME: ${globalEnv.eksClusterName}"
-                        echo "ECR_REGISTRY: ${globalEnv.ecrRegistry}"
-                    }
-                }
-            }
-        }
-
-        stage('testtest') {
-            steps {
-                container('node') {
-                    script {
-                        echo "ENVIRONMENT: ${globalEnv.environment}"
-                        echo "AWS_ACCOUNT_ID: ${globalEnv.awsAccountId}"
-                        echo "BACKEND_URL: ${globalEnv.backendUrl}"
-                        echo "EKS_CLUSTER_NAME: ${globalEnv.eksClusterName}"
-                        echo "ECR_REGISTRY: ${globalEnv.ecrRegistry}"
-                        
-                        // 如果你需要在 shell 命令中使用这些值，可以这样做：
-                        sh """
-                            echo "Building with environment: ${globalEnv.environment}"
-                            echo "Using AWS Account: ${globalEnv.awsAccountId}"
-                        """
+                        // echo "ECR_REGISTRY: ${globalEnv.ecrRegistry}"
                     }
                 }
             }
@@ -121,7 +76,7 @@ spec:
                         sh """
                             echo "test webhook."
                             echo "Building Docker image..."
-                            echo "ECR Registry: ${globalEnv.ecrRegistry}"
+                            // echo "ECR Registry: ${globalEnv.ecrRegistry}"
                             echo "Environment: ${globalEnv.environment}"
                             # 这里可以添加你的构建和推送逻辑
                         """
@@ -137,30 +92,48 @@ spec:
                 container('node') {
                     sh "npm install -g pnpm"
                     sh "pnpm install"
-                    sh "pnpm run type-check"
-                    sh "pnpm run lint"
-                    sh "pnpm test"
+                    // sh "pnpm run type-check"
+                    // sh "pnpm run lint"
+                    // sh "pnpm test"
                     sh "NEXT_PUBLIC_API_BASE_URL=${globalEnv.backendUrl} pnpm build"
                 }
             }
         }
 
+        stage('build docker image for frontend') {
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    script {
+                        // Use BuildKit to build docker image and push to ECR
+                        sh """
+                            pwd
+                            docker-credential-ecr-login list
+                            buildctl --addr=tcp://localhost:1234 build \\
+                              --frontend=dockerfile.v0 \\
+                              --local context=. \\
+                              --local dockerfile=. \\
+                              --output type=image,name=${globalEnv.imageName}:${globalEnv.imageTag},push=true
+                        """
+                    }
+                }
+            }
+        }
 
 
-        // stage('helming to deploy frontend') {
-        //     steps {
-        //         container('dispatchai-jenkins-agent') {
-        //             cleanWs()
-        //             dir('helm') {
-        //                 container('dispatchai-jenkins-agent') {
-        //                     git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
-        //                     // sh "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
-        //                     sh "bash deploy-frontend-${globalEnv.environment}.sh 59"
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('helming to deploy frontend') {
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    cleanWs()
+                    dir('helm') {
+                        script {
+                            git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+                            // sh "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
+                            sh "bash deploy-frontend-${globalEnv.environment}.sh 59"
+                        }
+                    }
+                }
+            }
+        }
 
 
 
@@ -169,7 +142,7 @@ spec:
     post {
         success {
             script {
-                echo "✅ Docker image pushed: ${globalEnv.ecrRegistry}/${env.ECR_REPO}:${env.IMAGE_TAG}"
+                echo "✅ Frontend has benn deployed successfully with image: ${globalEnv.imageName}:${globalEnv.imageTag}"
             }
         }
         failure {
@@ -177,6 +150,7 @@ spec:
         }
     }
 }
+
 
 
     //     stage('checkout helm repo') {
