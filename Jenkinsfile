@@ -131,6 +131,7 @@ spec:
                     script {
                         // 在需要的地方使用配置
                         sh """
+                            echo "test webhook."
                             echo "Building Docker image..."
                             echo "ECR Registry: ${globalEnv.ecrRegistry}"
                             echo "Environment: ${globalEnv.environment}"
