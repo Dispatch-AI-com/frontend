@@ -5,11 +5,13 @@ def getEnvironmentConfig(branchName, tagName) {
         echo "Matched UAT condition"
         config.environment = "uat"
         config.awsAccountId = "893774231297"
+        config.imageTag = "${env.BUILD_ID}"
     } else if (branchName == 'prod') {
         echo "Matched PROD condition"
         if (tagName != null && tagName.trim() != '') {
             config.environment = "prod"
             config.awsAccountId = "123456789012"
+            config.imageTag = "${tagName}"
         } else {
             error("Production builds require a tag!")
         }
@@ -91,19 +93,21 @@ spec:
             }
         }
 
-        stage('test') {
-            steps {
-                container('dispatchai-jenkins-agent') {
-                    script {
-                        echo "ENVIRONMENT: ${globalEnv.environment}"
-                        echo "AWS_ACCOUNT_ID: ${globalEnv.awsAccountId}"
-                        echo "BACKEND_URL: ${globalEnv.backendUrl}"
-                        echo "EKS_CLUSTER_NAME: ${globalEnv.eksClusterName}"
-                        echo "ECR_REGISTRY: ${globalEnv.ecrRegistry}"
-                    }
-                }
-            }
-        }
+        // stage('helm') {
+        //     steps {
+        //         container('dispatchai-jenkins-agent') {
+        //             cleanWs()
+        //             dir('helm') {
+        //                 container('dispatchai-jenkins-agent') {
+        //                     git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+        //                     // sh "bash deploy-frontend-${globalEnv.environment}.sh ${env.IMAGE_TAG}"
+        //                     sh "bash deploy-frontend-${globalEnv.environment}.sh 59"
+
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('testtest') {
             steps {
