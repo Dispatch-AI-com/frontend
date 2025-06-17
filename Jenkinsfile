@@ -153,11 +153,16 @@ pipeline {
 
     post {
         success {
-            echo "✅ Frontend has benn deployed successfully with image: ${globalEnv.imageName}:${globalEnv.imageTag}"
+            echo "✅ Frontend has been deployed successfully with image: ${globalEnv.imageName}:${globalEnv.imageTag}"
             emailext(
                 to: "lawrence.wenboli@gmail.com",
-                subject: "DispatchAI Frontend pipeline succeeded.",
-                body: "Jenkins CICD Pipeline succeeded.\n\nEnvironment: ${env.BRANCH_NAME}.",
+                subject: "✅ DispatchAI Frontend pipeline succeeded.",
+                body: "Jenkins CICD Pipeline succeeded!<br/>" +
+                    "Job Result: ${currentBuild.result}<br/>" +
+                    "Job Name: ${env.JOB_NAME}<br/>" +
+                    "Branch: ${env.BRANCH_NAME}<br/>" +
+                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                    "URL: ${env.BUILD_URL}<br/>",
                 attachLog: false
             )
         }
@@ -165,9 +170,15 @@ pipeline {
         failure {
             emailext(
                 to: "lawrence.wenboli@gmail.com",
-                subject: "DispatchAI Frontend pipeline failed.",
-                body: "Jenkins CICD Pipeline failed.\n\nEnvironment: ${BRANCH_NAME}.\n\nPlease check logfile for more details.",
-                attachLog: true
+                subject: "❌ DispatchAI Frontend pipeline failed.",
+                body: "Jenkins CICD Pipeline failed!<br/>" +
+                    "Job Result: ${currentBuild.result}<br/>" +
+                    "Job Name: ${env.JOB_NAME}<br/>" +
+                    "Branch: ${env.BRANCH_NAME}<br/>" +
+                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                    "URL: ${env.BUILD_URL}<br/>" +
+                    "Please check logfile for more details.<br/>",
+                attachLog: false
             )
         }
     }
