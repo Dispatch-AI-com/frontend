@@ -2,12 +2,12 @@
 def getEnvironmentConfig(branchName, tagName) {
     def config = [:]
     if (branchName == 'main' || (branchName != null && branchName.startsWith('DEVOPS-'))) {
-        echo "Matched UAT condition"
+        echo "Matched UAT environment."
         config.environment = "uat"
         config.awsAccountId = "893774231297"
         config.imageTag = "${env.BUILD_ID}"
     } else if (branchName == 'prod') {
-        echo "Matched PROD condition"
+        echo "Matched PROD environment."
         if (tagName != null && tagName.trim() != '') {
             config.environment = "prod"
             config.awsAccountId = "123456789012"
@@ -16,7 +16,7 @@ def getEnvironmentConfig(branchName, tagName) {
             error("Production builds require a tag!")
         }
     } else {
-        echo "No condition matched, will erro!!!"
+        echo "Error!!! No environment matched."
         error("Branch '${branchName ?: 'unknown'}' is not allowed to run this pipeline.")
     }
     
@@ -93,21 +93,6 @@ spec:
             }
         }
 
-        stage('helm') {
-            steps {
-                container('dispatchai-jenkins-agent') {
-                    cleanWs()
-                    dir('helm') {
-                        container('dispatchai-jenkins-agent') {
-                            git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
-                            // sh "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
-                            sh "bash deploy-frontend-${globalEnv.environment}.sh 59"
-                        }
-                    }
-                }
-            }
-        }
-
         stage('testtest') {
             steps {
                 container('node') {
@@ -144,6 +129,41 @@ spec:
                 }
             }
         }
+
+
+
+        stage('build and test') {
+            steps {
+                container('node') {
+                    sh "npm install -g pnpm"
+                    sh "pnpm install"
+                    sh "pnpm run type-check"
+                    sh "pnpm run lint"
+                    sh "pnpm test"
+                    sh "NEXT_PUBLIC_API_BASE_URL=${globalEnv.backendUrl} pnpm build"
+                }
+            }
+        }
+
+
+
+        // stage('helming to deploy frontend') {
+        //     steps {
+        //         container('dispatchai-jenkins-agent') {
+        //             cleanWs()
+        //             dir('helm') {
+        //                 container('dispatchai-jenkins-agent') {
+        //                     git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+        //                     // sh "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
+        //                     sh "bash deploy-frontend-${globalEnv.environment}.sh 59"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+
+
     }
 
     post {
