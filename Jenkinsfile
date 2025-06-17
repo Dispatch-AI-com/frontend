@@ -93,21 +93,21 @@ spec:
             }
         }
 
-        // stage('helm') {
-        //     steps {
-        //         container('dispatchai-jenkins-agent') {
-        //             cleanWs()
-        //             dir('helm') {
-        //                 container('dispatchai-jenkins-agent') {
-        //                     git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
-        //                     // sh "bash deploy-frontend-${globalEnv.environment}.sh ${env.IMAGE_TAG}"
-        //                     sh "bash deploy-frontend-${globalEnv.environment}.sh 59"
-
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('helm') {
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    cleanWs()
+                    dir('helm') {
+                        container('dispatchai-jenkins-agent') {
+                            git branch: "DEVOPS-26", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+                            // sh "bash deploy-frontend-${globalEnv.environment}.sh ${env.IMAGE_TAG}"
+                            // sh "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
+                            echo "bash deploy-frontend-${globalEnv.environment}.sh ${globalEnv.imageTag}"
+                        }
+                    }
+                }
+            }
+        }
 
         stage('testtest') {
             steps {
