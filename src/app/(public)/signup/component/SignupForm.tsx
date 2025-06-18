@@ -79,7 +79,7 @@ export default function SignupForm() {
 
   useEffect(() => {
     if (token) {
-      router.replace('/dashboard');
+      router.replace('/admin/overview');
     }
   }, [token, router]);
 
