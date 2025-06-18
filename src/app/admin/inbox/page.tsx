@@ -14,6 +14,8 @@ import type { ICallLog } from '@/types/calllog.d';
 const PageContainer = styled.div`
   display: flex;
   padding-left: 240px;
+  height: 100vh;
+  overflow: hidden;
   @media (max-width: 600px) {
     padding-left: 0;
   }
@@ -24,11 +26,15 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f8faf7;
+  height: 100vh;
+  overflow: hidden;
 `;
 
 const ContentContainer = styled.div`
   flex: 1;
   display: flex;
+  height: calc(100vh - 130px); /* 减去 SearchBar 的高度 */
+  overflow: hidden;
 `;
 
 const ListContainer = styled.div`
@@ -48,6 +54,7 @@ const ListContainer = styled.div`
 const ListContent = styled.div`
   flex: 1;
   overflow-y: auto;
+  height: calc(100vh - 150px);
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -87,10 +94,18 @@ const EmptyStateContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
+  min-height: calc(100vh - 130px);
 `;
 
 const EmptyStateContent = styled.div`
   text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const EmptyStateImage = styled.img`

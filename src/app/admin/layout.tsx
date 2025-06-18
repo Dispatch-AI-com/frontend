@@ -26,9 +26,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   return (
     <Box display="flex">
       <Sidebar />
-      <Box flex={1} p={3}>
-        {children}
-      </Box>
+      <Box flex={1}>{children}</Box>
     </Box>
   );
 }
