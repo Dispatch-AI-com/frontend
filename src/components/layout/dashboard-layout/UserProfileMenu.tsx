@@ -77,6 +77,7 @@ export default function UserProfileMenu({
           />
         </IconButton>
         <Menu
+          disableScrollLock
           anchorReference="anchorPosition"
           anchorPosition={
             anchorEl

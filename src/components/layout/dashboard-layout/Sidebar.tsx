@@ -41,43 +41,43 @@ const navItems = [
     label: 'Overview',
     iconSrc: '/dashboard/sidebar/overview.svg',
     iconAlt: 'Overview',
-    href: '/dashboard/overview',
+    href: '/admin/overview',
   },
   {
     label: 'Inbox',
     iconSrc: '/dashboard/sidebar/inbox.svg',
     iconAlt: 'Inbox',
-    href: '/dashboard/inbox',
+    href: '/admin/inbox',
   },
   {
     label: 'Service',
     iconSrc: '/dashboard/sidebar/service.svg',
     iconAlt: 'Service',
-    href: '/dashboard/service',
+    href: '/admin/service',
   },
   {
     label: 'Calendar',
     iconSrc: '/dashboard/sidebar/calendar.svg',
     iconAlt: 'Calendar',
-    href: '/dashboard/calendar',
+    href: '/admin/calendar',
   },
   {
     label: 'Billing',
     iconSrc: '/dashboard/sidebar/billing.svg',
     iconAlt: 'Billing',
-    href: '/dashboard/billing',
+    href: '/admin/billing',
   },
   {
     label: 'Dispatch AI Setup',
     iconSrc: '/dashboard/sidebar/AI-setup.svg',
     iconAlt: 'Dispatch AI Setup',
-    href: '/dashboard/ai-setup',
+    href: '/admin/ai-setup',
   },
   {
     label: 'Settings',
     iconSrc: '/dashboard/sidebar/settings.svg',
     iconAlt: 'Settings',
-    href: '/dashboard/settings',
+    href: '/admin/settings',
   },
 ];
 
@@ -141,20 +141,11 @@ export default function Sidebar() {
       {!isSmallScreen && (
         <SidebarContainer>
           <LogoBox>
-            <Link href="/dashboard">
+            <Link href="/admin/overview">
               <Image src="/logo.svg" alt="DispatchAI" width={126} height={28} />
             </Link>
           </LogoBox>
-          <DesktopSidebarNav
-            navItems={navItems}
-            activeIndex={activeIndex}
-            onNavItemClick={index => {
-              if (index >= 0 && index < navItems.length) {
-                setActiveIndex(index);
-                router.push(navItems[index].href);
-              }
-            }}
-          />
+          <DesktopSidebarNav navItems={navItems} />
           <UserProfileMenu
             name="Jeon"
             plan="Free Plan"

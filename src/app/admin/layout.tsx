@@ -1,8 +1,10 @@
-// app/(protected)/layout.tsx
+// app/admin/layout.tsx
 'use client';
+import { Box } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
 
+import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import { useAppSelector } from '@/redux/hooks';
 
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
@@ -21,5 +23,12 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   }, [ready, token, pathname, router]);
 
   if (!ready || !token) return null;
-  return <>{children}</>;
+  return (
+    <Box display="flex">
+      <Sidebar />
+      <Box flex={1} p={3}>
+        {children}
+      </Box>
+    </Box>
+  );
 }

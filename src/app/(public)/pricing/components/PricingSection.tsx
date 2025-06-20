@@ -1,7 +1,11 @@
 'use client';
 
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 import { styled } from '@mui/material/styles';
 import React from 'react';
+import Slider from 'react-slick';
 
 import { useGetPlansQuery } from '@/features/public/publicApiSlice';
 import type { Plan, PlanButton } from '@/types/plan.types';
@@ -13,11 +17,45 @@ function getButtons(tier: Plan['tier']): PlanButton[] {
     case 'FREE':
       return [{ label: 'Try for Free', variant: 'primary' }];
     case 'BASIC':
-      return [{ label: 'Get Basic', variant: 'primary' }];
+      return [
+        { label: 'Go with Basic', variant: 'primary' },
+        { label: 'Request Demo', variant: 'secondary' },
+      ];
     case 'PRO':
-      return [{ label: 'Go Pro', variant: 'primary' }];
+      return [
+        { label: 'Go with Pro', variant: 'primary' },
+        { label: 'Request Demo', variant: 'secondary' },
+      ];
   }
 }
+
+const settings = {
+  dots: true,
+  arrows: false,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  responsive: [
+    {
+      breakpoint: 960,
+      settings: {
+        centerMode: true,
+        centerPadding: '0px',
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
+
+const StyledSlider = styled(Slider)(({ theme }) => ({
+  '.slick-slide > div': {
+    padding: '0 16px 0 0',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+}));
 
 function parseRRule(rrule: string): string {
   if (rrule.includes('FREQ=MONTHLY;INTERVAL=3')) return 'quarter';
@@ -26,7 +64,6 @@ function parseRRule(rrule: string): string {
   return '';
 }
 
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 function getPrice(pricing: { rrule: string; price: number }[]): {
   priceDisplay: string;
   periodDisplay: string;
@@ -43,48 +80,41 @@ function getPrice(pricing: { rrule: string; price: number }[]): {
     periodDisplay: ` /${parseRRule(matched.rrule)}`,
   };
 }
-/* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
 const PricingContainer = styled('section')(({ theme }) => ({
   padding: '128px 0 68px 0',
-  textAlign: 'center',
   backgroundColor: theme.palette.background.default,
 }));
 
 const SectionTitle = styled('h2')(({ theme }) => ({
-  ...theme.typography.h2,
+  ...theme.typography.h1,
   textAlign: 'center',
   margin: '0 0 80px',
 }));
 
-const PlanGrid = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'nowrap',
-  overflowX: 'auto',
-  gap: theme.spacing(2),
-  padding: `0 ${theme.spacing(2)}px`,
-  scrollSnapType: 'x mandatory',
-  WebkitOverflowScrolling: 'touch',
-}));
-
 export default function PricingSection() {
   const { data: plans = [], isLoading, isError } = useGetPlansQuery(undefined);
+  const tierOrder = { FREE: 0, BASIC: 1, PRO: 2 };
+  const sortedPlans = [...plans].sort((a, b) => {
+    return tierOrder[a.tier] - tierOrder[b.tier];
+  });
 
   return (
     <PricingContainer>
       <SectionTitle>Choose the Right Plan for You</SectionTitle>
-      <PlanGrid>
+      <StyledSlider {...settings}>
         {isLoading && <p>Loading...</p>}
         {isError && <p>Failed to load plans.</p>}
-        {plans.map(plan => (
+        {sortedPlans.map(plan => (
           <PricingCard
             key={plan._id}
+            tier={plan.tier}
             features={plan.features}
             pricing={getPrice(plan.pricing)}
             buttons={getButtons(plan.tier)}
           />
         ))}
-      </PlanGrid>
+      </StyledSlider>
     </PricingContainer>
   );
 }

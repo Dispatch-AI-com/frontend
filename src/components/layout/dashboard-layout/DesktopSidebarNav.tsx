@@ -9,21 +9,20 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 
 const ICON_SIZE = 16;
-
-interface DesktopSidebarNavProps {
-  navItems: {
-    label: string;
-    iconSrc: string;
-    iconAlt: string;
-    active?: boolean;
-  }[];
-  activeIndex: number;
-  onNavItemClick: (index: number) => void;
+interface NavItem {
+  label: string;
+  iconSrc: string;
+  iconAlt: string;
+  href: string;
 }
 
-// Simple NavIcon component for rendering icons
+interface DesktopSidebarNavProps {
+  navItems: NavItem[];
+}
+
 function NavIcon({
   src,
   alt,
@@ -48,10 +47,13 @@ function NavIcon({
 
 export default function DesktopSidebarNav({
   navItems,
-  activeIndex,
-  onNavItemClick,
 }: DesktopSidebarNavProps) {
   const theme = useTheme();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // Find the active index based on current route
+  const activeIndex = navItems.findIndex(item => item.href === pathname);
 
   return (
     <>
@@ -61,7 +63,7 @@ export default function DesktopSidebarNav({
             key={item.label}
             selected={activeIndex === idx}
             onClick={() => {
-              onNavItemClick(idx);
+              router.push(item.href);
             }}
             sx={{
               mx: 2,
