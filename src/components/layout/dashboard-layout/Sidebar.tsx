@@ -160,7 +160,7 @@ export default function Sidebar() {
               )}
             </Link>
           </LogoBox>
-          <DesktopSidebarNav navItems={navItems} isCollapsed={isMediumScreen} />{' '}
+          <DesktopSidebarNav navItems={navItems} isCollapsed={isMediumScreen} />
           <UserProfileMenu
             name="Jeon"
             plan="Free Plan"
