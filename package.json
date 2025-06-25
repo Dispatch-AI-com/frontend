@@ -29,6 +29,7 @@
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.17",
+    "use-debounce": "^10.0.5",
     "zod": "^3.25.17"
   },
   "devDependencies": {

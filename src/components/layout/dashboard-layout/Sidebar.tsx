@@ -3,7 +3,6 @@
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { Box, IconButton, Link, styled, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import theme from '@/theme';
@@ -12,27 +11,30 @@ import DesktopSidebarNav from './DesktopSidebarNav';
 import MobileSidebarDrawer from './MobileSidebarDrawer';
 import UserProfileMenu from './UserProfileMenu';
 
-const SidebarContainer = styled(Box)(({ theme }) => ({
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: 240,
-  transition: 'width 0.2s',
-  height: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
-  padding: theme.spacing(2, 0),
-}));
+const SidebarContainer = styled(Box)<{ isCollapsed?: boolean }>(
+  ({ theme, isCollapsed }) => ({
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: isCollapsed ? 80 : 240,
+    transition: 'width 0.2s',
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
+    padding: theme.spacing(2, 0),
+  }),
+);
 
-const LogoBox = styled(Box)({
+const LogoBox = styled(Box)<{ isCollapsed?: boolean }>(({ isCollapsed }) => ({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
-  marginBottom: theme.spacing(2),
-  minHeight: theme.spacing(6),
-});
+  justifyContent: isCollapsed ? 'center' : 'flex-start',
+  marginLeft: isCollapsed ? 0 : 20,
+  marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(3),
+}));
 
 const ICON_SIZE = 16;
 
@@ -54,6 +56,12 @@ const navItems = [
     iconSrc: '/dashboard/sidebar/service.svg',
     iconAlt: 'Service',
     href: '/admin/service',
+  },
+  {
+    label: 'Service Management',
+    iconSrc: '/dashboard/sidebar/service-management.svg',
+    iconAlt: 'Service Management',
+    href: '/admin/service-management',
   },
   {
     label: 'Calendar',
@@ -110,6 +118,7 @@ export default function Sidebar() {
   };
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -117,7 +126,6 @@ export default function Sidebar() {
   };
 
   const [arrowUp, setArrowUp] = React.useState(false);
-  const router = useRouter();
 
   return (
     <>
@@ -139,13 +147,20 @@ export default function Sidebar() {
       )}
       {/* Sidebar for desktop */}
       {!isSmallScreen && (
-        <SidebarContainer>
-          <LogoBox>
+        <SidebarContainer isCollapsed={isMediumScreen}>
+          <LogoBox isCollapsed={isMediumScreen}>
             <Link href="/admin/overview">
-              <Image src="/logo.svg" alt="DispatchAI" width={126} height={28} />
+              {!isMediumScreen && (
+                <Image
+                  src="/logo.svg"
+                  alt="DispatchAI"
+                  width={126}
+                  height={30}
+                />
+              )}
             </Link>
           </LogoBox>
-          <DesktopSidebarNav navItems={navItems} />
+          <DesktopSidebarNav navItems={navItems} isCollapsed={isMediumScreen} />
           <UserProfileMenu
             name="Jeon"
             plan="Free Plan"
@@ -157,6 +172,7 @@ export default function Sidebar() {
             handleMenuOpen={handleMenuOpen}
             handleMenuClose={handleMenuClose}
             ICON_SIZE={ICON_SIZE}
+            isCollapsed={isMediumScreen}
           />
         </SidebarContainer>
       )}

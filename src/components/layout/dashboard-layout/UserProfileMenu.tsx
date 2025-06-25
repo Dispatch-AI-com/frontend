@@ -27,6 +27,7 @@ interface UserProfileMenuProps {
   handleMenuOpen: (event: React.MouseEvent<HTMLElement>) => void;
   handleMenuClose: () => void;
   ICON_SIZE?: number;
+  isCollapsed?: boolean;
 }
 
 export default function UserProfileMenu({
@@ -40,42 +41,60 @@ export default function UserProfileMenu({
   handleMenuOpen,
   handleMenuClose,
   ICON_SIZE = 16,
+  isCollapsed = false,
 }: UserProfileMenuProps) {
   return (
     <Box px={3} py={2} mt="auto">
-      <Box display="flex" alignItems="center" gap={1.5}>
+      <Box
+        display="flex"
+        alignItems="center"
+        gap={1.5}
+        justifyContent={isCollapsed ? 'center' : 'flex-start'}
+      >
         <Avatar
           sx={{
             width: 40,
             height: 40,
             bgcolor: '#e5fcd5',
             color: '#222',
+            cursor: isCollapsed ? 'pointer' : 'default',
           }}
+          onClick={
+            isCollapsed
+              ? arrowUp
+                ? handleMenuClose
+                : handleMenuOpen
+              : undefined
+          }
         >
           {avatarLetter}
         </Avatar>
-        <Box flex="1">
-          <Typography variant="body1" sx={{ fontWeight: 600 }}>
-            {name}
-          </Typography>
-          <Typography variant="body2">{plan}</Typography>
-        </Box>
-        <IconButton
-          size="small"
-          sx={{ ml: 1 }}
-          onClick={arrowUp ? handleMenuClose : handleMenuOpen}
-        >
-          <Image
-            src={
-              arrowUp
-                ? '/dashboard/sidebar/detail-arrow-up.svg'
-                : '/dashboard/sidebar/detail-arrow-right.svg'
-            }
-            width={12}
-            height={12}
-            alt="Profile Details"
-          />
-        </IconButton>
+        {!isCollapsed && (
+          <>
+            <Box flex="1">
+              <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                {name}
+              </Typography>
+              <Typography variant="body2">{plan}</Typography>
+            </Box>
+            <IconButton
+              size="small"
+              sx={{ ml: 1 }}
+              onClick={arrowUp ? handleMenuClose : handleMenuOpen}
+            >
+              <Image
+                src={
+                  arrowUp
+                    ? '/dashboard/sidebar/detail-arrow-up.svg'
+                    : '/dashboard/sidebar/detail-arrow-right.svg'
+                }
+                width={12}
+                height={12}
+                alt="Profile Details"
+              />
+            </IconButton>
+          </>
+        )}
         <Menu
           disableScrollLock
           anchorReference="anchorPosition"

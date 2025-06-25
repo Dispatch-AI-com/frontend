@@ -21,6 +21,7 @@ interface NavItem {
 
 interface DesktopSidebarNavProps {
   navItems: NavItem[];
+  isCollapsed?: boolean;
 }
 
 function NavIcon({
@@ -47,6 +48,7 @@ function NavIcon({
 
 export default function DesktopSidebarNav({
   navItems,
+  isCollapsed = false,
 }: DesktopSidebarNavProps) {
   const theme = useTheme();
   const pathname = usePathname();
@@ -84,9 +86,11 @@ export default function DesktopSidebarNav({
                 height={ICON_SIZE}
               />
             </ListItemIcon>
-            <ListItemText
-              primary={<Typography variant="body1">{item.label}</Typography>}
-            />
+            {!isCollapsed && (
+              <ListItemText
+                primary={<Typography variant="body1">{item.label}</Typography>}
+              />
+            )}
           </ListItemButton>
         ))}
       </List>
