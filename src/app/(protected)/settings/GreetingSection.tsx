@@ -25,7 +25,20 @@ export default function GreetingSection() {
     setIsModalOpen(true);
   };
   const handleSave = (message: string, isCustom: boolean) => {
-    setGreeting({ message, isCustom });
+    if (isCustom && (!message || message.trim().length === 0)) {
+      return {
+        success: false,
+        error: 'Custom greeting message cannot be empty',
+      };
+    }
+    if (message.trim().length > 1000) {
+      return {
+        success: false,
+        error: 'Greeting message cannot exceed 1000 characters',
+      };
+    }
+    setGreeting({ message: message.trim(), isCustom });
+    return { success: true };
   };
 
   return (

@@ -1,5 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import {
+  Alert,
   Box,
   Button,
   Dialog,
@@ -10,14 +11,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
-
-import theme from '@/theme';
+import React, { useEffect, useState } from 'react';
 
 interface GreetingEditModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (message: string, isCustom: boolean) => void;
+  onSave: (
+    message: string,
+    isCustom: boolean,
+  ) => { success: boolean; error?: string };
   initialMessage: string;
   isCustom: boolean;
 }
@@ -29,14 +31,95 @@ const GreetingEditModal: React.FC<GreetingEditModalProps> = ({
   initialMessage,
   isCustom,
 }) => {
-  const [selectedType, setSelectedType] = useState<'default' | 'custom'>(
-    isCustom ? 'custom' : 'default',
-  );
-  const [customMessage, setCustomMessage] = useState(
-    isCustom ? initialMessage : '',
-  );
+  const [message, setMessage] = useState(initialMessage);
+  const [isCustomMessage, setIsCustomMessage] = useState(isCustom);
+  const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const defaultMessage = `Hello! I'm an Dispatch AI assistant working for you.
+  useEffect(() => {
+    if (open) {
+      setMessage(initialMessage);
+      setIsCustomMessage(isCustom);
+      setError('');
+    }
+  }, [open, initialMessage, isCustom]);
+
+  const validateMessage = (msg: string, custom: boolean): string => {
+    if (custom && (!msg || msg.trim().length === 0)) {
+      return 'Custom greeting message cannot be empty';
+    }
+    if (msg.trim().length > 1000) {
+      return 'Greeting message cannot exceed 1000 characters';
+    }
+    return '';
+  };
+
+  const handleSave = () => {
+    setError('');
+    setIsLoading(true);
+
+    const validationError = validateMessage(message, isCustomMessage);
+    if (validationError) {
+      setError(validationError);
+      setIsLoading(false);
+      return;
+    }
+
+    const result = onSave(message, isCustomMessage);
+
+    if (result.success) {
+      onClose();
+    } else {
+      setError(result.error ?? 'An error occurred while saving');
+    }
+
+    setIsLoading(false);
+  };
+
+  const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMessage = event.target.value;
+    setMessage(newMessage);
+
+    // Clear error if message becomes valid
+    if (error) {
+      const validationError = validateMessage(newMessage, isCustomMessage);
+      if (!validationError) {
+        setError('');
+      }
+    }
+  };
+
+  const handleCustomToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newIsCustom = event.target.checked;
+    setIsCustomMessage(newIsCustom);
+
+    // When switching to default, set the message to default content
+    if (!newIsCustom) {
+      setMessage(defaultMessage);
+      setError('');
+    } else {
+      // When switching to custom, validate the current message
+      const validationError = validateMessage(message, newIsCustom);
+      setError(validationError);
+    }
+  };
+
+  // Update the button click handlers
+  const handleDefaultClick = () => {
+    setIsCustomMessage(false);
+    setMessage(defaultMessage);
+    setError('');
+  };
+
+  const handleCustomClick = () => {
+    setIsCustomMessage(true);
+    // Keep the current message when switching to custom
+    const validationError = validateMessage(message, true);
+    setError(validationError);
+  };
+
+  const defaultMessage = `"
+  Hello! I'm an Dispatch AI assistant working for you.
 
 Your team is not available to take the call right now.
 
@@ -44,25 +127,15 @@ I can take a message for you, or help you book an appointment with your team. Wh
 
 你也可以和我说普通话。`;
 
-  const handleSave = () => {
-    const messageToSave =
-      selectedType === 'default' ? defaultMessage : customMessage;
-    onSave(messageToSave, selectedType === 'custom');
-    onClose();
-  };
-
-  const handleTypeChange = (type: 'default' | 'custom') => {
-    setSelectedType(type);
-  };
-
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="sm"
       fullWidth
       disableScrollLock
-      PaperProps={{ sx: { pb: 2, pt: 2, pl: 3, pr: 3, borderRadius: 3 } }}
+      PaperProps={{
+        sx: { minWidth: '564px', pb: 2, pt: 2, pl: 3, pr: 3, borderRadius: 3 },
+      }}
     >
       <DialogTitle sx={{ pb: 2 }}>
         <Typography variant="h6" component="div">
@@ -90,40 +163,35 @@ I can take a message for you, or help you book an appointment with your team. Wh
           gap={0}
           mb={2}
           sx={{
-            backgroundColor: theme.palette.background.paper,
+            backgroundColor: '#f5f5f5',
             borderRadius: 2,
-            p: 0.5,
           }}
         >
           <Button
-            onClick={() => handleTypeChange('default')}
+            onClick={handleDefaultClick}
             sx={{
               flex: 1,
-              backgroundColor:
-                selectedType === 'default' ? '#a8f574' : 'transparent',
-              color: selectedType === 'default' ? 'black' : 'text.primary',
+              backgroundColor: !isCustomMessage ? '#a8f574' : '#f5f5f5',
+              color: !isCustomMessage ? 'black' : 'text.primary',
               textTransform: 'none',
               fontWeight: 'normal',
               '&:hover': {
-                backgroundColor:
-                  selectedType === 'default' ? '#96e862' : '#f5f5f5',
+                backgroundColor: !isCustomMessage ? '#96e862' : '#f5f5f5',
               },
             }}
           >
             Default
           </Button>
           <Button
-            onClick={() => handleTypeChange('custom')}
+            onClick={handleCustomClick}
             sx={{
               flex: 1,
-              backgroundColor:
-                selectedType === 'custom' ? '#a8f574' : 'transparent',
-              color: selectedType === 'custom' ? 'black' : 'text.primary',
+              backgroundColor: isCustomMessage ? '#a8f574' : '#f5f5f5',
+              color: isCustomMessage ? 'black' : 'text.primary',
               textTransform: 'none',
               fontWeight: 'normal',
               '&:hover': {
-                backgroundColor:
-                  selectedType === 'custom' ? '#96e862' : '#f5f5f5',
+                backgroundColor: isCustomMessage ? '#96e862' : '#f5f5f5',
               },
             }}
           >
@@ -131,7 +199,35 @@ I can take a message for you, or help you book an appointment with your team. Wh
           </Button>
         </Box>
 
-        {selectedType === 'default' ? (
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {isCustomMessage ? (
+          <TextField
+            placeholder="Enter your custom greeting here"
+            multiline
+            minRows={6}
+            fullWidth
+            variant="outlined"
+            value={message}
+            onChange={handleMessageChange}
+            error={!!error}
+            helperText={`${message.length}/1000 characters`}
+            disabled={isLoading}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#f7f7f7',
+                borderRadius: 2,
+                '& fieldset': {
+                  border: 'none',
+                },
+              },
+            }}
+          />
+        ) : (
           <Box
             sx={{
               p: 2,
@@ -144,25 +240,6 @@ I can take a message for you, or help you book an appointment with your team. Wh
               {defaultMessage}
             </Typography>
           </Box>
-        ) : (
-          <TextField
-            placeholder="Enter your custom greeting here"
-            multiline
-            minRows={6}
-            fullWidth
-            variant="outlined"
-            value={customMessage}
-            onChange={e => setCustomMessage(e.target.value)}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#f7f7f7',
-                borderRadius: 2,
-                '& fieldset': {
-                  border: 'none',
-                },
-              },
-            }}
-          />
         )}
       </DialogContent>
 
@@ -194,7 +271,7 @@ I can take a message for you, or help you book an appointment with your team. Wh
             },
           }}
         >
-          Save
+          {isLoading ? 'Saving...' : 'Save'}
         </Button>
       </DialogActions>
     </Dialog>
