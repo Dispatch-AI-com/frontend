@@ -27,6 +27,19 @@ const steps = [
   },
 ];
 
+const MainTitle = styled(Typography)(({ theme }) => ({
+  textAlign: 'center',
+  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(12),
+}));
+
+const SubTitle = styled(Typography)(({ theme }) => ({
+  color: '#888',
+  textAlign: 'center',
+  marginBottom: theme.spacing(12),
+  marginTop: theme.spacing(1),
+}));
+
 const StepContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
@@ -46,20 +59,20 @@ const StepCard = styled(Box)(({ theme, bgcolor }) => ({
   background: bgcolor === 'green' ? '#a8f574' : '#060606',
   color: bgcolor === 'green' ? '#060606' : '#ffffff',
   borderRadius: 24,
-  width: 262,
-  height: 132,
+  width: 220,
+  height: 110,
   padding: theme.spacing(2.5),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'center',
   position: 'relative',
-  flex: '0 0 262px',
+  flex: '0 0 220px',
   [theme.breakpoints.down('md')]: {
     width: '100%',
     maxWidth: '100%',
     minWidth: 0,
-    height: 132,
+    height: 110,
     padding: theme.spacing(1.5),
   },
 }));
@@ -68,18 +81,31 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   background: bgcolor === 'green' ? '#060606' : '#a8f574',
   color: bgcolor === 'green' ? '#a8f574' : '#060606',
   borderRadius: '50%',
-  width: 36,
-  height: 36,
+  width: 32,
+  height: 32,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   position: 'absolute',
-  top: -22,
+  top: -20,
   left: 20,
   boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)',
   [theme.breakpoints.down('md')]: {
-    top: -20,
+    top: -18,
   },
+}));
+
+const StepNumberText = styled(Typography)(({ theme, color }) => ({
+  color: color === 'green' ? '#a8f574' : '#060606',
+  fontSize: '16px',
+  fontWeight: 700,
+}));
+
+const StepLabel = styled(Typography)(({ theme, color }) => ({
+  color: color === 'green' ? '#060606' : '#ffffff',
+  fontSize: '16px',
+  fontWeight: 700,
+  lineHeight: 1.3,
 }));
 
 const Arrow = styled(Box)(({ theme }) => ({
@@ -92,54 +118,44 @@ const Arrow = styled(Box)(({ theme }) => ({
   },
 }));
 
+const Container = styled(Box)(({ theme }) => ({
+  width: '100%',
+  maxWidth: 1844,
+  margin: '0 auto',
+  marginTop: theme.spacing(6),
+  marginBottom: theme.spacing(10),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  [theme.breakpoints.up('md')]: {
+    marginTop: theme.spacing(10),
+    marginBottom: theme.spacing(10),
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+}));
+
 export default function SetupSteps() {
   return (
-    <Box
-      sx={{
-        width: '100%',
-        maxWidth: 1844,
-        mx: 'auto',
-        mt: { xs: 6, md: 10 },
-        mb: { xs: 6, md: 10 },
-        px: { xs: 2, md: 0 },
-      }}
-    >
-      <Typography variant="h2" sx={{ textAlign: 'center', mb: 1, mt: 12 }}>
-        Setup in 3 Minutes
-      </Typography>
-      <Typography
-        variant="subtitle1"
-        sx={{ color: '#888', textAlign: 'center', mb: 12, mt: 1 }}
-      >
+    <Container>
+      <MainTitle variant="h2">Setup in 3 Minutes</MainTitle>
+      <SubTitle variant="body1">
         No computer skills required — just talk.
-      </Typography>
+      </SubTitle>
       <StepContainer>
         {steps.map((step, idx) => (
           <React.Fragment key={idx}>
             <StepCard bgcolor={step.color}>
               <StepNumber bgcolor={step.color}>
-                <Typography
-                  variant="h3"
-                  sx={{
-                    color: step.color === 'green' ? '#a8f574' : '#060606',
-                  }}
-                >
+                <StepNumberText color={step.color}>
                   {'0' + String(idx + 1)}
-                </Typography>
+                </StepNumberText>
               </StepNumber>
-              <Typography
-                variant="h3"
-                sx={{
-                  color: step.color === 'green' ? '#060606' : '#ffffff',
-                }}
-              >
-                {step.label}
-              </Typography>
+              <StepLabel color={step.color}>{step.label}</StepLabel>
             </StepCard>
             {idx < steps.length - 1 && <Arrow as="span">&gt;&gt;</Arrow>}
           </React.Fragment>
         ))}
       </StepContainer>
-    </Box>
+    </Container>
   );
 }
