@@ -2,7 +2,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import React, { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import useCallLogs from '@/hooks/useCallLog';
+import type { ICallLog } from '@/types/calllog.d';
 
 const List = styled.div`
   display: flex;
@@ -139,6 +139,11 @@ interface InboxListProps {
   searchTerm?: string;
   tag?: 'all' | 'Missed' | 'Completed' | 'Follow-up';
   sort?: 'newest' | 'oldest';
+  allItems?: ICallLog[];
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  fetchNextPage?: () => void;
+  isLoading?: boolean;
 }
 
 const ITEM_HEIGHT = 140; // Updated to match the new ListItem height
@@ -161,34 +166,32 @@ export default function InboxList({
   selectedId,
   onSelect,
   searchTerm = '',
-  tag = 'all',
-  sort = 'newest',
+  allItems = [],
+  hasNextPage = false,
+  isFetchingNextPage = false,
+  fetchNextPage,
+  isLoading = false,
 }: InboxListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useCallLogs({
-      search: searchTerm,
-      status: tag !== 'all' ? tag : undefined,
-      sort,
-    });
-
-  const allItems = data?.pages.flatMap(page => page.data) ?? [];
 
   const rowVirtualizer = useVirtualizer({
     count: allItems.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => ITEM_HEIGHT,
     overscan: 5,
+    // Maintain scroll position when new items are added
+    getItemKey: index => allItems[index]?._id ?? index,
   });
 
   const handleScroll = useCallback(() => {
-    if (!parentRef.current) return;
+    if (!parentRef.current || !fetchNextPage) return;
 
     const { scrollTop, scrollHeight, clientHeight } = parentRef.current;
-    if (scrollHeight - scrollTop <= clientHeight * 1.5) {
-      if (hasNextPage && !isFetchingNextPage) {
-        void fetchNextPage();
-      }
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+    // Trigger next page when within 200px of bottom
+    if (distanceFromBottom <= 200 && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
@@ -229,6 +232,8 @@ export default function InboxList({
       >
         {rowVirtualizer.getVirtualItems().map(virtualRow => {
           const item = allItems[virtualRow.index];
+          if (!item) return null;
+
           return (
             <div
               key={item._id}
@@ -242,7 +247,7 @@ export default function InboxList({
             >
               <ListItem
                 selected={item._id === selectedId}
-                onClick={() => item._id && onSelect?.(item._id)}
+                onClick={() => onSelect?.(item._id!)}
               >
                 <CallerInfo>
                   <CallerName>
@@ -278,6 +283,19 @@ export default function InboxList({
               <StatusChip status="loading">Loading...</StatusChip>
             </StatusContainer>
           </ListItem>
+        </div>
+      )}
+      {!hasNextPage && allItems.length > 0 && (
+        <div
+          style={{
+            padding: '16px',
+            textAlign: 'center',
+            color: '#666',
+            fontSize: '14px',
+            fontStyle: 'italic',
+          }}
+        >
+          No more call logs to load • Total: {allItems.length} items
         </div>
       )}
     </List>

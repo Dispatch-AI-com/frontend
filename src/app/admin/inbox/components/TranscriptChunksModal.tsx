@@ -8,8 +8,9 @@ import {
 } from '@mui/material';
 import styled from 'styled-components';
 
-import useTranscriptChunks from '@/hooks/useTranscriptChunk';
 import type { ITranscriptChunk } from '@/types/transcript-chunk.d';
+
+import useTranscriptChunks from '../hooks/useTranscriptChunk';
 
 const ChatContainer = styled.div`
   display: flex;

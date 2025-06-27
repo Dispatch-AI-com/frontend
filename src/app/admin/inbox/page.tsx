@@ -8,15 +8,22 @@ import InboxDetail from '@/app/admin/inbox/components/InboxDetail';
 import InboxList from '@/app/admin/inbox/components/InboxList';
 import InboxSearchBar from '@/app/admin/inbox/components/InboxSearchBar';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
-import useCallLogs from '@/hooks/useCallLog';
+import theme from '@/theme';
 import type { ICallLog } from '@/types/calllog.d';
+
+import useCallLogs from './hooks/useCallLog';
 
 const PageContainer = styled.div`
   display: flex;
   padding-left: 240px;
   height: 100vh;
   overflow: hidden;
-  @media (max-width: 600px) {
+
+  ${theme.breakpoints.down('md')} {
+    padding-left: 80px;
+  }
+
+  ${theme.breakpoints.down('sm')} {
     padding-left: 0;
   }
 `;
@@ -33,7 +40,7 @@ const MainContent = styled.div`
 const ContentContainer = styled.div`
   flex: 1;
   display: flex;
-  height: calc(100vh - 130px); /* 减去 SearchBar 的高度 */
+  height: calc(100vh - 130px);
   overflow: hidden;
 `;
 
@@ -44,10 +51,10 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  @media (max-width: 600px) {
+
+  ${theme.breakpoints.down('sm')} {
     width: 100%;
     min-width: 0;
-    display: flex;
   }
 `;
 
@@ -129,12 +136,24 @@ export default function InboxPage() {
   const [tag, setTag] = useState<TagOption>('all');
   const [sort, setSort] = useState<SortOption>('newest');
 
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { data, error, isFetchingNextPage, isPending } = useCallLogs({
+  const {
+    data,
+    error,
+    isFetchingNextPage,
+    isPending,
+    hasNextPage,
+    fetchNextPage,
+  } = useCallLogs({
     status: tag !== 'all' ? tag : undefined,
     sort,
+    pageSize: 20,
   });
+
+  const handleFetchNextPage = React.useCallback(() => {
+    void fetchNextPage();
+  }, [fetchNextPage]);
 
   const errorMsg =
     typeof error === 'string'
@@ -160,7 +179,7 @@ export default function InboxPage() {
 
   const handleSelect = (id: string) => {
     setSelectedId(id);
-    if (isMobile) setShowDetailMobile(true);
+    if (isSmallScreen) setShowDetailMobile(true);
   };
   const handleBack = () => {
     setShowDetailMobile(false);
@@ -215,7 +234,7 @@ export default function InboxPage() {
           onSortChange={setSort}
         />
         <ContentContainer style={{ flex: 1, overflow: 'hidden' }}>
-          {!isMobile ? (
+          {!isSmallScreen ? (
             <>
               <ListContainer>
                 <ListContent>
@@ -224,10 +243,12 @@ export default function InboxPage() {
                     onSelect={handleSelect}
                     tag={tag}
                     sort={sort}
+                    allItems={allCallLogs}
+                    hasNextPage={hasNextPage}
+                    isFetchingNextPage={isFetchingNextPage}
+                    fetchNextPage={handleFetchNextPage}
+                    isLoading={isPending}
                   />
-                  {isFetchingNextPage && (
-                    <LoadingSpinner>Loading more...</LoadingSpinner>
-                  )}
                 </ListContent>
               </ListContainer>
               <DetailContainer>
@@ -262,10 +283,12 @@ export default function InboxPage() {
                   onSelect={handleSelect}
                   tag={tag}
                   sort={sort}
+                  allItems={allCallLogs}
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                  fetchNextPage={handleFetchNextPage}
+                  isLoading={isPending}
                 />
-                {isFetchingNextPage && (
-                  <LoadingSpinner>Loading more...</LoadingSpinner>
-                )}
               </ListContent>
             </ListContainer>
           )}

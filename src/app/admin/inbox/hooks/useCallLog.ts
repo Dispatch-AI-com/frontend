@@ -1,7 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useCallback, useEffect } from 'react';
+import type { AxiosError } from 'axios';
+import axios from 'axios';
+import { useCallback } from 'react';
 
-import { useAppSelector } from '@/redux/hooks';
+import { logout } from '@/features/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import type { ICallLog } from '@/types/calllog.d';
 
 type SortOption = 'newest' | 'oldest';
@@ -11,6 +14,7 @@ interface UseCallLogsOptions {
   search?: string;
   status?: TagOption;
   sort?: SortOption;
+  pageSize?: number;
 }
 
 interface CallLogResponse {
@@ -31,7 +35,9 @@ const STALE_TIME = 60 * 1000; // 1 minute
 
 export default function useCallLogs(options: UseCallLogsOptions = {}) {
   const user = useAppSelector(state => state.auth.user);
-  const { search, status, sort = 'newest' } = options;
+  const token = useAppSelector(state => state.auth.token);
+  const dispatch = useAppDispatch();
+  const { search, status, sort = 'newest', pageSize = 20 } = options;
 
   const fetchCallLogs = useCallback(
     async ({ pageParam }: { pageParam: unknown }) => {
@@ -49,27 +55,39 @@ export default function useCallLogs(options: UseCallLogsOptions = {}) {
         };
       }
       const page = typeof pageParam === 'number' ? pageParam : 1;
-      const params = new URLSearchParams({
+      const params = {
         page: page.toString(),
-        limit: '10',
+        limit: pageSize.toString(),
         sort,
         ...(search && { search: search.trim() }),
         ...(status && status !== 'all' && { status }),
-      });
+      };
 
-      const response = await fetch(
-        `${API_URL}/users/${user._id}/calllogs?${params.toString()}`,
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch call logs');
+      try {
+        const response = await axios({
+          baseURL: API_URL,
+          url: `/users/${user._id}/calllogs`,
+          method: 'GET',
+          params,
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        });
+
+        return response.data as CallLogResponse;
+      } catch (error) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        if (axiosError.response?.status === 401) {
+          dispatch(logout());
+        }
+        throw new Error(
+          axiosError.response?.data?.message ?? 'Failed to fetch call logs',
+        );
       }
-      return response.json() as Promise<CallLogResponse>;
     },
-    [user?._id, search, status, sort],
+    [user?._id, token, search, status, sort, pageSize, dispatch],
   );
 
   const query = useInfiniteQuery<CallLogResponse, Error>({
-    queryKey: ['callLogs', user?._id, search, status, sort],
+    queryKey: ['callLogs', user?._id, search, status, sort, pageSize],
     queryFn: fetchCallLogs,
     getNextPageParam: lastPage => {
       if (!lastPage) return undefined;
@@ -84,22 +102,7 @@ export default function useCallLogs(options: UseCallLogsOptions = {}) {
     refetchOnMount: false,
   });
 
-  // Prefetch next page when current page is loaded
-  useEffect(() => {
-    if (
-      query.data?.pages.length &&
-      query.hasNextPage &&
-      !query.isFetchingNextPage
-    ) {
-      void query.fetchNextPage();
-    }
-  }, [
-    query.data?.pages.length,
-    query.hasNextPage,
-    query.isFetchingNextPage,
-    query.fetchNextPage,
-    query,
-  ]);
+  // Note: Removed automatic prefetching - let user scroll control when to load more
 
   return query;
 }

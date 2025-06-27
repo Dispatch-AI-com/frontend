@@ -1,11 +1,8 @@
-import DownloadIcon from '@mui/icons-material/Download';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { Button, IconButton, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { Button, Typography } from '@mui/material';
+import { useState } from 'react';
 import styled from 'styled-components';
 
-import useTranscript from '@/hooks/useTranscript';
-
+import useTranscript from '../hooks/useTranscript';
 import TranscriptChunksModal from './TranscriptChunksModal';
 
 const SectionTitle = styled.div`
@@ -42,51 +39,12 @@ const ErrorText = styled(Typography)`
   margin-top: 16px;
 `;
 
-const IconGroup = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
-  align-items: center;
-  gap: 6px;
-`;
-
-const OutlinedIconButton = styled(IconButton)`
-  border: 1.5px solid #d5d5d5 !important;
-  background: #fff !important;
-  border-radius: 12px !important;
-  width: 40px;
-  height: 40px;
-  box-sizing: border-box;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const SpeedButton = styled.div`
-  border: 1.5px solid #d5d5d5;
-  background: #fff;
-  border-radius: 12px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 500;
-  color: #757575;
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-`;
-
-const IconRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 48px;
+  justify-content: flex-start;
   margin-top: 48px;
-  flex-wrap: wrap;
   @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 24px;
     margin-top: 32px;
-    align-items: stretch;
   }
 `;
 
@@ -98,39 +56,6 @@ const FixedWidthButton = styled(Button)`
   align-self: flex-start;
 `;
 
-const Waveform = styled.div`
-  width: 280px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  margin: 0 0;
-`;
-
-function StaticWaveform() {
-  return (
-    <Waveform>
-      <svg width="280" height="40" viewBox="0 0 280 40">
-        {Array.from({ length: 25 }).map((_, i) => {
-          const x = i * 11;
-          const heights = [8, 16, 24, 16, 8, 12, 20, 12];
-          const y = 20 - heights[i % heights.length] / 2;
-          return (
-            <rect
-              key={i}
-              x={x}
-              y={y}
-              width="6"
-              height={heights[i % heights.length]}
-              fill="#bdbdbd"
-              rx="2"
-            />
-          );
-        })}
-      </svg>
-    </Waveform>
-  );
-}
-
 interface TranscriptSectionProps {
   calllogId: string;
 }
@@ -141,20 +66,6 @@ export default function TranscriptSection({
   const { data: transcript, loading, error } = useTranscript(calllogId);
   const [openChunksModal, setOpenChunksModal] = useState(false);
 
-  const [, setIsNarrow] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const node = containerRef.current;
-    if (!node) return;
-    const observer = new window.ResizeObserver(entries => {
-      for (const entry of entries) {
-        setIsNarrow(entry.contentRect.width < 1400);
-      }
-    });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
   if (loading)
     return <Typography sx={{ mt: 2 }}>Loading transcript…</Typography>;
   if (error)
@@ -164,7 +75,7 @@ export default function TranscriptSection({
   if (!transcript) return null;
 
   return (
-    <div ref={containerRef}>
+    <div>
       {transcript.keyPoints && transcript.keyPoints.length > 0 && (
         <>
           <SectionTitle>Key Points</SectionTitle>
@@ -181,17 +92,7 @@ export default function TranscriptSection({
           <SummaryBody>{transcript.summary}</SummaryBody>
         </>
       )}
-      <IconRow>
-        <IconGroup>
-          <OutlinedIconButton>
-            <VolumeUpIcon sx={{ fontSize: 22, color: '#757575' }} />
-          </OutlinedIconButton>
-          <StaticWaveform />
-          <SpeedButton>2.5X</SpeedButton>
-          <OutlinedIconButton>
-            <DownloadIcon sx={{ fontSize: 22, color: '#757575' }} />
-          </OutlinedIconButton>
-        </IconGroup>
+      <ButtonContainer>
         <FixedWidthButton
           variant="outlined"
           sx={{
@@ -214,7 +115,7 @@ export default function TranscriptSection({
         >
           View Transcript
         </FixedWidthButton>
-      </IconRow>
+      </ButtonContainer>
       <TranscriptChunksModal
         open={openChunksModal}
         onClose={() => {
