@@ -29,7 +29,6 @@ const StyledButton = styled(Button, {
   color: buttonVariant === 'black' ? '#ffffff' : '#060606',
   '&:hover': {
     backgroundColor: buttonVariant === 'black' ? '#060606' : '#a8f574',
-    opacity: 0.9,
   },
 }));
 
