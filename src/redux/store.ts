@@ -13,6 +13,8 @@ import storage from 'redux-persist/lib/storage';
 
 import { authApi } from '@/features/auth/authApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
+import { serviceApi } from '@/features/service/serviceApi';
+import { serviceBookingApi } from '@/features/service/serviceBookingApi';
 import { testApi } from '@/features/test/testApiSlice';
 
 import { rootReducer } from './root-reducer';
@@ -36,6 +38,8 @@ export const store = configureStore({
       authApi.middleware,
       publicApiSlice.middleware,
       testApi.middleware,
+      serviceApi.middleware,
+      serviceBookingApi.middleware,
     ),
 });
 

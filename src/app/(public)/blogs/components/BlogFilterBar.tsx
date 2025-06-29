@@ -84,8 +84,8 @@ export default function BlogFilterBar() {
   const [topic, setTopic] = useState('');
   const router = useRouter();
 
-  const [debouncedKeyword] = useDebounce(keyword, 1000);
-  const [debouncedTopic] = useDebounce(topic, 1000);
+  const [debouncedKeyword] = useDebounce<string>(keyword, 1000);
+  const [debouncedTopic] = useDebounce<string>(topic, 1000);
 
   const handleSearch = () => {
     const params = new URLSearchParams();

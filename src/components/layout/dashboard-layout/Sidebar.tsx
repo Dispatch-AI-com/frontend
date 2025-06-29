@@ -1,3 +1,4 @@
+//Sidebar.tsx
 'use client';
 
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -11,23 +12,29 @@ import DesktopSidebarNav from './DesktopSidebarNav';
 import MobileSidebarDrawer from './MobileSidebarDrawer';
 import UserProfileMenu from './UserProfileMenu';
 
-const SidebarContainer = styled(Box)<{ isCollapsed?: boolean }>(
-  ({ theme, isCollapsed }) => ({
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: isCollapsed ? 80 : 240,
-    transition: 'width 0.2s',
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
-    padding: theme.spacing(2, 0),
-  }),
-);
+const SidebarContainer = styled(Box, {
+  shouldForwardProp: prop => prop !== 'isCollapsed',
+})<{
+  isCollapsed?: boolean;
+}>(({ theme, isCollapsed }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: isCollapsed ? 80 : 240,
+  transition: 'width 0.2s',
+  height: '100vh',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
+  padding: theme.spacing(2, 0),
+}));
 
-const LogoBox = styled(Box)<{ isCollapsed?: boolean }>(({ isCollapsed }) => ({
+const LogoBox = styled(Box, {
+  shouldForwardProp: prop => prop !== 'isCollapsed',
+})<{
+  isCollapsed?: boolean;
+}>(({ isCollapsed, theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: isCollapsed ? 'center' : 'flex-start',

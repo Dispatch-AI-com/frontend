@@ -20,6 +20,7 @@ interface UserProfileMenuProps {
   name: string;
   plan: string;
   avatarLetter: string;
+  avatarUrl?: string;
   dropdownOptions: DropdownOption[];
   anchorEl: null | HTMLElement;
   open: boolean;
@@ -34,6 +35,7 @@ export default function UserProfileMenu({
   name,
   plan,
   avatarLetter,
+  avatarUrl,
   dropdownOptions,
   anchorEl,
   open,
@@ -52,12 +54,15 @@ export default function UserProfileMenu({
         justifyContent={isCollapsed ? 'center' : 'flex-start'}
       >
         <Avatar
+          src={avatarUrl}
           sx={{
-            width: 40,
-            height: 40,
-            bgcolor: '#e5fcd5',
+            width: 48,
+            height: 48,
+            bgcolor: avatarUrl ? undefined : '#e5fcd5',
             color: '#222',
             cursor: isCollapsed ? 'pointer' : 'default',
+            border: '3px solid #fff',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
           }}
           onClick={
             isCollapsed
@@ -67,7 +72,7 @@ export default function UserProfileMenu({
               : undefined
           }
         >
-          {avatarLetter}
+          {!avatarUrl && avatarLetter}
         </Avatar>
         {!isCollapsed && (
           <>
