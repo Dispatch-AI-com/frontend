@@ -12,6 +12,7 @@
     "prepare": "husky install && (chmod -R +x .husky || echo 'Skipping chmod')"
   },
   "dependencies": {
+    "@date-io/date-fns": "^3.2.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^5.0.1",
@@ -19,7 +20,10 @@
     "@mui/material": "^6.1.9",
     "@mui/system": "^6.1.9",
     "@reduxjs/toolkit": "^2.8.2",
+    "@tanstack/react-query": "^5.80.7",
+    "@tanstack/react-virtual": "^3.13.10",
     "axios": "^1.9.0",
+    "date-fns": "^4.1.0",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

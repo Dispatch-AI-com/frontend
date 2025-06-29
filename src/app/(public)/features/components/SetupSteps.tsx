@@ -95,13 +95,13 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   },
 }));
 
-const StepNumberText = styled(Typography)(({ theme, color }) => ({
+const StepNumberText = styled(Typography)(({ color }) => ({
   color: color === 'green' ? '#a8f574' : '#060606',
   fontSize: '16px',
   fontWeight: 700,
 }));
 
-const StepLabel = styled(Typography)(({ theme, color }) => ({
+const StepLabel = styled(Typography)(({ color }) => ({
   color: color === 'green' ? '#060606' : '#ffffff',
   fontSize: '16px',
   fontWeight: 700,
