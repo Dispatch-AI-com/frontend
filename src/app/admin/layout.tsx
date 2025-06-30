@@ -8,23 +8,26 @@ import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import { useAppSelector } from '@/redux/hooks';
 
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
-  const [mounted, setMounted] = useState(false);
+  const [ready, setReady] = useState(false);
   const token = useAppSelector(s => s.auth.token);
   const user = useAppSelector(s => s.auth.user);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    // Wait for hydration and then check auth status
+    const timer = setTimeout(() => {
+      if (!token || !user) {
+        router.replace(`/login`);
+      } else {
+        setReady(true);
+      }
+    }, 0);
 
-  useEffect(() => {
-    if (mounted && (!token || !user)) {
-      router.replace(`/login`);
-    }
-  }, [mounted, token, user, pathname, router]);
+    return () => clearTimeout(timer);
+  }, [token, user, router, pathname]);
 
-  if (!mounted) {
+  if (!ready) {
     return (
       <Box
         display="flex"
@@ -32,19 +35,6 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         alignItems="center"
         height="100vh"
         sx={{ visibility: 'hidden' }}
-      >
-        Loading...
-      </Box>
-    );
-  }
-
-  if (!token || !user) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
       >
         <Box textAlign="center">
           <Box mb={2}>Initializing Admin Panel...</Box>
