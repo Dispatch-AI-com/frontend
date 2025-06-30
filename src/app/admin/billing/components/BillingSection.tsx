@@ -139,8 +139,8 @@ export default function BillingSection() {
       await downgrade();
       setShowCancelModal(false);
       window.location.reload();
-    } catch {
-      // Handle error silently
+    } catch (e) {
+      // console.error('Cancel failed:', e);
     }
   };
 
