@@ -17,7 +17,7 @@ export const subscriptionApi = createApi({
       CreateSubscriptionDto
     >({
       query: dto => ({
-        url: '/api/subscriptions',
+        url: '/subscriptions',
         method: 'POST',
         data: dto,
       }),
@@ -25,7 +25,7 @@ export const subscriptionApi = createApi({
 
     changePlan: builder.mutation<any, ChangePlanDto>({
       query: body => ({
-        url: '/api/subscriptions/change',
+        url: '/subscriptions/change',
         method: 'PATCH',
         data: body,
       }),
@@ -34,7 +34,7 @@ export const subscriptionApi = createApi({
 
     downgradeToFree: builder.mutation<void, string>({
       query: userId => ({
-        url: `/api/subscriptions/${userId}/free`,
+        url: `/subscriptions/${userId}/free`,
         method: 'PATCH',
       }),
       invalidatesTags: ['Subscription'],
@@ -42,7 +42,7 @@ export const subscriptionApi = createApi({
 
     getSubscriptionByUser: builder.query<Subscription, string>({
       query: userId => ({
-        url: `/api/subscriptions/${userId}`,
+        url: `/subscriptions/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Subscription'],
@@ -53,7 +53,7 @@ export const subscriptionApi = createApi({
       { page?: number; limit?: number }
     >({
       query: ({ page = 1, limit = 20 }) => ({
-        url: '/api/subscriptions',
+        url: '/subscriptions',
         method: 'GET',
         params: { page, limit },
       }),
@@ -61,7 +61,7 @@ export const subscriptionApi = createApi({
 
     generateBillingPortalUrl: builder.mutation<{ url: string }, string>({
       query: userId => ({
-        url: `/api/subscriptions/${userId}/retry-payment`,
+        url: `/subscriptions/${userId}/retry-payment`,
         method: 'POST',
       }),
     }),
