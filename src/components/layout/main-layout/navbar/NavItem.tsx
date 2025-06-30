@@ -82,7 +82,7 @@ export function NavItem({
   return (
     <NavItemContainer
       component={NextLink}
-      href={href}
+      href={href === '/features' ? '/features#features-banner' : href}
       width={width}
       textWidth={textWidth}
       themeVariant={themeVariant}

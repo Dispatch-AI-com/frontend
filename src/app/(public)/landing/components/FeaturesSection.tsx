@@ -1,9 +1,5 @@
 'use client';
 
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import BuildIcon from '@mui/icons-material/Build';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import {
   Box,
   Card,
@@ -13,6 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Image from 'next/image';
 import React from 'react';
 
 // Styled Components
@@ -60,16 +57,16 @@ const FeatureCard = styled(Card)(() => ({
 }));
 
 const FeatureIconContainer = styled(Box)(({ theme }) => ({
-  width: 64,
-  height: 64,
+  width: '72px',
+  height: '72px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor: theme.palette.grey[100],
-  borderRadius: '12px',
+  backgroundColor: '#e5fcd5',
   marginBottom: theme.spacing(3),
   alignSelf: 'flex-start',
   marginLeft: 0,
+  borderRadius: '50%',
 }));
 
 const FeatureTitle = styled(Typography)(({ theme }) => ({
@@ -106,25 +103,57 @@ export default function FeaturesSection() {
       title: 'Automated Call Handling',
       description:
         'AI answers calls, takes down key information, and creates tickets for you.',
-      icon: <PhoneInTalkIcon sx={{ fontSize: 60 }} />,
+      icon: (
+        <Image
+          src="/landing/assert-1.svg"
+          alt="Follow-Up Actions"
+          width={60}
+          height={60}
+          style={{ transform: 'scale(0.7)' }}
+        />
+      ),
     },
     {
       title: 'Follow-Up Actions',
       description:
         'Text message or email conclusions, arrange service bookings, and calendar reminders automatically.',
-      icon: <NotificationsActiveIcon sx={{ fontSize: 60 }} />,
+      icon: (
+        <Image
+          src="/landing/assert-2.svg"
+          alt="Follow-Up Actions"
+          width={60}
+          height={60}
+          style={{ transform: 'scale(0.7)' }}
+        />
+      ),
     },
     {
       title: '24/7 Availability',
       description:
         'Never miss a call, even after hours. Perfect for contractors and rental managers.',
-      icon: <AccessTimeIcon sx={{ fontSize: 60 }} />,
+      icon: (
+        <Image
+          src="/landing/assert-3.svg"
+          alt="Follow-Up Actions"
+          width={60}
+          height={60}
+          style={{ transform: 'scale(0.7)' }}
+        />
+      ),
     },
     {
       title: 'No Tech Skills Needed',
       description:
         'Set up in 3 minutes. Works with your existing phone number.',
-      icon: <BuildIcon sx={{ fontSize: 60 }} />,
+      icon: (
+        <Image
+          src="/landing/assert-4.svg"
+          alt="Follow-Up Actions"
+          width={60}
+          height={60}
+          style={{ transform: 'scale(0.7)' }}
+        />
+      ),
     },
   ];
 

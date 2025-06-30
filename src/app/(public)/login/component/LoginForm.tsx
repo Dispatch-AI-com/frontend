@@ -13,6 +13,7 @@ import {
 } from '@/app/(public)/login/schemas/loginSchema';
 import Button from '@/app/(public)/login/ui/Button';
 import ControllerInput from '@/app/(public)/login/ui/controller/ControllerInput';
+import GoogleOAuthButton from '@/components/GoogleOAuthButton';
 import { useLoginUserMutation } from '@/features/auth/authApi';
 import { useAppSelector } from '@/redux/hooks';
 import { parseRTKError } from '@/utils/parseRTKError';
@@ -59,6 +60,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
       <WelcomeText>Welcome to Dispatch AI!</WelcomeText>
+      <GoogleOAuthButton disabled={isLoading} />
       <FormField label="Email address">
         <ControllerInput
           name="workEmail"

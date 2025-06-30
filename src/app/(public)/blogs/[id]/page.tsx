@@ -10,7 +10,9 @@ export default async function DetailBlogPage({
 }) {
   // params.id is a plain string here
   const { id } = await params;
-  const res = await fetch(`http://localhost:4000/api/blogs/${id}`, {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
+  const res = await fetch(`${baseUrl}/blogs/${id}`, {
     cache: 'no-store',
   });
   if (!res.ok) {

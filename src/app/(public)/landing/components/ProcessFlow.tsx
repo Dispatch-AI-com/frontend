@@ -58,7 +58,7 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   width: '100%',
 }));
 
-const OuterWrapper = styled(Box)(({ theme }) => ({
+const OuterWrapper = styled(Box)(() => ({
   width: '100%',
 }));
 
