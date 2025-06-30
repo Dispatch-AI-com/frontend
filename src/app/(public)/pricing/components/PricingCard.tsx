@@ -1,6 +1,7 @@
 'use client';
 
 import { styled } from '@mui/material/styles';
+import Image from 'next/image';
 
 import CommonButton from '@/components/ui/CommonButton';
 import type { PlanButton } from '@/types/plan.types';
@@ -143,9 +144,20 @@ export default function PricingCard({
   return (
     <CardContainer>
       <IconWrapper tier={tier}>
-        {tier === 'FREE' && <img src="/plan/free.svg" alt="Free Plan" />}
-        {tier === 'BASIC' && <img src="/plan/basic.svg" alt="Basic Plan" />}
-        {tier === 'PRO' && <img src="/plan/pro.svg" alt="Pro Plan" />}
+        {tier === 'FREE' && (
+          <Image src="/plan/free.svg" alt="Free Plan" width={24} height={24} />
+        )}
+        {tier === 'BASIC' && (
+          <Image
+            src="/plan/basic.svg"
+            alt="Basic Plan"
+            width={24}
+            height={24}
+          />
+        )}
+        {tier === 'PRO' && (
+          <Image src="/plan/pro.svg" alt="Pro Plan" width={24} height={24} />
+        )}
       </IconWrapper>
 
       <PriceTitle>
@@ -188,7 +200,12 @@ export default function PricingCard({
 
       <FeatureItem>
         <CheckWrapper>
-          <img src="/plan/check.svg" alt="check Icon" />
+          <Image
+            src="/plan/check.svg"
+            alt="check Icon"
+            width={16}
+            height={16}
+          />
         </CheckWrapper>
         <FeatureLabel>Call Minutes:</FeatureLabel>
         <FeatureValue>{features.callMinutes}</FeatureValue>
@@ -196,7 +213,12 @@ export default function PricingCard({
 
       <FeatureItem>
         <CheckWrapper>
-          <img src="/plan/check.svg" alt="check Icon" />
+          <Image
+            src="/plan/check.svg"
+            alt="check Icon"
+            width={16}
+            height={16}
+          />
         </CheckWrapper>
         <FeatureLabel>Support:</FeatureLabel>
         <FeatureValue>{features.support}</FeatureValue>

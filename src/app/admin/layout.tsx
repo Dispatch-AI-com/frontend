@@ -1,5 +1,6 @@
 // app/admin/layout.tsx
 'use client';
+
 import { Box } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
@@ -45,7 +46,12 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <Box display="flex">
+    <Box
+      display="flex"
+      // border="5px solid black"
+      boxSizing="border-box"
+      overflow-x="auto"
+    >
       <Sidebar />
       <Box flex={1}>{children}</Box>
     </Box>
