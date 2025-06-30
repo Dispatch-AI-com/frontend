@@ -9,7 +9,6 @@ import { useAppSelector } from '@/redux/hooks';
 
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
-  const [ready, setReady] = useState(false);
   const token = useAppSelector(s => s.auth.token);
   const user = useAppSelector(s => s.auth.user);
   const router = useRouter();
@@ -20,17 +19,10 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (mounted) {
-      const isReady = !!token && !!user;
-      setReady(isReady);
-    }
-  }, [mounted, token, user]);
-
-  useEffect(() => {
-    if (ready && !token) {
+    if (mounted && (!token || !user)) {
       router.replace(`/login`);
     }
-  }, [ready, token, pathname, router]);
+  }, [mounted, token, user, pathname, router]);
 
   if (!mounted) {
     return (
@@ -46,7 +38,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     );
   }
 
-  if (!ready) {
+  if (!token || !user) {
     return (
       <Box
         display="flex"
