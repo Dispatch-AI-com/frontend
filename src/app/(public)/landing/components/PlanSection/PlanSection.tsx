@@ -49,7 +49,7 @@ const settings = {
   ],
 };
 
-const StyledSlider = styled(Slider)(({ theme }) => ({
+const StyledSlider = styled(Slider)(() => ({
   '.slick-slide > div': {
     padding: '0 16px 0 0',
     display: 'flex',

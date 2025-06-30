@@ -25,7 +25,7 @@ export const useSubscription = () => {
   const isSubscribed = subscription?.status === 'active';
   const isCancelled = subscription?.status === 'cancelled' || !subscription;
   const isFailed = subscription?.status === 'failed';
-  const currentPlanId = subscription?.planId ?? '';
+  const currentPlanId = subscription?.planId._id ?? '';
 
   return {
     subscription,

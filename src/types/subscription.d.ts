@@ -1,3 +1,4 @@
+import type { Plan } from './plan.types';
 export interface CreateSubscriptionDto {
   userId: string;
   planId: string;
@@ -11,7 +12,7 @@ export interface ChangePlanDto {
 export interface Subscription {
   _id: string;
   userId: string;
-  planId: string;
+  planId: Plan;
   subscriptionId: string;
   stripeCustomerId: string;
   chargeId: string;

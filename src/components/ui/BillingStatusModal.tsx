@@ -3,6 +3,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Modal, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import CommonButton from '@/components/ui/CommonButton';
@@ -99,7 +100,7 @@ const BillingStatusModal: React.FC<BillingStatusModalProps> = ({
           </IconButton>
 
           <IconWrapper>
-            <img src={iconSrc} alt={status} />
+            <Image src={iconSrc} alt={status} width={60} height={60} />
           </IconWrapper>
 
           <Typography variant="h6" mt={2}>

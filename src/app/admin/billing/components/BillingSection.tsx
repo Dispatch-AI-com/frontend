@@ -119,7 +119,7 @@ export default function BillingSection() {
     if (label.startsWith('Go with')) {
       if (!subscription || subscription.status === 'cancelled') {
         await create(planId);
-      } else if (subscription.planId !== planId) {
+      } else if (subscription.planId._id !== planId) {
         await change(planId);
       }
     }
