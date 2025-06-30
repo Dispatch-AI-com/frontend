@@ -19,26 +19,26 @@ const steps: Step[] = [
     id: 1,
     title: 'Sign Up',
     description: 'Create your account in 30 seconds.',
-    imageUrl: 'landing/undraw_sign_up.svg',
+    imageUrl: '/landing/step1.png',
   },
   {
     id: 2,
     title: 'Select Plan',
     description: 'Select the plan you want to get.',
-    imageUrl: 'landing/undraw_plans.svg',
+    imageUrl: '/landing/step2.png',
   },
   {
     id: 3,
     title: 'Set Up',
     description: 'Set up info and call workflows for your business.',
-    imageUrl: 'landing/undraw_set_up.svg',
+    imageUrl: '/landing/step3.png',
   },
   {
     id: 4,
     title: 'Go Live',
     description:
       'Connect your phone number and let SmartAgent handle the rest.',
-    imageUrl: 'landing/undraw_Go_Live.svg',
+    imageUrl: '/landing/step4.png',
   },
 ];
 
@@ -48,58 +48,55 @@ const SectionBox = styled(Box)({
 });
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Roboto, sans-serif',
-  fontWeight: 900,
-  lineHeight: 1.17,
-  letterSpacing: 'normal',
-  color: '#060606',
-  marginLeft: 'auto',
-  marginRight: 'auto',
-  [theme.breakpoints.up('xs')]: {
-    fontSize: '2rem',
-    width: '100%',
-    height: 'auto',
-    marginBottom: 'auto',
-  },
-  [theme.breakpoints.up('sm')]: {
-    width: '684px',
-    height: '56px',
-    marginBottom: '72px',
-  },
+  display: 'block',
+  whiteSpace: 'normal',
   [theme.breakpoints.up('md')]: {
-    fontSize: '40px',
+    whiteSpace: 'nowrap',
   },
+  textAlign: 'center',
+  marginBottom: theme.spacing(8),
+  width: '100%',
+}));
+
+const OuterWrapper = styled(Box)(({ theme }) => ({
+  width: '100%',
 }));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
-  width: '100%',
+  alignSelf: 'center',
+  width: '90%',
   maxWidth: '1260px',
   marginLeft: 'auto',
   marginRight: 'auto',
   backgroundColor: '#060606',
   borderRadius: '24px',
-  padding: '30px',
-  boxShadow: theme.shadows[4],
   overflow: 'hidden',
-  [theme.breakpoints.up('md')]: {
-    minHeight: '911px',
+  boxShadow: theme.shadows[4],
+
+  padding: '30px',
+
+  [theme.breakpoints.down('md')]: {
+    padding: '20px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: '12px',
+  },
+  '@media (max-width:400px)': {
+    padding: '8px',
   },
 }));
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  aspectRatio: '4 / 3',
+  aspectRatio: '16 / 9',
   position: 'relative',
   backgroundColor: theme.palette.common.white,
-  borderRadius: theme.shape.borderRadius * 3,
+  borderRadius: theme.shape.borderRadius * 1.5,
   overflow: 'hidden',
   marginBottom: theme.spacing(2),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  [theme.breakpoints.up('md')]: {
-    minHeight: '675px',
-  },
 }));
 
 const StepsGrid = styled(Box)(({ theme }) => ({
@@ -226,47 +223,49 @@ export default function ProcessFlow() {
         How SmartAgent Works for You
       </SectionTitle>
 
-      <ContentContainer>
-        <ImageContainer
-          ref={containerRef}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          {current && (
-            <Image
-              src={current.imageUrl}
-              alt={current.title}
-              fill
-              className="object-contain"
-            />
-          )}
-        </ImageContainer>
+      <OuterWrapper>
+        <ContentContainer>
+          <ImageContainer
+            ref={containerRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {current && (
+              <Image
+                src={current.imageUrl}
+                alt={current.title}
+                fill
+                className="object-contain"
+              />
+            )}
+          </ImageContainer>
 
-        <StepsGrid>
-          {steps.map(step => {
-            const isActive = step.id === activeStep;
-            return (
-              <StepBox
-                key={String(step.id)}
-                id={`step-${String(step.id)}`}
-                onClick={() => {
-                  handleStepChange(step.id);
-                }}
-              >
-                <StepPaper elevation={isActive ? 8 : 1} isActive={isActive}>
-                  <StepTitle variant="h6">
-                    {`${String(step.id)}. ${step.title}`}
-                  </StepTitle>
-                  <StepDescription variant="body2">
-                    {step.description}
-                  </StepDescription>
-                </StepPaper>
-              </StepBox>
-            );
-          })}
-        </StepsGrid>
-      </ContentContainer>
+          <StepsGrid>
+            {steps.map(step => {
+              const isActive = step.id === activeStep;
+              return (
+                <StepBox
+                  key={String(step.id)}
+                  id={`step-${String(step.id)}`}
+                  onClick={() => {
+                    handleStepChange(step.id);
+                  }}
+                >
+                  <StepPaper elevation={isActive ? 8 : 1} isActive={isActive}>
+                    <StepTitle variant="h6">
+                      {`${String(step.id)}. ${step.title}`}
+                    </StepTitle>
+                    <StepDescription variant="body2">
+                      {step.description}
+                    </StepDescription>
+                  </StepPaper>
+                </StepBox>
+              );
+            })}
+          </StepsGrid>
+        </ContentContainer>
+      </OuterWrapper>
     </SectionBox>
   );
 }
