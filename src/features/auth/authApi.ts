@@ -30,7 +30,7 @@ export const authApi = createApi({
   endpoints: builder => ({
     loginUser: builder.mutation<LoginResp, LoginDTO>({
       query: body => ({
-        url: '/auth/login',
+        url: '/api/auth/login',
         method: 'POST',
         data: body,
       }),
@@ -45,7 +45,7 @@ export const authApi = createApi({
     }),
     signupUser: builder.mutation<SignupResp, SignupDTO>({
       query: body => ({
-        url: '/auth/signup',
+        url: '/api/auth/signup',
         method: 'POST',
         data: body,
       }),
@@ -59,7 +59,7 @@ export const authApi = createApi({
       },
     }),
     logoutUser: builder.mutation<{ message: string }, null>({
-      query: () => ({ url: '/auth/logout', method: 'POST' }),
+      query: () => ({ url: '/api/auth/logout', method: 'POST' }),
       onQueryStarted(_, { dispatch }) {
         dispatch(logout());
       },

@@ -1,5 +1,5 @@
 export type PlanTier = 'FREE' | 'BASIC' | 'PRO';
-export type ButtonVariant = 'primary' | 'secondary';
+export type ButtonVariant = 'primary' | 'secondary' | 'disabled';
 
 export interface PlanButton {
   label: string;
@@ -17,6 +17,7 @@ export interface Plan {
   pricing: {
     rrule: string;
     price: number;
+    stripePriceId: string;
   }[];
   isActive: boolean;
 }

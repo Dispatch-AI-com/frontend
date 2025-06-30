@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { authApi } from '@/features/auth/authApi';
+import { companyApi } from '@/features/company/companyApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
 import { testApi } from '@/features/test/testApiSlice';
 
@@ -34,6 +35,7 @@ export const store = configureStore({
       },
     }).concat(
       authApi.middleware,
+      companyApi.middleware,
       publicApiSlice.middleware,
       testApi.middleware,
     ),

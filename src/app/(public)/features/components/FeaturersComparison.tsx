@@ -39,7 +39,7 @@ const TableContainer = styled(Box)(({ theme }) => ({
   boxShadow: 'none',
   overflow: 'hidden',
   marginTop: theme.spacing(8),
-  marginBottom: theme.spacing(32),
+  marginBottom: theme.spacing(24),
   [theme.breakpoints.down('md')]: {
     maxWidth: '100%',
     marginTop: theme.spacing(4),
