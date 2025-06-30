@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { authApi } from '@/features/auth/authApi';
+import { onboardingApi } from '@/features/onboarding/onboardingApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
 import { testApi } from '@/features/test/testApiSlice';
 
@@ -36,6 +37,7 @@ export const store = configureStore({
       authApi.middleware,
       publicApiSlice.middleware,
       testApi.middleware,
+      onboardingApi.middleware,
     ),
 });
 

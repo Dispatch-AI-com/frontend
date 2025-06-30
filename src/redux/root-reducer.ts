@@ -3,6 +3,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 
 import { authApi } from '@/features/auth/authApi';
 import authReducer from '@/features/auth/authSlice';
+import { onboardingApi } from '@/features/onboarding/onboardingApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
 import { testApi } from '@/features/test/testApiSlice';
 
@@ -11,6 +12,7 @@ export const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [publicApiSlice.reducerPath]: publicApiSlice.reducer,
   [testApi.reducerPath]: testApi.reducer,
+  [onboardingApi.reducerPath]: onboardingApi.reducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
