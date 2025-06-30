@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import EditableSection from '@/app/(protected)/settings/components/EditableSection';
+import EditableSection from '@/app/admin/settings/components/EditableSection';
 
 export default function BankAccountSection() {
   return (

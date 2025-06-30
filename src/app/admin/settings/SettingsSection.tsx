@@ -1,11 +1,11 @@
 'use client';
 
-import BankAccountSection from '@/app/(protected)/settings/BankAccountSection';
-import BillingAddressSection from '@/app/(protected)/settings/BillingAddressSection';
-import GreetingSection from '@/app/(protected)/settings/GreetingSection';
-import NotificationsSection from '@/app/(protected)/settings/NotificationsSection';
-import UserProfileSection from '@/app/(protected)/settings/UserProfileSection';
-import VerificationSection from '@/app/(protected)/settings/VerificationSection';
+import BankAccountSection from '@/app/admin/settings/BankAccountSection';
+import BillingAddressSection from '@/app/admin/settings/BillingAddressSection';
+import GreetingSection from '@/app/admin/settings/GreetingSection';
+import NotificationsSection from '@/app/admin/settings/NotificationsSection';
+import UserProfileSection from '@/app/admin/settings/UserProfileSection';
+import VerificationSection from '@/app/admin/settings/VerificationSection';
 
 export default function SettingsSection() {
   return (

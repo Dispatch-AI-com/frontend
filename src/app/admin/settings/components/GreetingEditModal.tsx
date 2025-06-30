@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
+import { validateGreeting } from '@/utils/validationSettings';
+
 interface GreetingEditModalProps {
   open: boolean;
   onClose: () => void;
@@ -45,13 +47,8 @@ const GreetingEditModal: React.FC<GreetingEditModalProps> = ({
   }, [open, initialMessage, isCustom]);
 
   const validateMessage = (msg: string, custom: boolean): string => {
-    if (custom && (!msg || msg.trim().length === 0)) {
-      return 'Custom greeting message cannot be empty';
-    }
-    if (msg.trim().length > 1000) {
-      return 'Greeting message cannot exceed 1000 characters';
-    }
-    return '';
+    const validation = validateGreeting(msg, custom);
+    return validation.isValid ? '' : (validation.error ?? '');
   };
 
   const handleSave = () => {
@@ -86,21 +83,6 @@ const GreetingEditModal: React.FC<GreetingEditModalProps> = ({
       if (!validationError) {
         setError('');
       }
-    }
-  };
-
-  const handleCustomToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newIsCustom = event.target.checked;
-    setIsCustomMessage(newIsCustom);
-
-    // When switching to default, set the message to default content
-    if (!newIsCustom) {
-      setMessage(defaultMessage);
-      setError('');
-    } else {
-      // When switching to custom, validate the current message
-      const validationError = validateMessage(message, newIsCustom);
-      setError(validationError);
     }
   };
 

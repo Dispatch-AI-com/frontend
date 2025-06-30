@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
 
-import EditableSection from '@/app/(protected)/settings/components/EditableSection';
-import SelectField from '@/app/(protected)/settings/components/SelectField';
+import EditableSection from '@/app/admin/settings/components/EditableSection';
+import SelectField from '@/app/admin/settings/components/SelectField';
 
 const STATE_OPTIONS = [
   { label: 'New South Wales', value: 'New South Wales' },

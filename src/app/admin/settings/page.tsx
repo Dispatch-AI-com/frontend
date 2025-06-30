@@ -1,8 +1,8 @@
 'use client';
 import { Box, styled } from '@mui/material';
 
-import SectionDivider from '@/app/(protected)/settings/components/SectionDivider';
-import SettingsSection from '@/app/(protected)/settings/SettingsSection';
+import SectionDivider from '@/app/admin/settings/components/SectionDivider';
+import SettingsSection from '@/app/admin/settings/SettingsSection';
 
 const Root = styled(Box)({
   backgroundColor: '#effbf5',
