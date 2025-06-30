@@ -8,21 +8,35 @@ import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import { useAppSelector } from '@/redux/hooks';
 
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
-  const [ready, setReady] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const token = useAppSelector(s => s.auth.token);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    setReady(true);
+    setMounted(true);
   }, []);
+
   useEffect(() => {
-    if (ready && !token) {
+    if (mounted && !token) {
       router.replace(`/login`);
     }
-  }, [ready, token, pathname, router]);
+  }, [mounted, token, pathname, router]);
 
-  if (!ready || !token) return null;
+  if (!mounted) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+        sx={{ visibility: 'hidden' }}
+      >
+        Loading...
+      </Box>
+    );
+  }
+
   return (
     <Box display="flex">
       <Sidebar />

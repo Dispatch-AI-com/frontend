@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import LoginForm from '@/app/(public)/login/component/LoginForm';
@@ -41,6 +42,29 @@ const LogoContainer = styled.div`
 `;
 
 export default function SigninPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          backgroundColor: '#fafafa',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          visibility: 'hidden',
+        }}
+      >
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <PageContainer>
       <FormContainer>
