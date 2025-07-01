@@ -26,6 +26,7 @@ interface Field {
   label: string;
   key: string;
   placeholder?: string;
+  validate?: (value: string) => ValidationResult;
   component?: (props: {
     value: string;
     onChange: (value: string) => void;
@@ -75,7 +76,23 @@ export default function EditableSection({
   const handleSave = () => {
     setError('');
 
-    // Run validation if provided
+    // Get current fields array
+    const fieldsArray =
+      typeof fields === 'function' ? fields(formValues) : fields;
+
+    // Run field-level validation first
+    for (const field of fieldsArray) {
+      if (field.validate) {
+        const fieldValue = formValues[field.key] || '';
+        const validationResult = field.validate(fieldValue);
+        if (!validationResult.isValid) {
+          setError(validationResult.error ?? 'Validation failed');
+          return;
+        }
+      }
+    }
+
+    // Run section-level validation if provided
     if (validation) {
       const validationResult = validation(formValues);
       if (!validationResult.isValid) {
