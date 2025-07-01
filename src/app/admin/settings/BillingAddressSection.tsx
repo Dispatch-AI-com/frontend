@@ -76,7 +76,7 @@ export default function BillingAddressSection() {
       title="Billing Address"
       fields={[
         {
-          label: 'Unit/Apt/PO BoX:',
+          label: 'Unit/Apt/PO Box:',
           key: 'unit',
           placeholder: 'Enter unit, apartment, or PO Box',
           validate: validateUnit,
