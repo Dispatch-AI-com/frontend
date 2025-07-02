@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
+import GoogleOAuthButton from '@/components/GoogleOAuthButton';
 import { useSignupUserMutation } from '@/features/auth/authApi';
 import { useAppSelector } from '@/redux/hooks';
 import { parseRTKError } from '@/utils/parseRTKError';
@@ -95,6 +96,7 @@ export default function SignupForm() {
 
   return (
     <StyledForm onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
+      <GoogleOAuthButton text="Sign up with Google" disabled={isLoading} />
       {error && <ErrorMessage>{parseRTKError(error)}</ErrorMessage>}
       <FormRow>
         <FormField label="First Name">

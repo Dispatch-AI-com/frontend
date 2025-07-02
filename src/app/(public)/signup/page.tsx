@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import SignupForm from '@/app/(public)/signup/component/SignupForm';
@@ -39,6 +40,26 @@ const LogoContainer = styled.div`
 `;
 
 export default function SignupPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          backgroundColor: '#fafafa',
+          visibility: 'hidden',
+        }}
+      >
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <PageContainer>
       <FormContainer>
