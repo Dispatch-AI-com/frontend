@@ -9,11 +9,13 @@ import ChatBubble from './ChatBubble';
 interface Message {
   role: 'ai' | 'user';
   content: string;
+  options?: string[];
 }
 
 interface ChatWindowProps {
   messages: Message[];
   isTyping: boolean;
+  onOptionClick?: (value: string) => void;
 }
 
 const ChatArea = styled(Box)(({ theme }) => ({
@@ -24,11 +26,21 @@ const ChatArea = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
 }));
 
-export default function ChatWindow({ messages, isTyping }: ChatWindowProps) {
+export default function ChatWindow({
+  messages,
+  isTyping,
+  onOptionClick,
+}: ChatWindowProps) {
   return (
     <ChatArea>
       {messages.map((msg, index) => (
-        <ChatBubble key={index} role={msg.role} content={msg.content} />
+        <ChatBubble
+          key={index}
+          role={msg.role}
+          content={msg.content}
+          options={msg.options}
+          onOptionClick={onOptionClick}
+        />
       ))}
       {isTyping && <ChatBubble role="ai" content="typing..." isTyping />}
     </ChatArea>

@@ -3,7 +3,6 @@
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 import {
   Box,
-  Button,
   IconButton,
   InputAdornment,
   Stack,
@@ -13,12 +12,9 @@ import { styled } from '@mui/material/styles';
 import React from 'react';
 
 interface UserInputAreaProps {
-  inputType: 'text' | 'button';
   userInput: string;
   setUserInput: (value: string) => void;
   onTextSubmit: (input: string) => void;
-  onButtonClick: (option: string) => void;
-  options?: string[];
   disabled?: boolean;
 }
 
@@ -52,12 +48,9 @@ const SendIconBtn = styled(IconButton)(({ theme }) => ({
 }));
 
 export default function UserInputArea({
-  inputType,
   userInput,
   setUserInput,
   onTextSubmit,
-  onButtonClick,
-  options = [],
   disabled = false,
 }: UserInputAreaProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -69,46 +62,29 @@ export default function UserInputArea({
 
   return (
     <InputWrapper>
-      {inputType === 'text' && (
-        <Stack spacing={2}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Enter your message..."
-            value={userInput}
-            onChange={e => setUserInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={disabled}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SendIconBtn
-                    onClick={() => onTextSubmit(userInput)}
-                    disabled={disabled || userInput.trim() === ''}
-                  >
-                    <ArrowUpwardRoundedIcon fontSize="small" />
-                  </SendIconBtn>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Stack>
-      )}
-
-      {inputType === 'button' && (
-        <Stack spacing={2} direction="row" flexWrap="wrap">
-          {options.map(option => (
-            <Button
-              key={option}
-              variant="outlined"
-              onClick={() => onButtonClick(option)}
-              disabled={disabled}
-            >
-              {option}
-            </Button>
-          ))}
-        </Stack>
-      )}
+      <Stack spacing={2}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Enter your message..."
+          value={userInput}
+          onChange={e => setUserInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SendIconBtn
+                  onClick={() => onTextSubmit(userInput)}
+                  disabled={disabled || userInput.trim() === ''}
+                >
+                  <ArrowUpwardRoundedIcon fontSize="small" />
+                </SendIconBtn>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Stack>
     </InputWrapper>
   );
 }

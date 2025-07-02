@@ -1,13 +1,3 @@
-'use client';
-
-import { Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
-
-import ChatWindow from './ChatWindow';
-import HeaderProgress from './HeaderProgress';
-import UserInputArea from './UserInputArea';
-
 export interface Step {
   id: number;
   question: string;
@@ -18,8 +8,7 @@ export interface Step {
   options?: string[];
 }
 
-// Step config
-const steps: Step[] = [
+export const steps: Step[] = [
   {
     id: 1,
     question:
@@ -83,90 +72,9 @@ const steps: Step[] = [
     validate: (input: string) => ['Yes, Demo Call', 'Skip'].includes(input),
     onValidResponse: (input: string) =>
       input === 'Yes, Demo Call'
-        ? 'Sweet! Let me show you what I can do. 📞'
-        : 'No worries, we can skip that for now. 👍',
+        ? 'Sweet! Let me show you what I can do. '
+        : 'No worries, we can skip that for now. ',
     retryMessage:
       'Go ahead and choose one of the options so we can move forward!',
   },
 ];
-
-const Wrapper = styled(Box)(() => ({
-  margin: '0 auto',
-  padding: 16,
-  borderRadius: 16,
-  minHeight: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-}));
-
-const FullWidth = styled(Box)({ width: '100%' });
-
-export default function OnboardingChat() {
-  const [messages, setMessages] = useState<
-    { role: 'ai' | 'user'; content: string }[]
-  >([]);
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(false);
-  const [userInput, setUserInput] = useState('');
-
-  const currentStep = steps[currentStepIndex];
-
-  useEffect(() => {
-    addAIMessage(currentStep.question);
-  }, [currentStep.question, currentStepIndex]);
-
-  const addAIMessage = (content: string) => {
-    setIsTyping(true);
-    setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'ai', content }]);
-      setIsTyping(false);
-    }, 600);
-  };
-
-  const handleSubmit = (input: string) => {
-    setMessages(prev => [...prev, { role: 'user', content: input }]);
-    const isValid = currentStep.validate(input);
-
-    if (isValid) {
-      const aiReply = currentStep.onValidResponse(input);
-      addAIMessage(aiReply);
-      if (currentStepIndex + 1 < steps.length) {
-        setCurrentStepIndex(prev => prev + 1);
-      } else {
-        addAIMessage('Onboarding complete! 🎉');
-      }
-    } else {
-      addAIMessage(currentStep.retryMessage);
-    }
-    setUserInput('');
-  };
-
-  const handleButtonClick = (option: string) => {
-    handleSubmit(option);
-  };
-
-  return (
-    <>
-      <Wrapper>
-        <FullWidth>
-          <HeaderProgress
-            currentStep={currentStepIndex + 1}
-            totalSteps={steps.length}
-          />
-        </FullWidth>
-
-        <ChatWindow messages={messages} isTyping={isTyping} />
-        <UserInputArea
-          inputType={currentStep.inputType}
-          userInput={userInput}
-          setUserInput={setUserInput}
-          onTextSubmit={handleSubmit}
-          onButtonClick={handleButtonClick}
-          options={currentStep.options}
-          disabled={isTyping}
-        />
-      </Wrapper>
-    </>
-  );
-}
