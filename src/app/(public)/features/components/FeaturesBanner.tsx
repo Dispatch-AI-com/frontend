@@ -17,10 +17,19 @@ const SleepIcon = () => (
 const BannerSection = styled('section')(({ theme }) => ({
   background: '#060606',
   position: 'relative',
-  paddingTop: theme.spacing(12),
-  minHeight: 450,
-  [theme.breakpoints.up('xl')]: {
-    paddingTop: theme.spacing(14),
+  paddingTop: theme.spacing(10),
+  paddingBottom: theme.spacing(16),
+  minHeight: 380,
+  [theme.breakpoints.up('lg')]: {
+    paddingTop: theme.spacing(12),
+    minHeight: 350,
+  },
+  [theme.breakpoints.between('md', 'lg')]: {
+    minHeight: 650,
+    paddingBottom: theme.spacing(0),
+  },
+  [theme.breakpoints.down('md')]: {
+    minHeight: 900,
   },
 }));
 
@@ -29,26 +38,29 @@ const BannerTitle = styled('h1')(({ theme }) => ({
   color: '#b8ff66',
   textAlign: 'center',
   margin: 0,
-  lineHeight: 1.5,
+  lineHeight: 1,
+  position: 'relative',
+  zIndex: 10,
 }));
 
 const FeatureCard = styled(Paper)(({ theme }) => ({
   borderRadius: 24,
   boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)',
-  padding: theme.spacing(3, 2.5),
+  padding: theme.spacing(2.5),
   width: 380,
-  height: 160,
-  margin: '0 auto',
+  minHeight: 120,
+  flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
-  [theme.breakpoints.down('md')]: {
-    height: 'auto',
-    alignItems: 'center',
-    paddingBottom: theme.spacing(3),
+  [theme.breakpoints.down('lg')]: {
+    width: 360,
   },
-  '@media (max-width: 500px)': {
+  [theme.breakpoints.down('md')]: {
     width: '100%',
-    minWidth: 0,
+    maxWidth: 380,
+    alignItems: 'center',
+  },
+  [theme.breakpoints.down('sm')]: {
     maxWidth: '100%',
   },
 }));
@@ -62,14 +74,14 @@ const FeatureIconBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(0.5),
 }));
 
 const FeatureTitle = styled(Typography)(() => ({
   fontWeight: 700,
   fontSize: 18,
   color: '#060606',
-  paddingBottom: 4,
+  paddingBottom: 2,
 }));
 
 const FeatureDesc = styled(Typography)(({ theme }) => ({
@@ -77,7 +89,7 @@ const FeatureDesc = styled(Typography)(({ theme }) => ({
   fontSize: 14,
   fontWeight: 400,
   lineHeight: 1.5,
-  paddingBottom: theme.spacing(2),
+  paddingBottom: theme.spacing(1),
   [theme.breakpoints.down('md')]: {
     textAlign: 'center',
   },
@@ -87,39 +99,55 @@ const FloatingCardsWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   width: '100%',
-  paddingTop: theme.spacing(6),
-  paddingBottom: theme.spacing(8),
   zIndex: 2,
-  bottom: 0,
-  [theme.breakpoints.up('md')]: {
-    position: 'absolute',
-    bottom: '-145px',
+  overflow: 'visible',
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: theme.spacing(32),
+  transform: 'none',
+  [theme.breakpoints.between('md', 'lg')]: {
+    bottom: theme.spacing(8),
+    minHeight: '320px',
   },
   [theme.breakpoints.down('md')]: {
-    paddingBottom: theme.spacing(6),
+    bottom: theme.spacing(4),
+    minHeight: '500px',
   },
 }));
 
 const CardsGrid = styled(Box)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 380px)',
-  gap: theme.spacing(6),
+  display: 'flex',
+  flexWrap: 'wrap',
   justifyContent: 'center',
-  width: 'auto',
-  maxWidth: 'none',
+  gap: theme.spacing(4),
+  width: '100%',
+  maxWidth: '800px',
   margin: '0 auto',
-  [theme.breakpoints.down('md')]: {
-    gridTemplateColumns: '1fr',
+  padding: theme.spacing(0, 2),
+  [theme.breakpoints.up('lg')]: {
+    flexWrap: 'nowrap',
     gap: theme.spacing(6),
-    width: '100%',
+    maxWidth: '1400px',
+    padding: theme.spacing(0, 3),
   },
-  '@media (max-width: 500px)': {
-    gridTemplateColumns: '1fr',
-    gap: theme.spacing(10),
-    padding: theme.spacing(3),
-    '& > *': {
-      width: '100%',
+  [theme.breakpoints.between('md', 'lg')]: {
+    alignContent: 'flex-start',
+    '& > :nth-of-type(1), & > :nth-of-type(2)': {
+      flexBasis: 'calc(50% - 16px)',
+      maxWidth: '380px',
+      minWidth: '350px',
     },
+    '& > :nth-of-type(3)': {
+      flexBasis: '100%',
+      maxWidth: '380px',
+      margin: '0 auto',
+    },
+  },
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    maxWidth: '400px',
   },
 }));
 
