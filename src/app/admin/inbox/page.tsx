@@ -8,10 +8,10 @@ import InboxDetail from '@/app/admin/inbox/components/InboxDetail';
 import InboxList from '@/app/admin/inbox/components/InboxList';
 import InboxSearchBar from '@/app/admin/inbox/components/InboxSearchBar';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
+import { useGetCallLogsQuery } from '@/features/callog/calllogApi';
+import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 import type { ICallLog } from '@/types/calllog.d';
-
-import useCallLogs from './hooks/useCallLog';
 
 const PageContainer = styled.div`
   display: flex;
@@ -138,22 +138,23 @@ export default function InboxPage() {
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const user = useAppSelector(state => state.auth.user);
   const {
     data,
     error,
-    isFetchingNextPage,
-    isPending,
-    hasNextPage,
-    fetchNextPage,
-  } = useCallLogs({
-    status: tag !== 'all' ? tag : undefined,
-    sort,
-    pageSize: 20,
-  });
-
-  const handleFetchNextPage = React.useCallback(() => {
-    void fetchNextPage();
-  }, [fetchNextPage]);
+    isLoading: isPending,
+    isFetching: isFetchingNextPage,
+  } = useGetCallLogsQuery(
+    {
+      userId: user?._id ?? '',
+      options: {
+        status: tag !== 'all' ? tag : undefined,
+        sort,
+        pageSize: 20,
+      },
+    },
+    { skip: !user?._id },
+  );
 
   const errorMsg =
     typeof error === 'string'
@@ -162,10 +163,7 @@ export default function InboxPage() {
         ? error.message
         : undefined;
 
-  const allCallLogs = React.useMemo(
-    () => data?.pages.flatMap(page => page.data) ?? [],
-    [data],
-  );
+  const allCallLogs = React.useMemo(() => data?.data ?? [], [data]);
 
   React.useEffect(() => {
     if (allCallLogs.length && !selectedId) {
@@ -244,9 +242,11 @@ export default function InboxPage() {
                     tag={tag}
                     sort={sort}
                     allItems={allCallLogs}
-                    hasNextPage={hasNextPage}
+                    hasNextPage={false}
                     isFetchingNextPage={isFetchingNextPage}
-                    fetchNextPage={handleFetchNextPage}
+                    fetchNextPage={() => {
+                      // No-op for now
+                    }}
                     isLoading={isPending}
                   />
                 </ListContent>
@@ -284,9 +284,11 @@ export default function InboxPage() {
                   tag={tag}
                   sort={sort}
                   allItems={allCallLogs}
-                  hasNextPage={hasNextPage}
+                  hasNextPage={false}
                   isFetchingNextPage={isFetchingNextPage}
-                  fetchNextPage={handleFetchNextPage}
+                  fetchNextPage={() => {
+                    // No-op for now
+                  }}
                   isLoading={isPending}
                 />
               </ListContent>
