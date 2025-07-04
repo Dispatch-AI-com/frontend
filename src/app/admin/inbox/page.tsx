@@ -135,6 +135,8 @@ export default function InboxPage() {
   const [showDetailMobile, setShowDetailMobile] = useState(false);
   const [tag, setTag] = useState<TagOption>('all');
   const [sort, setSort] = useState<SortOption>('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allCallLogs, setAllCallLogs] = useState<ICallLog[]>([]);
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -143,7 +145,7 @@ export default function InboxPage() {
     data,
     error,
     isLoading: isPending,
-    isFetching: isFetchingNextPage,
+    isFetching,
   } = useGetCallLogsQuery(
     {
       userId: user?._id ?? '',
@@ -151,6 +153,7 @@ export default function InboxPage() {
         status: tag !== 'all' ? tag : undefined,
         sort,
         pageSize: 20,
+        page: currentPage,
       },
     },
     { skip: !user?._id },
@@ -163,7 +166,31 @@ export default function InboxPage() {
         ? error.message
         : undefined;
 
-  const allCallLogs = React.useMemo(() => data?.data ?? [], [data]);
+  // Reset data when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+    setAllCallLogs([]);
+  }, [tag, sort, user?._id]);
+
+  // Accumulate data when new page is loaded
+  React.useEffect(() => {
+    if (data?.data) {
+      if (currentPage === 1) {
+        setAllCallLogs(data.data);
+      } else {
+        setAllCallLogs(prev => [...prev, ...data.data]);
+      }
+    }
+  }, [data, currentPage]);
+
+  const hasNextPage = data?.pagination?.hasNextPage ?? false;
+  const isFetchingNextPage = isFetching && currentPage > 1;
+
+  const fetchNextPage = React.useCallback(() => {
+    if (hasNextPage && !isFetching) {
+      setCurrentPage(prev => prev + 1);
+    }
+  }, [hasNextPage, isFetching]);
 
   React.useEffect(() => {
     if (allCallLogs.length && !selectedId) {
@@ -242,11 +269,9 @@ export default function InboxPage() {
                     tag={tag}
                     sort={sort}
                     allItems={allCallLogs}
-                    hasNextPage={false}
+                    hasNextPage={hasNextPage}
                     isFetchingNextPage={isFetchingNextPage}
-                    fetchNextPage={() => {
-                      // No-op for now
-                    }}
+                    fetchNextPage={fetchNextPage}
                     isLoading={isPending}
                   />
                 </ListContent>
@@ -284,11 +309,9 @@ export default function InboxPage() {
                   tag={tag}
                   sort={sort}
                   allItems={allCallLogs}
-                  hasNextPage={false}
+                  hasNextPage={hasNextPage}
                   isFetchingNextPage={isFetchingNextPage}
-                  fetchNextPage={() => {
-                    // No-op for now
-                  }}
+                  fetchNextPage={fetchNextPage}
                   isLoading={isPending}
                 />
               </ListContent>
