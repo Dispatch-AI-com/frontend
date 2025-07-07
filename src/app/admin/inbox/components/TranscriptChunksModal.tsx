@@ -8,9 +8,8 @@ import {
 } from '@mui/material';
 import styled from 'styled-components';
 
+import { useGetTranscriptChunksQuery } from '@/features/transcript-chunk/transcriptChunksApi';
 import type { ITranscriptChunk } from '@/types/transcript-chunk.d';
-
-import useTranscriptChunks from '../hooks/useTranscriptChunk';
 
 const ChatContainer = styled.div`
   display: flex;
@@ -77,7 +76,13 @@ export default function TranscriptChunksModal({
   onClose,
   transcriptId,
 }: TranscriptChunksModalProps) {
-  const { data: chunks, loading, error } = useTranscriptChunks(transcriptId);
+  const {
+    data: chunks,
+    isLoading: loading,
+    error,
+  } = useGetTranscriptChunksQuery(transcriptId, {
+    skip: !transcriptId,
+  });
 
   const getSpeaker = (chunk: ITranscriptChunk) => {
     return chunk.speakerType.toLowerCase() === 'user' ? 'user' : 'ai';
@@ -102,7 +107,7 @@ export default function TranscriptChunksModal({
           </div>
         )}
         <ChatContainer>
-          {chunks.map((chunk, idx) => {
+          {chunks?.map((chunk, idx) => {
             const speaker = getSpeaker(chunk);
             const isUser = speaker === 'user';
             return (
