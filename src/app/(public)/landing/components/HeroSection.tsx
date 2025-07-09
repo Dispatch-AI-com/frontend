@@ -69,13 +69,18 @@ const StyledDemoBox = styled(Box)`
   align-self: center;
   background-color: ${({ theme }) => theme.palette.background.default};
   border-radius: ${({ theme }) => theme.shape.borderRadius};
-  border: 1px solid ${({ theme }) => theme.palette.grey[200]};
   box-shadow: 0 0 12px 8px ${({ theme }) => theme.shadows[4]};
+  padding: 8px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   & img {
-    width: 100%;
+    width: 85%;
     height: auto;
     display: block;
+    border-radius: 16px;
   }
 
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
@@ -84,6 +89,10 @@ const StyledDemoBox = styled(Box)`
     aspect-ratio: 16 / 9;
     margin-top: ${({ theme }) => theme.spacing(10)};
   }
+`;
+
+const RoundedImage = styled(Image)`
+  border-radius: 16px;
 `;
 
 export default function HeroSection() {
@@ -125,7 +134,12 @@ export default function HeroSection() {
         </ButtonStack>
       </StyledStack>
       <StyledDemoBox>
-        <Image src="/demo-image.png" alt="Demo" width={1920} height={1080} />
+        <RoundedImage
+          src="/landing/herosection-image-1.png"
+          alt="Demo"
+          width={1920}
+          height={1080}
+        />
       </StyledDemoBox>
     </StyledContainer>
   );

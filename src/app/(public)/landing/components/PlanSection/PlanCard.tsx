@@ -108,18 +108,18 @@ export default function PlanCard({ tier, pricing, buttons }: PricingCardProps) {
     <CardContainer>
       <IconWrapper tier={tier}>
         {tier === 'FREE' && (
-          <Image src="/plan/free.svg" alt="Free Plan" width={48} height={48} />
+          <Image src="/plan/free.svg" alt="Free Plan" width={24} height={24} />
         )}
         {tier === 'BASIC' && (
           <Image
             src="/plan/basic.svg"
             alt="Basic Plan"
-            width={48}
-            height={48}
+            width={24}
+            height={24}
           />
         )}
         {tier === 'PRO' && (
-          <Image src="/plan/pro.svg" alt="Pro Plan" width={48} height={48} />
+          <Image src="/plan/pro.svg" alt="Pro Plan" width={24} height={24} />
         )}
       </IconWrapper>
 

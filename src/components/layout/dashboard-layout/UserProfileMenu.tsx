@@ -7,13 +7,17 @@ import {
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react';
+
+import { logout } from '@/features/auth/authSlice';
+import { useAppDispatch } from '@/redux/hooks';
 
 interface DropdownOption {
   label: string;
   iconSrc?: string;
   iconAlt?: string;
-  href?: string;
+  action?: string;
 }
 
 interface UserProfileMenuProps {
@@ -45,6 +49,16 @@ export default function UserProfileMenu({
   ICON_SIZE = 16,
   isCollapsed = false,
 }: UserProfileMenuProps) {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const handleMenuItemClick = (option: DropdownOption) => {
+    if (option.action === 'logout') {
+      dispatch(logout());
+      router.push('/login');
+    }
+    handleMenuClose();
+  };
   return (
     <Box px={3} py={2} mt="auto">
       <Box
@@ -138,7 +152,9 @@ export default function UserProfileMenu({
             .map(option => (
               <MenuItem
                 key={option.label}
-                onClick={handleMenuClose}
+                onClick={() => {
+                  void handleMenuItemClick(option);
+                }}
                 sx={{
                   borderRadius: 1,
                   mb: 0.5,

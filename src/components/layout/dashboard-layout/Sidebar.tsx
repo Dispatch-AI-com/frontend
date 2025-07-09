@@ -1,4 +1,3 @@
-//Sidebar.tsx
 'use client';
 
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -6,6 +5,7 @@ import { Box, IconButton, Link, styled, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
 
+import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 
 import DesktopSidebarNav from './DesktopSidebarNav';
@@ -14,9 +14,7 @@ import UserProfileMenu from './UserProfileMenu';
 
 const SidebarContainer = styled(Box, {
   shouldForwardProp: prop => prop !== 'isCollapsed',
-})<{
-  isCollapsed?: boolean;
-}>(({ theme, isCollapsed }) => ({
+})<{ isCollapsed?: boolean }>(({ theme, isCollapsed }) => ({
   position: 'fixed',
   top: 0,
   left: 0,
@@ -32,9 +30,7 @@ const SidebarContainer = styled(Box, {
 
 const LogoBox = styled(Box, {
   shouldForwardProp: prop => prop !== 'isCollapsed',
-})<{
-  isCollapsed?: boolean;
-}>(({ isCollapsed, theme }) => ({
+})<{ isCollapsed?: boolean }>(({ isCollapsed }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: isCollapsed ? 'center' : 'flex-start',
@@ -101,16 +97,18 @@ const dropdownOptions = [
     label: 'Switch Account',
     iconSrc: '/dashboard/sidebar/account-switch.svg',
     iconAlt: 'Switch Account',
+    action: 'logout',
   },
   {
     label: 'Sign out',
     iconSrc: '/dashboard/sidebar/sign-out.svg',
     iconAlt: 'Sign out',
-    href: '/logout',
+    action: 'logout',
   },
 ];
 
 export default function Sidebar() {
+  const user = useAppSelector(state => state.auth.user);
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -169,9 +167,9 @@ export default function Sidebar() {
           </LogoBox>
           <DesktopSidebarNav navItems={navItems} isCollapsed={isMediumScreen} />
           <UserProfileMenu
-            name="Jeon"
+            name={user?.firstName ?? 'User'}
             plan="Free Plan"
-            avatarLetter="J"
+            avatarLetter={user?.firstName?.charAt(0)?.toUpperCase() ?? 'U'}
             dropdownOptions={dropdownOptions}
             anchorEl={anchorEl}
             open={open}

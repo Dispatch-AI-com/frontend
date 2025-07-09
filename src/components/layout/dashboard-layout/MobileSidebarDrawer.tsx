@@ -48,8 +48,6 @@ export default function MobileSidebarDrawer({
   open,
   onClose,
   navItems,
-  activeIndex,
-  setActiveIndex,
   dropdownOptions,
   anchorEl,
   openMenu,

@@ -50,7 +50,9 @@ export default function BlogList() {
           params.set('topic', topic);
         }
 
-        const url = `http://localhost:4000/api/blogs/search?${params.toString()}`;
+        const baseUrl =
+          process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
+        const url = `${baseUrl}/blogs/search?${params.toString()}`;
 
         const res = await axios.get<{
           data: Blog[];

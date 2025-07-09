@@ -145,18 +145,18 @@ export default function PricingCard({
     <CardContainer>
       <IconWrapper tier={tier}>
         {tier === 'FREE' && (
-          <Image src="/plan/free.svg" alt="Free Plan" width={36} height={36} />
+          <Image src="/plan/free.svg" alt="Free Plan" width={24} height={24} />
         )}
         {tier === 'BASIC' && (
           <Image
             src="/plan/basic.svg"
             alt="Basic Plan"
-            width={36}
-            height={36}
+            width={24}
+            height={24}
           />
         )}
         {tier === 'PRO' && (
-          <Image src="/plan/pro.svg" alt="Pro Plan" width={36} height={36} />
+          <Image src="/plan/pro.svg" alt="Pro Plan" width={24} height={24} />
         )}
       </IconWrapper>
 

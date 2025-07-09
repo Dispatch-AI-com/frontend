@@ -12,10 +12,12 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { authApi } from '@/features/auth/authApi';
+import { calllogsApi } from '@/features/callog/calllogApi';
+import { companyApi } from '@/features/company/companyApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
-import { serviceApi } from '@/features/service/serviceApi';
-import { serviceBookingApi } from '@/features/service/serviceBookingApi';
 import { testApi } from '@/features/test/testApiSlice';
+import { transcriptApi } from '@/features/transcript/transcriptApi';
+import { transcriptChunksApi } from '@/features/transcript-chunk/transcriptChunksApi';
 
 import { rootReducer } from './root-reducer';
 
@@ -36,10 +38,12 @@ export const store = configureStore({
       },
     }).concat(
       authApi.middleware,
+      calllogsApi.middleware,
+      companyApi.middleware,
       publicApiSlice.middleware,
       testApi.middleware,
-      serviceApi.middleware,
-      serviceBookingApi.middleware,
+      transcriptApi.middleware,
+      transcriptChunksApi.middleware,
     ),
 });
 
