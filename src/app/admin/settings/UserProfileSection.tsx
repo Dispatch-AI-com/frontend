@@ -5,7 +5,6 @@ import React from 'react';
 import EditableSection from '@/app/admin/settings/components/EditableSection';
 import PhoneInput from '@/app/admin/settings/components/PhoneInput';
 import {
-  validateCompany,
   validateContact,
   validateRole,
   validateUserName,
@@ -21,12 +20,6 @@ export default function UserProfileSection() {
           key: 'name',
           placeholder: 'Name',
           validate: validateUserName,
-        },
-        {
-          label: 'Company',
-          key: 'company',
-          placeholder: 'Company',
-          validate: validateCompany,
         },
         {
           label: 'Role',
@@ -51,8 +44,7 @@ export default function UserProfileSection() {
       ]}
       initialValues={{
         name: 'John Doe',
-        company: 'Google',
-        role: '-',
+        role: 'Development',
         contact: '+61 481256866',
       }}
     />

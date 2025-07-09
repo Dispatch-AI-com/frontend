@@ -1,9 +1,9 @@
 'use client';
 
-import BankAccountSection from '@/app/admin/settings/BankAccountSection';
 import BillingAddressSection from '@/app/admin/settings/BillingAddressSection';
+import IntegrationsSection from '@/app/admin/settings/CalendarIntegrations';
+import CompanyInfoSection from '@/app/admin/settings/CompanyInfo';
 import GreetingSection from '@/app/admin/settings/GreetingSection';
-import NotificationsSection from '@/app/admin/settings/NotificationsSection';
 import UserProfileSection from '@/app/admin/settings/UserProfileSection';
 import VerificationSection from '@/app/admin/settings/VerificationSection';
 
@@ -13,9 +13,9 @@ export default function SettingsSection() {
       <GreetingSection />
       <UserProfileSection />
       <VerificationSection />
-      <BankAccountSection />
+      <IntegrationsSection />
+      <CompanyInfoSection />
       <BillingAddressSection />
-      <NotificationsSection />
     </>
   );
 }

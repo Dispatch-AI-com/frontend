@@ -95,9 +95,8 @@ const GreetingEditModal: React.FC<GreetingEditModalProps> = ({
 
   const handleCustomClick = () => {
     setIsCustomMessage(true);
-    // Keep the current message when switching to custom
-    const validationError = validateMessage(message, true);
-    setError(validationError);
+    setMessage('');
+    setError('');
   };
 
   const defaultMessage = `"
