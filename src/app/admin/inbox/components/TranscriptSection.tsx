@@ -2,7 +2,8 @@ import { Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import useTranscript from '../hooks/useTranscript';
+import { useGetTranscriptQuery } from '@/features/transcript/transcriptApi';
+
 import TranscriptChunksModal from './TranscriptChunksModal';
 
 const SectionTitle = styled.div`
@@ -63,7 +64,11 @@ interface TranscriptSectionProps {
 export default function TranscriptSection({
   calllogId,
 }: TranscriptSectionProps) {
-  const { data: transcript, loading, error } = useTranscript(calllogId);
+  const {
+    data: transcript,
+    isLoading: loading,
+    error,
+  } = useGetTranscriptQuery(calllogId);
   const [openChunksModal, setOpenChunksModal] = useState(false);
 
   if (loading)

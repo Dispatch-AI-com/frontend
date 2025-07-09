@@ -8,10 +8,10 @@ import InboxDetail from '@/app/admin/inbox/components/InboxDetail';
 import InboxList from '@/app/admin/inbox/components/InboxList';
 import InboxSearchBar from '@/app/admin/inbox/components/InboxSearchBar';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
+import { useGetCallLogsQuery } from '@/features/callog/calllogApi';
+import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 import type { ICallLog } from '@/types/calllog.d';
-
-import useCallLogs from './hooks/useCallLog';
 
 const PageContainer = styled.div`
   display: flex;
@@ -135,25 +135,29 @@ export default function InboxPage() {
   const [showDetailMobile, setShowDetailMobile] = useState(false);
   const [tag, setTag] = useState<TagOption>('all');
   const [sort, setSort] = useState<SortOption>('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allCallLogs, setAllCallLogs] = useState<ICallLog[]>([]);
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const user = useAppSelector(state => state.auth.user);
   const {
     data,
     error,
-    isFetchingNextPage,
-    isPending,
-    hasNextPage,
-    fetchNextPage,
-  } = useCallLogs({
-    status: tag !== 'all' ? tag : undefined,
-    sort,
-    pageSize: 20,
-  });
-
-  const handleFetchNextPage = React.useCallback(() => {
-    void fetchNextPage();
-  }, [fetchNextPage]);
+    isLoading: isPending,
+    isFetching,
+  } = useGetCallLogsQuery(
+    {
+      userId: user?._id ?? '',
+      options: {
+        status: tag !== 'all' ? tag : undefined,
+        sort,
+        pageSize: 20,
+        page: currentPage,
+      },
+    },
+    { skip: !user?._id },
+  );
 
   const errorMsg =
     typeof error === 'string'
@@ -162,10 +166,31 @@ export default function InboxPage() {
         ? error.message
         : undefined;
 
-  const allCallLogs = React.useMemo(
-    () => data?.pages.flatMap(page => page.data) ?? [],
-    [data],
-  );
+  // Reset data when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+    setAllCallLogs([]);
+  }, [tag, sort, user?._id]);
+
+  // Accumulate data when new page is loaded
+  React.useEffect(() => {
+    if (data?.data) {
+      if (currentPage === 1) {
+        setAllCallLogs(data.data);
+      } else {
+        setAllCallLogs(prev => [...prev, ...data.data]);
+      }
+    }
+  }, [data, currentPage]);
+
+  const hasNextPage = data?.pagination?.hasNextPage ?? false;
+  const isFetchingNextPage = isFetching && currentPage > 1;
+
+  const fetchNextPage = React.useCallback(() => {
+    if (hasNextPage && !isFetching) {
+      setCurrentPage(prev => prev + 1);
+    }
+  }, [hasNextPage, isFetching]);
 
   React.useEffect(() => {
     if (allCallLogs.length && !selectedId) {
@@ -246,7 +271,7 @@ export default function InboxPage() {
                     allItems={allCallLogs}
                     hasNextPage={hasNextPage}
                     isFetchingNextPage={isFetchingNextPage}
-                    fetchNextPage={handleFetchNextPage}
+                    fetchNextPage={fetchNextPage}
                     isLoading={isPending}
                   />
                 </ListContent>
@@ -286,7 +311,7 @@ export default function InboxPage() {
                   allItems={allCallLogs}
                   hasNextPage={hasNextPage}
                   isFetchingNextPage={isFetchingNextPage}
-                  fetchNextPage={handleFetchNextPage}
+                  fetchNextPage={fetchNextPage}
                   isLoading={isPending}
                 />
               </ListContent>

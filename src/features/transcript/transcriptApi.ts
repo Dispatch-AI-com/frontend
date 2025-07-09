@@ -18,5 +18,6 @@ export const transcriptApi = createApi({
   }),
 });
 
-export const { useGetTranscriptQuery } = transcriptApi;
+export const { useGetTranscriptQuery, useLazyGetTranscriptQuery } =
+  transcriptApi;
 export const getTranscript = transcriptApi.endpoints.getTranscript.initiate;
