@@ -39,23 +39,6 @@ export const validateMaxLength = (
 };
 
 /**
- * Validates minimum length for text fields
- */
-export const validateMinLength = (
-  value: string,
-  minLength: number,
-  fieldName: string,
-): ValidationResult => {
-  if (value.trim().length < minLength) {
-    return {
-      isValid: false,
-      error: `${fieldName} must be at least ${minLength} characters`,
-    };
-  }
-  return { isValid: true };
-};
-
-/**
  * Validates email format
  */
 export const validateEmail = (email: string): ValidationResult => {
@@ -129,22 +112,6 @@ export const validateCompany = (company: string): ValidationResult => {
  */
 export const validateRole = (role: string): ValidationResult => {
   return validateMaxLength(role, 100, 'Role');
-};
-
-/**
- * Validates contact information (phone or email)
- */
-export const validateContact = (contact: string): ValidationResult => {
-  if (!contact || contact.trim().length === 0) {
-    return { isValid: true }; // Contact is optional
-  }
-
-  // Check if it's an email or phone number
-  if (contact.includes('@')) {
-    return validateEmail(contact);
-  } else {
-    return validatePhoneNumber(contact);
-  }
 };
 
 /**

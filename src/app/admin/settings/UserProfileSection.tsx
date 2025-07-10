@@ -5,8 +5,8 @@ import React from 'react';
 import EditableSection from '@/app/admin/settings/components/EditableSection';
 import PhoneInput from '@/app/admin/settings/components/PhoneInput';
 import {
-  validateContact,
   validateRole,
+  validateSMSMobile,
   validateUserName,
 } from '@/utils/validationSettings';
 
@@ -31,7 +31,7 @@ export default function UserProfileSection() {
           label: 'Contact',
           key: 'contact',
           placeholder: 'Contact',
-          validate: validateContact,
+          validate: validateSMSMobile,
           component: props => (
             <Box>
               <Typography variant="body1" mb={0.5}>

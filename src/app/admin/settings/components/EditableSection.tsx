@@ -129,6 +129,7 @@ export default function EditableSection({
         open={open}
         title={title}
         onClose={() => {
+          setFormValues(values);
           setOpen(false);
           setError('');
         }}
