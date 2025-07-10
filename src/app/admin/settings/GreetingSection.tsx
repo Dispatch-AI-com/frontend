@@ -63,7 +63,7 @@ export default function GreetingSection() {
           sx={{
             width: '100%',
             '& .MuiOutlinedInput-root': {
-              backgroundColor: '#f7f7f7',
+              backgroundColor: '#fafafa',
               borderRadius: 2,
               '& fieldset': {
                 border: 'none',

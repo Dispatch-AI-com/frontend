@@ -160,3 +160,80 @@ export const combineValidations = (
   }
   return { isValid: true };
 };
+
+/**
+ * Validates verification type selection
+ */
+export const validateVerificationType = (type: string): ValidationResult => {
+  if (!type || type.trim() === '') {
+    return {
+      isValid: false,
+      error: 'Please select a verification type',
+    };
+  }
+
+  const validTypes = ['Email', 'SMS', 'Both'];
+  if (!validTypes.includes(type)) {
+    return {
+      isValid: false,
+      error: 'Please select a valid verification type',
+    };
+  }
+  return { isValid: true };
+};
+
+/**
+ * Validates mobile number for SMS verification
+ */
+export const validateSMSMobile = (mobile: string): ValidationResult => {
+  const requiredValidation = validateRequired(mobile, 'Mobile number');
+  if (!requiredValidation.isValid) {
+    return requiredValidation;
+  }
+
+  return validatePhoneNumber(mobile);
+};
+
+/**
+ * Validates email for email verification
+ */
+export const validateVerificationEmail = (email: string): ValidationResult => {
+  const requiredValidation = validateRequired(email, 'Email address');
+  if (!requiredValidation.isValid) {
+    return requiredValidation;
+  }
+
+  return validateEmail(email);
+};
+
+/**
+ * Validates complete verification form based on type
+ */
+export const validateVerificationForm = (values: {
+  type: string;
+  mobile: string;
+  email: string;
+}): ValidationResult => {
+  // Validate verification type
+  const typeValidation = validateVerificationType(values.type);
+  if (!typeValidation.isValid) {
+    return typeValidation;
+  }
+
+  // Validate based on selected type
+  if (values.type === 'SMS' || values.type === 'Both') {
+    const mobileValidation = validateSMSMobile(values.mobile);
+    if (!mobileValidation.isValid) {
+      return mobileValidation;
+    }
+  }
+
+  if (values.type === 'Email' || values.type === 'Both') {
+    const emailValidation = validateVerificationEmail(values.email);
+    if (!emailValidation.isValid) {
+      return emailValidation;
+    }
+  }
+
+  return { isValid: true };
+};
