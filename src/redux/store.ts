@@ -15,6 +15,7 @@ import { authApi } from '@/features/auth/authApi';
 import { calllogsApi } from '@/features/callog/calllogApi';
 import { companyApi } from '@/features/company/companyApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
+import { subscriptionApi } from '@/features/subscription/subscriptionApi';
 import { testApi } from '@/features/test/testApiSlice';
 import { transcriptApi } from '@/features/transcript/transcriptApi';
 import { transcriptChunksApi } from '@/features/transcript-chunk/transcriptChunksApi';
@@ -44,6 +45,7 @@ export const store = configureStore({
       testApi.middleware,
       transcriptApi.middleware,
       transcriptChunksApi.middleware,
+      subscriptionApi.middleware,
     ),
 });
 
