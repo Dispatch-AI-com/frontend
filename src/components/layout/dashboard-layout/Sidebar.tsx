@@ -5,6 +5,7 @@ import { Box, IconButton, Link, styled, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
 
+import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 
 import DesktopSidebarNav from './DesktopSidebarNav';
@@ -96,6 +97,7 @@ const dropdownOptions = [
     label: 'Switch Account',
     iconSrc: '/dashboard/sidebar/account-switch.svg',
     iconAlt: 'Switch Account',
+    action: 'logout',
   },
   {
     label: 'Sign out',
@@ -106,6 +108,7 @@ const dropdownOptions = [
 ];
 
 export default function Sidebar() {
+  const user = useAppSelector(state => state.auth.user);
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -164,9 +167,9 @@ export default function Sidebar() {
           </LogoBox>
           <DesktopSidebarNav navItems={navItems} isCollapsed={isMediumScreen} />
           <UserProfileMenu
-            name="Jeon"
+            name={user?.firstName ?? 'User'}
             plan="Free Plan"
-            avatarLetter="J"
+            avatarLetter={user?.firstName?.charAt(0)?.toUpperCase() ?? 'U'}
             dropdownOptions={dropdownOptions}
             anchorEl={anchorEl}
             open={open}

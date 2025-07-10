@@ -71,8 +71,8 @@ export default function GoogleOAuthButton({
 }: GoogleOAuthButtonProps) {
   const handleGoogleLogin = useCallback(() => {
     const backendUrl =
-      process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:4000';
-    window.location.href = `${backendUrl}/api/auth/google`;
+      process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
+    window.location.href = `${backendUrl}/auth/google`;
   }, []);
 
   return (
