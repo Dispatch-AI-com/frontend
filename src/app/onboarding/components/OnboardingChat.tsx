@@ -3,6 +3,8 @@
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { skipToken } from '@reduxjs/toolkit/query';
+import { get } from 'lodash';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import {
@@ -30,6 +32,7 @@ const Wrapper = styled(Box)(() => ({
 const FullWidth = styled(Box)({ width: '100%' });
 
 export default function OnboardingChat() {
+  const router = useRouter();
   const user = useAppSelector(state => state.auth.user);
   const userId = user?._id;
   console.log(userId);
@@ -55,21 +58,23 @@ export default function OnboardingChat() {
   /* refresh local state from progress */
   useEffect(() => {
     if (!progress || isFetching) return;
-
-    const answeredMsgs: {
+    interface ChatMsg {
       role: 'user' | 'ai';
       content: string;
       options?: string[];
-    }[] = steps.flatMap(step => {
-      const answer = progress.answers[String(step.id)];
-      if (!answer) return [];
+    }
+
+    const answeredMsgs = steps.flatMap<ChatMsg>(step => {
+      if (step.id >= progress.currentStep) return [];
+
+      const raw = step.field ? get(progress.answers, step.field, '') : '';
+
+      if (typeof raw !== 'string' || !raw.trim()) return [];
 
       return [
         { role: 'ai', content: step.question, options: step.options },
-
-        { role: 'user', content: answer },
-
-        { role: 'ai', content: step.onValidResponse(answer) },
+        { role: 'user', content: raw },
+        { role: 'ai', content: step.onValidResponse(raw) },
       ];
     });
 
@@ -85,13 +90,6 @@ export default function OnboardingChat() {
   }, [progress, isFetching]);
 
   const currentStep = steps[currentStepIndex];
-
-  /* if currentStep change, add new ai question */
-  /* useEffect(() => {
-    if (!progress || isFetching || isCompleted) return;
-
-    addAIMessage(currentStep.question, currentStep.options);
-  }, [progress, currentStep, isCompleted, isFetching]); */
 
   const addAIMessage = (content: string, options?: string[]) => {
     setIsTyping(true);
@@ -120,6 +118,7 @@ export default function OnboardingChat() {
         userId: userId!,
         stepId: currentStep.id,
         answer: input,
+        field: currentStep.field,
       }).unwrap();
       addAIMessage(currentStep.onValidResponse(input));
 
@@ -129,6 +128,9 @@ export default function OnboardingChat() {
         await completeFlow(userId!);
         setIsCompleted(true);
         addAIMessage('Onboarding Complete! ');
+        setTimeout(() => {
+          router.push('/admin/overview');
+        }, 2000);
       }
     } catch (err) {
       addAIMessage('Server error, please try again later.');

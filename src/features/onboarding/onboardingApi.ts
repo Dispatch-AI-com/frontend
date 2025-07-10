@@ -7,6 +7,7 @@ export interface SaveAnswerDTO {
   userId: string;
   stepId: number;
   answer: string;
+  field: string;
 }
 export interface SaveAnswerResp {
   success: boolean;
