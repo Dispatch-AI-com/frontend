@@ -27,20 +27,41 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
     fetch('https://restcountries.com/v3.1/all?fields=name,idd')
       .then(res => res.json())
       .then((data: Country[]) => {
-        const options = data
-          .map((country: Country) => {
-            const root = country.idd?.root ?? '';
-            const suffix = country.idd?.suffixes?.[0] ?? '';
-            if (!root || !suffix) return null;
-            return {
-              label: country.name.common,
-              value: `${root}${suffix}`,
-            };
-          })
-          .filter((option): option is { label: string; value: string } =>
-            Boolean(option),
-          )
-          .sort((a, b) => a.label.localeCompare(b.label));
+        const optionsMap = new Map<string, { label: string; value: string }>();
+        // Define preferred countries for common country codes
+        const preferredCountries = new Set([
+          'Australia',
+          'United States',
+          'United Kingdom',
+          'Canada',
+          'Germany',
+          'France',
+          'Japan',
+          'China',
+          'India',
+          'Brazil',
+        ]);
+        data.forEach((country: Country) => {
+          const root = country.idd?.root ?? '';
+          const suffix = country.idd?.suffixes?.[0] ?? '';
+          if (!root || !suffix) return;
+
+          const countryCode = `${root}${suffix}`;
+          const countryName = country.name.common;
+          // Only keep the first country for each country code, or prefer certain countries
+          if (
+            !optionsMap.has(countryCode) ||
+            preferredCountries.has(countryName)
+          ) {
+            optionsMap.set(countryCode, {
+              label: countryName,
+              value: countryCode,
+            });
+          }
+        });
+        const options = Array.from(optionsMap.values()).sort((a, b) =>
+          a.label.localeCompare(b.label),
+        );
         setCountryOptions(options);
       })
       .catch(() => {
