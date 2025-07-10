@@ -13,7 +13,7 @@ import {
   useCreateSubscription,
   useDowngradeToFree,
   useSubscription,
-} from '@/hooks/useSubscription';
+} from '@/features/subscription/useSubscription';
 import type { Plan, PlanButton } from '@/types/plan.types';
 
 import PricingCard from './BillingCard';
@@ -184,6 +184,12 @@ export default function BillingSection() {
               )}
               onButtonClick={label =>
                 void handleClick(label, plan.tier, plan._id)
+              }
+              isCurrent={
+                plan.tier === 'FREE' &&
+                (!currentPlanId || isCancelled || !isSubscribed)
+                  ? true
+                  : plan._id === currentPlanId
               }
             />
           </Box>

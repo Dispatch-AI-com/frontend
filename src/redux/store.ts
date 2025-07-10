@@ -39,6 +39,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat(
+      subscriptionApi.middleware,
       authApi.middleware,
       calllogsApi.middleware,
       companyApi.middleware,
