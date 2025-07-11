@@ -2,6 +2,11 @@
 import React from 'react';
 
 import EditableSection from '@/app/admin/settings/components/EditableSection';
+import {
+  useGetCompanyInfoQuery,
+  useUpdateCompanyInfoMutation,
+} from '@/features/settings/settingsApi';
+import { useAppSelector } from '@/redux/hooks';
 import type { ValidationResult } from '@/utils/validationSettings';
 import {
   combineValidations,
@@ -56,14 +61,44 @@ const validateABN = (abn: string): ValidationResult => {
   return { isValid: true };
 };
 
-export default function BankAccountSection() {
+export default function CompanyInfoSection() {
+  const user = useAppSelector(state => state.auth.user);
+
+  const {
+    data: companyData,
+    isLoading,
+    error,
+  } = useGetCompanyInfoQuery(user?._id ?? '', {
+    skip: !user?._id,
+  });
+
+  const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
+  const handleSave = async (values: Record<string, string>) => {
+    if (!user?._id) {
+      throw new Error('User not logged in');
+    }
+
+    await updateCompanyInfo({
+      userId: user._id,
+      companyName: values.companyName,
+      abn: values.abn,
+    }).unwrap();
+  };
+
+  const convertedData = companyData
+    ? {
+        companyName: companyData.companyName,
+        abn: companyData.abn,
+      }
+    : undefined;
+
   return (
     <EditableSection
       title="Company Info"
       fields={[
         {
           label: 'Company Name:',
-          key: 'company',
+          key: 'companyName',
           placeholder: 'e.g. Google',
           validate: validateCompanyName,
         },
@@ -74,9 +109,12 @@ export default function BankAccountSection() {
           validate: validateABN,
         },
       ]}
+      data={convertedData}
+      isLoading={isLoading}
+      onSave={handleSave}
       initialValues={{
-        company: 'Jone Smith',
-        abn: '12345678909',
+        companyName: '',
+        abn: '',
       }}
     />
   );

@@ -39,9 +39,12 @@ interface Field {
 interface EditableSectionProps {
   title: string;
   fields: Field[] | ((values: Record<string, string>) => Field[]);
-  initialValues: Record<string, string>;
+  initialValues?: Record<string, string>;
   columns?: number;
   validation?: (values: Record<string, string>) => ValidationResult;
+  data?: Record<string, string>;
+  isLoading?: boolean;
+  onSave?: (values: Record<string, string>) => Promise<void>;
 }
 
 function splitFields(fields: Field[], columns: number) {
@@ -56,16 +59,30 @@ function splitFields(fields: Field[], columns: number) {
 export default function EditableSection({
   title,
   fields,
-  initialValues,
+  initialValues = {},
   columns = 2,
   validation,
+  data,
+  isLoading = false,
+  onSave,
 }: EditableSectionProps) {
   const [open, setOpen] = React.useState(false);
+
+  const actualValues = data ?? initialValues;
+
   const [values, setValues] =
-    React.useState<Record<string, string>>(initialValues);
+    React.useState<Record<string, string>>(actualValues);
   const [formValues, setFormValues] =
-    React.useState<Record<string, string>>(initialValues);
+    React.useState<Record<string, string>>(actualValues);
   const [error, setError] = React.useState<string>('');
+  const [saving, setSaving] = React.useState(false);
+
+  React.useEffect(() => {
+    if (data) {
+      setValues(data);
+      setFormValues(data);
+    }
+  }, [data]);
 
   const handleEdit = () => {
     setFormValues(values);
@@ -73,36 +90,51 @@ export default function EditableSection({
     setOpen(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setError('');
+    setSaving(true);
 
-    // Get current fields array
-    const fieldsArray =
-      typeof fields === 'function' ? fields(formValues) : fields;
+    try {
+      // Get current fields array
+      const fieldsArray =
+        typeof fields === 'function' ? fields(formValues) : fields;
 
-    // Run field-level validation first
-    for (const field of fieldsArray) {
-      if (field.validate) {
-        const fieldValue = formValues[field.key] || '';
-        const validationResult = field.validate(fieldValue);
+      // Run field-level validation first
+      for (const field of fieldsArray) {
+        if (field.validate) {
+          const fieldValue = formValues[field.key] ?? '';
+          const validationResult = field.validate(fieldValue);
+          if (!validationResult.isValid) {
+            setError(validationResult.error ?? 'Validation failed');
+            setSaving(false);
+            return;
+          }
+        }
+      }
+
+      // Run section-level validation if provided
+      if (validation) {
+        const validationResult = validation(formValues);
         if (!validationResult.isValid) {
           setError(validationResult.error ?? 'Validation failed');
+          setSaving(false);
           return;
         }
       }
-    }
 
-    // Run section-level validation if provided
-    if (validation) {
-      const validationResult = validation(formValues);
-      if (!validationResult.isValid) {
-        setError(validationResult.error ?? 'Validation failed');
-        return;
+      if (onSave) {
+        await onSave(formValues);
       }
-    }
 
-    setValues(formValues);
-    setOpen(false);
+      setValues(formValues);
+      setOpen(false);
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : 'Failed to save settings',
+      );
+    } finally {
+      setSaving(false);
+    }
   };
   const fieldsArray =
     typeof fields === 'function' ? fields(open ? formValues : values) : fields;
@@ -111,7 +143,10 @@ export default function EditableSection({
   return (
     <>
       <SectionDivider />
-      <SectionHeader title={title} onEdit={handleEdit} />
+      <SectionHeader
+        title={title}
+        onEdit={isLoading ? undefined : handleEdit}
+      />
       <InfoRow>
         {fieldColumns.map((colFields, colIdx) => (
           <InfoCol key={colIdx}>
@@ -119,7 +154,7 @@ export default function EditableSection({
               <LabelValue
                 key={field.key}
                 label={field.label}
-                value={formValues[field.key] ?? ''}
+                value={isLoading ? 'Loading...' : (values[field.key] ?? '')}
               />
             ))}
           </InfoCol>
@@ -133,12 +168,17 @@ export default function EditableSection({
           setOpen(false);
           setError('');
         }}
-        onSave={handleSave}
+        onSave={() => void handleSave()}
       >
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {error}
+            </Alert>
+          )}
+          {saving && (
+            <Alert severity="info" sx={{ mb: 2 }}>
+              Saving...
             </Alert>
           )}
           {fieldsArray.map(field =>
@@ -147,8 +187,10 @@ export default function EditableSection({
                 {field.component({
                   value: formValues[field.key] || '',
                   onChange: (value: string) => {
-                    setFormValues(f => ({ ...f, [field.key]: value }));
-                    if (error) setError('');
+                    if (!saving) {
+                      setFormValues(f => ({ ...f, [field.key]: value }));
+                      if (error) setError('');
+                    }
                   },
                   placeholder: field.placeholder ?? field.label,
                   label: field.label,
@@ -161,8 +203,10 @@ export default function EditableSection({
                 label={field.label}
                 value={formValues[field.key] || ''}
                 onChange={e => {
-                  setFormValues(f => ({ ...f, [field.key]: e.target.value }));
-                  if (error) setError('');
+                  if (!saving) {
+                    setFormValues(f => ({ ...f, [field.key]: e.target.value }));
+                    if (error) setError('');
+                  }
                 }}
                 placeholder={field.placeholder ?? field.label}
               />

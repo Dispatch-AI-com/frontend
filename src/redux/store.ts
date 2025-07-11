@@ -15,6 +15,7 @@ import { authApi } from '@/features/auth/authApi';
 import { calllogsApi } from '@/features/callog/calllogApi';
 import { companyApi } from '@/features/company/companyApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
+import { settingsApi } from '@/features/settings/settingsApi';
 import { subscriptionApi } from '@/features/subscription/subscriptionApi';
 import { testApi } from '@/features/test/testApiSlice';
 import { transcriptApi } from '@/features/transcript/transcriptApi';
@@ -42,6 +43,7 @@ export const store = configureStore({
       calllogsApi.middleware,
       companyApi.middleware,
       publicApiSlice.middleware,
+      settingsApi.middleware,
       testApi.middleware,
       transcriptApi.middleware,
       transcriptChunksApi.middleware,

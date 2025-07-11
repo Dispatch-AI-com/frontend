@@ -3,6 +3,11 @@ import React from 'react';
 
 import EditableSection from '@/app/admin/settings/components/EditableSection';
 import SelectField from '@/app/admin/settings/components/SelectField';
+import {
+  useGetBillingAddressQuery,
+  useUpdateBillingAddressMutation,
+} from '@/features/settings/settingsApi';
+import { useAppSelector } from '@/redux/hooks';
 import type { ValidationResult } from '@/utils/validationSettings';
 import {
   combineValidations,
@@ -71,6 +76,42 @@ const validateState = (state: string): ValidationResult => {
 };
 
 export default function BillingAddressSection() {
+  const user = useAppSelector(state => state.auth.user);
+
+  const {
+    data: billingData,
+    isLoading,
+    error,
+  } = useGetBillingAddressQuery(user?._id ?? '', {
+    skip: !user?._id,
+  });
+
+  const [updateBillingAddress] = useUpdateBillingAddressMutation();
+  const handleSave = async (values: Record<string, string>) => {
+    if (!user?._id) {
+      throw new Error('User not logged in');
+    }
+
+    await updateBillingAddress({
+      userId: user._id,
+      unit: values.unit || undefined,
+      streetAddress: values.streetAddress,
+      suburb: values.suburb,
+      state: values.state,
+      postcode: values.postcode,
+    }).unwrap();
+  };
+
+  const convertedData = billingData
+    ? {
+        unit: billingData.unit ?? '',
+        streetAddress: billingData.streetAddress,
+        suburb: billingData.suburb,
+        state: billingData.state,
+        postcode: billingData.postcode,
+      }
+    : undefined;
+
   return (
     <EditableSection
       title="Billing Address"
@@ -83,7 +124,7 @@ export default function BillingAddressSection() {
         },
         {
           label: 'Street address:',
-          key: 'street',
+          key: 'streetAddress',
           placeholder: 'Street address',
           validate: validateStreetAddress,
         },
@@ -112,12 +153,15 @@ export default function BillingAddressSection() {
           validate: validatePostcode,
         },
       ]}
+      data={convertedData}
+      isLoading={isLoading}
+      onSave={handleSave}
       initialValues={{
-        unit: 'Enter unit, apartment, or PO Box',
-        street: '3-5 Underwood Road',
-        suburb: 'Parramatta',
-        state: 'New South Wales',
-        postcode: '2140',
+        unit: '',
+        streetAddress: '',
+        suburb: '',
+        state: '',
+        postcode: '',
       }}
     />
   );
