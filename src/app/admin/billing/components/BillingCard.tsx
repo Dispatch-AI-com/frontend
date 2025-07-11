@@ -48,6 +48,9 @@ const CurrentPlanTag = styled('div')(() => ({
   fontSize: '14px',
   fontWeight: 'bold',
   color: '#060606',
+  fontStretch: 'normal',
+  fontStyle: 'normal',
+  lineHeight: '1.43',
 }));
 
 const tierColors = {
