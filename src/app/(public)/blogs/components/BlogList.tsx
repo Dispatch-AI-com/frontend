@@ -1,6 +1,8 @@
 'use client';
 import { Box, Button, Grid, styled, Typography } from '@mui/material';
 import axios from 'axios';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -27,12 +29,14 @@ const NextButton = styled(Button)(() => ({
 
 export default function BlogList() {
   const searchParams = useSearchParams();
+  const router: AppRouterInstance = useRouter();
   const [blogs, setBlogs] = useState<Blog[]>([]);
 
   const keyword = searchParams.get('keyword') ?? '';
   const topic = searchParams.get('topic') ?? '';
-  const limit = 12;
-  const page = 1;
+  const limit = 9;
+  const page = Number(searchParams.get('page') ?? '1');
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -64,7 +68,7 @@ export default function BlogList() {
         const fetched = res.data.data;
 
         if (!keyword && !topic) {
-          if (fetched.length > 0 && fetched.length < 9) {
+          if (fetched.length > 0 && fetched.length < limit) {
             const base = fetched[0];
             while (fetched.length < 9) {
               fetched.push({
@@ -76,6 +80,7 @@ export default function BlogList() {
         }
 
         setBlogs(fetched);
+        setTotal(res.data.total);
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error('Failed to fetch blogs:', err);
@@ -85,6 +90,15 @@ export default function BlogList() {
     void fetchBlogs();
   }, [keyword, topic, page]);
 
+  const handleNextPage = () => {
+    const params = new URLSearchParams();
+    if (keyword.trim()) params.set('keyword', keyword.trim());
+    if (topic.trim()) params.set('topic', topic.trim());
+    params.set('page', String(page + 1));
+
+    router.replace(`/blogs?${params.toString()}`, { scroll: false });
+  };
+
   return (
     <>
       {blogs.length === 0 ? (
@@ -93,11 +107,16 @@ export default function BlogList() {
             variant="h6"
             fontWeight="bold"
             color="text.secondary"
+            sx={{ marginTop: 20 }}
             gutterBottom
           >
-            😕 No results found
+            No results found
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ marginBottom: 20 }}
+          >
             We could not find any blogs matching <strong>{keyword}</strong>
           </Typography>
         </Box>
@@ -117,9 +136,11 @@ export default function BlogList() {
         </Grid>
       )}
 
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <NextButton>Next →</NextButton>
-      </Box>
+      {blogs.length == limit && (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <NextButton onClick={handleNextPage}>Next →</NextButton>
+        </Box>
+      )}
     </>
   );
 }
