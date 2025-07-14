@@ -215,7 +215,9 @@ export default function PricingCard({
                 ? 'black'
                 : btn.variant === 'secondary'
                   ? 'green'
-                  : 'disabled'
+                  : btn.variant === 'cancel'
+                    ? 'cancel'
+                    : 'disabled'
             }
             onClick={
               btn.variant === 'disabled'
