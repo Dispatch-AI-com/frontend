@@ -12,6 +12,23 @@ import type { Plan, PlanButton } from '@/types/plan.types';
 
 import PlanCard from './PlanCard';
 
+function getButtons(tier: Plan['tier']): PlanButton[] {
+  switch (tier) {
+    case 'FREE':
+      return [{ label: 'Try for Free', variant: 'primary' }];
+    case 'BASIC':
+      return [
+        { label: 'Go with Basic', variant: 'primary' },
+        { label: 'Request Demo', variant: 'secondary' },
+      ];
+    case 'PRO':
+      return [
+        { label: 'Go with Pro', variant: 'primary' },
+        { label: 'Request Demo', variant: 'secondary' },
+      ];
+  }
+}
+
 const settings = {
   dots: true,
   arrows: false,
@@ -105,30 +122,14 @@ export default function PlanSection() {
     <SectionContainer id="LandingPlans">
       <SectionTitle>Flexible Plans to Match Your Needs</SectionTitle>
       <StyledSlider {...settings}>
-        {sortedPlans.map(plan => {
-          let buttons: PlanButton[] = [];
-          if (plan.tier === 'FREE') {
-            buttons = [{ label: 'Try for Free', variant: 'primary' }];
-          } else if (plan.tier === 'BASIC') {
-            buttons = [
-              { label: 'Go with Basic', variant: 'primary' },
-              { label: 'Request Demo', variant: 'secondary' },
-            ];
-          } else if (plan.tier === 'PRO') {
-            buttons = [
-              { label: 'Go with Pro', variant: 'primary' },
-              { label: 'Request Demo', variant: 'secondary' },
-            ];
-          }
-          return (
-            <PlanCard
-              key={plan._id}
-              tier={plan.tier}
-              pricing={getPrice(plan.pricing)}
-              buttons={buttons}
-            />
-          );
-        })}
+        {sortedPlans.map(plan => (
+          <PlanCard
+            key={plan._id}
+            tier={plan.tier}
+            pricing={getPrice(plan.pricing)}
+            buttons={getButtons(plan.tier)}
+          />
+        ))}
       </StyledSlider>
     </SectionContainer>
   );
