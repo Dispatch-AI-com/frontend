@@ -13,7 +13,7 @@ import {
   useCreateSubscription,
   useDowngradeToFree,
   useSubscription,
-} from '@/hooks/useSubscription';
+} from '@/features/subscription/useSubscription';
 import type { Plan, PlanButton } from '@/types/plan.types';
 
 import PricingCard from './BillingCard';
@@ -49,10 +49,7 @@ function getButtonsByPlan(
   }
   if (isSubscribed) {
     if (isCurrent) {
-      return [
-        { label: 'Your current plan', variant: 'disabled' },
-        { label: 'Cancel Subscription', variant: 'secondary' },
-      ];
+      return [{ label: 'Cancel Subscription', variant: 'cancel' }];
     }
     return [{ label: `Switch to ${plan.tier}`, variant: 'primary' }];
   }
@@ -93,7 +90,7 @@ export default function BillingSection() {
       '(min-width: 900px)': {
         slides: { perView: 2, spacing: 0 },
       },
-      '(min-width: 1400px)': {
+      '(min-width: 1200px)': {
         slides: { perView: 3, spacing: 0 },
       },
     },
@@ -154,8 +151,8 @@ export default function BillingSection() {
         className="keen-slider"
         sx={{
           maxWidth: {
-            xs: 500,
-            sm: 800,
+            xs: 350,
+            sm: 600,
             md: 750,
             lg: 1150,
           },
@@ -170,6 +167,7 @@ export default function BillingSection() {
             sx={{
               display: 'flex',
               boxSizing: 'border-box',
+              justifyContent: 'center',
             }}
           >
             <PricingCard
@@ -184,6 +182,12 @@ export default function BillingSection() {
               )}
               onButtonClick={label =>
                 void handleClick(label, plan.tier, plan._id)
+              }
+              isCurrent={
+                plan.tier === 'FREE' &&
+                (!currentPlanId || isCancelled || !isSubscribed)
+                  ? true
+                  : plan._id === currentPlanId
               }
             />
           </Box>

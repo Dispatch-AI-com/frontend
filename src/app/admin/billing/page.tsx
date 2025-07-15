@@ -8,9 +8,9 @@ import BillingSection from '@/app/admin/billing/components/BillingSection';
 import BillingStatusModal from '@/components/ui/BillingStatusModal';
 
 const styles = {
-  pageContainer: (isMobile: boolean) => ({
+  pageContainer: (isMobile: boolean, isExtraSmall: boolean) => ({
     display: 'flex',
-    margin: isMobile ? 0 : '0 0 0 240px',
+    margin: isExtraSmall ? '0 0 0 0' : isMobile ? '0 0 0 80px' : '0 0 0 240px',
     background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
     boxSizing: 'border-box',
   }),
@@ -50,7 +50,8 @@ const styles = {
 };
 
 export default function BillingboxPage() {
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const isMobile = useMediaQuery('(max-width:900px)');
+  const isExtraSmall = useMediaQuery('(max-width:600px)');
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -71,7 +72,7 @@ export default function BillingboxPage() {
 
   return (
     <>
-      <Box sx={styles.pageContainer(isMobile)}>
+      <Box sx={styles.pageContainer(isMobile, isExtraSmall)}>
         <Box sx={styles.mainContent}>
           <Box sx={styles.titleBar}>
             <Typography sx={styles.titleText}>Billing</Typography>
