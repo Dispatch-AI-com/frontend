@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, styled } from '@mui/material';
+import { Box, Container, styled } from '@mui/material';
 
 import Footer from '../main-layout/Footer';
 import Navbar from '../main-layout/Navbar';
@@ -9,7 +9,6 @@ const PageWrapper = styled(Box)({
   minHeight: '100vh',
   display: 'flex',
   flexDirection: 'column',
-  background: 'linear-gradient(180deg, #f8fff3 0%, #ffffff 100%)',
 });
 
 const GradientNavbar = styled(Navbar)({
@@ -40,9 +39,9 @@ export default function ProductsLayout({
   return (
     <PageWrapper>
       <GradientNavbar />
-      <Box component="main" sx={{ flex: 1 }}>
+      <Container component="main" sx={{ flex: 1 }}>
         {children}
-      </Box>
+      </Container>
       <Footer />
     </PageWrapper>
   );

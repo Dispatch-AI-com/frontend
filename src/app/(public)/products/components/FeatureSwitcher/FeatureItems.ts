@@ -14,35 +14,37 @@ export const FEATURE_ITEMS: FeatureItem[] = [
   {
     key: 'incoming',
     title: 'Incoming Call Handling',
-    description: 'AI answers business phone calls — even at 2 am.',
+    description: '24/7 Auto-answer. Never miss calls - even at 3am',
     image: '/products/feature-incoming.avif',
+    bg: 'linear-gradient(to bottom, #f2f8ee, #f9faf8)',
   },
   {
     key: 'smart-replies',
     title: 'AI Interaction & Smart Replies',
     description:
-      'Verify details, answer FAQs and collect customer info — let AI handle it for you.',
+      'Worry about missing any important calls? Do not worry — let AI handle it for you.',
     image: '/products/feature-smart-replies.avif',
+    bg: 'linear-gradient(to bottom, #f7f7ff, #fcfdfe)',
   },
   {
     key: 'tasks',
     title: 'Automatic Task Creation',
-    description:
-      'We save time by pushing tasks (calls, notes, follow-ups) straight to your inbox or CRM.',
+    description: 'We write down the job details so you do not have to.',
     image: '/products/feature-tasks.avif',
+    bg: 'linear-gradient(to bottom, #f2f8ee, #f9faf8)',
   },
   {
     key: 'follow-ups',
     title: 'Reminders & Follow-Ups',
-    description:
-      'Sends follow-up emails or SMS automatically — never forget to nurture a lead.',
+    description: 'Show SMS/notification bubble.',
     image: '/products/feature-follow-ups.avif',
+    bg: 'linear-gradient(to bottom, #f7f7ff, #fcfdfe)',
   },
   {
     key: 'history',
     title: 'History Management',
-    description:
-      'A crystal-clear timeline of every call and action, searchable at any time.',
+    description: 'We have prepared your services that need to be down today.',
     image: '/products/feature-history.avif',
+    bg: 'linear-gradient(to bottom, #f2f8ee, #f9faf8)',
   },
 ] satisfies FeatureItem[];

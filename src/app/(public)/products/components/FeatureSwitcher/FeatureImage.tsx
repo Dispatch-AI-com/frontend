@@ -10,37 +10,45 @@ interface FeatureImageProps {
   activeIndex: number;
 }
 
-const ImageContainer = styled(Box)({
+const Wrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  paddingTop: '75%', // 4:3 aspect ratio placeholder
+  aspectRatio: '4 / 3',
+  borderRadius: theme.shape.borderRadius * 2,
+  overflow: 'hidden',
+}));
+
+const Backdrop = styled(Box)({
+  position: 'absolute',
+  inset: 0,
+  borderRadius: 'inherit',
 });
+
+const Inner = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  inset: theme.spacing(3),
+}));
 
 export default function FeatureImage({
   items,
   activeIndex,
 }: FeatureImageProps) {
+  const { image, title, bg } = items[activeIndex];
+
   return (
-    <ImageContainer>
-      {items.map((item, idx) => (
-        <Box
-          key={item.key}
-          sx={{
-            display: idx === activeIndex ? 'block' : 'none',
-            position: 'absolute',
-            inset: 0,
-          }}
-        >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            style={{ objectFit: 'contain' }}
-            sizes="(max-width: 900px) 100vw, 600px"
-            priority={idx === activeIndex}
-          />
-        </Box>
-      ))}
-    </ImageContainer>
+    <Wrapper>
+      <Backdrop sx={{ background: bg ?? '#f6f6f6' }} />
+
+      <Inner>
+        <Image
+          src={image}
+          alt={title}
+          fill
+          style={{ objectFit: 'contain' }}
+          sizes="(max-width:900px) 100vw, 600px"
+          priority
+        />
+      </Inner>
+    </Wrapper>
   );
 }

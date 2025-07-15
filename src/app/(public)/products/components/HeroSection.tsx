@@ -14,6 +14,16 @@ const Wrapper = styled('section')(({ theme }: { theme: Theme }) => ({
   [theme.breakpoints.up('md')]: {
     paddingTop: theme.spacing(17),
   },
+  backgroundImage: `
+    linear-gradient(
+      180deg,
+      #f8fff3 0%,
+      #f8fff3 10%,
+      rgba(248,255,243,0.4) 40%,
+      rgba(248,255,243,0) 60%,
+      #ffffff 100%
+    )
+  `,
 }));
 
 const BulletIcon = () => (
@@ -66,10 +76,10 @@ export default function HeroSection() {
   return (
     <Wrapper>
       <Stack alignItems="center">
-        <Typography sx={{ fontSize: 40, fontWeight: 700 }}>
+        <Typography sx={{ fontSize: 38, fontWeight: 700 }}>
           Your 24/7 Phone Assistant
         </Typography>
-        <Typography sx={{ fontSize: 40, fontWeight: 700 }} color="text.primary">
+        <Typography sx={{ fontSize: 38, fontWeight: 700 }} color="text.primary">
           Let AI handle your business calls while you focus on growth
         </Typography>
 
