@@ -47,43 +47,43 @@ export default tseslint.config(
       },
     },
     rules: {
-      // General style rules
-      'prettier/prettier': 'error', // Enforce correct formatting
-      'no-console': 'warn', // Warn for uncleared console
-      'no-debugger': 'error', // Disallow debugger left in code
+      // 通用风格规范
+      'prettier/prettier': 'error', // 强制格式正确
+      'no-console': 'warn', // 警告未清除的 console
+      'no-debugger': 'error', // 禁止 debugger 留在代码中
 
-      // TS style
-      '@typescript-eslint/no-explicit-any': 'warn', // Not recommended to use any
+      // TS 风格
+      '@typescript-eslint/no-explicit-any': 'warn', // 不推荐使用 any
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_' },
       ],
-      '@typescript-eslint/consistent-type-imports': 'error', // Use import type
+      '@typescript-eslint/consistent-type-imports': 'error', // 使用 import type
       '@typescript-eslint/no-deprecated': 'off',
 
-      // React related
-      'react/react-in-jsx-scope': 'off', // Next.js does not need to import React
-      'react/jsx-uses-react': 'off', // Outdated React 17 rule
-      'react/jsx-uses-vars': 'warn', // Ensure JSX variables are not mistakenly deleted
+      // React 相关
+      'react/react-in-jsx-scope': 'off', // Next.js 无需 import React
+      'react/jsx-uses-react': 'off', // Outdated React 17 规则
+      'react/jsx-uses-vars': 'warn', // 确保 JSX 变量未被误删
 
       // React Hooks
-      'react-hooks/rules-of-hooks': 'error', // Hook usage must be correct
-      'react-hooks/exhaustive-deps': 'warn', // useEffect and other dependency arrays must be complete
+      'react-hooks/rules-of-hooks': 'error', // Hook 用法必须正确
+      'react-hooks/exhaustive-deps': 'warn', // useEffect 等依赖数组必须完整
 
-      // MUI / JSX accessibility suggestions
-      'jsx-a11y/alt-text': 'warn', // Check if img or Image has alt attribute
-      'jsx-a11y/anchor-is-valid': 'warn', // Ensure <a> uses reasonable
-      'jsx-a11y/click-events-have-key-events': 'warn', // Ensure click events also support keyboard
+      // MUI / JSX 可访问性建议
+      'jsx-a11y/alt-text': 'warn', // 检查 img 或 Image 是否有 alt 属性
+      'jsx-a11y/anchor-is-valid': 'warn', // 确保 <a> 使用合理
+      'jsx-a11y/click-events-have-key-events': 'warn', // 保证点击事件同时支持键盘
 
-      // Next.js recommended settings
-      '@next/next/no-img-element': 'warn', // Recommend using <Image /> instead of <img /> for better performance and security
-      '@next/next/no-html-link-for-pages': 'off', // Allow <a href> navigation
-      '@next/next/no-sync-scripts': 'error', // Disallow synchronous <script>
-      '@next/next/no-title-in-document-head': 'error', // Disallow setting <title> in _document.js, should be set in _app.js or page component
-      '@next/next/no-document-import-in-page': 'error', // Disallow importing _document.js in page components to prevent SSR issues
-      '@next/next/no-head-element': 'error', // Disallow using <head> directly in _document.js, should use <Head /> component
+      // Next.js 推荐设置
+      '@next/next/no-img-element': 'warn', // 建议用 <Image /> 替代 <img />，以获得更好的性能和安全性
+      '@next/next/no-html-link-for-pages': 'off', // 允许 <a href> 跳转
+      '@next/next/no-sync-scripts': 'error', // 禁止同步 <script>
+      '@next/next/no-title-in-document-head': 'error', // 禁止在 _document.js 里设置 <title>，应在 _app.js 或页面组件设置
+      '@next/next/no-document-import-in-page': 'error', // 禁止在页面组件中导入 _document.js，防止 SSR 问题
+      '@next/next/no-head-element': 'error', // 禁止在 _document.js 里直接使用 <head>，应使用 <Head /> 组件
 
-      // Import sorting
+      // 导入排序
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
     },
@@ -95,8 +95,8 @@ export default tseslint.config(
       globals: { ...globals.jest },
     },
     rules: {
-      'jest/no-disabled-tests': 'warn', // Avoid forgetting to remove test.skip
-      'jest/expect-expect': 'warn', // Each test must have expect
+      'jest/no-disabled-tests': 'warn', // 避免忘记移除 test.skip
+      'jest/expect-expect': 'warn', // 每个测试必须有 expect
     },
   },
 );
