@@ -158,7 +158,7 @@ const statusMap: Record<string, string> = {
 };
 
 const Container = styled(Box)(({ theme }) => ({
-  width: 'calc(100vw - 280px)',
+  width: '100%',
   height: '884px',
   margin: '0',
   borderRadius: '20px',
@@ -171,43 +171,27 @@ const Container = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   padding: '24px',
   '@media (min-width: 1920px)': {
-    width: 'calc(100vw - 280px)',
     padding: '28px 32px',
   },
   '@media (min-width: 1600px) and (max-width: 1919px)': {
-    width: 'calc(100vw - 270px)',
     padding: '26px 28px',
   },
   '@media (min-width: 1200px) and (max-width: 1599px)': {
-    width: 'calc(100vw - 260px)',
     padding: '24px',
   },
   [theme.breakpoints.between('md', 'lg')]: {
-    width: 'calc(100vw - 100px)',
     height: 'auto',
     minHeight: '884px',
     padding: '20px',
     borderRadius: '20px',
   },
   [theme.breakpoints.down('md')]: {
-    width: 'calc(100vw - 100px)',
     padding: '18px',
     borderRadius: '20px',
   },
   [theme.breakpoints.down('sm')]: {
-    width: 'calc(100vw - 20px)',
     margin: '0',
     borderRadius: '12px',
-    border: '1px solid rgba(234, 234, 234, 0.2)',
-    padding: '12px',
-  },
-  '@media (max-width: 600px)': {
-    width: '100%',
-    margin: '0',
-    borderRadius: '0',
-    padding: '12px',
-    boxShadow: 'none',
-    border: 'none',
   },
 }));
 

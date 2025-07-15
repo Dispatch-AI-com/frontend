@@ -8,6 +8,7 @@ import { companyApi } from '@/features/company/companyApi';
 import { onboardingApi } from '@/features/onboarding/onboardingApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
 import { subscriptionApi } from '@/features/subscription/subscriptionApi';
+import { serviceBookingApi } from '@/features/service/serviceBookingApi';
 import { testApi } from '@/features/test/testApiSlice';
 import { transcriptApi } from '@/features/transcript/transcriptApi';
 import { transcriptChunksApi } from '@/features/transcript-chunk/transcriptChunksApi';
@@ -23,6 +24,7 @@ export const rootReducer = combineReducers({
   [transcriptApi.reducerPath]: transcriptApi.reducer,
   [transcriptChunksApi.reducerPath]: transcriptChunksApi.reducer,
   [subscriptionApi.reducerPath]: subscriptionApi.reducer,
+  [serviceBookingApi.reducerPath]: serviceBookingApi.reducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
