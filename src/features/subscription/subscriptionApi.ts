@@ -7,6 +7,11 @@ import type {
   Subscription,
 } from '@/types/subscription.d.ts';
 
+export interface SubscriptionListQuery {
+  page?: number;
+  limit?: number;
+}
+
 export const subscriptionApi = createApi({
   reducerPath: 'subscriptionApi',
   baseQuery: axiosBaseQuery(),
@@ -23,7 +28,7 @@ export const subscriptionApi = createApi({
       }),
     }),
 
-    changePlan: builder.mutation<any, ChangePlanDto>({
+    changePlan: builder.mutation<void, ChangePlanDto>({
       query: body => ({
         url: '/subscriptions/change',
         method: 'PATCH',
@@ -48,10 +53,7 @@ export const subscriptionApi = createApi({
       providesTags: ['Subscription'],
     }),
 
-    getAllSubscriptions: builder.query<
-      Subscription[],
-      { page?: number; limit?: number }
-    >({
+    getAllSubscriptions: builder.query<Subscription[], SubscriptionListQuery>({
       query: ({ page = 1, limit = 20 }) => ({
         url: '/subscriptions',
         method: 'GET',
@@ -68,6 +70,7 @@ export const subscriptionApi = createApi({
   }),
 });
 
+// Export hooks
 export const {
   useCreateSubscriptionMutation,
   useChangePlanMutation,
@@ -76,3 +79,16 @@ export const {
   useGetAllSubscriptionsQuery,
   useGenerateBillingPortalUrlMutation,
 } = subscriptionApi;
+
+// Export raw endpoints
+export const createSubscription =
+  subscriptionApi.endpoints.createSubscription.initiate;
+export const changePlan = subscriptionApi.endpoints.changePlan.initiate;
+export const downgradeToFree =
+  subscriptionApi.endpoints.downgradeToFree.initiate;
+export const getSubscriptionByUser =
+  subscriptionApi.endpoints.getSubscriptionByUser.initiate;
+export const getAllSubscriptions =
+  subscriptionApi.endpoints.getAllSubscriptions.initiate;
+export const generateBillingPortalUrl =
+  subscriptionApi.endpoints.generateBillingPortalUrl.initiate;
