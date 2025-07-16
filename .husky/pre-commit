@@ -1,7 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
-
-# make sure pnpm on Homebrew is on the PATH
-export PATH="/opt/homebrew/bin:$PATH"
 
 pnpm lint-staged
