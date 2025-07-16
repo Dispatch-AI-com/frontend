@@ -67,7 +67,7 @@ export const serviceApi = createApi({
         method: 'GET',
         params: { userId },
       }),
-      providesTags: (result, error, userId) =>
+      providesTags: (result, _error, _userId) =>
         result
           ? [
               ...result.map(({ _id }) => ({

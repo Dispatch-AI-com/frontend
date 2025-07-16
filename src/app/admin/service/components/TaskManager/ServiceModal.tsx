@@ -20,10 +20,6 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { Service, TaskStatus } from '@/features/service/serviceApi';
-import {
-  useCreateServiceMutation,
-  useGetServicesQuery,
-} from '@/features/service/serviceApi';
 import { useCreateServiceBookingMutation } from '@/features/service/serviceBookingApi';
 import { useAppSelector } from '@/redux/hooks';
 
@@ -232,7 +228,6 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
     return now.toISOString().slice(0, 16);
   });
   const [description, setDescription] = useState('');
-  const [createService] = useCreateServiceMutation();
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
   const userName =
@@ -277,12 +272,12 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
         throw new Error('Invalid date format');
       }
       return testDate.toISOString();
-    } catch (error) {
-      console.error(
-        'Error converting date to backend format:',
-        datetime,
-        error,
-      );
+    } catch {
+      // console.error(
+      //   'Error converting date to backend format:',
+      //   datetime,
+      //   error,
+      // );
       throw new Error('Invalid date format');
     }
   }
@@ -328,13 +323,8 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
         description,
       });
       onClose();
-    } catch (error: unknown) {
-      // if (typeof error === 'object' && error !== null && 'data' in error) {
-      //   const errData = (error as { data?: { message?: string } }).data;
-      //   console.error('Failed to create booking:', errData?.message ?? JSON.stringify(error));
-      // } else {
-      //   console.error('Failed to create booking:', JSON.stringify(error));
-      // }
+    } catch {
+      // Error handling removed for lint compliance
     }
   };
 

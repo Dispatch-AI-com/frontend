@@ -1,7 +1,6 @@
 // FilterModal.tsx
 'use client';
 
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
@@ -9,7 +8,6 @@ import {
   FormControl,
   IconButton,
   MenuItem,
-  Modal,
   Popover,
   Select,
   styled,

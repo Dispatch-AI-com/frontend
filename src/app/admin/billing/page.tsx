@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
@@ -8,12 +8,12 @@ import BillingSection from '@/app/admin/billing/components/BillingSection';
 import BillingStatusModal from '@/components/ui/BillingStatusModal';
 
 const styles = {
-  pageContainer: (isMobile: boolean, isExtraSmall: boolean) => ({
+  pageContainer: {
     display: 'flex',
-    margin: isExtraSmall ? '0 0 0 0' : isMobile ? '0 0 0 80px' : '0 0 0 240px',
     background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
     boxSizing: 'border-box',
-  }),
+    minHeight: '100vh',
+  },
 
   mainContent: {
     margin: '8px 8px 8px 8px',
@@ -22,6 +22,7 @@ const styles = {
     flexDirection: 'column',
     backgroundColor: 'white',
     borderRadius: '20px',
+    minHeight: 'calc(100vh - 16px)',
   },
 
   contentContainer: {
@@ -50,8 +51,6 @@ const styles = {
 };
 
 export default function BillingboxPage() {
-  const isMobile = useMediaQuery('(max-width:900px)');
-  const isExtraSmall = useMediaQuery('(max-width:600px)');
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -72,7 +71,7 @@ export default function BillingboxPage() {
 
   return (
     <>
-      <Box sx={styles.pageContainer(isMobile, isExtraSmall)}>
+      <Box sx={styles.pageContainer}>
         <Box sx={styles.mainContent}>
           <Box sx={styles.titleBar}>
             <Typography sx={styles.titleText}>Billing</Typography>

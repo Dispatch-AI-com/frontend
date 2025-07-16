@@ -16,7 +16,7 @@ import { useGetTasksByUserQuery } from '@/features/service/serviceApi';
 import { useDeleteServiceBookingMutation } from '@/features/service/serviceBookingApi';
 import { useAppSelector } from '@/redux/hooks';
 
-const ModalContainer = styled(Box)(({ theme }) => ({
+const ModalContainer = styled(Box)(() => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -29,7 +29,7 @@ const ModalContainer = styled(Box)(({ theme }) => ({
   boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.1)',
 }));
 
-const ModalHeader = styled(Box)(({ theme }) => ({
+const ModalHeader = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -37,13 +37,13 @@ const ModalHeader = styled(Box)(({ theme }) => ({
   marginBottom: '16px',
 }));
 
-const ModalTitle = styled(Typography)(({ theme }) => ({
+const ModalTitle = styled(Typography)(() => ({
   fontSize: '20px',
   fontWeight: 600,
   color: '#1a1a1a',
 }));
 
-const CloseButton = styled(IconButton)(({ theme }) => ({
+const CloseButton = styled(IconButton)(() => ({
   padding: 4,
   color: '#666',
   '&:hover': {
@@ -51,18 +51,18 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-const ModalContent = styled(Box)(({ theme }) => ({
+const ModalContent = styled(Box)(() => ({
   padding: '0 24px',
   marginBottom: '24px',
 }));
 
-const MessageText = styled(Typography)(({ theme }) => ({
+const MessageText = styled(Typography)(() => ({
   fontSize: '14px',
   color: '#666',
   lineHeight: 1.5,
 }));
 
-const ModalFooter = styled(Box)(({ theme }) => ({
+const ModalFooter = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'flex-end',
   gap: '12px',
@@ -70,7 +70,7 @@ const ModalFooter = styled(Box)(({ theme }) => ({
   borderTop: '1px solid #f0f0f0',
 }));
 
-const CancelButton = styled(Button)(({ theme }) => ({
+const CancelButton = styled(Button)(() => ({
   padding: '8px 24px',
   borderRadius: '8px',
   textTransform: 'none',
@@ -85,7 +85,7 @@ const CancelButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const DeleteButton = styled(Button)(({ theme }) => ({
+const DeleteButton = styled(Button)(() => ({
   padding: '8px 24px',
   borderRadius: '8px',
   textTransform: 'none',
@@ -118,7 +118,7 @@ const DeleteConfirmModal: React.FC<Props> = ({
       await deleteBooking(serviceId).unwrap();
       await refetch();
       onConfirm();
-    } catch (error) {
+    } catch {
       // console.error('Failed to delete booking:', error);
     }
   };

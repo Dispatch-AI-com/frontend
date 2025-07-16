@@ -20,11 +20,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { formatCurrency } from '@/lib/utils';
 
-import type { PaginationParams, Service } from '../serviceApi';
+import type { PaginationParams } from '../serviceApi';
 import { useGetServicesQuery } from '../serviceApi';
 
 function ServiceListSkeleton() {

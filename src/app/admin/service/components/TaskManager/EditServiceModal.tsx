@@ -8,7 +8,6 @@ import {
   Button,
   FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
   Modal,
   Select,
@@ -20,9 +19,8 @@ import {
 import { useState } from 'react';
 
 import type { Service, TaskStatus } from '@/features/service/serviceApi';
-import { useAppSelector } from '@/redux/hooks';
 
-const ModalContainer = styled(Box)(({ theme }) => ({
+const ModalContainer = styled(Box)(() => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -35,7 +33,7 @@ const ModalContainer = styled(Box)(({ theme }) => ({
   boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.1)',
 }));
 
-const ModalHeader = styled(Box)(({ theme }) => ({
+const ModalHeader = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -43,13 +41,13 @@ const ModalHeader = styled(Box)(({ theme }) => ({
   marginBottom: '24px',
 }));
 
-const ModalTitle = styled(Typography)(({ theme }) => ({
+const ModalTitle = styled(Typography)(() => ({
   fontSize: '20px',
   fontWeight: 600,
   color: '#1a1a1a',
 }));
 
-const CloseButton = styled(IconButton)(({ theme }) => ({
+const CloseButton = styled(IconButton)(() => ({
   padding: 4,
   color: '#666',
   '&:hover': {
@@ -57,22 +55,22 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-const ModalContent = styled(Box)(({ theme }) => ({
+const ModalContent = styled(Box)(() => ({
   padding: '0 24px',
 }));
 
-const FormField = styled(Box)(({ theme }) => ({
+const FormField = styled(Box)(() => ({
   marginBottom: '20px',
 }));
 
-const FieldLabel = styled(Typography)(({ theme }) => ({
+const FieldLabel = styled(Typography)(() => ({
   fontSize: '14px',
   fontWeight: 500,
   color: '#1a1a1a',
   marginBottom: '8px',
 }));
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
+const StyledTextField = styled(TextField)(() => ({
   width: '420px',
   '& .MuiOutlinedInput-root': {
     height: '40px',
@@ -100,7 +98,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const CreatedByContainer = styled(Box)(({ theme }) => ({
+const CreatedByContainer = styled(Box)(() => ({
   width: '123px',
   height: '40px',
   margin: '6px 0 0',
@@ -112,7 +110,7 @@ const CreatedByContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-const UserAvatar = styled(Avatar)(({ theme }) => ({
+const UserAvatar = styled(Avatar)(() => ({
   width: 24,
   height: 24,
   fontSize: '12px',
@@ -120,7 +118,7 @@ const UserAvatar = styled(Avatar)(({ theme }) => ({
   marginRight: '8px',
 }));
 
-const UserName = styled(Typography)(({ theme }) => ({
+const UserName = styled(Typography)(() => ({
   width: '67px',
   height: '16px',
   fontFamily: 'Roboto',
@@ -130,7 +128,7 @@ const UserName = styled(Typography)(({ theme }) => ({
   color: '#060606',
 }));
 
-const StatusSelect = styled(Select)(({ theme }) => ({
+const StatusSelect = styled(Select)(() => ({
   width: '420px',
   height: '40px',
   margin: '6px 0 0',
@@ -159,7 +157,7 @@ const StatusSelect = styled(Select)(({ theme }) => ({
   },
 }));
 
-const DateTimeInput = styled(TextField)(({ theme }) => ({
+const DateTimeInput = styled(TextField)(() => ({
   width: '420px',
   '& .MuiOutlinedInput-root': {
     height: '40px',
@@ -183,7 +181,7 @@ const DateTimeInput = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const DescriptionTextarea = styled(TextareaAutosize)(({ theme }) => ({
+const DescriptionTextarea = styled(TextareaAutosize)(() => ({
   width: '420px',
   minHeight: '80px',
   padding: '12px 16px',
@@ -206,7 +204,7 @@ const DescriptionTextarea = styled(TextareaAutosize)(({ theme }) => ({
   },
 }));
 
-const ModalFooter = styled(Box)(({ theme }) => ({
+const ModalFooter = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'flex-end',
   gap: '12px',
@@ -215,7 +213,7 @@ const ModalFooter = styled(Box)(({ theme }) => ({
   marginTop: '24px',
 }));
 
-const DeleteButton = styled(Button)(({ theme }) => ({
+const DeleteButton = styled(Button)(() => ({
   padding: '8px 24px',
   borderRadius: '8px',
   textTransform: 'none',
@@ -230,7 +228,7 @@ const DeleteButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const SaveButton = styled(Button)(({ theme }) => ({
+const SaveButton = styled(Button)(() => ({
   padding: '8px 24px',
   borderRadius: '8px',
   textTransform: 'none',

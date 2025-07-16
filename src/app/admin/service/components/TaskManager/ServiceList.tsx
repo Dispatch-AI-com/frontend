@@ -16,14 +16,14 @@ import Image from 'next/image';
 
 import type { Service } from '@/features/service/serviceApi';
 
-const StyledTableHead = styled(TableHead)(({ theme }) => ({
+const StyledTableHead = styled(TableHead)(() => ({
   backgroundColor: '#F7F8FA',
   '& .MuiTableRow-root': {
     height: '56px',
   },
 }));
 
-const StyledHeaderCell = styled(TableCell)(({ theme }) => ({
+const StyledHeaderCell = styled(TableCell)(() => ({
   fontWeight: 700,
   fontSize: '16px',
   color: '#1A1A1A',
@@ -37,7 +37,7 @@ const StyledHeaderCell = styled(TableCell)(({ theme }) => ({
   height: '56px',
 }));
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
   border: 'none',
   padding: '12px 16px',
   fontSize: '15px',
@@ -46,7 +46,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   backgroundColor: '#fff',
 }));
 
-const TableContentContainer = styled(Box)(({ theme }) => ({
+const TableContentContainer = styled(Box)(() => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
@@ -56,7 +56,7 @@ const TableContentContainer = styled(Box)(({ theme }) => ({
   minWidth: '700px',
 }));
 
-const ScrollableTableContainer = styled(TableContainer)(({ theme }) => ({
+const ScrollableTableContainer = styled(TableContainer)(() => ({
   flex: 1,
   border: 'none',
   borderRadius: '0',
@@ -107,7 +107,7 @@ const NoServicesText = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const EmptyStateContainer = styled(Box)(({ theme }) => ({
+const EmptyStateContainer = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -118,7 +118,7 @@ const EmptyStateContainer = styled(Box)(({ theme }) => ({
   minHeight: '600px',
 }));
 
-const FixedHeaderTable = styled(Table)(({ theme }) => ({
+const FixedHeaderTable = styled(Table)(() => ({
   borderCollapse: 'separate',
   borderSpacing: 0,
   tableLayout: 'fixed',
@@ -130,20 +130,7 @@ const TableHeaderContainer = styled(Box)({
   flexShrink: 0,
 });
 
-const UserAvatar = styled(Box)({
-  width: 24,
-  height: 24,
-  borderRadius: '50%',
-  backgroundColor: '#e0e0e0',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: '12px',
-  fontWeight: 'bold',
-  color: '#666',
-});
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(() => ({
   '&:hover': {
     backgroundColor: '#F0F2F5',
   },
@@ -193,19 +180,6 @@ const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Completed':
-        return '#D1FADF';
-      case 'Missed':
-        return '#FEE4E2';
-      case 'Follow-up':
-        return '#FEF0C7';
-      default:
-        return '#E0E0E0';
-    }
-  };
-
   const formatDateTime = (datetime?: string) => {
     if (!datetime) return 'No data';
     const date = new Date(datetime);
@@ -222,7 +196,7 @@ const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
         minute: '2-digit',
         hour12: false,
       });
-    } catch (error) {
+    } catch {
       // fallback to manual formatting
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -279,7 +253,7 @@ const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
         <ScrollableTableContainer>
           <FixedHeaderTable>
             <TableBody>
-              {services.map((service, index) => {
+              {services.map(service => {
                 return (
                   <StyledTableRow
                     key={service._id}
