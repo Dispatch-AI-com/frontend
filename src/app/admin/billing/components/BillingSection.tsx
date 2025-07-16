@@ -156,7 +156,7 @@ export default function BillingSection() {
             md: 750,
             lg: 1150,
           },
-          mx: 'auto',
+          // mx: 'auto',
           overflow: 'hidden',
         }}
       >
