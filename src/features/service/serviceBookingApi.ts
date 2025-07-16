@@ -23,7 +23,7 @@ export const serviceBookingApi = createApi({
       Partial<ServiceBooking>
     >({
       query: body => ({
-        url: '/api/bookings',
+        url: '/bookings',
         method: 'POST',
         data: body,
       }),
@@ -34,7 +34,7 @@ export const serviceBookingApi = createApi({
       { userId?: string; serviceId?: string }
     >({
       query: params => ({
-        url: '/api/bookings',
+        url: '/bookings',
         method: 'GET',
         params,
       }),
@@ -51,7 +51,7 @@ export const serviceBookingApi = createApi({
     }),
     deleteServiceBooking: builder.mutation<{ message: string }, string>({
       query: id => ({
-        url: `/api/bookings/${id}`,
+        url: `/bookings/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'ServiceBooking', id: 'LIST' }],
@@ -61,7 +61,7 @@ export const serviceBookingApi = createApi({
       { id: string; data: Partial<ServiceBooking> }
     >({
       query: ({ id, data }) => ({
-        url: `/api/bookings/${id}`,
+        url: `/bookings/${id}`,
         method: 'PATCH',
         data,
       }),
