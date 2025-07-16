@@ -7,12 +7,13 @@ import React, { useEffect, useState } from 'react';
 import BillingSection from '@/app/admin/billing/components/BillingSection';
 import BillingStatusModal from '@/components/ui/BillingStatusModal';
 
+import BillingHistorySection from './components/BillingHistorySection';
+
 const styles = {
   pageContainer: {
     display: 'flex',
     background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
     boxSizing: 'border-box',
-    minHeight: '100vh',
   },
 
   mainContent: {
@@ -28,7 +29,7 @@ const styles = {
   contentContainer: {
     flex: 1,
     display: 'flex',
-    padding: '24px',
+    padding: '24px 24px 0 24px',
     borderRadius: '20px',
     overflowX: 'visible',
   },
@@ -78,6 +79,19 @@ export default function BillingboxPage() {
           </Box>
           <Box sx={styles.contentContainer}>
             <BillingSection />
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 24px',
+            }}
+          >
+            <Typography sx={styles.titleText}>Invoice History</Typography>
+          </Box>
+          <Box sx={styles.contentContainer}>
+            <BillingHistorySection />
           </Box>
         </Box>
       </Box>
