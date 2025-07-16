@@ -301,7 +301,6 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
       }
       await createServiceBooking({
         serviceId,
-        companyId: 'default',
         client: { name: userName, phoneNumber: 'dummy', address: 'dummy' },
         serviceFormValues: [{ serviceFieldId: 'dummy', answer: name }],
         bookingTime,
