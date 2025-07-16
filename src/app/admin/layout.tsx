@@ -32,13 +32,13 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         return;
       }
 
-      // // check if onboarding finished
-      // if (isFetching || !progress) return;
+      // check if onboarding finished
+      if (isFetching || !progress) return;
 
-      // if (progress.status !== 'completed' && pathname !== '/onboarding') {
-      //   router.replace('/onboarding');
-      //   return;
-      // }
+      if (progress.status !== 'completed' && pathname !== '/onboarding') {
+        router.replace('/onboarding');
+        return;
+      }
 
       setReady(true);
     }, 0);
