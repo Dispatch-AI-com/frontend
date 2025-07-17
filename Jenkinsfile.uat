@@ -8,7 +8,6 @@ pipeline {
 
     environment {
         ENVIRONMENT = "uat"
-        BRANCH_NAME="main"
         AWS_ACCOUNT_ID = "893774231297"
         AWS_REGION = "ap-southeast-2"
         ECR_REPO = "dispatchai-frontend"
