@@ -282,7 +282,7 @@ function ServiceManager() {
       if (updatedService.name) {
         payload.serviceFormValues = [
           {
-            serviceFieldId: 'dummy', // 这里建议用真实的 fieldId
+            serviceFieldId: updatedService.serviceFieldId ?? 'dummy', // 用原有的
             answer: updatedService.name,
           },
         ];
@@ -377,8 +377,9 @@ function ServiceManager() {
   // Map booking to Service type (only keep display fields)
   const bookingsAsServices = currentBookings.map(booking => ({
     _id: booking._id,
-    name: booking.serviceFormValues?.[0]?.answer || '',
-    companyId: booking.companyId,
+    name: booking.serviceFormValues?.[0]?.answer ?? '',
+    serviceFieldId: booking.serviceFormValues?.[0]?.serviceFieldId ?? '',
+    companyId: booking.companyId ?? '',
     description: booking.note ?? '',
     price: 0,
     notifications: { preferNotificationType: '', phoneNumber: '', email: '' },
@@ -389,9 +390,9 @@ function ServiceManager() {
       if (booking.status === 'confirmed') return 'Follow-up';
       return 'Follow-up';
     })() as TaskStatus,
-    dateTime: booking.bookingTime,
+    dateTime: booking.bookingTime ?? '',
     userId: '',
-    createdBy: { name: booking.client?.name || 'Unknown', avatar: '' },
+    createdBy: { name: booking.client?.name ?? 'Unknown', avatar: '' },
   }));
 
   // Unique status dropdown
