@@ -4,6 +4,8 @@ import { axiosBaseQuery } from '@/lib/axiosBaseQuery';
 import type {
   ChangePlanDto,
   CreateSubscriptionDto,
+  RawInvoice,
+  RawRefund,
   Subscription,
 } from '@/types/subscription.d.ts';
 
@@ -67,6 +69,20 @@ export const subscriptionApi = createApi({
         method: 'POST',
       }),
     }),
+
+    getInvoicesByUser: builder.query<RawInvoice, string>({
+      query: userId => ({
+        url: `/subscriptions/${userId}/invoices`,
+        method: 'GET',
+      }),
+    }),
+
+    getRefundsByUser: builder.query<RawRefund, string>({
+      query: userId => ({
+        url: `/subscriptions/${userId}/refunds`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -78,6 +94,8 @@ export const {
   useGetSubscriptionByUserQuery,
   useGetAllSubscriptionsQuery,
   useGenerateBillingPortalUrlMutation,
+  useGetInvoicesByUserQuery,
+  useGetRefundsByUserQuery,
 } = subscriptionApi;
 
 // Export raw endpoints
@@ -92,3 +110,7 @@ export const getAllSubscriptions =
   subscriptionApi.endpoints.getAllSubscriptions.initiate;
 export const generateBillingPortalUrl =
   subscriptionApi.endpoints.generateBillingPortalUrl.initiate;
+export const getInvoicesByUser =
+  subscriptionApi.endpoints.getInvoicesByUser.initiate;
+export const getRefundsByUser =
+  subscriptionApi.endpoints.getRefundsByUser.initiate;
