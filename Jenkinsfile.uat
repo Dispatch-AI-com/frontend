@@ -2,7 +2,7 @@ pipeline {
     agent {
         kubernetes {
             cloud 'EKS-Agent-UAT-lawrence'
-            label 'jenkins-slave-uat'
+            yamlFile 'jenkins-agent-uat.yaml'
         }
     }
 
