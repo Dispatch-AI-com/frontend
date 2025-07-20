@@ -110,13 +110,6 @@ const dropdownOptions = [
 export default function Sidebar() {
   const user = useAppSelector(state => state.auth.user);
   const [activeIndex, setActiveIndex] = React.useState(0);
-
-  console.log('User avatar:', user?.avatar);
-  console.log('User:', user);
-  console.log(
-    'Complete Redux auth state:',
-    useAppSelector(state => state.auth),
-  );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
