@@ -54,6 +54,7 @@ export default function AuthCallbackContent() {
               firstName: parsedUser.firstName,
               lastName: parsedUser.lastName,
               role: parsedUser.role,
+              avatar: parsedUser.avatar,
             },
           }),
         );

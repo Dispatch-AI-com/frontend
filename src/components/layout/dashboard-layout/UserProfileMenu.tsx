@@ -24,6 +24,7 @@ interface UserProfileMenuProps {
   name: string;
   plan: string;
   avatarLetter: string;
+  avatarUrl?: string;
   dropdownOptions: DropdownOption[];
   anchorEl: null | HTMLElement;
   open: boolean;
@@ -38,6 +39,7 @@ export default function UserProfileMenu({
   name,
   plan,
   avatarLetter,
+  avatarUrl,
   dropdownOptions,
   anchorEl,
   open,
@@ -69,7 +71,7 @@ export default function UserProfileMenu({
           sx={{
             width: 40,
             height: 40,
-            bgcolor: '#e5fcd5',
+            bgcolor: avatarUrl ? 'transparent' : '#e5fcd5',
             color: '#222',
             cursor: isCollapsed ? 'pointer' : 'default',
           }}
@@ -80,8 +82,9 @@ export default function UserProfileMenu({
                 : handleMenuOpen
               : undefined
           }
+          src={avatarUrl}
         >
-          {avatarLetter}
+          {!avatarUrl && avatarLetter}
         </Avatar>
         {!isCollapsed && (
           <>
