@@ -2,13 +2,30 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
+import type { AuthErrorType } from '@/types/auth-errors';
 import type { UserInfo } from '@/types/user.d';
 
 interface AuthState {
   token: string | null;
   user: UserInfo | null;
+  isAuthenticated: boolean;
+  authError?: {
+    type: AuthErrorType;
+    timestamp: number;
+    showModal: boolean;
+  };
+  lastAuthCheck: number;
+  isCheckingAuth: boolean;
 }
-const initialState: AuthState = { token: null, user: null };
+
+const initialState: AuthState = {
+  token: null,
+  user: null,
+  isAuthenticated: false,
+  authError: undefined,
+  lastAuthCheck: 0,
+  isCheckingAuth: false,
+};
 
 interface Credentials {
   token: string;
@@ -22,10 +39,49 @@ const authSlice = createSlice({
     setCredentials: (state, action: PayloadAction<Credentials>) => {
       state.token = action.payload.token;
       state.user = action.payload.user;
+      state.isAuthenticated = true;
+      state.authError = undefined;
+      state.lastAuthCheck = Date.now();
     },
-    logout: () => ({ ...initialState }),
+    setUser: (state, action: PayloadAction<UserInfo | null>) => {
+      state.user = action.payload;
+      state.isAuthenticated = !!action.payload;
+      state.authError = undefined;
+      state.lastAuthCheck = Date.now();
+    },
+    logout: state => {
+      state.token = null;
+      state.user = null;
+      state.isAuthenticated = false;
+      state.authError = undefined;
+    },
+    setAuthError: (state, action: PayloadAction<AuthErrorType>) => {
+      state.authError = {
+        type: action.payload,
+        timestamp: Date.now(),
+        showModal: true,
+      };
+      state.isCheckingAuth = false;
+    },
+    clearAuthError: state => {
+      state.authError = undefined;
+    },
+    setCheckingAuth: (state, action: PayloadAction<boolean>) => {
+      state.isCheckingAuth = action.payload;
+    },
+    updateLastAuthCheck: state => {
+      state.lastAuthCheck = Date.now();
+    },
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const {
+  setCredentials,
+  setUser,
+  logout,
+  setAuthError,
+  clearAuthError,
+  setCheckingAuth,
+  updateLastAuthCheck,
+} = authSlice.actions;
 export default authSlice.reducer;

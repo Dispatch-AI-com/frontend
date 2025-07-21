@@ -3,8 +3,9 @@ import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 
-import { logout } from '@/features/auth/authSlice';
+import { logout, setAuthError } from '@/features/auth/authSlice';
 import type { AppDispatch, RootState } from '@/redux/store';
+import { AuthErrorHandler } from '@/services/auth-error-handler';
 
 interface ErrorResponse {
   message: string;
@@ -18,7 +19,7 @@ export const axiosBaseQuery = (): BaseQueryFn<
     params?: Record<string, unknown>;
   },
   unknown,
-  { status?: number; data?: string }
+  { status?: number; data?: string; type?: string }
 > => {
   return async (
     { url, method = 'GET', data, params },
@@ -39,17 +40,36 @@ export const axiosBaseQuery = (): BaseQueryFn<
       return { data: result.data };
     } catch (e) {
       const err = e as AxiosError<ErrorResponse>;
-      if (
-        err.response?.status === 401 &&
-        url !== '/auth/signup' &&
-        url !== '/auth/login'
-      ) {
-        dispatch(logout() as unknown as AppDispatch);
+
+      // 智能错误识别和处理
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        // 排除登录相关的API，避免循环处理
+        if (
+          url !== '/auth/login' &&
+          url !== '/auth/signup' &&
+          url !== '/auth/google' &&
+          url !== '/auth/logout'
+        ) {
+          const errorType = AuthErrorHandler.identifyErrorType(err);
+
+          // 记录错误类型，触发用户友好的提示
+          dispatch(setAuthError(errorType) as unknown as AppDispatch);
+
+          // 如果需要强制登出
+          if (AuthErrorHandler.shouldForceLogout(errorType)) {
+            dispatch(logout() as unknown as AppDispatch);
+          }
+        }
       }
+
       return {
         error: {
           status: err.response?.status,
-          data: err.response?.data.message ?? err.message,
+          data: err.response?.data?.message ?? err.message,
+          type:
+            err.response?.status === 401 || err.response?.status === 403
+              ? AuthErrorHandler.identifyErrorType(err)
+              : undefined,
         },
       };
     }

@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Container, Grid, styled, Typography } from '@mui/material';
+import { Box, Grid, styled, Typography } from '@mui/material';
 import { useState } from 'react';
 
 import FeatureImage from './FeatureImage';
