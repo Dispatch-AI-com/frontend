@@ -1,4 +1,3 @@
-// app/admin/layout.tsx
 'use client';
 
 import { Box } from '@mui/material';
@@ -12,10 +11,19 @@ import {
 } from '@/features/onboarding/onboardingApi';
 import { useAppSelector } from '@/redux/hooks';
 
-export default function ProtectedLayout({ children }: { children: ReactNode }) {
+export default function UserDashboardLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [ready, setReady] = useState(false);
-  const token = useAppSelector(s => s.auth.token);
-  const user = useAppSelector(s => s.auth.user);
+
+  const { token, user, isAuthenticated } = useAppSelector(s => ({
+    token: s.auth.token,
+    user: s.auth.user,
+    isAuthenticated: s.auth.isAuthenticated,
+  }));
+
   const userId = user?._id;
   const {
     data: progress, // { currentStep, answers, status }
@@ -27,12 +35,11 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     // Wait for hydration and then check auth status
     const timer = setTimeout(() => {
       // check if logged in
-      if (!token || !user) {
+      if (!isAuthenticated || !token || !user) {
         router.replace('/login');
         return;
       }
 
-      // check if onboarding finished
       if (isFetching || !progress) return;
 
       if (progress.status !== 'completed' && pathname !== '/onboarding') {
@@ -44,7 +51,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     }, 0);
 
     return () => clearTimeout(timer);
-  }, [token, user, router, pathname, isFetching, progress]);
+  }, [isAuthenticated, token, user, router, pathname, isFetching, progress]);
 
   if (!ready) {
     return (
@@ -56,8 +63,8 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         sx={{ visibility: 'hidden' }}
       >
         <Box textAlign="center">
-          <Box mb={2}>Initializing Admin Panel...</Box>
-          <Box>Loading user data and permissions...</Box>
+          <Box mb={2}>Initializing User Dashboard...</Box>
+          <Box>Loading your personal data...</Box>
         </Box>
       </Box>
     );
