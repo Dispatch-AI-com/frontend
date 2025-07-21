@@ -15,7 +15,7 @@ import CalendarView from './components/CalendarView';
 const styles = {
   pageContainer: (width: number) => ({
     display: 'flex',
-    margin: width <= 600 ? 0 : width <= 900 ? '0 0 0 80px' : '0 0 0 240px',
+    margin: 0,
     background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
     boxSizing: 'border-box',
   }),
@@ -80,12 +80,6 @@ export default function CalendarPage() {
   } else if (isMd) {
     width = 900;
   }
-  const getSidebarWidth = (width: number) => {
-    if (width <= 600) return 0;
-    if (width <= 900) return 80;
-    return 240;
-  };
-  const sidebarWidth = getSidebarWidth(width);
 
   return (
     <Box sx={styles.pageContainer(width)}>
@@ -97,7 +91,7 @@ export default function CalendarPage() {
             <Filter onFilterChange={setSelectedFilters} />
           </Box>
         </Box>
-        <Box sx={{ width: '100%', height: 1, background: '#eaeaea' }} />
+        <Box sx={{ width: '100%', height: '1px', background: '#eaeaea' }} />
         <Box
           sx={{
             display: 'flex',
@@ -129,7 +123,7 @@ export default function CalendarPage() {
         <Box sx={styles.contentContainer}>
           <Box
             sx={{
-              width: `calc(100vw - ${sidebarWidth}px)`,
+              width: '100%',
               maxWidth: 1155,
               minWidth: 0,
               background: '#fff',
