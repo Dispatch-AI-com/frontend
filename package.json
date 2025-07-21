@@ -29,6 +29,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "keen-slider": "^6.8.6",
+    "lodash": "^4.17.21",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-big-calendar": "^1.19.4",
@@ -41,12 +42,14 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.17",
     "use-debounce": "^10.0.5",
+    "uuid": "^11.1.0",
     "zod": "^3.25.17"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.27.0",
     "@next/eslint-plugin-next": "^15.3.2",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-big-calendar": "^1.16.2",

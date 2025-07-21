@@ -18,7 +18,7 @@ const ListItem = styled.div<{ selected?: boolean }>`
   cursor: pointer;
   background-color: ${props => (props.selected ? '#fafafa' : 'transparent')};
   transition: background-color 0.2s;
-  height: 140px;
+  height: 100px;
   width: 324px;
   box-sizing: border-box;
 
@@ -63,17 +63,12 @@ const CallTime = styled.div`
   }
 `;
 
-const CallSummary = styled.div`
+const CallerPhone = styled.div`
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   font-weight: 400;
-  color: #060606;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.4;
-  margin-top: 8px;
+  color: #666;
+  flex: 1;
 `;
 
 const StatusChip = styled.div<{ status: string }>`
@@ -119,18 +114,43 @@ const StatusChip = styled.div<{ status: string }>`
   }
 `;
 
-const StatusContainer = styled.div`
+const PhoneStatusRow = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  margin-top: 4px;
-  margin-bottom: 8px;
+  margin-top: 24px;
 `;
 
 const HighlightedText = styled.span`
   background-color: #fff3cd;
   padding: 0 2px;
   border-radius: 2px;
+`;
+
+const VirtualContainer = styled.div`
+  width: 100%;
+  position: relative;
+`;
+
+const VirtualItem = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+`;
+
+const LoadingContainer = styled.div`
+  position: relative;
+  margin-top: 8px;
+`;
+
+const EndMessage = styled.div`
+  padding: 16px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
 `;
 
 interface InboxListProps {
@@ -146,7 +166,7 @@ interface InboxListProps {
   isLoading?: boolean;
 }
 
-const ITEM_HEIGHT = 140; // Updated to match the new ListItem height
+const ITEM_HEIGHT = 100; // Updated to match the new ListItem height
 
 const highlightText = (text: string, searchTerm: string) => {
   if (!searchTerm || !text) return text;
@@ -212,9 +232,10 @@ export default function InboxList({
               <CallerName>Loading...</CallerName>
               <CallTime>--:--</CallTime>
             </CallerInfo>
-            <StatusContainer>
+            <PhoneStatusRow>
+              <CallerPhone>Loading...</CallerPhone>
               <StatusChip status="loading">Loading...</StatusChip>
-            </StatusContainer>
+            </PhoneStatusRow>
           </ListItem>
         ))}
       </List>
@@ -223,27 +244,17 @@ export default function InboxList({
 
   return (
     <List ref={parentRef}>
-      <div
-        style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
-          width: '100%',
-          position: 'relative',
-        }}
+      <VirtualContainer
+        style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
       >
         {rowVirtualizer.getVirtualItems().map(virtualRow => {
           const item = allItems[virtualRow.index];
           if (!item) return null;
 
           return (
-            <div
+            <VirtualItem
               key={item._id}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                transform: `translateY(${virtualRow.start}px)`,
-              }}
+              style={{ transform: `translateY(${virtualRow.start}px)` }}
             >
               <ListItem
                 selected={item._id === selectedId}
@@ -259,44 +270,40 @@ export default function InboxList({
                       : '--:--'}
                   </CallTime>
                 </CallerInfo>
-                <StatusContainer>
+                <PhoneStatusRow>
+                  <CallerPhone>
+                    {highlightText(
+                      item.callerNumber ?? 'Unknown number',
+                      searchTerm,
+                    )}
+                  </CallerPhone>
                   <StatusChip status={item.status ?? 'Unknown'}>
                     {item.status ?? 'Unknown'}
                   </StatusChip>
-                </StatusContainer>
-                <CallSummary>
-                  {highlightText(item.summary ?? '', searchTerm)}
-                </CallSummary>
+                </PhoneStatusRow>
               </ListItem>
-            </div>
+            </VirtualItem>
           );
         })}
-      </div>
+      </VirtualContainer>
       {isFetchingNextPage && (
-        <div style={{ position: 'relative', marginTop: '8px' }}>
+        <LoadingContainer>
           <ListItem>
             <CallerInfo>
               <CallerName>Loading more...</CallerName>
               <CallTime>--:--</CallTime>
             </CallerInfo>
-            <StatusContainer>
+            <PhoneStatusRow>
+              <CallerPhone>Loading...</CallerPhone>
               <StatusChip status="loading">Loading...</StatusChip>
-            </StatusContainer>
+            </PhoneStatusRow>
           </ListItem>
-        </div>
+        </LoadingContainer>
       )}
       {!hasNextPage && allItems.length > 0 && (
-        <div
-          style={{
-            padding: '16px',
-            textAlign: 'center',
-            color: '#666',
-            fontSize: '14px',
-            fontStyle: 'italic',
-          }}
-        >
+        <EndMessage>
           No more call logs to load • Total: {allItems.length} items
-        </div>
+        </EndMessage>
       )}
     </List>
   );
