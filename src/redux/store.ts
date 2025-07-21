@@ -14,8 +14,10 @@ import storage from 'redux-persist/lib/storage';
 import { authApi } from '@/features/auth/authApi';
 import { calllogsApi } from '@/features/callog/calllogApi';
 import { companyApi } from '@/features/company/companyApi';
+import { onboardingApi } from '@/features/onboarding/onboardingApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
-import { settingsApi } from '@/features/settings/settingsApi';
+import { serviceApi } from '@/features/service/serviceApi';
+import { serviceBookingApi } from '@/features/service/serviceBookingApi';
 import { subscriptionApi } from '@/features/subscription/subscriptionApi';
 import { testApi } from '@/features/test/testApiSlice';
 import { transcriptApi } from '@/features/transcript/transcriptApi';
@@ -45,9 +47,12 @@ export const store = configureStore({
       publicApiSlice.middleware,
       settingsApi.middleware,
       testApi.middleware,
+      onboardingApi.middleware,
       transcriptApi.middleware,
       transcriptChunksApi.middleware,
       subscriptionApi.middleware,
+      serviceBookingApi.middleware,
+      serviceApi.middleware,
     ),
 });
 

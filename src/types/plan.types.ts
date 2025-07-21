@@ -1,5 +1,5 @@
 export type PlanTier = 'FREE' | 'BASIC' | 'PRO';
-export type ButtonVariant = 'primary' | 'secondary' | 'disabled';
+export type ButtonVariant = 'primary' | 'secondary' | 'disabled' | 'cancel';
 
 export interface PlanButton {
   label: string;

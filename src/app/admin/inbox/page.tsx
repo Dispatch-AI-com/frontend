@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import InboxDetail from '@/app/admin/inbox/components/InboxDetail';
 import InboxList from '@/app/admin/inbox/components/InboxList';
 import InboxSearchBar from '@/app/admin/inbox/components/InboxSearchBar';
-import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import { useGetCallLogsQuery } from '@/features/callog/calllogApi';
 import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
@@ -15,17 +14,8 @@ import type { ICallLog } from '@/types/calllog.d';
 
 const PageContainer = styled.div`
   display: flex;
-  padding-left: 240px;
   height: 100vh;
   overflow: hidden;
-
-  ${theme.breakpoints.down('md')} {
-    padding-left: 80px;
-  }
-
-  ${theme.breakpoints.down('sm')} {
-    padding-left: 0;
-  }
 `;
 
 const MainContent = styled.div`
@@ -214,7 +204,6 @@ export default function InboxPage() {
   if (isPending) {
     return (
       <PageContainer>
-        <Sidebar />
         <MainContent>
           <LoadingSpinner>Loading...</LoadingSpinner>
         </MainContent>
@@ -224,7 +213,6 @@ export default function InboxPage() {
   if (!allCallLogs.length) {
     return (
       <PageContainer>
-        <Sidebar />
         <MainContent>
           <InboxSearchBar
             tag={tag}
@@ -248,7 +236,6 @@ export default function InboxPage() {
 
   return (
     <PageContainer>
-      <Sidebar />
       <MainContent
         style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
       >

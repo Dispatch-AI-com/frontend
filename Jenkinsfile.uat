@@ -1,0 +1,120 @@
+pipeline {
+    agent {
+        kubernetes {
+            cloud 'EKS-Agent-UAT-lawrence'
+            yamlFile 'jenkins-agent-uat.yaml'
+        }
+    }
+
+    environment {
+        ENVIRONMENT = "uat"
+        AWS_ACCOUNT_ID = "893774231297"
+        AWS_REGION = "ap-southeast-2"
+        ECR_REPO = "dispatchai-frontend"
+        IMAGE_NAME= "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
+        IMAGE_TAG = "uat-${env.BUILD_ID}"
+        BACKEND_URL = "https://backend.${ENVIRONMENT}.getdispatch.ai/api"
+    }
+
+    stages {
+        stage('Clean workspace') {
+            steps { cleanWs() }
+        }
+
+        stage('checkout repos') {
+            steps {
+                container('node') {
+                    dir('frontend') {
+                        git branch: "${env.BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/frontend.git'
+                    }
+                }
+                container('dispatchai-jenkins-agent') {
+                    dir('helm') {
+                        git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+                    }
+                }
+
+            }
+        }
+
+        stage('install, test and build') {
+            steps {
+                container('node') {
+                    dir('frontend') {
+                        sh "npm install -g pnpm"
+                        sh "pnpm install"
+                        sh "pnpm run type-check"
+                        sh "pnpm run lint"
+                        sh "pnpm test"
+                        sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
+                    }
+                }
+            }
+        }
+
+        stage('build docker image') {
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    dir('frontend') {
+                        script {
+                            // Use BuildKit to build docker image and push to ECR
+                            sh """
+                                docker-credential-ecr-login list
+                                buildctl --addr=tcp://localhost:1234 build \\
+                                --frontend=dockerfile.v0 \\
+                                --local context=. \\
+                                --local dockerfile=. \\
+                                --output type=image,name=${IMAGE_NAME}:${IMAGE_TAG},push=true
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('helm to deploy frontend') {
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    dir('helm/envs/uat') {
+                        script {
+                            // deploy to eks via bash
+                            sh "bash deploy-frontend-${ENVIRONMENT}.sh ${IMAGE_TAG}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Frontend has been deployed successfully with image: ${IMAGE_NAME}:${IMAGE_TAG}"
+            emailext(
+                to: "lawrence.wenboli@gmail.com",
+                subject: "✅ DispatchAI Frontend pipeline succeeded.",
+                body: "Jenkins CICD Pipeline succeeded!<br/>" +
+                    "Job Result: ${currentBuild.currentResult}<br/>" +
+                    "Job Name: ${env.JOB_NAME}<br/>" +
+                    "Branch: ${env.BRANCH_NAME}<br/>" +
+                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                    "URL: ${env.BUILD_URL}<br/>",
+                attachLog: false
+            )
+        }
+
+        failure {
+            emailext(
+                to: "lawrence.wenboli@gmail.com",
+                subject: "❌ DispatchAI Frontend pipeline failed.",
+                body: "Jenkins CICD Pipeline failed!<br/>" +
+                    "Job Result: ${currentBuild.currentResult}<br/>" +
+                    "Job Name: ${env.JOB_NAME}<br/>" +
+                    "Branch: ${env.BRANCH_NAME}<br/>" +
+                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                    "URL: ${env.BUILD_URL}<br/>" +
+                    "Please check logfile for more details.<br/>",
+                attachLog: false
+            )
+        }
+    }
+}
