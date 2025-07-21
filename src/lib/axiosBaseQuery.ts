@@ -41,8 +41,12 @@ export const axiosBaseQuery = (): BaseQueryFn<
     } catch (e) {
       const err = e as AxiosError<ErrorResponse>;
 
-      // 智能错误识别和处理
-      if (err.response?.status === 401 || err.response?.status === 403) {
+      // 智能错误识别和处理 - 401/403/404都可能是认证问题
+      if (
+        err.response?.status === 401 ||
+        err.response?.status === 403 ||
+        err.response?.status === 404
+      ) {
         // 排除登录相关的API，避免循环处理
         if (
           url !== '/auth/login' &&

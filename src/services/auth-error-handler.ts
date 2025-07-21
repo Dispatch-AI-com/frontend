@@ -63,6 +63,11 @@ export class AuthErrorHandler {
       return AuthErrorType.PERMISSION_DENIED;
     }
 
+    if (status === 404) {
+      // 404 often means user doesn't exist or token is invalid
+      return AuthErrorType.USER_DELETED;
+    }
+
     return AuthErrorType.NETWORK_ERROR;
   }
 

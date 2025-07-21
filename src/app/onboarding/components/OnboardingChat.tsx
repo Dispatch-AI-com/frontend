@@ -37,9 +37,11 @@ export default function OnboardingChat() {
   const userId = user?._id;
 
   /* progress = currentStep + answers + status, refetch when saveAnswer | complete */
-  const { data: progress, isFetching } = useGetProgressQuery(
-    userId ?? skipToken,
-  );
+  const {
+    data: progress,
+    isFetching,
+    error,
+  } = useGetProgressQuery(userId ?? skipToken);
 
   const [saveAnswer] = useSaveAnswerMutation();
   const [completeFlow] = useCompleteMutation();
@@ -54,7 +56,16 @@ export default function OnboardingChat() {
 
   /* refresh local state from progress */
   useEffect(() => {
-    if (!progress || isFetching) return;
+    if (isFetching) return;
+
+    // If there's an error or no progress, axiosBaseQuery will handle auth issues
+    // Just start fresh onboarding
+    if (error || !progress) {
+      setMessages([]);
+      setCurrentStepIndex(0);
+      addAIMessage(steps[0].question, steps[0].options);
+      return;
+    }
     interface ChatMsg {
       role: 'user' | 'ai';
       content: string;
@@ -84,7 +95,7 @@ export default function OnboardingChat() {
     } else {
       setCurrentStepIndex(steps.length - 1);
     }
-  }, [progress, isFetching]);
+  }, [progress, isFetching, error, router]);
 
   const currentStep = steps[currentStepIndex];
 
@@ -129,8 +140,19 @@ export default function OnboardingChat() {
           router.push('/admin/overview');
         }, 2000);
       }
-    } catch {
-      addAIMessage('Server error, please try again later.');
+    } catch (error: unknown) {
+      // eslint-disable-next-line no-console
+      console.error('Onboarding completion error:', error);
+      interface ErrorResponse {
+        data?: { message?: string };
+        message?: string;
+      }
+      const err = error as ErrorResponse;
+      const errorMsg =
+        err?.data?.message ??
+        err?.message ??
+        'Server error, please try again later.';
+      addAIMessage(`Error: ${errorMsg}`);
     } finally {
       setUserInput('');
     }
