@@ -3,6 +3,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 
 import { authApi } from '@/features/auth/authApi';
 import authReducer from '@/features/auth/authSlice';
+import { calendarApi } from '@/features/calendar/calendarApi';
 import { calllogsApi } from '@/features/callog/calllogApi';
 import { companyApi } from '@/features/company/companyApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
@@ -21,6 +22,7 @@ export const rootReducer = combineReducers({
   [transcriptApi.reducerPath]: transcriptApi.reducer,
   [transcriptChunksApi.reducerPath]: transcriptChunksApi.reducer,
   [subscriptionApi.reducerPath]: subscriptionApi.reducer,
+  [calendarApi.reducerPath]: calendarApi.reducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
