@@ -1,7 +1,6 @@
 'use client';
 
-import { Box, Typography, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 import Filter from './components/CalendarToolbar/Filter';
@@ -70,16 +69,6 @@ export default function CalendarPage() {
     'follow-up',
   ]);
   const [search, setSearch] = useState('');
-
-  const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMd = useMediaQuery(theme.breakpoints.down('md'));
-  let width = 1200;
-  if (isSm) {
-    width = 600;
-  } else if (isMd) {
-    width = 900;
-  }
 
   return (
     <Box sx={styles.pageContainer()}>
