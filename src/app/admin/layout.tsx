@@ -71,7 +71,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       overflow-x="auto"
     >
       <Sidebar />
-      <Box flex={1} sx={{ ml: { xs: 0, sm: '80px', md: '240px' } }}>
+      <Box flex={1} sx={{ ml: { xs: 0, sm: '30px', md: 0 } }}>
         {children}
       </Box>
     </Box>
