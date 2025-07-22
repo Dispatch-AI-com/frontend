@@ -3,6 +3,7 @@ import React from 'react';
 
 import EditableSection from '@/app/admin/settings/components/EditableSection';
 import {
+  useCheckABNExistsMutation,
   useGetCompanyInfoQuery,
   useUpdateCompanyInfoMutation,
 } from '@/features/settings/settingsApi';
@@ -21,7 +22,7 @@ const validateCompanyName = (name: string): ValidationResult => {
   );
 };
 
-const validateABN = (abn: string): ValidationResult => {
+const validateABNFormat = (abn: string): ValidationResult => {
   const requiredValidation = validateRequired(abn, 'ABN');
   if (!requiredValidation.isValid) {
     return requiredValidation;
@@ -63,14 +64,19 @@ const validateABN = (abn: string): ValidationResult => {
 
 export default function CompanyInfoSection() {
   const user = useAppSelector(state => state.auth.user);
+  const [checkABNExists] = useCheckABNExistsMutation();
 
-  const {
-    data: companyData,
-    isLoading,
-    error,
-  } = useGetCompanyInfoQuery(user?._id ?? '', {
-    skip: !user?._id,
-  });
+  // Synchronous validation for real-time feedback (format only)
+  const validateABN = (abn: string): ValidationResult => {
+    return validateABNFormat(abn);
+  };
+
+  const { data: companyData, isLoading } = useGetCompanyInfoQuery(
+    user?._id ?? '',
+    {
+      skip: !user?._id,
+    },
+  );
 
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
   const handleSave = async (values: Record<string, string>) => {
@@ -78,10 +84,31 @@ export default function CompanyInfoSection() {
       throw new Error('User not logged in');
     }
 
+    // Clean the ABN (remove spaces, dashes, and other non-digit characters)
+    const cleanAbn = values.abn.replace(/\D/g, '');
+
+    // Check for ABN duplication before saving
+    if (user._id) {
+      try {
+        const result = await checkABNExists({
+          abn: cleanAbn,
+          userId: user._id,
+        }).unwrap();
+
+        if (result.exists) {
+          throw new Error('This ABN is already registered by another company');
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          throw error;
+        }
+      }
+    }
+
     await updateCompanyInfo({
       userId: user._id,
       companyName: values.companyName,
-      abn: values.abn,
+      abn: cleanAbn,
     }).unwrap();
   };
 

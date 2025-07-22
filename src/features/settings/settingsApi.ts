@@ -21,7 +21,6 @@ export interface BillingAddressSettings {
   postcode: string;
 }
 
-// API响应接口
 export interface UserSetting {
   _id: string;
   userId: string;
@@ -92,6 +91,16 @@ export const settingsApi = createApi({
       }),
       invalidatesTags: ['BillingAddress'],
     }),
+    checkABNExists: builder.mutation<
+      { exists: boolean },
+      { abn: string; userId: string }
+    >({
+      query: ({ abn, userId }) => ({
+        url: `/settings/check-abn-exists`,
+        method: 'POST',
+        data: { abn, userId },
+      }),
+    }),
   }),
 });
 
@@ -102,4 +111,5 @@ export const {
   useUpdateCompanyInfoMutation,
   useGetBillingAddressQuery,
   useUpdateBillingAddressMutation,
+  useCheckABNExistsMutation,
 } = settingsApi;
