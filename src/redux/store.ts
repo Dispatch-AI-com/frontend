@@ -20,6 +20,7 @@ import { publicApiSlice } from '@/features/public/publicApiSlice';
 import { serviceApi } from '@/features/service/serviceApi';
 import { serviceBookingApi } from '@/features/service/serviceBookingApi';
 import { settingsApi } from '@/features/settings/settingsApi';
+import { serviceManagementApi } from '@/features/service-management/serviceManagementApi';
 import { subscriptionApi } from '@/features/subscription/subscriptionApi';
 import { testApi } from '@/features/test/testApiSlice';
 import { transcriptApi } from '@/features/transcript/transcriptApi';
@@ -56,6 +57,7 @@ export const store = configureStore({
       calendarApi.middleware,
       serviceBookingApi.middleware,
       serviceApi.middleware,
+      serviceManagementApi.middleware,
     ),
 });
 
