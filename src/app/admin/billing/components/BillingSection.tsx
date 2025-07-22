@@ -196,29 +196,40 @@ export default function BillingSection() {
       {/* Dots Pagination */}
       <Box
         sx={{
+          height: '32px',
           display: 'flex',
           justifyContent: 'center',
-          mt: 2,
-          gap: 1.5,
+          alignItems: 'center',
         }}
       >
-        {sortedPlans.map((_, idx) => (
-          <Box
-            key={idx}
-            onClick={() => {
-              slider.current?.moveToIdx(idx);
-            }}
-            sx={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              backgroundColor:
-                currentSlide === idx ? 'primary.main' : 'grey.400',
-              cursor: 'pointer',
-              transition: 'background-color 0.3s',
-            }}
-          />
-        ))}
+        <Box
+          sx={{
+            display: {
+              xs: 'flex',
+              lg: 'none',
+            },
+            justifyContent: 'center',
+            gap: 1.5,
+          }}
+        >
+          {sortedPlans.map((_, idx) => (
+            <Box
+              key={idx}
+              onClick={() => {
+                slider.current?.moveToIdx(idx);
+              }}
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                backgroundColor:
+                  currentSlide === idx ? 'primary.main' : 'grey.400',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s',
+              }}
+            />
+          ))}
+        </Box>
       </Box>
 
       <CancelConfirmModal
