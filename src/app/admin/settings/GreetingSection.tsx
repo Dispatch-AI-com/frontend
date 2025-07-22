@@ -4,35 +4,59 @@ import { useState } from 'react';
 
 import GreetingEditModal from '@/app/admin/settings/components/GreetingEditModal';
 import SectionHeader from '@/app/admin/settings/components/SectionHeader';
+import {
+  useGetGreetingQuery,
+  useUpdateGreetingMutation,
+} from '@/features/settings/settingsApi';
+import { useAppSelector } from '@/redux/hooks';
 import { validateGreeting } from '@/utils/validationSettings';
 
-const defaultGreeting = {
-  message: `"
-Hello! I'm an Dispatch AI assistant working for you.
-
-Your team is not available to take the call right now.
-
-I can take a message for you, or help you book an appointment with your team. What can I do for you today?
-
-你也可以和我说普通话。`,
-  isCustom: false,
-};
-
 export default function GreetingSection() {
-  const [greeting, setGreeting] = useState(defaultGreeting);
+  const user = useAppSelector(state => state.auth.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fetch greeting data from API
+  const {
+    data: greeting,
+    isLoading,
+    error,
+  } = useGetGreetingQuery(user?._id ?? '', {
+    skip: !user?._id,
+  });
+
+  // Update greeting mutation
+  const [updateGreeting] = useUpdateGreetingMutation();
 
   const handleEdit = () => {
     setIsModalOpen(true);
   };
+
   const handleSave = (message: string, isCustom: boolean) => {
     const validation = validateGreeting(message, isCustom);
     if (!validation.isValid) {
       return { success: false, error: validation.error };
     }
-    setGreeting({ message: message.trim(), isCustom });
+
+    if (!user?._id) {
+      return { success: false, error: 'User not logged in' };
+    }
+
+    void updateGreeting({
+      userId: user._id,
+      message: message.trim(),
+      isCustom,
+    });
+
     return { success: true };
   };
+
+  if (isLoading) {
+    return <Box>Loading...</Box>;
+  }
+
+  if (!greeting) {
+    return <Box>Error loading greeting data</Box>;
+  }
 
   return (
     <>

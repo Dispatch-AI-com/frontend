@@ -29,11 +29,15 @@ export interface UserSetting {
   createdAt: string;
   updatedAt: string;
 }
+export interface GreetingSettings {
+  message: string;
+  isCustom: boolean;
+}
 
 export const settingsApi = createApi({
   reducerPath: 'settingsApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['UserProfile', 'CompanyInfo', 'BillingAddress'],
+  tagTypes: ['UserProfile', 'CompanyInfo', 'BillingAddress', 'Greeting'],
   endpoints: builder => ({
     getUserProfile: builder.query<UserProfileSettings, string>({
       query: userId => ({
@@ -91,6 +95,24 @@ export const settingsApi = createApi({
       }),
       invalidatesTags: ['BillingAddress'],
     }),
+    getGreeting: builder.query<GreetingSettings, string>({
+      query: userId => ({
+        url: `/companies/user/${userId}/greeting`,
+        method: 'GET',
+      }),
+      providesTags: ['Greeting'],
+    }),
+    updateGreeting: builder.mutation<
+      any,
+      { userId: string } & GreetingSettings
+    >({
+      query: ({ userId, ...greetingData }) => ({
+        url: `/companies/user/${userId}/greeting`,
+        method: 'PATCH',
+        data: greetingData,
+      }),
+      invalidatesTags: ['Greeting'],
+    }),
     checkABNExists: builder.mutation<
       { exists: boolean },
       { abn: string; userId: string }
@@ -112,4 +134,6 @@ export const {
   useGetBillingAddressQuery,
   useUpdateBillingAddressMutation,
   useCheckABNExistsMutation,
+  useGetGreetingQuery,
+  useUpdateGreetingMutation,
 } = settingsApi;
