@@ -13,7 +13,7 @@ import WeekSelect from './components/CalendarToolbar/WeekSelect';
 import CalendarView from './components/CalendarView';
 
 const styles = {
-  pageContainer: (width: number) => ({
+  pageContainer: () => ({
     display: 'flex',
     margin: 0,
     background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
@@ -82,7 +82,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <Box sx={styles.pageContainer(width)}>
+    <Box sx={styles.pageContainer()}>
       <Box sx={styles.mainContent}>
         <Box sx={styles.titleBar}>
           <Typography sx={styles.titleText}>Calendar</Typography>

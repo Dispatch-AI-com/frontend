@@ -61,6 +61,14 @@ const StyledCalendarWrapper = styled('div')(({ theme }) => ({
     maxWidth: '100vw',
     borderRadius: 0,
   },
+  '@media (min-width:600px) and (max-width:900px)': {
+    maxWidth: 'calc(100vw - 80px)',
+    width: 'calc(100vw - 80px)',
+  },
+  '@media (min-width:900px) and (max-width:1155px)': {
+    maxWidth: 'calc(100vw - 240px)',
+    width: 'calc(100vw - 240px)',
+  },
   '.rbc-month-view .rbc-date-cell': {
     position: 'relative',
     paddingBottom: 8,
@@ -71,7 +79,7 @@ const StyledCalendarWrapper = styled('div')(({ theme }) => ({
   },
   '.rbc-month-view .rbc-date-cell .rbc-button-link': {
     position: 'absolute',
-    bottom: 8,
+    bottom: -65,
     right: 8,
     zIndex: 2,
     float: 'none',
@@ -93,7 +101,7 @@ const StyledCalendarWrapper = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 12,
-    fontWeight: 500,
+    fontWeight: 700,
     border: 'none',
     margin: 0,
     padding: '2px 4px 2px 3px',
@@ -135,7 +143,7 @@ const StyledCalendarWrapper = styled('div')(({ theme }) => ({
     border: 'none',
     boxShadow: 'none',
     padding: 0,
-    margin: '0 0 0 8px',
+    margin: '-25px 0 0 8px',
     '@media (max-width: 600px)': {
       width: '100%',
       maxWidth: 'none',

@@ -168,9 +168,8 @@ export interface CalendarEvent {
 interface WeeklyViewProps {
   value: Date;
   onChange: (date: Date) => void;
-  events?: CalendarEvent[];
-  selectedFilters?: string[];
-  search?: string;
+  selectedFilters: string[];
+  search: string;
 }
 
 const DayHeader: React.FC<{ date: Date }> = ({ date }) => {
@@ -213,12 +212,13 @@ const DayHeader: React.FC<{ date: Date }> = ({ date }) => {
             fontFamily:
               'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
             fontSize: 20,
-            fontWeight: 400,
+            fontWeight: isToday ? 700 : 400,
             fontStretch: 'normal',
             fontStyle: 'normal',
             lineHeight: 1.2,
             letterSpacing: 'normal',
             color: isToday ? '#a8f574' : '#000',
+            marginLeft: -2,
           }}
         >
           {dayNumber}
@@ -241,9 +241,8 @@ const DayHeader: React.FC<{ date: Date }> = ({ date }) => {
 const WeeklyView: React.FC<WeeklyViewProps> = ({
   value,
   onChange,
-  events: _events = [],
-  selectedFilters = ['task', 'completed', 'missed', 'follow-up'],
-  search = '',
+  selectedFilters,
+  search,
 }) => {
   const userId = useSelector((state: RootState) => state.auth?.user?._id);
   const { data: company } = useGetCompanyByUserIdQuery(userId!, {
@@ -255,51 +254,46 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
     { skip: !companyId },
   ) as { data: Booking[] };
 
-  const filteredBookings = bookings.filter(
-    (item: Booking) =>
-      (item.client?.name ?? '').toLowerCase().includes(search.toLowerCase()) ||
-      (item.serviceId?.name ?? '').toLowerCase().includes(search.toLowerCase()),
-  );
+  const statusToFilterMap: Record<string, string> = {
+    task: 'task',
+    completed: 'completed',
+    missed: 'missed',
+    followup: 'followup',
+  };
 
-  const allEvents = filteredBookings.map((item: Booking) => ({
-    ...item,
-    id: item._id,
-    title: `${item.serviceId?.name ?? ''} - ${item.client?.name ?? ''}`,
-    start: new Date(item.bookingTime),
-    end: new Date(item.bookingTime),
-  }));
+  const events = bookings
+    .filter((item: Booking) => {
+      const matchesSearch =
+        (item.client?.name ?? '')
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        (item.serviceId?.name ?? '')
+          .toLowerCase()
+          .includes(search.toLowerCase());
+      if (!matchesSearch) return false;
+      if (selectedFilters.length === 0) return false;
+      const filterType = statusToFilterMap[item.status];
+      return filterType ? selectedFilters.includes(filterType) : false;
+    })
+    .map((item: Booking) => ({
+      ...item,
+      id: item._id,
+      title: `${item.serviceId?.name ?? ''} - ${item.client?.name ?? ''}`,
+      start: new Date(item.bookingTime),
+      end: new Date(item.bookingTime),
+    }));
 
-  const events = allEvents.filter((event: Booking) => {
-    if (selectedFilters.length === 0) return false;
-    const statusToFilterMap: Record<string, string> = {
-      task: 'task',
-      completed: 'completed',
-      missed: 'missed',
-      followup: 'follow-up',
-    };
-    const filterType = statusToFilterMap[event.status];
-    return filterType ? selectedFilters.includes(filterType) : false;
-  });
-
-  const SLOT_HEIGHT = 80;
-  const HEADER_HEIGHT = 72;
-  const VISIBLE_HOURS = 7;
-
-  const minTime = useMemo(() => {
-    const d = new Date(value);
-    d.setHours(0, 0, 0, 0);
-    return d;
+  const { minTime, maxTime } = useMemo(() => {
+    const min = new Date(value);
+    min.setHours(0, 0, 0, 0);
+    const max = new Date(value);
+    max.setHours(23, 59, 59, 999);
+    return { minTime: min, maxTime: max };
   }, [value]);
 
-  const maxTime = useMemo(() => {
-    const d = new Date(value);
-    d.setHours(23, 59, 59, 999);
-    return d;
-  }, [value]);
-
-  const eventPropGetter = (event: CalendarEvent) => ({
+  const eventPropGetter = () => ({
     style: {
-      backgroundColor: event.color ?? '#C7E0FF',
+      backgroundColor: '#C7E0FF',
       border: 'none',
       borderRadius: 6,
       fontSize: 12,
@@ -330,6 +324,10 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
     window.addEventListener('resize', syncHeaderPadding);
     return () => window.removeEventListener('resize', syncHeaderPadding);
   }, []);
+
+  const SLOT_HEIGHT = 80;
+  const HEADER_HEIGHT = 72;
+  const VISIBLE_HOURS = 7;
 
   return (
     <StyledWeeklyCalendarWrapper
