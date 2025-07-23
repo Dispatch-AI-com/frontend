@@ -2,11 +2,16 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import GoogleOAuthButton from '@/components/GoogleOAuthButton';
+import PolicyModal from '@/components/PolicyModal';
+import {
+  PrivacyPolicyContent,
+  TermsOfServiceContent,
+} from '@/constants/policies';
 import { useSignupUserMutation } from '@/features/auth/authApi';
 import { useAppSelector } from '@/redux/hooks';
 import { parseRTKError } from '@/utils/parseRTKError';
@@ -67,9 +72,24 @@ const ErrorMessage = styled.div`
   border: 1px solid #f44336;
 `;
 
+const PolicyLink = styled.span`
+  color: #060606;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+
+  &:hover {
+    color: #333;
+  }
+`;
+
 export default function SignupForm() {
   const router = useRouter();
   const token = useAppSelector(s => s.auth.token);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<'terms' | 'privacy'>(
+    'terms',
+  );
 
   const [signupUser, { isLoading, error }] = useSignupUserMutation();
   const { control, handleSubmit } = useForm<SignupFormData>({
@@ -84,6 +104,15 @@ export default function SignupForm() {
     }
   }, [token, router]);
 
+  const handlePolicyClick = (type: 'terms' | 'privacy') => {
+    setModalContent(type);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   const onSubmit = async (vals: SignupFormData) => {
     const payload = {
       name: `${vals.firstName} ${vals.lastName}`,
@@ -94,70 +123,103 @@ export default function SignupForm() {
     await signupUser(payload);
   };
 
+  const getModalTitle = () => {
+    return modalContent === 'terms' ? 'Terms of Service' : 'Privacy Policy';
+  };
+
+  const getModalContent = () => {
+    return modalContent === 'terms' ? (
+      <TermsOfServiceContent />
+    ) : (
+      <PrivacyPolicyContent />
+    );
+  };
+
   return (
-    <StyledForm onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
-      <GoogleOAuthButton text="Sign up with Google" disabled={isLoading} />
-      {error && <ErrorMessage>{parseRTKError(error)}</ErrorMessage>}
-      <FormRow>
-        <FormField label="First Name">
+    <>
+      <StyledForm onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
+        <GoogleOAuthButton text="Sign up with Google" disabled={isLoading} />
+        {error && <ErrorMessage>{parseRTKError(error)}</ErrorMessage>}
+        <FormRow>
+          <FormField label="First Name">
+            <ControllerInput
+              name="firstName"
+              control={control}
+              placeholder="First Name"
+              disabled={isLoading}
+            />
+          </FormField>
+
+          <FormField label="Last Name">
+            <ControllerInput
+              name="lastName"
+              control={control}
+              placeholder="Last Name"
+              disabled={isLoading}
+            />
+          </FormField>
+        </FormRow>
+        <FormField label="Work Email Address">
           <ControllerInput
-            name="firstName"
+            name="workEmail"
             control={control}
-            placeholder="First Name"
+            type="email"
+            placeholder="you@company.com"
             disabled={isLoading}
           />
         </FormField>
 
-        <FormField label="Last Name">
+        <FormField label="Password">
           <ControllerInput
-            name="lastName"
+            name="password"
             control={control}
-            placeholder="Last Name"
+            type="password"
+            placeholder="Password"
             disabled={isLoading}
           />
         </FormField>
-      </FormRow>
-      <FormField label="Work Email Address">
-        <ControllerInput
-          name="workEmail"
-          control={control}
-          type="email"
-          placeholder="you@company.com"
-          disabled={isLoading}
-        />
-      </FormField>
+        <CheckboxContainer>
+          <ControllerCheckbox
+            name="agreeToPolicy"
+            control={control}
+            label={
+              <span>
+                I agree to the{' '}
+                <PolicyLink onClick={() => handlePolicyClick('terms')}>
+                  Terms of Service
+                </PolicyLink>{' '}
+                and{' '}
+                <PolicyLink onClick={() => handlePolicyClick('privacy')}>
+                  Privacy Policy
+                </PolicyLink>
+                .
+              </span>
+            }
+            disabled={isLoading}
+          />
+        </CheckboxContainer>
+        <CheckboxContainer>
+          <ControllerCheckbox
+            name="agreeToComms"
+            control={control}
+            label="Receive marketing communications (optional)"
+            disabled={isLoading}
+          />
+        </CheckboxContainer>
+        <Button type="submit" fullWidth disabled={isLoading}>
+          {isLoading ? 'Creating Account…' : 'Sign Up'}
+        </Button>
+        <LoginContainer>
+          Already have an account? <LoginLink href="/login">Login</LoginLink>
+        </LoginContainer>
+      </StyledForm>
 
-      <FormField label="Password">
-        <ControllerInput
-          name="password"
-          control={control}
-          type="password"
-          placeholder="Password"
-          disabled={isLoading}
-        />
-      </FormField>
-      <CheckboxContainer>
-        <ControllerCheckbox
-          name="agreeToPolicy"
-          control={control}
-          label="I agree to the Terms of Service and Privacy Policy."
-          disabled={isLoading}
-        />
-      </CheckboxContainer>
-      <CheckboxContainer>
-        <ControllerCheckbox
-          name="agreeToComms"
-          control={control}
-          label="Receive marketing communications (optional)"
-          disabled={isLoading}
-        />
-      </CheckboxContainer>
-      <Button type="submit" fullWidth disabled={isLoading}>
-        {isLoading ? 'Creating Account…' : 'Sign Up'}
-      </Button>
-      <LoginContainer>
-        Already have an account? <LoginLink href="/login">Login</LoginLink>
-      </LoginContainer>
-    </StyledForm>
+      <PolicyModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        title={getModalTitle()}
+        content={getModalContent()}
+      />
+    </>
   );
 }
