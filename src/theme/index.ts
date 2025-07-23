@@ -11,25 +11,29 @@ const ssrMatchMedia = (query: string) => {
   // In SSR phase, return reasonable default values based on common breakpoints
   if (
     query.includes('(max-width:600px)') ||
-    query.includes('(max-width: 600px)')
+    query.includes('(max-width: 600px)') ||
+    query.includes('(max-width: 599.95px)')
   ) {
     return { matches: false }; // Default to desktop
   }
   if (
     query.includes('(max-width:900px)') ||
-    query.includes('(max-width: 900px)')
+    query.includes('(max-width: 900px)') ||
+    query.includes('(max-width: 899.95px)')
   ) {
     return { matches: false }; // Default to desktop
   }
   if (
     query.includes('(max-width:1200px)') ||
-    query.includes('(max-width: 1200px)')
+    query.includes('(max-width: 1200px)') ||
+    query.includes('(max-width: 1199.95px)')
   ) {
     return { matches: false }; // Default to desktop
   }
   if (
     query.includes('(max-width:1536px)') ||
-    query.includes('(max-width: 1536px)')
+    query.includes('(max-width: 1536px)') ||
+    query.includes('(max-width: 1535.95px)')
   ) {
     return { matches: false }; // Default to desktop
   }

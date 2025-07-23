@@ -17,7 +17,7 @@ interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {
 interface MobileDrawerProps {
   handleDrawerToggle: () => void;
   navItems: NavItemProps[];
-  themeVariant?: 'light' | 'dark';
+  themeVariant?: 'light' | 'dark' | 'green';
   isAuthenticated?: boolean;
   user?: UserInfo | null;
 }

@@ -5,7 +5,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { Box, IconButton, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Styled components
 const SocialContainer = styled(Box)(({ theme }) => ({
@@ -37,7 +37,16 @@ const SocialLabel = styled(Typography)(({ theme }) => ({
 }));
 
 const SocialMedia = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Prevent hydration errors
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const handleShare = (platform: string) => {
+    if (!isMounted) return;
+
     const url = window.location.href;
     const title =
       'New Lucy Features Update: Enhanced FAQs & Get Call Notifications Your Way';

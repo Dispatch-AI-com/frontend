@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface Step {
   id: number;
@@ -155,31 +155,47 @@ export default function ProcessFlow() {
   const [activeStep, setActiveStep] = useState<number>(1);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const current = steps.find(s => s.id === activeStep);
 
+  // Prevent hydration errors - ensure DOM operations only run on client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const minSwipeDistance = 50;
 
-  const handleStepChange = (stepId: number) => {
-    if (stepId >= 1 && stepId <= steps.length) {
-      setActiveStep(stepId);
+  const handleStepChange = useCallback(
+    (stepId: number) => {
+      if (stepId >= 1 && stepId <= steps.length) {
+        setActiveStep(stepId);
 
-      const stepElement = document.getElementById(`step-${String(stepId)}`);
-      if (stepElement && containerRef.current) {
-        const container = containerRef.current;
-        const scrollLeft =
-          stepElement.offsetLeft -
-          container.offsetLeft -
-          container.offsetWidth / 2 +
-          stepElement.offsetWidth / 2;
+        // Only perform DOM operations after client-side mount
+        if (isMounted) {
+          setTimeout(() => {
+            const stepElement = document.getElementById(
+              `step-${String(stepId)}`,
+            );
+            if (stepElement && containerRef.current) {
+              const container = containerRef.current;
+              const scrollLeft =
+                stepElement.offsetLeft -
+                container.offsetLeft -
+                container.offsetWidth / 2 +
+                stepElement.offsetWidth / 2;
 
-        container.scrollTo({
-          left: scrollLeft,
-          behavior: 'smooth',
-        });
+              container.scrollTo({
+                left: scrollLeft,
+                behavior: 'smooth',
+              });
+            }
+          }, 0);
+        }
       }
-    }
-  };
+    },
+    [isMounted],
+  );
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -207,6 +223,8 @@ export default function ProcessFlow() {
   };
 
   useEffect(() => {
+    if (!isMounted) return;
+
     const timer = setTimeout(() => {
       const nextStep = activeStep < steps.length ? activeStep + 1 : 1;
       handleStepChange(nextStep);
@@ -215,7 +233,7 @@ export default function ProcessFlow() {
     return () => {
       clearTimeout(timer);
     };
-  }, [activeStep]);
+  }, [activeStep, isMounted, handleStepChange]);
 
   return (
     <SectionBox>

@@ -1,15 +1,23 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import FeaturersComparison from '@/app/(public)/features/components/FeaturersComparison';
 import SetupSteps from '@/app/(public)/features/components/SetupSteps';
 
 export default function Features() {
   const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Prevent hydration errors
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
+    if (!isMounted) return;
+
     // Force scroll to top when visiting features page
     const scrollToTop = () => {
       document.documentElement.scrollTop = 0;
@@ -29,7 +37,7 @@ export default function Features() {
     scrollToTop();
 
     return () => clearTimeout(timeoutId);
-  }, [pathname]);
+  }, [pathname, isMounted]);
 
   return (
     <>

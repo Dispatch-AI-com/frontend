@@ -51,7 +51,7 @@ const DropdownArrow = styled(ArrowDropDownIcon)({
 
 interface UserProfileDropdownProps {
   user: UserInfo;
-  themeVariant?: 'light' | 'dark';
+  themeVariant?: 'light' | 'dark' | 'green';
 }
 
 export function UserProfileDropdown({ user }: UserProfileDropdownProps) {

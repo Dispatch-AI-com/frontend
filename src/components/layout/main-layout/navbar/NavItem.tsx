@@ -8,7 +8,7 @@ import NextLink from 'next/link';
 interface ExtraNavProps {
   width: number;
   textWidth: number;
-  themeVariant?: 'light' | 'dark';
+  themeVariant?: 'light' | 'dark' | 'green';
   isMobile?: boolean;
 }
 
@@ -34,7 +34,11 @@ const NavItemContainer = styled(Box, {
     borderRadius: 12,
     marginRight: theme.spacing(1),
     backgroundColor:
-      themeVariant === 'light' ? theme.palette.background.default : '#060606',
+      themeVariant === 'light'
+        ? theme.palette.background.default
+        : themeVariant === 'green'
+          ? '#f8fff3'
+          : '#060606',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -42,7 +46,11 @@ const NavItemContainer = styled(Box, {
     transition: 'all 0.3s ease',
     '&:hover': {
       backgroundColor:
-        themeVariant === 'light' ? theme.palette.background.paper : '#060606',
+        themeVariant === 'light'
+          ? theme.palette.background.paper
+          : themeVariant === 'green'
+            ? '#e5fcd6'
+            : '#060606',
     },
     '&:active': { transform: 'scale(0.97)' },
     [theme.breakpoints.down('lg')]: {
@@ -56,19 +64,26 @@ const NavItemContainer = styled(Box, {
 const NavItemText = styled(Typography, {
   shouldForwardProp: prop =>
     !['textWidth', 'themeVariant', 'isMobile'].includes(prop as string),
-})<{ textWidth: number; themeVariant?: 'light' | 'dark'; isMobile?: boolean }>(
-  ({ theme, textWidth, themeVariant = 'light', isMobile }) => ({
-    width: isMobile ? 'auto' : textWidth,
-    height: isMobile ? 24 : undefined,
-    lineHeight: 1.25,
-    whiteSpace: 'nowrap',
-    color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
-    ...(isMobile && {
-      fontSize: 20,
-      fontWeight: 500,
-    }),
+})<{
+  textWidth: number;
+  themeVariant?: 'light' | 'dark' | 'green';
+  isMobile?: boolean;
+}>(({ theme, textWidth, themeVariant = 'light', isMobile }) => ({
+  width: isMobile ? 'auto' : textWidth,
+  height: isMobile ? 24 : undefined,
+  lineHeight: 1.25,
+  whiteSpace: 'nowrap',
+  color:
+    themeVariant === 'light'
+      ? theme.palette.text.primary
+      : themeVariant === 'green'
+        ? '#060606'
+        : '#ffffff',
+  ...(isMobile && {
+    fontSize: 20,
+    fontWeight: 500,
   }),
-);
+}));
 
 export function NavItem({
   href,
