@@ -20,47 +20,47 @@ export const AuthStatusModal: React.FC<AuthStatusModalProps> = ({
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  // 防止 hydration 错误 - 确保只在客户端渲染
+  // Prevent hydration errors - ensure only renders on client
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   const errorInfo = errorType ? AUTH_ERROR_MESSAGES[errorType] : null;
 
-  // 在服务端渲染或未挂载时不显示模态框
+  // Don't show modal during server-side rendering or before mounting
   if (!isMounted || !errorInfo) return null;
 
   const handleRelogin = () => {
     setIsRedirecting(true);
 
-    // 清除认证状态
+    // Clear authentication status
     dispatch(logout());
     dispatch(clearAuthError());
 
-    // 延迟跳转，给用户看到处理过程
+    // Delay navigation to show user the process
     setTimeout(() => {
       router.push('/login?reason=auth_required');
     }, 1000);
   };
 
   const handleContactSupport = () => {
-    // 跳转到客服页面或显示联系方式
+    // Navigate to support page or show contact info
     window.open('/support', '_blank');
   };
 
   const handleRetry = () => {
     dispatch(clearAuthError());
     onClose?.();
-    // 刷新当前页面
+    // Refresh current page
     window.location.reload();
   };
 
-  // 使用 portal 将模态框渲染到 document.body，确保不影响页面布局
+  // Use portal to render modal to document.body, ensuring it doesn't affect page layout
   return createPortal(
     <div
       className="fixed inset-0 flex items-center justify-center p-4"
       style={{
-        zIndex: 99999, // 使用 style 确保优先级最高
+        zIndex: 99999, // Use style to ensure highest priority
         position: 'fixed',
         top: 0,
         left: 0,

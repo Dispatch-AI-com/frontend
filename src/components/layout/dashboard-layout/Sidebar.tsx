@@ -26,7 +26,7 @@ const SidebarContainer = styled(Box, {
   justifyContent: 'space-between',
   background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
   padding: theme.spacing(2, 0),
-  zIndex: 1000, // 确保 sidebar 有合理的层级，但低于模态框 (9999)
+  zIndex: 1000, // Ensure sidebar has reasonable z-index, but below modal (9999)
 }));
 
 const LogoBox = styled(Box, {

@@ -7,6 +7,10 @@ import { useEffect, useState } from 'react';
 import { createEmotionCache } from '@/lib/createEmotionCache';
 import theme from '@/theme';
 
+// Type assertion to fix React 19 compatibility
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+const EmotionCacheProvider = CacheProvider as any;
+
 const clientSideEmotionCache = createEmotionCache();
 
 export default function ThemeProvider({
@@ -19,7 +23,7 @@ export default function ThemeProvider({
 
   useEffect(() => {
     setIsMounted(true);
-    // 确保客户端使用自己的缓存
+    // Ensure client uses its own cache
     setEmotionCache(createEmotionCache());
   }, []);
 
@@ -34,11 +38,11 @@ export default function ThemeProvider({
   }
 
   return (
-    <CacheProvider value={emotionCache}>
+    <EmotionCacheProvider value={emotionCache}>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         {children}
       </MuiThemeProvider>
-    </CacheProvider>
+    </EmotionCacheProvider>
   );
 }

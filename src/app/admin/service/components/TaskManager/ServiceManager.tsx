@@ -242,13 +242,13 @@ function ServiceManager() {
     );
   });
 
-  // 分页
+  // Pagination
   const totalPages = Math.ceil(sortedBookings.length / TASKS_PER_PAGE);
   const startIndex = (currentPage - 1) * TASKS_PER_PAGE;
   const endIndex = startIndex + TASKS_PER_PAGE;
   const currentBookings = sortedBookings.slice(startIndex, endIndex);
 
-  // 事件处理
+  // Event handlers
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     value: number,
@@ -267,7 +267,7 @@ function ServiceManager() {
       else if (updatedService.status === 'Follow-up')
         bookingStatus = 'confirmed';
 
-      // 只传实际可编辑字段
+      // Only pass actually editable fields
       const payload: Partial<ServiceBooking> = {
         status: bookingStatus,
       };
@@ -275,16 +275,16 @@ function ServiceManager() {
       if (updatedService.name) {
         payload.serviceFormValues = [
           {
-            serviceFieldId: updatedService.serviceFieldId ?? 'dummy', // 用原有的
+            serviceFieldId: updatedService.serviceFieldId ?? 'dummy', // Use existing
             answer: updatedService.name,
           },
         ];
       }
-      // Date & Time -> bookingTime（转为 ISO/UTC，兼容 datetime-local 格式）
+      // Date & Time -> bookingTime (convert to ISO/UTC, compatible with datetime-local format)
       if (updatedService.dateTime) {
         let dateStr = updatedService.dateTime;
         if (!dateStr.endsWith('Z')) {
-          // 如果没有秒，补全
+          // If no seconds, complete
           if (dateStr.length === 16) dateStr += ':00';
           dateStr += 'Z';
         }
@@ -328,7 +328,7 @@ function ServiceManager() {
   };
   const handleCancelDelete = () => setDeletingServiceId(null);
 
-  // 搜索、筛选、活跃标签等 UI 逻辑
+  // Search, filter, active tags and other UI logic
   const handleSearch = (filters?: unknown) => {
     if (filters && typeof filters === 'object' && filters !== null) {
       const f = filters as Partial<{

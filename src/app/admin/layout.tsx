@@ -42,7 +42,7 @@ export default function UserDashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  // 防止 hydration 错误
+  // Prevent hydration errors
   useEffect(() => {
     setIsMounted(true);
   }, []);

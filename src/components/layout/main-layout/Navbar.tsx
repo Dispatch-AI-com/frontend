@@ -16,7 +16,7 @@ import {
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useAppSelector } from '@/redux/hooks';
 
@@ -91,16 +91,11 @@ interface NavbarProps {
 
 export default function Navbar({ variant = 'light' }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // 获取用户认证状态
+  // Get user authentication status
   const { isAuthenticated, user } = useAppSelector(state => state.auth);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -133,7 +128,7 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
           </LogoBox>
 
           {/* Desktop */}
-          {isClient && !isMobile && (
+          {!isMobile && (
             <>
               <DesktopNavItems navItems={navItems} themeVariant={variant} />
               <DesktopButtonGroup direction="row" spacing={1.5}>
@@ -150,7 +145,7 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
           )}
 
           {/* Mobile */}
-          {isClient && isMobile && (
+          {isMobile && (
             <MobileMenuButton
               color="inherit"
               aria-label="toggle drawer"

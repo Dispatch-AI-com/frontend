@@ -28,24 +28,24 @@ export const AuthGuard: React.FC<{ children: React.ReactNode }> = ({
   );
   const [isMounted, setIsMounted] = useState(false);
 
-  // 防止 hydration 错误 - 确保只在客户端执行依赖浏览器 API 的代码
+  // Prevent hydration errors - ensure browser API dependent code only runs on client
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // 定期检查认证状态（可选）
+  // Periodically check authentication status (optional)
   const checkAuthStatus = useCallback(async () => {
     if (!isAuthenticated || !token) return;
 
     const now = Date.now();
     const timeSinceLastCheck = now - lastAuthCheck;
 
-    // 每5分钟检查一次
+    // Check every 5 minutes
     if (timeSinceLastCheck > 5 * 60 * 1000) {
       dispatch(setCheckingAuth(true));
 
       try {
-        // 使用正确的 API URL
+        // Use correct API URL
         const apiBaseUrl =
           process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
         const headers: Record<string, string> = {};
@@ -60,13 +60,13 @@ export const AuthGuard: React.FC<{ children: React.ReactNode }> = ({
         if (response.ok) {
           dispatch(updateLastAuthCheck());
         } else {
-          // 只有在明确的用户账户问题时才触发认证错误
+          // Only trigger auth error for explicit user account issues
           const errorData = (await response.json().catch(() => ({}))) as {
             message?: string;
           };
           const errorMessage = errorData.message ?? '';
 
-          // 使用 AuthErrorHandler 判断是否为用户账户问题
+          // Use AuthErrorHandler to determine if it's an auth error
           const mockError = {
             response: {
               status: response.status,
@@ -81,7 +81,7 @@ export const AuthGuard: React.FC<{ children: React.ReactNode }> = ({
           }
         }
       } catch {
-        // 网络错误或其他错误不触发认证模态框
+        // Network errors or other errors don't trigger auth modal
         // console.warn('Auth status check failed:', error);
       } finally {
         dispatch(setCheckingAuth(false));
@@ -89,7 +89,7 @@ export const AuthGuard: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isAuthenticated, lastAuthCheck, dispatch, token]);
 
-  // 页面可见性变化时检查认证状态 - 只在客户端执行
+  // Check auth status when page visibility changes - only execute on client
   useEffect(() => {
     if (!isMounted) return;
 
@@ -104,13 +104,13 @@ export const AuthGuard: React.FC<{ children: React.ReactNode }> = ({
       document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [checkAuthStatus, isAuthenticated, isMounted]);
 
-  // 监听存储事件（多标签页同步）- 只在客户端执行
+  // Listen for storage events (multi-tab sync) - only execute on client
   useEffect(() => {
     if (!isMounted) return;
 
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'auth_logout') {
-        // 其他标签页已登出，同步状态
+        // Other tab has logged out, sync state
         dispatch(logout());
         router.push('/login?reason=logged_out_elsewhere');
       }

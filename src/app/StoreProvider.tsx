@@ -13,13 +13,13 @@ export default function StoreProvider({
 }) {
   const [isClient, setIsClient] = useState(false);
 
-  // 防止 hydration 错误 - 确保 redux-persist 只在客户端运行
+  // Prevent hydration errors - ensure redux-persist only runs on client
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   if (!isClient) {
-    // 服务端渲染时只提供基础的 Redux store，不使用 persist
+    // Server-side rendering: only provide basic Redux store, no persist
     return <Provider store={store}>{children}</Provider>;
   }
 

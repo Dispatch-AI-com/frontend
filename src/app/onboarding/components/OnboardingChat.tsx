@@ -143,7 +143,7 @@ export default function OnboardingChat() {
             }, 2000);
           }
         } catch (completionError: unknown) {
-          // 处理完成失败的情况，给用户明确指引
+          // Handle completion failure, provide clear guidance to user
           const err = completionError as {
             data?: { message?: string };
             message?: string;
@@ -157,9 +157,9 @@ export default function OnboardingChat() {
             ['Retry Setup'],
           );
 
-          // 显示重试按钮
+          // Show retry button
           setIsCompleted(false);
-          throw completionError; // 让外层catch处理
+          throw completionError; // Let outer catch handle
         }
       }
     } catch (error: unknown) {

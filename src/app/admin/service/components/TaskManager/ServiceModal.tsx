@@ -259,7 +259,7 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
     }
   };
 
-  // 工具函数：将 datetime-local 补全为后端需要的 UTC 字符串（标准 ISO/UTC，不手动加 Z）
+  // Utility function: convert datetime-local to UTC string required by backend (standard ISO/UTC, don't manually add Z)
   function toBackendDateString(datetime: string) {
     if (!datetime) return '';
     try {

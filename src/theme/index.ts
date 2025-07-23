@@ -6,6 +6,37 @@ declare module '@mui/material/styles' {
   }
 }
 
+// SSR media query matcher function
+const ssrMatchMedia = (query: string) => {
+  // In SSR phase, return reasonable default values based on common breakpoints
+  if (
+    query.includes('(max-width:600px)') ||
+    query.includes('(max-width: 600px)')
+  ) {
+    return { matches: false }; // Default to desktop
+  }
+  if (
+    query.includes('(max-width:900px)') ||
+    query.includes('(max-width: 900px)')
+  ) {
+    return { matches: false }; // Default to desktop
+  }
+  if (
+    query.includes('(max-width:1200px)') ||
+    query.includes('(max-width: 1200px)')
+  ) {
+    return { matches: false }; // Default to desktop
+  }
+  if (
+    query.includes('(max-width:1536px)') ||
+    query.includes('(max-width: 1536px)')
+  ) {
+    return { matches: false }; // Default to desktop
+  }
+  // For other queries, default to false
+  return { matches: false };
+};
+
 const baseTheme = createTheme({
   spacing: 8,
   shape: {
@@ -107,6 +138,11 @@ const theme = createTheme(baseTheme, {
           },
         },
       },
+    },
+  },
+  props: {
+    MuiUseMediaQuery: {
+      ssrMatchMedia,
     },
   },
 });

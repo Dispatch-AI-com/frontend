@@ -19,13 +19,13 @@ const GradientNavbar = styled(Navbar)({
 
   /* 2️⃣ 用 before 伪元素放渐变，置于最底层 */
   '& .MuiAppBar-root': {
-    position: 'relative', // 让 ::before 绝对定位参照
+    position: 'relative', // Allow ::before absolute positioning reference
     boxShadow: 'none',
     '&::before': {
       content: '""',
       position: 'absolute',
       inset: 0,
-      zIndex: -1, // 在所有内容下方
+      zIndex: -1, // Below all content
       background: 'linear-gradient(180deg,#f8fff3 0%,#ffffff 100%)',
     },
   },
