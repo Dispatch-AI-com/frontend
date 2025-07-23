@@ -331,7 +331,7 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
 
   return (
     <StyledWeeklyCalendarWrapper
-      style={{ height: SLOT_HEIGHT * VISIBLE_HOURS + HEADER_HEIGHT + 12 }}
+      style={{ height: SLOT_HEIGHT * VISIBLE_HOURS + HEADER_HEIGHT + 10 }}
     >
       <Calendar
         localizer={localizer}

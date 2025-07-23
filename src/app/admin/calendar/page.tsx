@@ -71,64 +71,90 @@ export default function CalendarPage() {
   const [search, setSearch] = useState('');
 
   return (
-    <Box sx={styles.pageContainer()}>
-      <Box sx={styles.mainContent}>
-        <Box sx={styles.titleBar}>
-          <Typography sx={styles.titleText}>Calendar</Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Search onSearch={setSearch} />
-            <Filter onFilterChange={setSelectedFilters} />
+    <Box
+      sx={{
+        display: 'flex',
+        minHeight: '100vh',
+        background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+      }}
+    >
+      <Box
+        sx={{
+          width: { xs: 0, sm: '80px', md: '240px' },
+          flexShrink: 0,
+          transition: 'width 0.2s',
+        }}
+      />
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 'calc(100vh - 16px)',
+          overflow: 'auto',
+          margin: '8px 8px 8px 0',
+        }}
+      >
+        <Box sx={styles.mainContent}>
+          <Box sx={styles.titleBar}>
+            <Typography sx={styles.titleText}>Calendar</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Search onSearch={setSearch} />
+              <Filter onFilterChange={setSelectedFilters} />
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ width: '100%', height: '1px', background: '#eaeaea' }} />
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: 2,
-            marginLeft: 0,
-            marginRight: 0,
-            marginBottom: -1,
-          }}
-        >
-          {viewType === 'monthly' ? (
-            <MonthSelect value={currentDate} onChange={setCurrentDate} />
-          ) : (
-            <WeekSelect value={currentDate} onChange={setCurrentDate} />
-          )}
+          <Box sx={{ width: '100%', height: '1px', background: '#eaeaea' }} />
           <Box
             sx={{
               display: 'flex',
               alignItems: 'center',
-              paddingRight: '24px',
-              height: 40,
+              justifyContent: 'space-between',
+              marginTop: 2,
+              marginLeft: 0,
+              marginRight: 0,
+              marginBottom: -1,
             }}
           >
-            <Tag />
-            <Switch value={viewType} onChange={setViewType} />
+            {viewType === 'monthly' ? (
+              <MonthSelect value={currentDate} onChange={setCurrentDate} />
+            ) : (
+              <WeekSelect value={currentDate} onChange={setCurrentDate} />
+            )}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                paddingRight: '24px',
+                height: 40,
+              }}
+            >
+              <Tag />
+              <Switch value={viewType} onChange={setViewType} />
+            </Box>
           </Box>
-        </Box>
-        <Box sx={styles.contentContainer}>
-          <Box
-            sx={{
-              width: '100%',
-              maxWidth: 1155,
-              minWidth: 0,
-              background: '#fff',
-              borderRadius: '12px',
-              boxShadow: 'none',
-              overflowX: 'auto',
-              mx: 'auto',
-            }}
-          >
-            <CalendarView
-              viewType={viewType}
-              currentDate={currentDate}
-              onDateChange={setCurrentDate}
-              selectedFilters={selectedFilters}
-              search={search}
-            />
+          <Box sx={styles.contentContainer}>
+            <Box
+              sx={{
+                width: '100%',
+                maxWidth: 1155,
+                minWidth: 0,
+                background: '#fff',
+                borderRadius: '12px',
+                boxShadow: 'none',
+                overflowX: 'auto',
+                mx: 'auto',
+              }}
+            >
+              <CalendarView
+                viewType={viewType}
+                currentDate={currentDate}
+                onDateChange={setCurrentDate}
+                selectedFilters={selectedFilters}
+                search={search}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>
