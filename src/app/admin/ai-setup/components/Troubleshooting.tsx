@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 import CommonButton from '@/components/ui/CommonButton';
 import { useGetCompanyByUserIdQuery } from '@/features/company/companyApi';
@@ -157,9 +158,14 @@ export default function Troubleshooting({
   onBack,
   onGoToGuide,
 }: TroubleshootingProps) {
+  const [isClient, setIsClient] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const user = useAppSelector(state => state.auth.user);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const {
     data: company,
@@ -186,7 +192,7 @@ export default function Troubleshooting({
         sx={{
           width: '100%',
           maxWidth: '678px',
-          px: isMobile ? 2 : 0,
+          px: isClient && isMobile ? 2 : 0,
         }}
       >
         <Text>Loading company information...</Text>
@@ -204,7 +210,7 @@ export default function Troubleshooting({
         sx={{
           width: '100%',
           maxWidth: '678px',
-          px: isMobile ? 2 : 0,
+          px: isClient && isMobile ? 2 : 0,
         }}
       >
         <Text>Error: Failed to get company information</Text>
@@ -239,7 +245,7 @@ export default function Troubleshooting({
       sx={{
         width: '100%',
         maxWidth: '678px',
-        px: isMobile ? 2 : 0,
+        px: isClient && isMobile ? 2 : 0,
         height: '100%',
         justifyContent: 'center',
         minHeight: 'calc(100vh - 160px)',

@@ -17,7 +17,6 @@ const styles = {
   },
 
   mainContent: {
-    margin: '8px 8px 8px 8px',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',

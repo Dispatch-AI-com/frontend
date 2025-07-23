@@ -6,6 +6,7 @@ import { skipToken } from '@reduxjs/toolkit/query';
 import { usePathname, useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
 
+import { AuthGuard } from '@/components/AuthGuard';
 import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import {
   useGetProgressQuery, // ← RTK-Query hook
@@ -29,6 +30,7 @@ export default function UserDashboardLayout({
   children: ReactNode;
 }) {
   const [ready, setReady] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const { token, user, isAuthenticated } = useAppSelector(selectAuthData);
   const userId = user?._id;
@@ -39,7 +41,14 @@ export default function UserDashboardLayout({
   } = useGetProgressQuery(userId ?? skipToken);
   const router = useRouter();
   const pathname = usePathname();
+
+  // 防止 hydration 错误
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  useEffect(() => {
+    if (!isMounted) return;
+
     // Wait for hydration and then check auth status
     const timer = setTimeout(() => {
       // check if logged in
@@ -69,6 +78,7 @@ export default function UserDashboardLayout({
 
     return () => clearTimeout(timer);
   }, [
+    isMounted,
     isAuthenticated,
     token,
     user,
@@ -79,7 +89,7 @@ export default function UserDashboardLayout({
     error,
   ]);
 
-  if (!ready) {
+  if (!isMounted || !ready) {
     return (
       <Box
         display="flex"
@@ -97,16 +107,31 @@ export default function UserDashboardLayout({
   }
 
   return (
-    <Box
-      display="flex"
-      // border="5px solid black"
-      boxSizing="border-box"
-      overflow-x="auto"
-    >
-      <Sidebar />
-      <Box flex={1} sx={{ ml: { xs: 0, sm: '30px', md: 0 } }}>
-        {children}
+    <AuthGuard>
+      <Box
+        display="flex"
+        boxSizing="border-box"
+        overflow-x="auto"
+        sx={{ minHeight: '100vh' }}
+      >
+        <Sidebar />
+        <Box
+          flex={1}
+          sx={{
+            ml: {
+              xs: 0,
+              sm: '80px',
+              md: '240px',
+            },
+            minHeight: '100vh',
+            width: '100%',
+            boxSizing: 'border-box',
+            padding: { xs: 1, sm: 2, md: 3 },
+          }}
+        >
+          {children}
+        </Box>
       </Box>
-    </Box>
+    </AuthGuard>
   );
 }

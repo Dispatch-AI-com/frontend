@@ -18,21 +18,20 @@ import {
 export default function UserProfileSection() {
   const user = useAppSelector(state => state.auth.user);
 
-  const {
-    data: profileData,
-    isLoading,
-    error,
-  } = useGetUserProfileQuery(user?._id ?? '', {
-    skip: !user?._id,
-  });
+  const { data: profileData, isLoading } = useGetUserProfileQuery(
+    user?._id ?? '',
+    {
+      skip: !user?._id,
+    },
+  );
 
-  const [updateProfile] = useUpdateUserProfileMutation();
+  const [updateUserProfile] = useUpdateUserProfileMutation();
   const handleSave = async (values: Record<string, string>) => {
     if (!user?._id) {
       throw new Error('User not logged in');
     }
 
-    await updateProfile({
+    await updateUserProfile({
       userId: user._id,
       name: values.name,
       role: values.role,

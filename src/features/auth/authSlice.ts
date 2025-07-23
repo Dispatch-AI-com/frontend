@@ -56,10 +56,20 @@ const authSlice = createSlice({
       state.authError = undefined;
     },
     setAuthError: (state, action: PayloadAction<AuthErrorType>) => {
+      // 只有真正的认证错误才显示模态框
+      const isAuthenticationError = [
+        'USER_DELETED',
+        'USER_BANNED',
+        'USER_INACTIVE',
+        'TOKEN_EXPIRED',
+        'TOKEN_INVALID',
+        'PERMISSION_DENIED',
+      ].includes(action.payload);
+
       state.authError = {
         type: action.payload,
         timestamp: Date.now(),
-        showModal: true,
+        showModal: isAuthenticationError,
       };
       state.isCheckingAuth = false;
     },

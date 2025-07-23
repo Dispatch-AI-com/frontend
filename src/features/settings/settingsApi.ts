@@ -26,7 +26,7 @@ export interface UserSetting {
   _id: string;
   userId: string;
   category: string;
-  settings: Record<string, any>;
+  settings: Record<string, string | number | boolean>;
   createdAt: string;
   updatedAt: string;
 }

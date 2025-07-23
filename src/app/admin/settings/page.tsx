@@ -13,11 +13,7 @@ const Content = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
   display: 'flex',
   flexDirection: 'column',
-  marginLeft: 0, // default for mobile
-  [theme.breakpoints.up('md')]: {
-    marginLeft: theme.spacing(30), // 240px for desktop
-    minHeight: 'calc(100vh - 48px)',
-  },
+  minHeight: 'calc(100vh - 48px)',
 }));
 
 const SettingsHeader = styled(Box)(({ theme }) => ({

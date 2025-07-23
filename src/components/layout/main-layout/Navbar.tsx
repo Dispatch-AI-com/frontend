@@ -16,12 +16,15 @@ import {
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useAppSelector } from '@/redux/hooks';
 
 import { AuthButton } from './navbar/AuthButton';
 import { DesktopNavItems } from './navbar/DesktopNavItems';
 import { MobileDrawer } from './navbar/MobileDrawer';
 import type { NavItemProps } from './navbar/NavItem';
+import { UserProfileDropdown } from './navbar/UserProfileDropdown';
 
 const navItems: NavItemProps[] = [
   { href: '/', text: 'Home', width: 70, textWidth: 38 },
@@ -88,8 +91,16 @@ interface NavbarProps {
 
 export default function Navbar({ variant = 'light' }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // 获取用户认证状态
+  const { isAuthenticated, user } = useAppSelector(state => state.auth);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -122,18 +133,24 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
           </LogoBox>
 
           {/* Desktop */}
-          {!isMobile && (
+          {isClient && !isMobile && (
             <>
               <DesktopNavItems navItems={navItems} themeVariant={variant} />
               <DesktopButtonGroup direction="row" spacing={1.5}>
-                <AuthButton variant="login" themeVariant={variant} />
-                <AuthButton variant="signup" themeVariant={variant} />
+                {isAuthenticated && user ? (
+                  <UserProfileDropdown user={user} themeVariant={variant} />
+                ) : (
+                  <>
+                    <AuthButton variant="login" themeVariant={variant} />
+                    <AuthButton variant="signup" themeVariant={variant} />
+                  </>
+                )}
               </DesktopButtonGroup>
             </>
           )}
 
           {/* Mobile */}
-          {isMobile && (
+          {isClient && isMobile && (
             <MobileMenuButton
               color="inherit"
               aria-label="toggle drawer"
@@ -186,6 +203,8 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
           handleDrawerToggle={handleDrawerToggle}
           navItems={navItems}
           themeVariant={variant}
+          isAuthenticated={isAuthenticated}
+          user={user}
         />
       </StyledDrawer>
     </StyledAppBar>

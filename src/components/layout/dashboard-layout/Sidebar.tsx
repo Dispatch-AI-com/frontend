@@ -26,6 +26,7 @@ const SidebarContainer = styled(Box, {
   justifyContent: 'space-between',
   background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
   padding: theme.spacing(2, 0),
+  zIndex: 1000, // 确保 sidebar 有合理的层级，但低于模态框 (9999)
 }));
 
 const LogoBox = styled(Box, {
@@ -100,6 +101,12 @@ const dropdownOptions = [
     action: 'logout',
   },
   {
+    label: 'Dispatch AI Home',
+    iconSrc: '/dashboard/sidebar/overview.svg',
+    iconAlt: 'Dispatch AI Home',
+    action: 'home',
+  },
+  {
     label: 'Sign out',
     iconSrc: '/dashboard/sidebar/sign-out.svg',
     iconAlt: 'Sign out',
@@ -110,6 +117,7 @@ const dropdownOptions = [
 export default function Sidebar() {
   const user = useAppSelector(state => state.auth.user);
   const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isClient, setIsClient] = React.useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -126,6 +134,10 @@ export default function Sidebar() {
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -135,7 +147,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Hamburger icon for small screens */}
-      {isSmallScreen && !mobileOpen && (
+      {isClient && isSmallScreen && !mobileOpen && (
         <IconButton
           onClick={handleDrawerToggle}
           sx={{
@@ -151,7 +163,7 @@ export default function Sidebar() {
         </IconButton>
       )}
       {/* Sidebar for desktop */}
-      {!isSmallScreen && (
+      {isClient && !isSmallScreen && (
         <SidebarContainer isCollapsed={isMediumScreen}>
           <LogoBox isCollapsed={isMediumScreen}>
             <Link href="/admin/overview">

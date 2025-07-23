@@ -3,7 +3,7 @@
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const rows = [
   {
@@ -108,14 +108,19 @@ const IconText = styled(Box)({
 });
 
 export default function FeaturersComparison() {
+  const [isClient, setIsClient] = useState(false);
   const isSmall = useMediaQuery('(max-width:800px)');
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <OuterBox>
       <Typography variant="h2" sx={{ textAlign: 'center', mb: 4, mt: 24 }}>
         DIY vs AI Assistant
       </Typography>
-      {isSmall ? (
+      {isClient && isSmall ? (
         <Box>
           <TableContainer className="mb6">
             <TableRow className="diy">

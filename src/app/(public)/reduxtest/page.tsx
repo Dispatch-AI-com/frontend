@@ -13,10 +13,7 @@ export default function ReduxTestPage() {
   const user = useAppSelector(state => state.auth.user);
 
   useEffect(() => {
-    console.groupCollapsed('🔑 Auth State');
-    console.log('Token:', token);
-    console.log('User:', user);
-    console.groupEnd();
+    // Auth state logging removed for production
   }, [token, user]);
 
   const [triggerUnauthorized, { isFetching, error }] =
@@ -25,8 +22,8 @@ export default function ReduxTestPage() {
   const handleTrigger401 = async () => {
     try {
       await triggerUnauthorized(undefined).unwrap();
-    } catch (err) {
-      console.log('❌ API Error:', JSON.stringify(err, null, 2));
+    } catch {
+      // Error logging removed for production
     }
   };
 

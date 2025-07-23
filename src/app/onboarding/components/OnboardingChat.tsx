@@ -53,7 +53,6 @@ export default function OnboardingChat() {
   const [isTyping, setIsTyping] = useState(false);
   const [userInput, setUserInput] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
-  const [showRetryCompletion, setShowRetryCompletion] = useState(false);
 
   /* refresh local state from progress */
   useEffect(() => {
@@ -160,7 +159,6 @@ export default function OnboardingChat() {
 
           // 显示重试按钮
           setIsCompleted(false);
-          setShowRetryCompletion(true);
           throw completionError; // 让外层catch处理
         }
       }
@@ -196,7 +194,6 @@ export default function OnboardingChat() {
     if (!userId) return;
 
     try {
-      setShowRetryCompletion(false);
       addAIMessage('Retrying onboarding completion...');
 
       const completeResult = await completeFlow(userId).unwrap();
@@ -217,7 +214,6 @@ export default function OnboardingChat() {
           `You can try again or refresh the page. If the problem persists, please contact support.`,
         ['Retry Setup', 'Refresh Page'],
       );
-      setShowRetryCompletion(true); // 允许再次重试
     }
   };
   return (

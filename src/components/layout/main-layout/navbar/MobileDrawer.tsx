@@ -3,9 +3,12 @@
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import type { UserInfo } from '@/types/user.d';
+
 import { AuthButton } from './AuthButton';
 import type { NavItemProps as OriginalNavItemProps } from './NavItem';
 import { NavItem } from './NavItem';
+import { UserProfileDropdown } from './UserProfileDropdown';
 
 interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {
   href: string;
@@ -15,6 +18,8 @@ interface MobileDrawerProps {
   handleDrawerToggle: () => void;
   navItems: NavItemProps[];
   themeVariant?: 'light' | 'dark';
+  isAuthenticated?: boolean;
+  user?: UserInfo | null;
 }
 
 const ActionArea = styled(Box)({
@@ -44,6 +49,8 @@ export function MobileDrawer({
   handleDrawerToggle,
   navItems,
   themeVariant = 'light',
+  isAuthenticated = false,
+  user = null,
 }: MobileDrawerProps) {
   return (
     <MobileDrawerContainer>
@@ -60,18 +67,24 @@ export function MobileDrawer({
       </MobileNavContainer>
 
       <ActionArea>
-        <AuthButton
-          variant="login"
-          isMobile
-          onClick={handleDrawerToggle}
-          themeVariant={themeVariant}
-        />
-        <AuthButton
-          variant="signup"
-          isMobile
-          onClick={handleDrawerToggle}
-          themeVariant={themeVariant}
-        />
+        {isAuthenticated && user ? (
+          <UserProfileDropdown user={user} themeVariant={themeVariant} />
+        ) : (
+          <>
+            <AuthButton
+              variant="login"
+              isMobile
+              onClick={handleDrawerToggle}
+              themeVariant={themeVariant}
+            />
+            <AuthButton
+              variant="signup"
+              isMobile
+              onClick={handleDrawerToggle}
+              themeVariant={themeVariant}
+            />
+          </>
+        )}
       </ActionArea>
     </MobileDrawerContainer>
   );

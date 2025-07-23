@@ -7,13 +7,11 @@ import { useAppDispatch } from '@/redux/hooks';
 import { AUTH_ERROR_MESSAGES, AuthErrorType } from '@/types/auth-errors';
 
 interface AuthStatusModalProps {
-  visible: boolean;
   errorType?: AuthErrorType;
   onClose?: () => void;
 }
 
 export const AuthStatusModal: React.FC<AuthStatusModalProps> = ({
-  visible,
   errorType,
   onClose,
 }) => {
@@ -59,14 +57,35 @@ export const AuthStatusModal: React.FC<AuthStatusModalProps> = ({
 
   // 使用 portal 将模态框渲染到 document.body，确保不影响页面布局
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    <div
+      className="fixed inset-0 flex items-center justify-center p-4"
+      style={{
+        zIndex: 99999, // 使用 style 确保优先级最高
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+    >
       {/* 背景遮罩 */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"
         onClick={onClose}
+        onKeyDown={e => {
+          if (e.key === 'Escape') {
+            onClose?.();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Close modal"
       ></div>
-      {/* 模态框内容 */}
-      <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-200 scale-100">
+      {/* 模态框内容 - 使用 relative 确保在遮罩之上 */}
+      <div
+        className="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-200 scale-100"
+        style={{ zIndex: 1 }}
+      >
         <div className="p-6">
           <div className="flex items-center space-x-2 mb-4">
             <span className="text-orange-500 text-xl">⚠️</span>

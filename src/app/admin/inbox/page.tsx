@@ -1,7 +1,7 @@
 'use client';
 
 import { useMediaQuery } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import InboxDetail from '@/app/admin/inbox/components/InboxDetail';
@@ -127,8 +127,13 @@ export default function InboxPage() {
   const [sort, setSort] = useState<SortOption>('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [allCallLogs, setAllCallLogs] = useState<ICallLog[]>([]);
+  const [isClient, setIsClient] = useState(false);
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const user = useAppSelector(state => state.auth.user);
   const {
@@ -194,7 +199,7 @@ export default function InboxPage() {
 
   const handleSelect = (id: string) => {
     setSelectedId(id);
-    if (isSmallScreen) setShowDetailMobile(true);
+    if (isClient && isSmallScreen) setShowDetailMobile(true);
   };
   const handleBack = () => {
     setShowDetailMobile(false);
@@ -246,7 +251,7 @@ export default function InboxPage() {
           onSortChange={setSort}
         />
         <ContentContainer style={{ flex: 1, overflow: 'hidden' }}>
-          {!isSmallScreen ? (
+          {!(isClient && isSmallScreen) ? (
             <>
               <ListContainer>
                 <ListContent>
@@ -267,7 +272,7 @@ export default function InboxPage() {
                 {selectedItem && <InboxDetail item={selectedItem} />}
               </DetailContainer>
             </>
-          ) : showDetailMobile ? (
+          ) : isClient && isSmallScreen && showDetailMobile ? (
             <DetailContainer>
               <div style={{ padding: '16px 0 0 16px' }}>
                 <button
@@ -287,7 +292,7 @@ export default function InboxPage() {
               </div>
               {selectedItem && <InboxDetail item={selectedItem} />}
             </DetailContainer>
-          ) : (
+          ) : isClient && isSmallScreen ? (
             <ListContainer style={{ width: '100%' }}>
               <ListContent>
                 <InboxList
@@ -303,7 +308,7 @@ export default function InboxPage() {
                 />
               </ListContent>
             </ListContainer>
-          )}
+          ) : null}
         </ContentContainer>
       </MainContent>
     </PageContainer>

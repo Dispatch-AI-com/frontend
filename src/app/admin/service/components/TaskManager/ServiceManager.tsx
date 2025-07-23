@@ -111,34 +111,28 @@ const FilterButton = styled(Button)({
 });
 
 const Divider = styled(Box)(({ theme }) => ({
-  width: 'calc(100% + 48px)',
+  width: '100%',
   height: '1px',
   backgroundColor: '#eaeaea',
   flexShrink: 0,
-  margin: '15px -24px 24px -24px',
+  margin: '15px 0 24px 0',
   '@media (min-width: 1920px)': {
-    width: 'calc(100% + 64px)',
-    margin: '16px -32px 24px -32px',
+    margin: '16px 0 24px 0',
   },
   '@media (min-width: 1600px) and (max-width: 1919px)': {
-    width: 'calc(100% + 56px)',
-    margin: '15px -28px 24px -28px',
+    margin: '15px 0 24px 0',
   },
   '@media (min-width: 1200px) and (max-width: 1599px)': {
-    width: 'calc(100% + 48px)',
-    margin: '15px -24px 24px -24px',
+    margin: '15px 0 24px 0',
   },
   [theme.breakpoints.between('md', 'lg')]: {
-    width: 'calc(100% + 40px)',
-    margin: '15px -20px 24px -20px',
+    margin: '15px 0 24px 0',
   },
   [theme.breakpoints.down('md')]: {
-    width: 'calc(100% + 36px)',
-    margin: '15px -18px 24px -18px',
+    margin: '15px 0 24px 0',
   },
   [theme.breakpoints.down('sm')]: {
-    width: 'calc(100% + 24px)',
-    margin: '15px -12px 24px -12px',
+    margin: '15px 0 24px 0',
   },
 }));
 
@@ -166,7 +160,6 @@ const Container = styled(Box)(({ theme }) => ({
   position: 'relative',
   boxShadow: 'none',
   border: '1px solid rgba(234, 234, 234, 0.2)',
-  borderLeft: 'none',
   display: 'flex',
   flexDirection: 'column',
   padding: '24px',

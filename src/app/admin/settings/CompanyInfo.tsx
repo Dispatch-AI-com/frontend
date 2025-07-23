@@ -64,13 +64,12 @@ const validateABN = (abn: string): ValidationResult => {
 export default function CompanyInfoSection() {
   const user = useAppSelector(state => state.auth.user);
 
-  const {
-    data: companyData,
-    isLoading,
-    error,
-  } = useGetCompanyInfoQuery(user?._id ?? '', {
-    skip: !user?._id,
-  });
+  const { data: companyData, isLoading } = useGetCompanyInfoQuery(
+    user?._id ?? '',
+    {
+      skip: !user?._id,
+    },
+  );
 
   const [updateCompanyInfo] = useUpdateCompanyInfoMutation();
   const handleSave = async (values: Record<string, string>) => {

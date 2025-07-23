@@ -43,10 +43,15 @@ const items = [
 
 export default function BlogHighlightCard() {
   const [centerIndex, setCenterIndex] = useState(0);
+  const [isClient, setIsClient] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,10 +84,13 @@ export default function BlogHighlightCard() {
           index === (centerIndex - 1 + items.length) % items.length;
         const isRight = index === (centerIndex + 1) % items.length;
 
-        const cardWidth = isMobile ? 280 : isTablet ? 380 : 741.6;
-        const cardHeight = isMobile ? 140 : isTablet ? 180 : 238.5;
-        const offset = isMobile ? 100 : isTablet ? 130 : 280;
-        const sideCardScale = isMobile ? 0.9 : 0.75;
+        const cardWidth =
+          isClient && isMobile ? 280 : isClient && isTablet ? 380 : 741.6;
+        const cardHeight =
+          isClient && isMobile ? 140 : isClient && isTablet ? 180 : 238.5;
+        const offset =
+          isClient && isMobile ? 100 : isClient && isTablet ? 130 : 280;
+        const sideCardScale = isClient && isMobile ? 0.9 : 0.75;
 
         const offsetString = isLeft
           ? `- ${offset.toFixed(0)}px`
