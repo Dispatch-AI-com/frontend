@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import { clearAuthError, logout } from '@/features/auth/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
@@ -19,8 +20,17 @@ export const AuthStatusModal: React.FC<AuthStatusModalProps> = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 防止 hydration 错误 - 确保只在客户端渲染
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const errorInfo = errorType ? AUTH_ERROR_MESSAGES[errorType] : null;
+
+  // 在服务端渲染或未挂载时不显示模态框
+  if (!isMounted || !errorInfo) return null;
 
   const handleRelogin = () => {
     setIsRedirecting(true);
@@ -47,14 +57,16 @@ export const AuthStatusModal: React.FC<AuthStatusModalProps> = ({
     window.location.reload();
   };
 
-  if (!errorInfo) return null;
-
-  return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center ${visible ? 'block' : 'hidden'}`}
-    >
-      <div className="fixed inset-0 bg-black bg-opacity-50"></div>
-      <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+  // 使用 portal 将模态框渲染到 document.body，确保不影响页面布局
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      {/* 背景遮罩 */}
+      <div
+        className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm"
+        onClick={onClose}
+      ></div>
+      {/* 模态框内容 */}
+      <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-200 scale-100">
         <div className="p-6">
           <div className="flex items-center space-x-2 mb-4">
             <span className="text-orange-500 text-xl">⚠️</span>
@@ -145,6 +157,7 @@ export const AuthStatusModal: React.FC<AuthStatusModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };

@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect } from 'react';
 
@@ -11,7 +12,11 @@ import {
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { AuthErrorHandler } from '@/services/auth-error-handler';
 
-import { AuthStatusModal } from './AuthStatusModal';
+const AuthStatusModal = dynamic(
+  () =>
+    import('./AuthStatusModal').then(mod => ({ default: mod.AuthStatusModal })),
+  { ssr: false },
+);
 
 export const AuthGuard: React.FC<{ children: React.ReactNode }> = ({
   children,

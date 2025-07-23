@@ -3,7 +3,7 @@ import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 
-import { logout, setAuthError } from '@/features/auth/authSlice';
+import { setAuthError } from '@/features/auth/authSlice';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { AuthErrorHandler } from '@/services/auth-error-handler';
 
@@ -59,10 +59,8 @@ export const axiosBaseQuery = (): BaseQueryFn<
           // 记录错误类型，触发用户友好的提示
           dispatch(setAuthError(errorType) as unknown as AppDispatch);
 
-          // 如果需要强制登出
-          if (AuthErrorHandler.shouldForceLogout(errorType)) {
-            dispatch(logout() as unknown as AppDispatch);
-          }
+          // 注意：不在这里立即登出，让 AuthStatusModal 处理用户交互
+          // 如果需要强制登出，由用户在模态框中确认
         }
       }
 

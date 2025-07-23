@@ -53,6 +53,7 @@ export default function OnboardingChat() {
   const [isTyping, setIsTyping] = useState(false);
   const [userInput, setUserInput] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
+  const [showRetryCompletion, setShowRetryCompletion] = useState(false);
 
   /* refresh local state from progress */
   useEffect(() => {
@@ -133,12 +134,35 @@ export default function OnboardingChat() {
       if (resp.currentStep <= steps.length) {
         setCurrentStepIndex(resp.currentStep - 1);
       } else {
-        await completeFlow(userId!);
-        setIsCompleted(true);
-        addAIMessage('Onboarding Complete! ');
-        setTimeout(() => {
-          router.push('/admin/overview');
-        }, 2000);
+        try {
+          const completeResult = await completeFlow(userId!).unwrap();
+          if (completeResult.success) {
+            setIsCompleted(true);
+            addAIMessage('Onboarding Complete! Redirecting to dashboard...');
+            setTimeout(() => {
+              router.push('/admin/overview');
+            }, 2000);
+          }
+        } catch (completionError: unknown) {
+          // 处理完成失败的情况，给用户明确指引
+          const err = completionError as {
+            data?: { message?: string };
+            message?: string;
+          };
+          const errorMsg =
+            err?.data?.message ?? err?.message ?? 'Unknown error occurred';
+
+          addAIMessage(
+            `There was an issue completing your onboarding: ${errorMsg}\n\n` +
+              `Would you like to try again?`,
+            ['Retry Setup'],
+          );
+
+          // 显示重试按钮
+          setIsCompleted(false);
+          setShowRetryCompletion(true);
+          throw completionError; // 让外层catch处理
+        }
       }
     } catch (error: unknown) {
       // eslint-disable-next-line no-console
@@ -159,7 +183,42 @@ export default function OnboardingChat() {
   };
 
   const handleButtonClick = async (option: string) => {
-    await handleSubmit(option);
+    if (option === 'Retry Setup') {
+      await handleRetryCompletion();
+    } else if (option === 'Refresh Page') {
+      window.location.reload();
+    } else {
+      await handleSubmit(option);
+    }
+  };
+
+  const handleRetryCompletion = async () => {
+    if (!userId) return;
+
+    try {
+      setShowRetryCompletion(false);
+      addAIMessage('Retrying onboarding completion...');
+
+      const completeResult = await completeFlow(userId).unwrap();
+      if (completeResult.success) {
+        setIsCompleted(true);
+        addAIMessage('Onboarding Complete! Redirecting to dashboard...');
+        setTimeout(() => {
+          router.push('/admin/overview');
+        }, 2000);
+      }
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string }; message?: string };
+      const errorMsg =
+        err?.data?.message ?? err?.message ?? 'Unknown error occurred';
+
+      addAIMessage(
+        `Still having issues: ${errorMsg}\n\n` +
+          `You can try again or refresh the page. If the problem persists, please contact support.`,
+        ['Retry Setup', 'Refresh Page'],
+      );
+      setShowRetryCompletion(true); // 允许再次重试
+    }
   };
   return (
     <>

@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import StoreProvider from '@/app/StoreProvider';
+import { AuthGuard } from '@/components/AuthGuard';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 
 export default function RootLayout({
@@ -28,7 +29,9 @@ export default function RootLayout({
       <body>
         <QueryClientProvider client={queryClient}>
           <StoreProvider>
-            <ThemeProvider>{children}</ThemeProvider>
+            <ThemeProvider>
+              <AuthGuard>{children}</AuthGuard>
+            </ThemeProvider>
           </StoreProvider>
         </QueryClientProvider>
       </body>
