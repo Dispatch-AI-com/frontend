@@ -33,11 +33,25 @@ export interface GreetingSettings {
   message: string;
   isCustom: boolean;
 }
+export interface VerificationSettings {
+  type: 'SMS' | 'Email' | 'Both';
+  mobile?: string;
+  email?: string;
+  mobileVerified?: boolean;
+  emailVerified?: boolean;
+  marketingPromotions?: boolean;
+}
 
 export const settingsApi = createApi({
   reducerPath: 'settingsApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['UserProfile', 'CompanyInfo', 'BillingAddress', 'Greeting'],
+  tagTypes: [
+    'UserProfile',
+    'CompanyInfo',
+    'BillingAddress',
+    'Greeting',
+    'Verification',
+  ],
   endpoints: builder => ({
     getUserProfile: builder.query<UserProfileSettings, string>({
       query: userId => ({
@@ -113,6 +127,46 @@ export const settingsApi = createApi({
       }),
       invalidatesTags: ['Greeting'],
     }),
+    getVerification: builder.query<VerificationSettings, string>({
+      query: userId => ({
+        url: `/settings/user/${userId}/verification`,
+        method: 'GET',
+      }),
+      providesTags: ['Verification'],
+    }),
+    updateVerification: builder.mutation<
+      UserSetting,
+      { userId: string } & VerificationSettings
+    >({
+      query: ({ userId, ...verificationData }) => ({
+        url: `/settings/user/${userId}/verification`,
+        method: 'PUT',
+        data: verificationData,
+      }),
+      invalidatesTags: ['Verification'],
+    }),
+    verifyMobile: builder.mutation<
+      { success: boolean; message: string },
+      { userId: string; mobile: string }
+    >({
+      query: ({ userId, mobile }) => ({
+        url: `/settings/user/${userId}/verify-mobile`,
+        method: 'POST',
+        data: { mobile },
+      }),
+      invalidatesTags: ['Verification'],
+    }),
+    verifyEmail: builder.mutation<
+      { success: boolean; message: string },
+      { userId: string; email: string }
+    >({
+      query: ({ userId, email }) => ({
+        url: `/settings/user/${userId}/verify-email`,
+        method: 'POST',
+        data: { email },
+      }),
+      invalidatesTags: ['Verification'],
+    }),
     checkABNExists: builder.mutation<
       { exists: boolean },
       { abn: string; userId: string }
@@ -136,4 +190,8 @@ export const {
   useCheckABNExistsMutation,
   useGetGreetingQuery,
   useUpdateGreetingMutation,
+  useGetVerificationQuery,
+  useUpdateVerificationMutation,
+  useVerifyMobileMutation,
+  useVerifyEmailMutation,
 } = settingsApi;

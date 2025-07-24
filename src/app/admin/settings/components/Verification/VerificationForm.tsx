@@ -12,9 +12,10 @@ const VERIFICATION_OPTIONS = [
 ];
 
 interface FormValues {
-  type: string;
+  type: 'SMS' | 'Email' | 'Both';
   mobile: string;
   email: string;
+  marketingPromotions: boolean;
 }
 
 interface VerificationFormProps {
@@ -28,7 +29,10 @@ export default function VerificationForm({
   onChange,
   error,
 }: VerificationFormProps) {
-  const handleFieldChange = (field: keyof FormValues, value: string) => {
+  const handleFieldChange = (
+    field: keyof FormValues,
+    value: string | boolean,
+  ) => {
     onChange({ ...values, [field]: value });
   };
 
