@@ -25,19 +25,15 @@ export default function FeatureSwitcher({
   const [activeIndex, setActiveIndex] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const resetTimer = () => {
+  useEffect(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
+
     timeoutRef.current = setTimeout(() => {
       setActiveIndex(prev => (prev + 1) % items.length);
-    }, 3000);
-  };
+    }, 3000); // 3秒后切换
 
-  useEffect(() => {
-    if (items.length > 0) {
-      resetTimer();
-    }
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
