@@ -161,12 +161,10 @@ const Container = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '884px',
   margin: '0',
-  borderRadius: '20px',
-  backgroundColor: '#ffffff',
+  backgroundColor: 'transparent',
   position: 'relative',
   boxShadow: 'none',
-  border: '1px solid rgba(234, 234, 234, 0.2)',
-  borderLeft: 'none',
+  border: 'none',
   display: 'flex',
   flexDirection: 'column',
   padding: '24px',
@@ -426,7 +424,7 @@ function ServiceManager() {
               placeholder="Search"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              onKeyPress={handleSearchKeyPress}
+              onKeyDown={handleSearchKeyPress}
             />
             {search && (
               <ClearIcon
