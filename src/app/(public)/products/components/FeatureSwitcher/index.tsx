@@ -1,7 +1,7 @@
 'use client';
 
-import { Box, Container, Grid, styled, Typography } from '@mui/material';
-import { useState } from 'react';
+import { Box, Grid, styled, Typography } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 
 import FeatureImage from './FeatureImage';
 import type { FeatureItem } from './FeatureList';
@@ -23,6 +23,27 @@ export default function FeatureSwitcher({
   title = 'Combined Features & Workflow Section',
 }: FeatureSwitcherProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setActiveIndex(prev => (prev + 1) % items.length);
+    }, 3000);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [activeIndex, items.length]);
+
+  const handleChange = (index: number) => {
+    setActiveIndex(index);
+  };
 
   return (
     <Wrapper>
@@ -36,14 +57,13 @@ export default function FeatureSwitcher({
           rowSpacing={{ xs: 4, md: 6 }}
           justifyContent="center"
           alignItems="flex-start"
-          sx={{ width: 'auto' }}
         >
           {/* Feature list */}
           <Grid item xs={12} md={5} order={{ xs: 2, md: 1 }}>
             <FeatureList
               items={items}
               activeIndex={activeIndex}
-              onChange={setActiveIndex}
+              onChange={handleChange}
             />
           </Grid>
 
@@ -53,10 +73,7 @@ export default function FeatureSwitcher({
             xs={12}
             md={6}
             order={{ xs: 1, md: 2 }}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
+            sx={{ display: 'flex', alignItems: 'center' }}
           >
             <Box sx={{ width: '100%', maxWidth: 540, maxHeight: '100%' }}>
               <FeatureImage items={items} activeIndex={activeIndex} />

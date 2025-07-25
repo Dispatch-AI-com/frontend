@@ -1,5 +1,6 @@
 'use client';
 
+import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -112,7 +113,7 @@ export default function AISetupPage() {
           if (prevStep !== null) setStep(prevStep);
         }}
         onGoToGuide={() => {
-          // Redirect to troubleshooting guide
+          router.push('/admin/overview');
         }}
       />
     ),
@@ -148,5 +149,51 @@ export default function AISetupPage() {
     ),
   };
 
-  return stepComponents[step];
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        minHeight: '100vh',
+        background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+      }}
+    >
+      <Box
+        sx={{
+          width: { xs: 0, sm: '80px', md: '240px' },
+          flexShrink: 0,
+          transition: 'width 0.2s',
+        }}
+      />
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 'calc(100vh - 16px)',
+          overflow: 'auto',
+          margin: '0 8px 0 0',
+        }}
+      >
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: '100%',
+            margin: '8px 0',
+            background: '#fff',
+            borderRadius: '20px',
+            boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)',
+            p: { xs: 2, sm: 4 },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          {stepComponents[step]}
+        </Box>
+      </Box>
+    </Box>
+  );
 }

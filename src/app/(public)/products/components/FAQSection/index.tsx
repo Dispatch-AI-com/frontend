@@ -77,6 +77,12 @@ const StyledDetails = styled(AccordionDetails)(({ theme }) => ({
   paddingLeft: theme.spacing(ICON_SPACE),
 }));
 
+const Inner = styled(Box)(({ theme }) => ({
+  maxWidth: theme.breakpoints.values.xl,
+  marginLeft: 'auto',
+  marginRight: 'auto',
+}));
+
 /* ------------------------------- component ------------------------------ */
 export default function QASection({
   data = CATEGORIES,
@@ -89,83 +95,90 @@ export default function QASection({
 
   return (
     <Section>
-      <Typography
-        textAlign="center"
-        fontSize={24}
-        fontWeight={700}
-        gutterBottom
-      >
-        FAQ Section
-      </Typography>
-      <Typography
-        variant="body1"
-        textAlign="center"
-        maxWidth={560}
-        mx="auto"
-        mb={8}
-      >
-        We've gathered the most frequently asked questions from our users.
-      </Typography>
-
-      <Grid container spacing={8} justifyContent="center" alignItems="stretch">
-        {/* Table of contents */}
-        <Grid item xs={12} md={4} lg={3}>
-          <TocTitle fontSize={18} gutterBottom>
-            Table of Contents
-          </TocTitle>
-          <List disablePadding sx={{ flex: 1 }}>
-            {data.map((cat, idx) => (
-              <TocItem
-                key={cat.key}
-                selected={idx === catIndex}
-                onClick={() => {
-                  setCatIndex(idx);
-                  setOpenIndex(0);
-                }}
-              >
-                <ListItemText primary={cat.title} />
-              </TocItem>
-            ))}
-          </List>
-        </Grid>
-
-        {/* FAQ list */}
-        <Grid
-          item
-          xs={12}
-          md={8}
-          lg={6}
-          sx={{ display: 'flex', flexDirection: 'column' }}
+      <Inner>
+        <Typography
+          textAlign="center"
+          fontSize={24}
+          fontWeight={700}
+          gutterBottom
         >
-          {active.faqs.length === 0 && (
-            <Typography variant="body2">No questions yet.</Typography>
-          )}
+          FAQ Section
+        </Typography>
+        <Typography
+          variant="body1"
+          textAlign="center"
+          maxWidth={560}
+          mx="auto"
+          mb={8}
+        >
+          We've gathered the most frequently asked questions from our users.
+        </Typography>
 
-          {active.faqs.map((faq, i) => (
-            <StyledAccordion
-              key={i}
-              disableGutters
-              expanded={openIndex === i}
-              onChange={() => setOpenIndex(openIndex === i ? -1 : i)}
-            >
-              <StyledSummary
-                expandIcon={
-                  openIndex === i ? <RemoveRoundedIcon /> : <AddRoundedIcon />
-                }
+        <Grid
+          container
+          spacing={8}
+          justifyContent="center"
+          alignItems="stretch"
+        >
+          {/* Table of contents */}
+          <Grid item xs={12} md={4} lg={3}>
+            <TocTitle fontSize={18} gutterBottom>
+              Table of Contents
+            </TocTitle>
+            <List disablePadding sx={{ flex: 1 }}>
+              {data.map((cat, idx) => (
+                <TocItem
+                  key={cat.key}
+                  selected={idx === catIndex}
+                  onClick={() => {
+                    setCatIndex(idx);
+                    setOpenIndex(0);
+                  }}
+                >
+                  <ListItemText primary={cat.title} />
+                </TocItem>
+              ))}
+            </List>
+          </Grid>
+
+          {/* FAQ list */}
+          <Grid
+            item
+            xs={12}
+            md={8}
+            lg={6}
+            sx={{ display: 'flex', flexDirection: 'column' }}
+          >
+            {active.faqs.length === 0 && (
+              <Typography variant="body2">No questions yet.</Typography>
+            )}
+
+            {active.faqs.map((faq, i) => (
+              <StyledAccordion
+                key={i}
+                disableGutters
+                expanded={openIndex === i}
+                onChange={() => setOpenIndex(openIndex === i ? -1 : i)}
               >
-                <Typography fontWeight={700} fontSize={18}>
-                  {faq.q}
-                </Typography>
-              </StyledSummary>
-              <StyledDetails>
-                <Typography variant="body2" color="text.secondary">
-                  {faq.a}
-                </Typography>
-              </StyledDetails>
-            </StyledAccordion>
-          ))}
+                <StyledSummary
+                  expandIcon={
+                    openIndex === i ? <RemoveRoundedIcon /> : <AddRoundedIcon />
+                  }
+                >
+                  <Typography fontWeight={700} fontSize={18}>
+                    {faq.q}
+                  </Typography>
+                </StyledSummary>
+                <StyledDetails>
+                  <Typography variant="body2" color="text.secondary">
+                    {faq.a}
+                  </Typography>
+                </StyledDetails>
+              </StyledAccordion>
+            ))}
+          </Grid>
         </Grid>
-      </Grid>
+      </Inner>
     </Section>
   );
 }
