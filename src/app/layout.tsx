@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import StoreProvider from '@/app/StoreProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
+import StyledComponentsRegistry from '@/lib/registry';
 
 export default function RootLayout({
   children,
@@ -26,11 +27,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <QueryClientProvider client={queryClient}>
-          <StoreProvider>
-            <ThemeProvider>{children}</ThemeProvider>
-          </StoreProvider>
-        </QueryClientProvider>
+        <StyledComponentsRegistry>
+          <QueryClientProvider client={queryClient}>
+            <StoreProvider>
+              <ThemeProvider>{children}</ThemeProvider>
+            </StoreProvider>
+          </QueryClientProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );
