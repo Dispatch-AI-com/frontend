@@ -68,15 +68,6 @@ const MainContent = styled.div`
   gap: 8px;
 `;
 
-const SummaryText = styled(Typography)`
-  && {
-    font-size: 15px;
-    font-weight: 700;
-    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-    color: #222;
-  }
-`;
-
 const StatusChip = styled(Chip)<{ status: string }>`
   height: 20px;
   font-size: 13px;
@@ -208,14 +199,13 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
           </ColIcon>
           <ColMain>
             <SummaryStatusRow>
-              <SummaryText>{item.summary}</SummaryText>
+              <DateText>{formattedDate}</DateText>
               <StatusChip
                 label={item.status}
                 status={item.status}
                 size="small"
               />
             </SummaryStatusRow>
-            <DateText>{formattedDate}</DateText>
           </ColMain>
         </ThreeColRow>
       </MainContent>

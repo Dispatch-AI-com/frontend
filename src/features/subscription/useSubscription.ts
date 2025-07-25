@@ -1,5 +1,6 @@
-// hooks/useSubscription.ts
 import { useSelector } from 'react-redux';
+
+import type { RootState } from '@/redux/store';
 
 import {
   useChangePlanMutation,
@@ -7,9 +8,7 @@ import {
   useDowngradeToFreeMutation,
   useGenerateBillingPortalUrlMutation,
   useGetSubscriptionByUserQuery,
-} from '@/features/subscription/subscriptionApi';
-import { useAppSelector } from '@/redux/hooks';
-import type { RootState } from '@/redux/store';
+} from './subscriptionApi';
 
 export const useSubscription = () => {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -40,16 +39,13 @@ export const useSubscription = () => {
 };
 
 export const useCreateSubscription = () => {
-  const user = useAppSelector(state => state.auth.user);
+  const user = useSelector((state: RootState) => state.auth.user);
   const [createSubscription, { isLoading, error }] =
     useCreateSubscriptionMutation();
 
   const create = async (planId: string) => {
     if (!user?._id) throw new Error('User not logged in');
-    const res = await createSubscription({
-      userId: user._id,
-      planId,
-    }).unwrap();
+    const res = await createSubscription({ userId: user._id, planId }).unwrap();
     window.location.href = res.checkoutUrl;
   };
 
@@ -60,9 +56,10 @@ export const useChangePlan = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [changePlan, { isLoading, error }] = useChangePlanMutation();
 
-  const change: (planId: string) => Promise<void> = async planId => {
+  const change = async (planId: string) => {
     if (!user?._id) throw new Error('User not logged in');
     await changePlan({ userId: user._id, planId }).unwrap();
+    window.location.reload();
   };
 
   return { change, isLoading, error };
@@ -72,9 +69,10 @@ export const useDowngradeToFree = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [downgradeToFree, { isLoading, error }] = useDowngradeToFreeMutation();
 
-  const downgrade: () => Promise<void> = async () => {
+  const downgrade = async () => {
     if (!user?._id) throw new Error('User not logged in');
     await downgradeToFree(user._id).unwrap();
+    window.location.reload();
   };
 
   return { downgrade, isLoading, error };
@@ -82,12 +80,11 @@ export const useDowngradeToFree = () => {
 
 export const useRetryPayment = () => {
   const user = useSelector((state: RootState) => state.auth.user);
-  const [getPortalUrl, { isLoading, error }] =
-    useGenerateBillingPortalUrlMutation();
+  const [getUrl, { isLoading, error }] = useGenerateBillingPortalUrlMutation();
 
   const retryPayment = async () => {
     if (!user?._id) throw new Error('User not logged in');
-    const res = await getPortalUrl(user._id).unwrap();
+    const res = await getUrl(user._id).unwrap();
     window.location.href = res.url;
   };
 

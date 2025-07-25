@@ -15,18 +15,42 @@ interface PricingCardProps {
   pricing: { priceDisplay: string; periodDisplay: string };
   buttons: PlanButton[];
   onButtonClick: (label: string) => void;
+  isCurrent: boolean;
 }
 
-const CardContainer = styled('div')(() => ({
+const CardContainer = styled('div')<{ isCurrent: boolean }>(
+  ({ isCurrent }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '408px',
+    width: '340px',
+    flexShrink: 0,
+    padding: '30px',
+    borderRadius: '24px',
+    border: '1px solid #d5d5d5',
+    backgroundColor: isCurrent ? '#f9fff6' : '#fff',
+    position: 'relative',
+  }),
+);
+
+const CurrentPlanTag = styled('div')(() => ({
+  position: 'absolute',
+  top: '12px',
+  right: '12px',
+  width: '128px',
+  height: '28px',
+  backgroundColor: '#a8f574',
+  borderRadius: '8px',
   display: 'flex',
-  flexDirection: 'column',
-  height: '408px',
-  width: '340px',
-  flexShrink: 0,
-  padding: '30px',
-  borderRadius: '24px',
-  border: '1px solid #d5d5d5',
-  backgroundColor: '#fff',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontFamily: 'Roboto',
+  fontSize: '14px',
+  fontWeight: 'bold',
+  color: '#060606',
+  fontStretch: 'normal',
+  fontStyle: 'normal',
+  lineHeight: '1.43',
 }));
 
 const tierColors = {
@@ -141,9 +165,10 @@ export default function PricingCard({
   pricing,
   buttons,
   onButtonClick,
+  isCurrent,
 }: PricingCardProps) {
   return (
-    <CardContainer>
+    <CardContainer isCurrent={isCurrent}>
       <IconWrapper tier={tier}>
         {tier === 'FREE' && (
           <Image src="/plan/free.svg" alt="Free Plan" width={24} height={24} />
@@ -160,6 +185,8 @@ export default function PricingCard({
           <Image src="/plan/pro.svg" alt="Pro Plan" width={24} height={24} />
         )}
       </IconWrapper>
+
+      {isCurrent && <CurrentPlanTag>Your current plan</CurrentPlanTag>}
 
       <PriceTitle>
         {tier === 'FREE' && 'Free Plan'}
@@ -188,7 +215,9 @@ export default function PricingCard({
                 ? 'black'
                 : btn.variant === 'secondary'
                   ? 'green'
-                  : 'disabled'
+                  : btn.variant === 'cancel'
+                    ? 'cancel'
+                    : 'disabled'
             }
             onClick={
               btn.variant === 'disabled'
