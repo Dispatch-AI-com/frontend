@@ -7,6 +7,7 @@ import EditModal from '@/app/admin/settings/components/EditModal';
 import SectionDivider from '@/app/admin/settings/components/SectionDivider';
 import SectionHeader from '@/app/admin/settings/components/SectionHeader';
 import VerificationCard from '@/app/admin/settings/components/Verification/VerificationCard';
+import VerificationCodeModal from '@/app/admin/settings/components/Verification/VerificationCodeModal';
 import VerificationForm from '@/app/admin/settings/components/Verification/VerificationForm';
 import {
   useGetUserProfileQuery,
@@ -33,6 +34,15 @@ export default function VerificationSection() {
   const [verifyMobile] = useVerifyMobileMutation();
   const [verifyEmail] = useVerifyEmailMutation();
   const [open, setOpen] = useState(false);
+  const [verificationModal, setVerificationModal] = useState<{
+    open: boolean;
+    type: 'mobile' | 'email';
+    contact: string;
+  }>({
+    open: false,
+    type: 'mobile',
+    contact: '',
+  });
   // Define the form values type to match what VerificationForm expects
   interface FormValues {
     type: 'SMS' | 'Email' | 'Both';
@@ -95,12 +105,18 @@ export default function VerificationSection() {
         throw new Error('User not logged in');
       }
 
+      // Check if mobile or email has changed
+      const mobileChanged = formValues.mobile !== values.mobile;
+      const emailChanged = formValues.email !== values.email;
+
       await updateVerification({
         userId: user._id,
         type: formValues.type,
         mobile: formValues.mobile,
         email: formValues.email,
         marketingPromotions: formValues.marketingPromotions,
+        mobileVerified: mobileChanged ? false : values.mobileVerified,
+        emailVerified: emailChanged ? false : values.emailVerified,
       }).unwrap();
 
       setOpen(false);
@@ -134,6 +150,12 @@ export default function VerificationSection() {
         userId: user._id,
         mobile: values.mobile,
       }).unwrap();
+
+      setVerificationModal({
+        open: true,
+        type: 'mobile',
+        contact: values.mobile,
+      });
     } catch {
       setError('Failed to verify mobile number');
     }
@@ -149,8 +171,58 @@ export default function VerificationSection() {
         userId: user._id,
         email: values.email,
       }).unwrap();
+
+      setVerificationModal({
+        open: true,
+        type: 'email',
+        contact: values.email,
+      });
     } catch {
       setError('Failed to verify email address');
+    }
+  };
+
+  const handleCloseVerificationModal = () => {
+    setVerificationModal({
+      open: false,
+      type: 'mobile',
+      contact: '',
+    });
+  };
+
+  const handleMarketingPromotionsChange = async (checked: boolean) => {
+    try {
+      if (!user?._id) {
+        throw new Error('User not logged in');
+      }
+
+      await updateVerification({
+        userId: user._id,
+        type: values.type,
+        mobile: values.mobile,
+        email: values.email,
+        marketingPromotions: checked,
+        mobileVerified: values.mobileVerified,
+        emailVerified: values.emailVerified,
+      }).unwrap();
+
+      setError(null);
+    } catch (err) {
+      function isErrorWithMessage(
+        error: unknown,
+      ): error is { message: string } {
+        return (
+          typeof error === 'object' &&
+          error !== null &&
+          'message' in error &&
+          typeof (error as { message?: unknown }).message === 'string'
+        );
+      }
+
+      const errorMessage = isErrorWithMessage(err)
+        ? err.message
+        : 'Failed to update marketing preferences';
+      setError(errorMessage);
     }
   };
 
@@ -163,6 +235,7 @@ export default function VerificationSection() {
             <VerificationCard
               type="SMS"
               mobile={values.mobile}
+              mobileVerified={values.mobileVerified}
               onVerifyMobile={() => {
                 void handleVerifyMobile();
               }}
@@ -174,9 +247,14 @@ export default function VerificationSection() {
             <VerificationCard
               type="Email"
               email={values.email}
+              emailVerified={values.emailVerified}
+              marketingPromotions={values.marketingPromotions}
               showMarketingPromotions
               onVerifyEmail={() => {
                 void handleVerifyEmail();
+              }}
+              onMarketingPromotionsChange={checked => {
+                void handleMarketingPromotionsChange(checked);
               }}
               isLastCard
             />
@@ -191,6 +269,15 @@ export default function VerificationSection() {
         type={values.type}
         mobile={values.type === 'SMS' ? values.mobile : undefined}
         email={values.type === 'Email' ? values.email : undefined}
+        mobileVerified={
+          values.type === 'SMS' ? values.mobileVerified : undefined
+        }
+        emailVerified={
+          values.type === 'Email' ? values.emailVerified : undefined
+        }
+        marketingPromotions={
+          values.type === 'Email' ? values.marketingPromotions : undefined
+        }
         onVerifyMobile={
           values.type === 'SMS'
             ? () => {
@@ -240,6 +327,14 @@ export default function VerificationSection() {
           error={error ?? undefined}
         />
       </EditModal>
+
+      {/* Verification Code Modal */}
+      <VerificationCodeModal
+        open={verificationModal.open}
+        type={verificationModal.type}
+        contact={verificationModal.contact}
+        onClose={handleCloseVerificationModal}
+      />
     </>
   );
 }

@@ -129,7 +129,7 @@ export const settingsApi = createApi({
     }),
     getVerification: builder.query<VerificationSettings, string>({
       query: userId => ({
-        url: `/settings/user/${userId}/verification`,
+        url: `/api/settings/user/${userId}/verification`,
         method: 'GET',
       }),
       providesTags: ['Verification'],
@@ -139,7 +139,7 @@ export const settingsApi = createApi({
       { userId: string } & VerificationSettings
     >({
       query: ({ userId, ...verificationData }) => ({
-        url: `/settings/user/${userId}/verification`,
+        url: `/api/settings/user/${userId}/verification`,
         method: 'PUT',
         data: verificationData,
       }),
@@ -150,7 +150,7 @@ export const settingsApi = createApi({
       { userId: string; mobile: string }
     >({
       query: ({ userId, mobile }) => ({
-        url: `/settings/user/${userId}/verify-mobile`,
+        url: `/api/settings/user/${userId}/verification/mobile`,
         method: 'POST',
         data: { mobile },
       }),
@@ -161,7 +161,7 @@ export const settingsApi = createApi({
       { userId: string; email: string }
     >({
       query: ({ userId, email }) => ({
-        url: `/settings/user/${userId}/verify-email`,
+        url: `/api/settings/user/${userId}/verification/email`,
         method: 'POST',
         data: { email },
       }),
