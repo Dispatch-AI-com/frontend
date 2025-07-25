@@ -32,7 +32,7 @@ export default function FeatureSwitcher({
 
     timeoutRef.current = setTimeout(() => {
       setActiveIndex(prev => (prev + 1) % items.length);
-    }, 3000); // 3秒后切换
+    }, 3000);
 
     return () => {
       if (timeoutRef.current) {
