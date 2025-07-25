@@ -45,7 +45,7 @@ export default function FeatureImage({
           alt={title}
           fill
           style={{ objectFit: 'contain' }}
-          sizes="(max-width:900px) 100vw, 600px"
+          sizes="(max-width: 900px) 100vw, 600px"
           priority
         />
       </Inner>
