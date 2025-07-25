@@ -15,7 +15,7 @@ const styles = {
     background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
     boxSizing: 'border-box',
     minHeight: '100vh',
-    marginLeft: { xs: 0, sm: '50px', md: '240px' }, // 为悬空侧边栏留出空间
+    marginLeft: { xs: 0, sm: '50px', md: '240px' },
   },
 
   mainContent: {
