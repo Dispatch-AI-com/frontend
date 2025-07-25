@@ -7,17 +7,18 @@ import React, { useEffect, useMemo } from 'react';
 import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import { useSelector } from 'react-redux';
 
-import { useGetBookingsQuery } from '@/features/calendar/calendarApi';
-import { useGetCompanyByUserIdQuery } from '@/features/company/companyApi';
+import type { Service } from '@/features/calendar/calendarApi';
+import {
+  useGetBookingsQuery,
+  useGetServicesQuery,
+} from '@/features/calendar/calendarApi';
 
 import TaskCard from './TaskCard';
 import TaskDetailModal from './TaskDetailModal';
 
 interface Booking {
   _id: string;
-  serviceId?: {
-    name?: string;
-  };
+  serviceId: string;
   client?: {
     name?: string;
   };
@@ -155,6 +156,14 @@ const StyledWeeklyCalendarWrapper = styled('div')(({ theme }) => ({
     borderRadius: 6,
     boxSizing: 'border-box',
   },
+  '.rbc-time-content .rbc-event': {
+    left: '0 !important',
+    width: '100% !important',
+    minWidth: '0 !important',
+    maxWidth: '100% !important',
+    marginLeft: '0 !important',
+    marginRight: '0 !important',
+  },
 }));
 
 export interface CalendarEvent {
@@ -245,21 +254,21 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
   search,
 }) => {
   const userId = useSelector((state: RootState) => state.auth?.user?._id);
-  const { data: company } = useGetCompanyByUserIdQuery(userId!, {
-    skip: !userId,
-  });
-  const companyId = company?._id;
   const { data: bookings = [] } = useGetBookingsQuery(
-    { companyId },
-    { skip: !companyId },
+    { userId },
+    { skip: !userId },
   ) as { data: Booking[] };
 
-  const statusToFilterMap: Record<string, string> = {
-    task: 'task',
-    completed: 'completed',
-    missed: 'missed',
-    followup: 'followup',
-  };
+  const { data: services = [] } = useGetServicesQuery() ?? [];
+  const serviceMap = useMemo(() => {
+    const map = new Map<string, Service>();
+    (Array.isArray(services) ? services : []).forEach(s => {
+      if (s && typeof s._id === 'string') {
+        map.set(s._id, s);
+      }
+    });
+    return map;
+  }, [services]);
 
   const events = bookings
     .filter((item: Booking) => {
@@ -267,18 +276,17 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
         (item.client?.name ?? '')
           .toLowerCase()
           .includes(search.toLowerCase()) ||
-        (item.serviceId?.name ?? '')
+        (serviceMap.get(item.serviceId)?.name ?? '')
           .toLowerCase()
           .includes(search.toLowerCase());
       if (!matchesSearch) return false;
       if (selectedFilters.length === 0) return false;
-      const filterType = statusToFilterMap[item.status];
-      return filterType ? selectedFilters.includes(filterType) : false;
+      return selectedFilters.includes(item.status);
     })
     .map((item: Booking) => ({
       ...item,
       id: item._id,
-      title: `${item.serviceId?.name ?? ''} - ${item.client?.name ?? ''}`,
+      title: `${serviceMap.get(item.serviceId)?.name ?? ''} - ${item.client?.name ?? ''}`,
       start: new Date(item.bookingTime),
       end: new Date(item.bookingTime),
     }));
@@ -362,10 +370,8 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
               }}
             >
               <TaskCard
-                taskName={`${event.serviceId?.name ?? ''} - ${event.client?.name ?? ''}`}
-                status={
-                  event.status as 'task' | 'completed' | 'missed' | 'followup'
-                }
+                taskName={`${serviceMap.get(event.serviceId)?.name ?? ''} - ${event.client?.name ?? ''}`}
+                status={event.status as 'confirmed' | 'done' | 'pending'}
                 onClick={() => {
                   setSelectedTask(event);
                   setModalOpen(true);
@@ -381,7 +387,21 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
       <TaskDetailModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        task={selectedTask ?? undefined}
+        task={
+          selectedTask
+            ? {
+                ...selectedTask,
+                serviceId:
+                  selectedTask.serviceId &&
+                  serviceMap.get(selectedTask.serviceId)
+                    ? { ...serviceMap.get(selectedTask.serviceId) }
+                    : undefined,
+              }
+            : undefined
+        }
+        service={
+          selectedTask ? serviceMap.get(selectedTask.serviceId) : undefined
+        }
       />
     </StyledWeeklyCalendarWrapper>
   );

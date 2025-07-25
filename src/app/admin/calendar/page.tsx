@@ -63,10 +63,9 @@ export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewType, setViewType] = useState<'weekly' | 'monthly'>('monthly');
   const [selectedFilters, setSelectedFilters] = useState([
-    'task',
-    'completed',
-    'missed',
-    'follow-up',
+    'pending',
+    'confirmed',
+    'done',
   ]);
   const [search, setSearch] = useState('');
 

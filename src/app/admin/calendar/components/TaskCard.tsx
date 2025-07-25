@@ -5,12 +5,12 @@ import { calendarStatusColor } from './calendarStatusColor';
 
 interface TaskCardProps {
   taskName: string;
-  status: 'task' | 'completed' | 'missed' | 'followup';
+  status: 'confirmed' | 'done' | 'pending';
   onClick?: () => void;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ taskName, status, onClick }) => {
-  const style = calendarStatusColor[status] || calendarStatusColor.task;
+  const style = calendarStatusColor[status] || calendarStatusColor.pending;
   return (
     <Box
       onClick={onClick}

@@ -35,10 +35,22 @@ interface Task {
   note?: string;
 }
 
+interface Service {
+  name?: string;
+  price?: number;
+  notifications?: {
+    phoneNumber?: string;
+    email?: string;
+  };
+  isAvailable?: boolean;
+  description?: string;
+}
+
 interface TaskDetailModalProps {
   open: boolean;
   onClose: () => void;
   task?: Task;
+  service?: Service;
 }
 
 const iconSx = { verticalAlign: 'middle', mr: 0.75, color: '#a8f574' };
@@ -49,6 +61,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   open,
   onClose,
   task,
+  service,
 }) => (
   <Dialog
     open={open}
@@ -96,25 +109,21 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               Service Info
             </Typography>
           </Box>
-          <Typography>Name: {task.serviceId?.name ?? '-'}</Typography>
-          <Typography>Price: {task.serviceId?.price ?? '-'}</Typography>
+          <Typography>Name: {service?.name ?? '-'}</Typography>
+          <Typography>Price: {service?.price ?? '-'}</Typography>
           <Typography>
-            Phone: {task.serviceId?.notifications?.phoneNumber ?? '-'}
+            Phone: {service?.notifications?.phoneNumber ?? '-'}
           </Typography>
-          <Typography>
-            Email: {task.serviceId?.notifications?.email ?? '-'}
-          </Typography>
+          <Typography>Email: {service?.notifications?.email ?? '-'}</Typography>
           <Typography>
             Is Available:{' '}
-            {typeof task.serviceId?.isAvailable === 'boolean'
-              ? task.serviceId.isAvailable
+            {typeof service?.isAvailable === 'boolean'
+              ? service.isAvailable
                 ? 'Yes'
                 : 'No'
               : '-'}
           </Typography>
-          <Typography>
-            Description: {task.serviceId?.description ?? '-'}
-          </Typography>
+          <Typography>Description: {service?.description ?? '-'}</Typography>
           <Divider sx={hrSx} />
           <Box sx={sectionSx}>
             <StickyNote2Icon sx={iconSx} />

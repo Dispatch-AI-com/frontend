@@ -3,10 +3,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 
 const tags = [
-  { label: 'Task', color: '#e1f0ff', dot: '#0687ff' },
-  { label: 'Completed', color: '#e7f8dc', dot: '#58c112' },
-  { label: 'Missed', color: '#ffebeb', dot: '#ff3f3f' },
-  { label: 'Follow-up', color: '#fff0e6', dot: '#ff7206' },
+  { label: 'Confirmed', color: '#e1f0ff', dot: '#0687ff' },
+  { label: 'Done', color: '#e7f8dc', dot: '#58c112' },
+  { label: 'Pending', color: '#fff0e6', dot: '#ff7206' },
 ];
 
 const Tag: React.FC = () => {

@@ -15,7 +15,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   viewType,
   currentDate,
   onDateChange,
-  selectedFilters = ['task', 'completed', 'missed', 'follow-up'],
+  selectedFilters = ['pending', 'confirmed', 'done'],
   search = '',
 }) =>
   viewType === 'monthly' ? (

@@ -24,10 +24,9 @@ interface FilterProps {
 }
 
 const initialFilters: FilterOption[] = [
-  { id: 'task', label: 'Task', color: '#007BFF', selected: true },
-  { id: 'completed', label: 'Completed', color: '#28A745', selected: true },
-  { id: 'missed', label: 'Missed', color: '#DC3545', selected: true },
-  { id: 'follow-up', label: 'Follow-up', color: '#FFA500', selected: true },
+  { id: 'pending', label: 'Pending', color: '#ff7206', selected: true },
+  { id: 'confirmed', label: 'Confirmed', color: '#0687ff', selected: true },
+  { id: 'done', label: 'Done', color: '#58c112', selected: true },
 ];
 
 const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
