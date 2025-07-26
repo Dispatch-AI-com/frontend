@@ -264,7 +264,6 @@ const ServiceModal: React.FC<Props> = ({
     client.name &&
     client.phoneNumber &&
     client.address;
-
   // 新增：根据选中的 service name 找到对应的 service _id
   const handleServiceNameChange = (serviceName: string) => {
     setName(serviceName);

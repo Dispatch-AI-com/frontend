@@ -436,8 +436,10 @@ const EditServiceModal: React.FC<Props> = ({
             <FormControl fullWidth>
               <StatusSelect
                 value={status}
-                onChange={e => setStatus(e.target.value as TaskStatus)}
-                size="small"
+                onChange={(e: SelectChangeEvent<unknown>) =>
+                  setStatus(e.target.value as TaskStatus)
+                }
+                displayEmpty
               >
                 <MenuItem value="Done">Done</MenuItem>
                 <MenuItem value="Cancelled">Cancelled</MenuItem>
