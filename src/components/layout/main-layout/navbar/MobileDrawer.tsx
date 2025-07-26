@@ -14,7 +14,7 @@ interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {
 interface MobileDrawerProps {
   handleDrawerToggle: () => void;
   navItems: NavItemProps[];
-  themeVariant?: 'light' | 'dark';
+  themeVariant?: 'light' | 'dark' | 'green';
 }
 
 const ActionArea = styled(Box)({
