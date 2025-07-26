@@ -8,12 +8,13 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import type { CalendarItem } from '@/app/admin/settings/components/CalendarForm';
 import CalendarOptionsList from '@/app/admin/settings/components/CalendarForm';
 import SectionDivider from '@/app/admin/settings/components/SectionDivider';
 import SectionHeader from '@/app/admin/settings/components/SectionHeader';
+import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 
 const InfoRow = styled(Box)({
@@ -90,6 +91,11 @@ const CustomCheckbox = styled(Checkbox)({
 export default function IntegrationsSection() {
   const [isConnected, setIsConnected] = useState(false);
   const [showGoogleEvents, setShowGoogleEvents] = useState(true);
+
+  // get current user info
+  const user = useAppSelector(state => state.auth.user);
+  const userEmail = user?.email ?? 'email51@company.com'; // default value as fallback
+
   const [calendars, setCalendars] = useState<CalendarItem[]>([
     { id: 'family', name: 'Family', color: '#d076eb', checked: false },
     { id: 'birthdays', name: 'Birthdays', color: '#ae725d', checked: false },
@@ -101,11 +107,18 @@ export default function IntegrationsSection() {
     },
     {
       id: 'email',
-      name: 'email51@company.com',
+      name: userEmail,
       color: '#989ffd',
       checked: true,
     },
   ]);
+
+  //  when userEmail changes, update the calendar list
+  useEffect(() => {
+    setCalendars(prev =>
+      prev.map(cal => (cal.id === 'email' ? { ...cal, name: userEmail } : cal)),
+    );
+  }, [userEmail]);
 
   const handleConnect = () => {
     // TODO: Implement Google Calendar OAuth connection
@@ -151,7 +164,7 @@ export default function IntegrationsSection() {
               />
               <ContentSection>
                 <Typography variant="body2" color="text.primary" sx={{ mb: 1 }}>
-                  email51@company.com
+                  {userEmail}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Sync your appointments to Google Calendar. Online booking
@@ -175,7 +188,7 @@ export default function IntegrationsSection() {
               Connected account:
             </Typography>
             <Typography variant="body2" color="text.primary" sx={{ mb: 2 }}>
-              email51@company.com
+              {userEmail}
             </Typography>
 
             <FormControlLabel

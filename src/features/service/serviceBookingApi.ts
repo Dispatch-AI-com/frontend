@@ -14,6 +14,16 @@ export interface ServiceBooking {
   userId: string;
 }
 
+// data for creating a booking with a calendar event
+export interface BookingWithCalendar extends Partial<ServiceBooking> {
+  calendarEvent?: {
+    title: string;
+    description?: string;
+    location?: string;
+    duration?: number;
+  };
+}
+
 export const serviceBookingApi = createApi({
   reducerPath: 'serviceBookingApi',
   baseQuery: axiosBaseQuery(),
@@ -29,6 +39,20 @@ export const serviceBookingApi = createApi({
       }),
       invalidatesTags: [{ type: 'ServiceBooking', id: 'LIST' }],
     }),
+
+    // create a booking and push a calendar event
+    createBookingWithCalendar: builder.mutation<
+      ServiceBooking,
+      BookingWithCalendar
+    >({
+      query: body => ({
+        url: '/bookings/with-calendar',
+        method: 'POST',
+        data: body,
+      }),
+      invalidatesTags: [{ type: 'ServiceBooking', id: 'LIST' }],
+    }),
+
     getBookings: builder.query<
       ServiceBooking[],
       { userId?: string; serviceId?: string }
@@ -73,6 +97,7 @@ export const serviceBookingApi = createApi({
 
 export const {
   useCreateServiceBookingMutation,
+  useCreateBookingWithCalendarMutation,
   useGetBookingsQuery,
   useDeleteServiceBookingMutation,
   useUpdateServiceBookingMutation,

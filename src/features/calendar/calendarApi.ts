@@ -28,6 +28,16 @@ export interface Service {
   description?: string;
 }
 
+export interface CalendarEvent {
+  title: string;
+  start: string;
+  end: string;
+  description?: string;
+  location?: string;
+  organizer?: string;
+  access_token?: string;
+}
+
 export const calendarApi = createApi({
   reducerPath: 'calendarApi',
   baseQuery: axiosBaseQuery(),
@@ -45,7 +55,19 @@ export const calendarApi = createApi({
         method: 'GET',
       }),
     }),
+
+    pushCalendarEvent: builder.mutation<{ message: string }, CalendarEvent>({
+      query: eventData => ({
+        url: '/calendar/push',
+        method: 'POST',
+        data: eventData,
+      }),
+    }),
   }),
 });
 
-export const { useGetBookingsQuery, useGetServicesQuery } = calendarApi;
+export const {
+  useGetBookingsQuery,
+  useGetServicesQuery,
+  usePushCalendarEventMutation,
+} = calendarApi;
