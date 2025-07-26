@@ -16,20 +16,27 @@ import { logout } from '@/features/auth/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import type { UserInfo } from '@/types/user.d';
 
-const UserProfileButton = styled(Button)(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  padding: '8px 12px',
-  borderRadius: '12px',
-  backgroundColor: 'transparent',
-  border: 'none',
-  color: 'inherit',
-  textTransform: 'none',
-  '&:hover': {
-    backgroundColor: 'rgba(0, 0, 0, 0.04)',
-  },
-}));
+const UserProfileButton = styled(Button, {
+  shouldForwardProp: prop => prop !== 'themeVariant',
+})<{ themeVariant?: 'light' | 'dark' | 'green' }>(
+  ({ themeVariant = 'light' }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '8px 12px',
+    borderRadius: '12px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: 'inherit',
+    textTransform: 'none',
+    '&:hover': {
+      backgroundColor:
+        themeVariant === 'dark'
+          ? 'rgba(255, 255, 255, 0.08)'
+          : 'rgba(0, 0, 0, 0.04)',
+    },
+  }),
+);
 
 const UserAvatar = styled(Avatar)({
   width: 32,
@@ -54,7 +61,10 @@ interface UserProfileDropdownProps {
   themeVariant?: 'light' | 'dark' | 'green';
 }
 
-export function UserProfileDropdown({ user }: UserProfileDropdownProps) {
+export function UserProfileDropdown({
+  user,
+  themeVariant = 'light',
+}: UserProfileDropdownProps) {
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -94,6 +104,7 @@ export function UserProfileDropdown({ user }: UserProfileDropdownProps) {
         aria-controls={open ? 'user-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
+        themeVariant={themeVariant}
       >
         <UserAvatar>{getInitials(user.firstName ?? 'User')}</UserAvatar>
         <UserName>{user.firstName ?? 'User'}</UserName>
@@ -105,15 +116,14 @@ export function UserProfileDropdown({ user }: UserProfileDropdownProps) {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'user-button',
-        }}
-        PaperProps={{
-          sx: {
-            mt: 1,
-            minWidth: 120,
-            borderRadius: '12px',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+        slotProps={{
+          paper: {
+            sx: {
+              mt: 1,
+              minWidth: 120,
+              borderRadius: '12px',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+            },
           },
         }}
       >

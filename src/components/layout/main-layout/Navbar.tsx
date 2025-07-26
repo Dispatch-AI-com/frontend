@@ -16,12 +16,15 @@ import {
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useAppSelector } from '@/redux/hooks';
 
 import { AuthButton } from './navbar/AuthButton';
 import { DesktopNavItems } from './navbar/DesktopNavItems';
 import { MobileDrawer } from './navbar/MobileDrawer';
 import type { NavItemProps } from './navbar/NavItem';
+import { UserProfileDropdown } from './navbar/UserProfileDropdown';
 
 const navItems: NavItemProps[] = [
   { href: '/', text: 'Home', width: 70, textWidth: 38 },
@@ -88,8 +91,14 @@ interface NavbarProps {
 
 export default function Navbar({ variant = 'light' }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { user } = useAppSelector(state => state.auth);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -130,8 +139,14 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
             <>
               <DesktopNavItems navItems={navItems} themeVariant={variant} />
               <DesktopButtonGroup direction="row" spacing={1.5}>
-                <AuthButton variant="login" themeVariant={variant} />
-                <AuthButton variant="signup" themeVariant={variant} />
+                {isHydrated && user ? (
+                  <UserProfileDropdown user={user} themeVariant={variant} />
+                ) : (
+                  <>
+                    <AuthButton variant="login" themeVariant={variant} />
+                    <AuthButton variant="signup" themeVariant={variant} />
+                  </>
+                )}
               </DesktopButtonGroup>
             </>
           )}
