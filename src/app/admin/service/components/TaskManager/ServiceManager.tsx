@@ -153,9 +153,9 @@ const ActiveFiltersContainer = styled(Box)(() => ({
 
 // Status mapping table
 const statusMap: Record<string, string> = {
-  Completed: 'done',
-  Missed: 'pending',
-  'Follow-up': 'confirmed',
+  Done: 'Done',
+  Cancelled: 'Cancelled',
+  Confirmed: 'Confirmed',
 };
 
 const Container = styled(Box)(({ theme }) => ({
@@ -272,12 +272,13 @@ function ServiceManager() {
   const handleSaveService = async (updatedService: Service): Promise<void> => {
     try {
       if (!updatedService._id) throw new Error('Booking ID is missing');
-      let bookingStatus: 'pending' | 'confirmed' | 'done' | undefined =
+      let bookingStatus: 'Cancelled' | 'Confirmed' | 'Done' | undefined =
         undefined;
-      if (updatedService.status === 'Completed') bookingStatus = 'done';
-      else if (updatedService.status === 'Missed') bookingStatus = 'pending';
-      else if (updatedService.status === 'Follow-up')
-        bookingStatus = 'confirmed';
+      if (updatedService.status === 'Done') bookingStatus = 'Done';
+      else if (updatedService.status === 'Cancelled')
+        bookingStatus = 'Cancelled';
+      else if (updatedService.status === 'Confirmed')
+        bookingStatus = 'Confirmed';
 
       // Only pass editable fields
       const payload: Partial<ServiceBooking> = {
@@ -390,10 +391,10 @@ function ServiceManager() {
     notifications: { preferNotificationType: '', phoneNumber: '', email: '' },
     isAvailable: true,
     status: (() => {
-      if (booking.status === 'done') return 'Completed';
-      if (booking.status === 'pending') return 'Missed';
-      if (booking.status === 'confirmed') return 'Follow-up';
-      return 'Follow-up';
+      if (booking.status === 'Done') return 'Done';
+      if (booking.status === 'Cancelled') return 'Cancelled';
+      if (booking.status === 'Confirmed') return 'Confirmed';
+      return 'Confirmed';
     })() as TaskStatus,
     dateTime: booking.bookingTime ?? '',
     userId: '',

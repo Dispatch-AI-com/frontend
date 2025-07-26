@@ -13,7 +13,7 @@ import {
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-type TagOption = 'all' | 'Missed' | 'Completed' | 'Follow-up';
+type TagOption = 'all' | 'Cancelled' | 'Done' | 'Confirmed';
 type SortOption = 'newest' | 'oldest';
 
 interface InboxSearchBarProps {
@@ -96,9 +96,9 @@ export default function InboxSearchBar({
             sx={{ fontSize: 14 }}
           >
             <MenuItem value="all">All tags</MenuItem>
-            <MenuItem value="Missed">Missed</MenuItem>
-            <MenuItem value="Completed">Completed</MenuItem>
-            <MenuItem value="Follow-up">Follow-up</MenuItem>
+            <MenuItem value="Done">Done</MenuItem>
+            <MenuItem value="Cancelled">Cancelled</MenuItem>
+            <MenuItem value="Confirmed">Confirmed</MenuItem>
           </Select>
         </FormControl>
       </HideOnMobile>

@@ -19,7 +19,6 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 import type { TaskStatus } from '@/features/service/serviceApi';
 import { type Service } from '@/features/service/serviceApi';
@@ -232,6 +231,7 @@ const ServiceModal: React.FC<Props> = ({
   serviceManagementServices,
 }) => {
   const [name, setName] = useState('');
+  const [selectedServiceId, setSelectedServiceId] = useState(''); // 新增：保存选中的 service _id
   const [status, setStatus] = useState('');
   const [datetime, setDatetime] = useState(() => {
     const now = new Date();
@@ -258,25 +258,35 @@ const ServiceModal: React.FC<Props> = ({
 
   const isValid =
     name &&
+    selectedServiceId && // 修改：检查 selectedServiceId
     status &&
     datetime &&
     client.name &&
     client.phoneNumber &&
     client.address;
 
+  // 新增：根据选中的 service name 找到对应的 service _id
+  const handleServiceNameChange = (serviceName: string) => {
+    setName(serviceName);
+    const selectedService = serviceManagementServices.find(
+      s => s.name === serviceName,
+    );
+    setSelectedServiceId(selectedService?._id ?? '');
+  };
+
   // Utility function: Map frontend status to backend booking status
   const mapStatusToBookingStatus = (
     status: string,
-  ): 'pending' | 'confirmed' | 'done' => {
+  ): 'Cancelled' | 'Confirmed' | 'Done' => {
     switch (status) {
-      case 'Completed':
-        return 'done';
-      case 'Missed':
-        return 'pending';
-      case 'Follow-up':
-        return 'confirmed';
+      case 'Done':
+        return 'Done';
+      case 'Cancelled':
+        return 'Cancelled';
+      case 'Confirmed':
+        return 'Confirmed';
       default:
-        return 'pending';
+        return 'Cancelled';
     }
   };
 
@@ -309,14 +319,13 @@ const ServiceModal: React.FC<Props> = ({
         throw new Error('User is missing, please login again.');
       }
       const bookingStatus = mapStatusToBookingStatus(status);
-      const serviceId = uuidv4();
       const bookingTime = toBackendDateString(datetime);
       if (!bookingTime) {
         alert('Please select a valid date and time');
         return;
       }
       await createServiceBooking({
-        serviceId,
+        serviceId: selectedServiceId, // 修改：使用选中的 service _id
         client: {
           name: client.name,
           phoneNumber: client.phoneNumber,
@@ -329,9 +338,9 @@ const ServiceModal: React.FC<Props> = ({
         userId: user?._id,
       }).unwrap();
       const statusMap: Record<string, TaskStatus> = {
-        done: 'Completed',
-        pending: 'Missed',
-        confirmed: 'Follow-up',
+        Done: 'Done',
+        Cancelled: 'Cancelled',
+        Confirmed: 'Confirmed',
       };
       onCreate({
         name,
@@ -368,8 +377,9 @@ const ServiceModal: React.FC<Props> = ({
             <FormControl fullWidth>
               <StatusSelect
                 value={name}
-                onChange={(e: SelectChangeEvent<unknown>) =>
-                  setName(e.target.value as string)
+                onChange={
+                  (e: SelectChangeEvent<unknown>) =>
+                    handleServiceNameChange(e.target.value as string) // 修改：使用新的处理函数
                 }
                 displayEmpty
                 renderValue={selected => {
@@ -460,7 +470,7 @@ const ServiceModal: React.FC<Props> = ({
                     : JSON.stringify(selected);
                 }}
               >
-                {['Completed', 'Missed', 'Follow-up'].map(option => (
+                {['Done', 'Cancelled', 'Confirmed'].map(option => (
                   <MenuItem key={option} value={option}>
                     {option}
                   </MenuItem>

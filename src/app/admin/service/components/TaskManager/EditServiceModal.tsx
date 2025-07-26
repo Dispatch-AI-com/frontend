@@ -283,7 +283,7 @@ const EditServiceModal: React.FC<Props> = ({
   const [name, setName] = useState(service.name);
   const [description, setDescription] = useState(service.description ?? '');
   const [status, setStatus] = useState<TaskStatus>(
-    service.status ?? 'Follow-up',
+    service.status ?? 'Confirmed',
   );
   const [dateTime, setDateTime] = useState(
     formatForDateTimeLocal(service.dateTime ?? ''),
@@ -436,16 +436,12 @@ const EditServiceModal: React.FC<Props> = ({
             <FormControl fullWidth>
               <StatusSelect
                 value={status}
-                onChange={(e: SelectChangeEvent<unknown>) =>
-                  setStatus(e.target.value as TaskStatus)
-                }
-                displayEmpty
+                onChange={e => setStatus(e.target.value as TaskStatus)}
+                size="small"
               >
-                {['Completed', 'Missed', 'Follow-up'].map(option => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
+                <MenuItem value="Done">Done</MenuItem>
+                <MenuItem value="Cancelled">Cancelled</MenuItem>
+                <MenuItem value="Confirmed">Confirmed</MenuItem>
               </StatusSelect>
             </FormControl>
           </FormField>

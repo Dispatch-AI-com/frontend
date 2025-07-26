@@ -7,7 +7,7 @@ import { axiosBaseQuery } from '@/lib/axiosBaseQuery';
 // -------------------- Type Definitions --------------------
 
 // Task status type definition
-export type TaskStatus = 'Completed' | 'Missed' | 'Follow-up';
+export type TaskStatus = 'Confirmed' | 'Cancelled' | 'Done';
 
 // Service type definition (includes task management features)
 export interface Service {

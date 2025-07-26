@@ -73,9 +73,9 @@ const StatusChip = styled(Chip)<{ status: string }>`
   font-size: 13px;
   margin-right: 8px;
   background-color: ${({ status }) =>
-    status === 'Missed'
+    status === 'Cancelled'
       ? '#ffebeb'
-      : status === 'Completed'
+      : status === 'Done'
         ? '#e7f8dc'
         : '#fff0e6'} !important;
   color: #060606 !important;
@@ -93,9 +93,9 @@ const StatusChip = styled(Chip)<{ status: string }>`
       border-radius: 50%;
       margin-right: 6px;
       background-color: ${({ status }) =>
-        status === 'Missed'
+        status === 'Cancelled'
           ? '#c62828'
-          : status === 'Completed'
+          : status === 'Done'
             ? '#2e7d32'
             : '#f57c00'};
     }
