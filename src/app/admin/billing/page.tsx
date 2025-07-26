@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
@@ -14,6 +14,8 @@ const styles = {
     display: 'flex',
     background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
     boxSizing: 'border-box',
+    minHeight: '100vh',
+    marginLeft: { xs: 0, sm: '50px', md: '240px' },
   },
 
   mainContent: {
@@ -51,8 +53,6 @@ const styles = {
 };
 
 export default function BillingboxPage() {
-  const isMobile = useMediaQuery('(max-width:900px)');
-  const isExtraSmall = useMediaQuery('(max-width:600px)');
   const searchParams = useSearchParams();
   const router = useRouter();
 

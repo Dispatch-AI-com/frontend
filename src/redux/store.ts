@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { authApi } from '@/features/auth/authApi';
+import { calendarApi } from '@/features/calendar/calendarApi';
 import { calllogsApi } from '@/features/callog/calllogApi';
 import { companyApi } from '@/features/company/companyApi';
 import { onboardingApi } from '@/features/onboarding/onboardingApi';
@@ -52,6 +53,7 @@ export const store = configureStore({
       transcriptApi.middleware,
       transcriptChunksApi.middleware,
       subscriptionApi.middleware,
+      calendarApi.middleware,
       serviceBookingApi.middleware,
       serviceApi.middleware,
     ),

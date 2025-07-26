@@ -16,13 +16,22 @@ const PageContainer = styled.div`
   display: flex;
   height: 100vh;
   overflow: hidden;
+  background-color: #f8faf7;
+  margin-left: 0;
+
+  ${theme.breakpoints.up('sm')} {
+    margin-left: 50px;
+  }
+
+  ${theme.breakpoints.up('md')} {
+    margin-left: 240px;
+  }
 `;
 
 const MainContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #f8faf7;
   height: 100vh;
   overflow: hidden;
 `;
