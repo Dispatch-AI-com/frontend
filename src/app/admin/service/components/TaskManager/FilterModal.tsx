@@ -306,7 +306,9 @@ const FilterModal: React.FC<Props> = ({
             fullWidth
             placeholder="User"
             value={filters.user}
-            onChange={e => handleFilterChange('user', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleFilterChange('user', e.target.value)
+            }
             variant="outlined"
           />
         </FormField>
@@ -318,7 +320,9 @@ const FilterModal: React.FC<Props> = ({
               type="date"
               placeholder="From"
               value={filters.dateFrom}
-              onChange={e => handleFilterChange('dateFrom', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleFilterChange('dateFrom', e.target.value)
+              }
               InputLabelProps={{ shrink: true }}
               inputProps={{
                 style: {
@@ -332,7 +336,9 @@ const FilterModal: React.FC<Props> = ({
               type="date"
               placeholder="To"
               value={filters.dateTo}
-              onChange={e => handleFilterChange('dateTo', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleFilterChange('dateTo', e.target.value)
+              }
               InputLabelProps={{ shrink: true }}
               inputProps={{
                 style: {

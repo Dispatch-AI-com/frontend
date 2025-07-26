@@ -348,7 +348,9 @@ const EditServiceModal: React.FC<Props> = ({
             <FormControl fullWidth>
               <StatusSelect
                 value={name}
-                onChange={e => setName(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
                 displayEmpty
                 renderValue={selected => {
                   if (!selected) {
@@ -384,7 +386,9 @@ const EditServiceModal: React.FC<Props> = ({
               fullWidth
               placeholder="Client Name"
               value={client.name}
-              onChange={e => setClient({ ...client, name: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setClient({ ...client, name: e.target.value })
+              }
               variant="outlined"
             />
           </FormField>
@@ -394,7 +398,7 @@ const EditServiceModal: React.FC<Props> = ({
               fullWidth
               placeholder="Phone Number"
               value={client.phoneNumber}
-              onChange={e =>
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setClient({ ...client, phoneNumber: e.target.value })
               }
               variant="outlined"
@@ -406,7 +410,9 @@ const EditServiceModal: React.FC<Props> = ({
               fullWidth
               placeholder="Address"
               value={client.address}
-              onChange={e => setClient({ ...client, address: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setClient({ ...client, address: e.target.value })
+              }
               variant="outlined"
             />
           </FormField>
@@ -429,7 +435,9 @@ const EditServiceModal: React.FC<Props> = ({
             <FormControl fullWidth>
               <StatusSelect
                 value={status}
-                onChange={e => setStatus(e.target.value as TaskStatus)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setStatus(e.target.value as TaskStatus)
+                }
                 displayEmpty
               >
                 {['Completed', 'Missed', 'Follow-up'].map(option => (
@@ -447,7 +455,9 @@ const EditServiceModal: React.FC<Props> = ({
               fullWidth
               type="datetime-local"
               value={dateTime}
-              onChange={e => setDateTime(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setDateTime(e.target.value)
+              }
               InputLabelProps={{ shrink: true }}
             />
           </FormField>
@@ -457,7 +467,9 @@ const EditServiceModal: React.FC<Props> = ({
             <DescriptionTextarea
               placeholder="Fill in"
               value={description}
-              onChange={e => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setDescription(e.target.value)
+              }
             />
           </FormField>
         </ModalContent>

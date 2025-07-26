@@ -226,7 +226,9 @@ export default function EditServiceModal({
           <TextField
             label="Service Name"
             value={formData.name}
-            onChange={e => handleInputChange('name', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleInputChange('name', e.target.value)
+            }
             fullWidth
             size={isExtraSmallScreen ? 'small' : 'small'}
             required
@@ -235,7 +237,9 @@ export default function EditServiceModal({
           <TextField
             label="Description"
             value={formData.description}
-            onChange={e => handleInputChange('description', e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              handleInputChange('description', e.target.value)
+            }
             fullWidth
             multiline
             rows={isSmallScreen ? 2 : 3}
