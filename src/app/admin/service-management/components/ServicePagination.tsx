@@ -93,20 +93,20 @@ export default function ServicePagination({
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
-  // 在小屏幕上只显示当前页和相邻的页面
+  // Only show current page and adjacent pages on small screens
   const getVisiblePages = () => {
     if (isExtraSmallScreen) {
-      // 超小屏幕只显示当前页
+      // Extra small screen only shows current page
       return [page];
     } else if (isSmallScreen) {
-      // 小屏幕显示当前页和相邻页面
+      // Small screen shows current page and adjacent pages
       const pages = [];
       if (page > 1) pages.push(page - 1);
       pages.push(page);
       if (page < totalPages) pages.push(page + 1);
       return pages;
     } else {
-      // 大屏幕显示所有页面
+      // Large screen shows all pages
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
   };

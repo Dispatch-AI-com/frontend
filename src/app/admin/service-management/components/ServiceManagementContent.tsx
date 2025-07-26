@@ -2,7 +2,10 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 
-import type { ServiceManagement } from '../serviceManagementApi';
+import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
+import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
+import { useAppSelector } from '@/redux/hooks';
+
 import DeleteConfirmModal from './DeleteConfirmModal';
 import EditServiceModal from './EditServiceModal';
 import ServiceCardGrid from './ServiceCardGrid';
@@ -12,14 +15,15 @@ import ServicePagination from './ServicePagination';
 const ContentContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  minHeight: 'calc(100vh - 48px)', // 减去页面padding
+  height: '100%',
+  padding: theme.spacing(3),
 
   [theme.breakpoints.down('sm')]: {
-    minHeight: 'calc(100vh - 32px)',
+    padding: theme.spacing(2),
   },
 
   [theme.breakpoints.down('xs')]: {
-    minHeight: 'calc(100vh - 24px)',
+    padding: theme.spacing(1.5),
   },
 }));
 
@@ -42,6 +46,32 @@ export default function ServiceManagementContent() {
   const [selectedService, setSelectedService] =
     useState<ServiceManagement | null>(null);
   const [page, setPage] = useState(1);
+
+  // Get current user
+  const user = useAppSelector(state => state.auth.user);
+  const userId = user?._id;
+  const { data: services = [] } = useGetServicesQuery(
+    { userId: userId ?? '' },
+    { skip: !userId },
+  );
+
+  // Calculate items per page, must be consistent with ServiceCardGrid
+  const isSmallScreen =
+    typeof window !== 'undefined' && window.innerWidth <= 600;
+  const isMediumScreen =
+    typeof window !== 'undefined' &&
+    window.innerWidth > 600 &&
+    window.innerWidth <= 900;
+  const isLargeScreen =
+    typeof window !== 'undefined' &&
+    window.innerWidth > 900 &&
+    window.innerWidth <= 1200;
+  let itemsPerPage = 12;
+  if (isSmallScreen) itemsPerPage = 6;
+  else if (isMediumScreen) itemsPerPage = 6;
+  else if (isLargeScreen) itemsPerPage = 9;
+
+  const totalPages = Math.max(1, Math.ceil(services.length / itemsPerPage));
 
   const handleCreate = () => {
     setSelectedService(null);
@@ -80,7 +110,11 @@ export default function ServiceManagementContent() {
         />
       </GridContainer>
 
-      <ServicePagination page={page} onPageChange={setPage} />
+      <ServicePagination
+        page={page}
+        onPageChange={setPage}
+        totalPages={totalPages}
+      />
 
       <EditServiceModal
         open={editOpen}

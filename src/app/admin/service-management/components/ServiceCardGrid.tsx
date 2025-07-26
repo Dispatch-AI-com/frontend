@@ -7,11 +7,11 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
+import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 
-import type { ServiceManagement } from '../serviceManagementApi';
-import { useGetServicesQuery } from '../serviceManagementApi';
 import ServiceCard from './ServiceCard';
 
 const GridContainer = styled(Grid)(({ theme }) => ({
@@ -52,9 +52,9 @@ export default function ServiceCardGrid({
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
-  // 获取当前用户
+  // Get current user
   const user = useAppSelector(state => state.auth.user);
-  // 只获取当前用户的 service
+  // Only get current user's services
   const userId = user?._id;
   const {
     data: services,
@@ -62,12 +62,12 @@ export default function ServiceCardGrid({
     error,
   } = useGetServicesQuery({ userId: userId ?? '' }, { skip: !userId });
 
-  // 根据屏幕尺寸调整每页显示的服务数量
+  // Adjust items per page based on screen size
   const getItemsPerPage = () => {
-    if (isSmallScreen) return 6; // 手机：2列 x 3行
-    if (isMediumScreen) return 6; // 平板：2列 x 3行
-    if (isLargeScreen) return 9; // 小桌面：3列 x 3行
-    return 12; // 大桌面：3列 x 4行
+    if (isSmallScreen) return 6; // Mobile: 2 columns x 3 rows
+    if (isMediumScreen) return 6; // Tablet: 2 columns x 3 rows
+    if (isLargeScreen) return 9; // Small desktop: 3 columns x 3 rows
+    return 12; // Large desktop: 3 columns x 4 rows
   };
 
   if (isLoading) {

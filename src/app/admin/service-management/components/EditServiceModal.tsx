@@ -18,18 +18,17 @@ import {
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 
-import { useAppSelector } from '@/redux/hooks';
-import theme from '@/theme';
-
 import type {
   CreateServiceManagementDto,
   ServiceManagement,
   UpdateServiceManagementDto,
-} from '../serviceManagementApi';
+} from '@/features/service-management/serviceManagementApi';
 import {
   useCreateServiceMutation,
   useUpdateServiceMutation,
-} from '../serviceManagementApi';
+} from '@/features/service-management/serviceManagementApi';
+import { useAppSelector } from '@/redux/hooks';
+import theme from '@/theme';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -175,7 +174,7 @@ export default function EditServiceModal({
   const handleSubmit = async (): Promise<void> => {
     try {
       if (service) {
-        // 更新服务
+        // Update service
         const updateData: UpdateServiceManagementDto = {
           name: formData.name,
           description: formData.description,
@@ -184,12 +183,12 @@ export default function EditServiceModal({
         };
         await updateService({ id: service._id, data: updateData }).unwrap();
       } else {
-        // 创建新服务
+        // Create new service
         await createService(formData).unwrap();
       }
       onClose();
     } catch {
-      // 这里可以添加错误提示
+      // Error handling can be added here
     }
   };
 

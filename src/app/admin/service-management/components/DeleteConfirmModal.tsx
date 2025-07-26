@@ -12,10 +12,9 @@ import {
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 
+import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
+import { useDeleteServiceMutation } from '@/features/service-management/serviceManagementApi';
 import theme from '@/theme';
-
-import type { ServiceManagement } from '../serviceManagementApi';
-import { useDeleteServiceMutation } from '../serviceManagementApi';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -120,7 +119,7 @@ export default function DeleteConfirmModal({
       await deleteService(service._id).unwrap();
       onClose();
     } catch {
-      // 这里可以添加错误提示
+      // Error handling can be added here
     } finally {
       setIsDeleting(false);
     }

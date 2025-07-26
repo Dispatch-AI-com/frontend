@@ -19,6 +19,8 @@ import {
 import { useState } from 'react';
 
 import type { Service, TaskStatus } from '@/features/service/serviceApi';
+import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
+import { useAppSelector } from '@/redux/hooks';
 
 const ModalContainer = styled(Box)(() => ({
   position: 'absolute',
@@ -57,6 +59,8 @@ const CloseButton = styled(IconButton)(() => ({
 
 const ModalContent = styled(Box)(() => ({
   padding: '0 24px',
+  maxHeight: '60vh', // Limit content area max height
+  overflowY: 'auto', // Scrollable when content overflows
 }));
 
 const FormField = styled(Box)(() => ({
@@ -283,8 +287,28 @@ const EditServiceModal: React.FC<Props> = ({
   const [dateTime, setDateTime] = useState(
     formatForDateTimeLocal(service.dateTime ?? ''),
   );
+  // Add client fields
+  const [client, setClient] = useState({
+    name: service.client?.name ?? '',
+    phoneNumber: service.client?.phoneNumber ?? '',
+    address: service.client?.address ?? '',
+  });
 
-  const isValid = name && status && dateTime;
+  // Get service-management services list
+  const user = useAppSelector(state => state.auth.user);
+  const userId = user?._id;
+  const { data: serviceManagementServices = [] } = useGetServicesQuery(
+    { userId: userId ?? '' },
+    { skip: !userId },
+  );
+
+  const isValid =
+    name &&
+    status &&
+    dateTime &&
+    client.name &&
+    client.phoneNumber &&
+    client.address;
 
   const handleSave = () => {
     // Convert to ISO string when saving
@@ -297,6 +321,7 @@ const EditServiceModal: React.FC<Props> = ({
       description,
       status,
       dateTime: isoString,
+      client: { ...client },
     };
     onSave(updatedService as Service);
   };
@@ -320,11 +345,68 @@ const EditServiceModal: React.FC<Props> = ({
         <ModalContent>
           <FormField>
             <FieldLabel>Service Name</FieldLabel>
+            <FormControl fullWidth>
+              <StatusSelect
+                value={name}
+                onChange={e => setName(e.target.value)}
+                displayEmpty
+                renderValue={selected => {
+                  if (!selected) {
+                    return <span style={{ color: '#999' }}>Please Select</span>;
+                  }
+                  return typeof selected === 'string'
+                    ? selected
+                    : JSON.stringify(selected);
+                }}
+              >
+                {serviceManagementServices.length === 0 ? (
+                  <MenuItem disabled value="">
+                    No services available
+                  </MenuItem>
+                ) : (
+                  serviceManagementServices.map(serviceOption => (
+                    <MenuItem
+                      key={serviceOption._id}
+                      value={serviceOption.name}
+                    >
+                      {serviceOption.name}
+                    </MenuItem>
+                  ))
+                )}
+              </StatusSelect>
+            </FormControl>
+          </FormField>
+
+          {/* 新增 client 信息输入框 */}
+          <FormField>
+            <FieldLabel>Client Name</FieldLabel>
             <StyledTextField
               fullWidth
-              placeholder="Service Name"
-              value={name}
-              onChange={e => setName(e.target.value)}
+              placeholder="Client Name"
+              value={client.name}
+              onChange={e => setClient({ ...client, name: e.target.value })}
+              variant="outlined"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>Client Phone Number</FieldLabel>
+            <StyledTextField
+              fullWidth
+              placeholder="Phone Number"
+              value={client.phoneNumber}
+              onChange={e =>
+                setClient({ ...client, phoneNumber: e.target.value })
+              }
+              variant="outlined"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>Client Address</FieldLabel>
+            <StyledTextField
+              fullWidth
+              placeholder="Address"
+              value={client.address}
+              onChange={e => setClient({ ...client, address: e.target.value })}
               variant="outlined"
             />
           </FormField>

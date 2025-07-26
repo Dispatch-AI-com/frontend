@@ -13,9 +13,8 @@ import {
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 
+import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
 import theme from '@/theme';
-
-import type { ServiceManagement } from '../serviceManagementApi';
 
 const CardContainer = styled(Box)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -129,7 +128,7 @@ export default function ServiceCard({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  // 格式化日期时间
+  // Format date and time
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
     return date
@@ -145,7 +144,7 @@ export default function ServiceCard({
       .replace(',', '');
   };
 
-  // 获取状态显示
+  // Get status display
   const getStatusDisplay = () => {
     return service.isAvailable ? 'Active' : 'Inactive';
   };

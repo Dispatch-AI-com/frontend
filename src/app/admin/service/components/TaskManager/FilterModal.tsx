@@ -224,15 +224,15 @@ const FilterModal: React.FC<Props> = ({
   };
 
   const handleApply = () => {
-    // 将筛选器状态传递给 ServiceManager，使用正确的字段名
+    // Pass filter state to ServiceManager with correct field names
     const appliedFilters = {
       status: filters.status,
       createdBy: filters.user,
-      serviceName: currentFilters.serviceName, // 保留现有筛选
-      description: currentFilters.description, // 保留现有筛选
-      dateFrom: filters.dateFrom, // 传递 dateFrom
-      dateTo: filters.dateTo, // 传递 dateTo
-      dateTime: '', // 清空旧的 dateTime 字段
+      serviceName: currentFilters.serviceName, // Keep existing filter
+      description: currentFilters.description, // Keep existing filter
+      dateFrom: filters.dateFrom, // Pass dateFrom
+      dateTo: filters.dateTo, // Pass dateTo
+      dateTime: '', // Clear old dateTime field
     };
 
     onApply(appliedFilters);
