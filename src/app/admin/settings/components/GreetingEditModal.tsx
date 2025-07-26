@@ -113,9 +113,19 @@ I can take a message for you, or help you book an appointment with your team. Wh
       open={open}
       onClose={onClose}
       fullWidth
+      maxWidth="sm"
       disableScrollLock
       PaperProps={{
-        sx: { minWidth: '564px', pb: 2, pt: 2, pl: 3, pr: 3, borderRadius: 3 },
+        sx: {
+          minWidth: { xs: '90vw', sm: '564px' },
+          maxWidth: { xs: '95vw', sm: '600px' },
+          pb: 2,
+          pt: 2,
+          pl: { xs: 2, sm: 3 },
+          pr: { xs: 2, sm: 3 },
+          borderRadius: 3,
+          margin: { xs: 1, sm: 2 },
+        },
       }}
     >
       <DialogTitle sx={{ pb: 2 }}>
@@ -132,13 +142,18 @@ I can take a message for you, or help you book an appointment with your team. Wh
         <IconButton
           aria-label="close"
           onClick={onClose}
-          sx={{ position: 'absolute', right: 16, top: 16 }}
+          sx={{
+            position: 'absolute',
+            right: { xs: 8, sm: 16 },
+            top: { xs: 8, sm: 16 },
+            padding: { xs: 1, sm: 1 },
+          }}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ pt: 4 }}>
+      <DialogContent sx={{ pt: 4, px: { xs: 0, sm: 3 } }}>
         <Box
           display="flex"
           gap={0}
@@ -146,6 +161,7 @@ I can take a message for you, or help you book an appointment with your team. Wh
           sx={{
             backgroundColor: '#f5f5f5',
             borderRadius: 2,
+            flexDirection: { xs: 'column', sm: 'row' },
           }}
         >
           <Button
@@ -217,14 +233,24 @@ I can take a message for you, or help you book an appointment with your team. Wh
               minHeight: 120,
             }}
           >
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
+            <Typography
+              variant="body2"
+              sx={{ whiteSpace: 'pre-line', lineHeight: { xs: 1.4, sm: 1.5 } }}
+            >
               {defaultMessage}
             </Typography>
           </Box>
         )}
       </DialogContent>
 
-      <DialogActions sx={{ pt: 2, px: 0 }}>
+      <DialogActions
+        sx={{
+          pt: 2,
+          px: { xs: 0, sm: 0 },
+          gap: { xs: 1, sm: 1 },
+          flexDirection: { xs: 'column', sm: 'row' },
+        }}
+      >
         <Button
           onClick={onClose}
           sx={{
