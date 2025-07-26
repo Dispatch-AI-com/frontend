@@ -16,8 +16,8 @@ import {
   useVerifyEmailMutation,
   useVerifyMobileMutation,
 } from '@/features/settings/settingsApi';
-// import { useVerificationLogic } from '@/hooks/useVerificationLogic';
 import { useAppSelector } from '@/redux/hooks';
+import { validateVerificationForm } from '@/utils/validationSettings';
 
 export default function VerificationSection() {
   const user = useAppSelector(state => state.auth.user);
@@ -105,6 +105,13 @@ export default function VerificationSection() {
         throw new Error('User not logged in');
       }
 
+      // Validate form before saving
+      const validationResult = validateVerificationForm(formValues);
+      if (!validationResult.isValid) {
+        setError(validationResult.error ?? 'Validation failed');
+        return;
+      }
+
       // Check if mobile or email has changed
       const mobileChanged = formValues.mobile !== values.mobile;
       const emailChanged = formValues.email !== values.email;
@@ -121,22 +128,8 @@ export default function VerificationSection() {
 
       setOpen(false);
       setError(null);
-    } catch (err) {
-      function isErrorWithMessage(
-        error: unknown,
-      ): error is { message: string } {
-        return (
-          typeof error === 'object' &&
-          error !== null &&
-          'message' in error &&
-          typeof (error as { message?: unknown }).message === 'string'
-        );
-      }
-
-      const errorMessage = isErrorWithMessage(err)
-        ? err.message
-        : 'Failed to update verification settings';
-      setError(errorMessage);
+    } catch {
+      setError('Failed to update verification settings');
     }
   };
 
