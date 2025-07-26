@@ -2,6 +2,7 @@
 'use client';
 
 import CloseIcon from '@mui/icons-material/Close';
+import type { SelectChangeEvent } from '@mui/material';
 import {
   Avatar,
   Box,
@@ -348,8 +349,8 @@ const EditServiceModal: React.FC<Props> = ({
             <FormControl fullWidth>
               <StatusSelect
                 value={name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setName(e.target.value)
+                onChange={(e: SelectChangeEvent<unknown>) =>
+                  setName(e.target.value as string)
                 }
                 displayEmpty
                 renderValue={selected => {
@@ -435,7 +436,7 @@ const EditServiceModal: React.FC<Props> = ({
             <FormControl fullWidth>
               <StatusSelect
                 value={status}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e: SelectChangeEvent<unknown>) =>
                   setStatus(e.target.value as TaskStatus)
                 }
                 displayEmpty
