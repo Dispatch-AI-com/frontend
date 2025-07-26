@@ -33,7 +33,13 @@ export interface Service {
   status?: TaskStatus;
   dateTime?: string;
   userId?: string; // Used to specify the user when creating a task
-  serviceFieldId?: string; // 新增：用于编辑时传递 serviceFieldId
+  serviceFieldId?: string; // Add: for passing serviceFieldId during editing
+  // Add: client information fields
+  client?: {
+    name: string;
+    phoneNumber: string;
+    address: string;
+  };
 }
 
 // Pagination response wrapper

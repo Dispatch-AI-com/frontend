@@ -2,6 +2,7 @@
 'use client';
 
 import CloseIcon from '@mui/icons-material/Close';
+import type { SelectChangeEvent } from '@mui/material';
 import {
   Avatar,
   Box,
@@ -16,12 +17,20 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import React from 'react';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import type { Service, TaskStatus } from '@/features/service/serviceApi';
+import type { TaskStatus } from '@/features/service/serviceApi';
+import { type Service } from '@/features/service/serviceApi';
 import { useCreateServiceBookingMutation } from '@/features/service/serviceBookingApi';
+import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
+interface Props {
+  onClose: () => void;
+  onCreate: (service: Service) => void;
+  serviceManagementServices: ServiceManagement[];
+}
 
 const ModalContainer = styled(Box)({
   position: 'absolute',
@@ -60,6 +69,8 @@ const CloseButton = styled(IconButton)({
 
 const ModalContent = styled(Box)({
   padding: '0 24px',
+  maxHeight: '60vh', // Limit content area max height
+  overflowY: 'auto', // Scrollable when content overflows
 });
 
 const FormField = styled(Box)({
@@ -215,12 +226,11 @@ const CreateButton = styled(Button)({
   },
 });
 
-interface Props {
-  onClose: () => void;
-  onCreate: (service: Service) => void;
-}
-
-const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
+const ServiceModal: React.FC<Props> = ({
+  onClose,
+  onCreate,
+  serviceManagementServices,
+}) => {
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const [datetime, setDatetime] = useState(() => {
@@ -228,6 +238,11 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
     return now.toISOString().slice(0, 16);
   });
   const [description, setDescription] = useState('');
+  const [client, setClient] = useState({
+    name: '',
+    phoneNumber: '',
+    address: '',
+  });
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
   const userName =
@@ -241,7 +256,13 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
       (user.email?.[0]?.toUpperCase() ?? 'U')
     : 'U';
 
-  const isValid = name && status && datetime;
+  const isValid =
+    name &&
+    status &&
+    datetime &&
+    client.name &&
+    client.phoneNumber &&
+    client.address;
 
   // Utility function: Map frontend status to backend booking status
   const mapStatusToBookingStatus = (
@@ -296,7 +317,11 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
       }
       await createServiceBooking({
         serviceId,
-        client: { name: userName, phoneNumber: 'dummy', address: 'dummy' },
+        client: {
+          name: client.name,
+          phoneNumber: client.phoneNumber,
+          address: client.address,
+        },
         serviceFormValues: [{ serviceFieldId: 'dummy', answer: name }],
         bookingTime,
         status: bookingStatus,
@@ -340,11 +365,71 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
         <ModalContent>
           <FormField>
             <FieldLabel>Service Name</FieldLabel>
+            <FormControl fullWidth>
+              <StatusSelect
+                value={name}
+                onChange={(e: SelectChangeEvent<unknown>) =>
+                  setName(e.target.value as string)
+                }
+                displayEmpty
+                renderValue={selected => {
+                  if (!selected) {
+                    return <span style={{ color: '#999' }}>Please Select</span>;
+                  }
+                  return typeof selected === 'string'
+                    ? selected
+                    : JSON.stringify(selected);
+                }}
+              >
+                {serviceManagementServices.length === 0 ? (
+                  <MenuItem disabled value="">
+                    No services available
+                  </MenuItem>
+                ) : (
+                  serviceManagementServices.map(service => (
+                    <MenuItem key={service._id} value={service.name}>
+                      {service.name}
+                    </MenuItem>
+                  ))
+                )}
+              </StatusSelect>
+            </FormControl>
+          </FormField>
+
+          {/* 新增 client 信息输入框 */}
+          <FormField>
+            <FieldLabel>Client Name</FieldLabel>
             <StyledTextField
               fullWidth
-              placeholder="Service Name"
-              value={name}
-              onChange={e => setName(e.target.value)}
+              placeholder="Client Name"
+              value={client.name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setClient({ ...client, name: e.target.value })
+              }
+              variant="outlined"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>Client Phone Number</FieldLabel>
+            <StyledTextField
+              fullWidth
+              placeholder="Phone Number"
+              value={client.phoneNumber}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setClient({ ...client, phoneNumber: e.target.value })
+              }
+              variant="outlined"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>Client Address</FieldLabel>
+            <StyledTextField
+              fullWidth
+              placeholder="Address"
+              value={client.address}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setClient({ ...client, address: e.target.value })
+              }
               variant="outlined"
             />
           </FormField>
@@ -362,7 +447,9 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
             <FormControl fullWidth>
               <StatusSelect
                 value={status}
-                onChange={e => setStatus(e.target.value as TaskStatus)}
+                onChange={(e: SelectChangeEvent<unknown>) =>
+                  setStatus(e.target.value as TaskStatus)
+                }
                 displayEmpty
                 renderValue={selected => {
                   if (!selected) {
@@ -388,7 +475,9 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
               fullWidth
               type="datetime-local"
               value={datetime}
-              onChange={e => setDatetime(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setDatetime(e.target.value)
+              }
               InputLabelProps={{ shrink: true }}
             />
           </FormField>
@@ -398,7 +487,9 @@ const ServiceModal: React.FC<Props> = ({ onClose, onCreate }) => {
             <DescriptionTextarea
               placeholder="Fill in"
               value={description}
-              onChange={e => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setDescription(e.target.value)
+              }
             />
           </FormField>
         </ModalContent>
