@@ -64,13 +64,6 @@ export const settingsApi = createApi({
     'Greeting',
     'Verification',
   ],
-  tagTypes: [
-    'UserProfile',
-    'CompanyInfo',
-    'BillingAddress',
-    'Greeting',
-    'Verification',
-  ],
   endpoints: builder => ({
     getUserProfile: builder.query<UserProfileSettings, string>({
       query: userId => ({
@@ -206,13 +199,6 @@ export const {
   useUpdateCompanyInfoMutation,
   useGetBillingAddressQuery,
   useUpdateBillingAddressMutation,
-  useCheckABNExistsMutation,
-  useGetGreetingQuery,
-  useUpdateGreetingMutation,
-  useGetVerificationQuery,
-  useUpdateVerificationMutation,
-  useVerifyMobileMutation,
-  useVerifyEmailMutation,
   useCheckABNExistsMutation,
   useGetGreetingQuery,
   useUpdateGreetingMutation,
