@@ -41,18 +41,6 @@ export interface VerificationSettings {
   emailVerified?: boolean;
   marketingPromotions?: boolean;
 }
-export interface GreetingSettings {
-  message: string;
-  isCustom: boolean;
-}
-export interface VerificationSettings {
-  type: 'SMS' | 'Email' | 'Both';
-  mobile?: string;
-  email?: string;
-  mobileVerified?: boolean;
-  emailVerified?: boolean;
-  marketingPromotions?: boolean;
-}
 
 export const settingsApi = createApi({
   reducerPath: 'settingsApi',
