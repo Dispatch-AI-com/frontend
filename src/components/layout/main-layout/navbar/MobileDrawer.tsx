@@ -2,10 +2,14 @@
 
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
+
+import { useAppSelector } from '@/redux/hooks';
 
 import { AuthButton } from './AuthButton';
 import type { NavItemProps as OriginalNavItemProps } from './NavItem';
 import { NavItem } from './NavItem';
+import { UserProfileDropdown } from './UserProfileDropdown';
 
 interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {
   href: string;
@@ -14,7 +18,7 @@ interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {
 interface MobileDrawerProps {
   handleDrawerToggle: () => void;
   navItems: NavItemProps[];
-  themeVariant?: 'light' | 'dark';
+  themeVariant?: 'light' | 'dark' | 'green';
 }
 
 const ActionArea = styled(Box)({
@@ -45,6 +49,12 @@ export function MobileDrawer({
   navItems,
   themeVariant = 'light',
 }: MobileDrawerProps) {
+  const [isHydrated, setIsHydrated] = useState(false);
+  const { user } = useAppSelector(state => state.auth);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
   return (
     <MobileDrawerContainer>
       <MobileNavContainer spacing={2}>
@@ -60,18 +70,24 @@ export function MobileDrawer({
       </MobileNavContainer>
 
       <ActionArea>
-        <AuthButton
-          variant="login"
-          isMobile
-          onClick={handleDrawerToggle}
-          themeVariant={themeVariant}
-        />
-        <AuthButton
-          variant="signup"
-          isMobile
-          onClick={handleDrawerToggle}
-          themeVariant={themeVariant}
-        />
+        {isHydrated && user ? (
+          <UserProfileDropdown user={user} themeVariant={themeVariant} />
+        ) : (
+          <>
+            <AuthButton
+              variant="login"
+              isMobile
+              onClick={handleDrawerToggle}
+              themeVariant={themeVariant}
+            />
+            <AuthButton
+              variant="signup"
+              isMobile
+              onClick={handleDrawerToggle}
+              themeVariant={themeVariant}
+            />
+          </>
+        )}
       </ActionArea>
     </MobileDrawerContainer>
   );

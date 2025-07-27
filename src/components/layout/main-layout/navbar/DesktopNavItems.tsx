@@ -8,7 +8,7 @@ import { NavItem } from './NavItem';
 
 interface DesktopNavItemsProps {
   navItems: NavItemProps[];
-  themeVariant?: 'light' | 'dark';
+  themeVariant?: 'light' | 'dark' | 'green';
 }
 
 interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {

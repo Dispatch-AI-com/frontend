@@ -5,7 +5,7 @@ import type { ICallLog } from '@/types/calllog.d';
 import type { ITranscriptChunk } from '@/types/transcript-chunk.d';
 
 type SortOption = 'newest' | 'oldest';
-type TagOption = 'all' | 'Missed' | 'Completed' | 'Follow-up';
+type TagOption = 'all' | 'Cancelled' | 'Done' | 'Confirmed';
 
 interface CallLogResponse {
   data: ICallLog[];

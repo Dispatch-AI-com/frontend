@@ -21,7 +21,6 @@ export interface BillingAddressSettings {
   postcode: string;
 }
 
-// API响应接口
 export interface UserSetting {
   _id: string;
   userId: string;
@@ -30,11 +29,29 @@ export interface UserSetting {
   createdAt: string;
   updatedAt: string;
 }
+export interface GreetingSettings {
+  message: string;
+  isCustom: boolean;
+}
+export interface VerificationSettings {
+  type: 'SMS' | 'Email' | 'Both';
+  mobile?: string;
+  email?: string;
+  mobileVerified?: boolean;
+  emailVerified?: boolean;
+  marketingPromotions?: boolean;
+}
 
 export const settingsApi = createApi({
   reducerPath: 'settingsApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['UserProfile', 'CompanyInfo', 'BillingAddress'],
+  tagTypes: [
+    'UserProfile',
+    'CompanyInfo',
+    'BillingAddress',
+    'Greeting',
+    'Verification',
+  ],
   endpoints: builder => ({
     getUserProfile: builder.query<UserProfileSettings, string>({
       query: userId => ({
@@ -92,6 +109,74 @@ export const settingsApi = createApi({
       }),
       invalidatesTags: ['BillingAddress'],
     }),
+    getGreeting: builder.query<GreetingSettings, string>({
+      query: userId => ({
+        url: `/companies/user/${userId}/greeting`,
+        method: 'GET',
+      }),
+      providesTags: ['Greeting'],
+    }),
+    updateGreeting: builder.mutation<
+      any,
+      { userId: string } & GreetingSettings
+    >({
+      query: ({ userId, ...greetingData }) => ({
+        url: `/companies/user/${userId}/greeting`,
+        method: 'PATCH',
+        data: greetingData,
+      }),
+      invalidatesTags: ['Greeting'],
+    }),
+    getVerification: builder.query<VerificationSettings, string>({
+      query: userId => ({
+        url: `/api/settings/user/${userId}/verification`,
+        method: 'GET',
+      }),
+      providesTags: ['Verification'],
+    }),
+    updateVerification: builder.mutation<
+      UserSetting,
+      { userId: string } & VerificationSettings
+    >({
+      query: ({ userId, ...verificationData }) => ({
+        url: `/api/settings/user/${userId}/verification`,
+        method: 'PUT',
+        data: verificationData,
+      }),
+      invalidatesTags: ['Verification'],
+    }),
+    verifyMobile: builder.mutation<
+      { success: boolean; message: string },
+      { userId: string; mobile: string }
+    >({
+      query: ({ userId, mobile }) => ({
+        url: `/api/settings/user/${userId}/verification/mobile`,
+        method: 'POST',
+        data: { mobile },
+      }),
+      invalidatesTags: ['Verification'],
+    }),
+    verifyEmail: builder.mutation<
+      { success: boolean; message: string },
+      { userId: string; email: string }
+    >({
+      query: ({ userId, email }) => ({
+        url: `/api/settings/user/${userId}/verification/email`,
+        method: 'POST',
+        data: { email },
+      }),
+      invalidatesTags: ['Verification'],
+    }),
+    checkABNExists: builder.mutation<
+      { exists: boolean },
+      { abn: string; userId: string }
+    >({
+      query: ({ abn, userId }) => ({
+        url: `/settings/check-abn-exists`,
+        method: 'POST',
+        data: { abn, userId },
+      }),
+    }),
   }),
 });
 
@@ -102,4 +187,11 @@ export const {
   useUpdateCompanyInfoMutation,
   useGetBillingAddressQuery,
   useUpdateBillingAddressMutation,
+  useCheckABNExistsMutation,
+  useGetGreetingQuery,
+  useUpdateGreetingMutation,
+  useGetVerificationQuery,
+  useUpdateVerificationMutation,
+  useVerifyMobileMutation,
+  useVerifyEmailMutation,
 } = settingsApi;

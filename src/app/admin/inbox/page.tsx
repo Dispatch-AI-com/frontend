@@ -126,7 +126,7 @@ const EmptyStateText = styled.div`
   font-weight: 500;
 `;
 
-type TagOption = 'all' | 'Missed' | 'Completed' | 'Follow-up';
+type TagOption = 'all' | 'Cancelled' | 'Done' | 'Confirmed';
 type SortOption = 'newest' | 'oldest';
 
 export default function InboxPage() {

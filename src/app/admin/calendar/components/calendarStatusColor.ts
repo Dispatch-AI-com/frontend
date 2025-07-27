@@ -1,5 +1,5 @@
 export const calendarStatusColor = {
-  confirmed: { bg: '#e1f0ff', bar: '#0687ff' },
-  done: { bg: '#e7f8dc', bar: '#58c112' },
-  pending: { bg: '#fff0e6', bar: '#ff7206' },
+  Confirmed: { bg: '#e1f0ff', bar: '#0687ff' },
+  Done: { bg: '#e7f8dc', bar: '#58c112' },
+  Cancelled: { bg: '#fff0e6', bar: '#ff7206' },
 };

@@ -1,4 +1,10 @@
-import { Alert, Box, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+} from '@mui/material';
 import React from 'react';
 
 import LabeledTextField from '../LabeledTextField';
@@ -12,9 +18,10 @@ const VERIFICATION_OPTIONS = [
 ];
 
 interface FormValues {
-  type: string;
+  type: 'SMS' | 'Email' | 'Both';
   mobile: string;
   email: string;
+  marketingPromotions: boolean;
 }
 
 interface VerificationFormProps {
@@ -28,7 +35,10 @@ export default function VerificationForm({
   onChange,
   error,
 }: VerificationFormProps) {
-  const handleFieldChange = (field: keyof FormValues, value: string) => {
+  const handleFieldChange = (
+    field: keyof FormValues,
+    value: string | boolean,
+  ) => {
     onChange({ ...values, [field]: value });
   };
 
@@ -71,6 +81,28 @@ export default function VerificationForm({
           onChange={e => handleFieldChange('email', e.target.value)}
           placeholder="Email Address"
         />
+      )}
+
+      {/* Marketing Promotions Checkbox - only show when Email is selected */}
+      {(values.type === 'Email' || values.type === 'Both') && (
+        <Box>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={values.marketingPromotions}
+                onChange={e =>
+                  handleFieldChange('marketingPromotions', e.target.checked)
+                }
+                sx={{
+                  '&.Mui-checked': {
+                    color: '#58c112',
+                  },
+                }}
+              />
+            }
+            label="Receive Marketing Promotions?"
+          />
+        </Box>
       )}
     </Box>
   );

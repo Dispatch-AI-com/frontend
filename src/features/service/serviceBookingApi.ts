@@ -9,7 +9,7 @@ export interface ServiceBooking {
   client: { name: string; phoneNumber: string; address: string };
   serviceFormValues: { serviceFieldId: string; answer: string }[];
   bookingTime: string;
-  status?: 'pending' | 'confirmed' | 'done';
+  status?: 'Cancelled' | 'Confirmed' | 'Done';
   note?: string;
   userId: string;
 }

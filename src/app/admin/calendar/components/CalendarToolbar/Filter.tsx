@@ -24,9 +24,9 @@ interface FilterProps {
 }
 
 const initialFilters: FilterOption[] = [
-  { id: 'pending', label: 'Pending', color: '#ff7206', selected: true },
-  { id: 'confirmed', label: 'Confirmed', color: '#0687ff', selected: true },
-  { id: 'done', label: 'Done', color: '#58c112', selected: true },
+  { id: 'Cancelled', label: 'Cancelled', color: '#ff7206', selected: true },
+  { id: 'Confirmed', label: 'Confirmed', color: '#0687ff', selected: true },
+  { id: 'Done', label: 'Done', color: '#58c112', selected: true },
 ];
 
 const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
