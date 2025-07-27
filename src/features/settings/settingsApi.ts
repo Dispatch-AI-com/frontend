@@ -41,10 +41,29 @@ export interface VerificationSettings {
   emailVerified?: boolean;
   marketingPromotions?: boolean;
 }
+export interface GreetingSettings {
+  message: string;
+  isCustom: boolean;
+}
+export interface VerificationSettings {
+  type: 'SMS' | 'Email' | 'Both';
+  mobile?: string;
+  email?: string;
+  mobileVerified?: boolean;
+  emailVerified?: boolean;
+  marketingPromotions?: boolean;
+}
 
 export const settingsApi = createApi({
   reducerPath: 'settingsApi',
   baseQuery: axiosBaseQuery(),
+  tagTypes: [
+    'UserProfile',
+    'CompanyInfo',
+    'BillingAddress',
+    'Greeting',
+    'Verification',
+  ],
   tagTypes: [
     'UserProfile',
     'CompanyInfo',
@@ -187,6 +206,13 @@ export const {
   useUpdateCompanyInfoMutation,
   useGetBillingAddressQuery,
   useUpdateBillingAddressMutation,
+  useCheckABNExistsMutation,
+  useGetGreetingQuery,
+  useUpdateGreetingMutation,
+  useGetVerificationQuery,
+  useUpdateVerificationMutation,
+  useVerifyMobileMutation,
+  useVerifyEmailMutation,
   useCheckABNExistsMutation,
   useGetGreetingQuery,
   useUpdateGreetingMutation,
