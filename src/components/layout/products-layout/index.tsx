@@ -38,7 +38,7 @@ export default function ProductsLayout({
 }) {
   return (
     <PageWrapper>
-      <GradientNavbar />
+      <GradientNavbar variant="green" />
       <Container component="main" sx={{ flex: 1 }}>
         {children}
       </Container>

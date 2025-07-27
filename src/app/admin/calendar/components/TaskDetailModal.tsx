@@ -13,6 +13,8 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
+import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
+
 interface Task {
   status?: string;
   bookingTime?: string | Date;
@@ -35,22 +37,11 @@ interface Task {
   note?: string;
 }
 
-interface Service {
-  name?: string;
-  price?: number;
-  notifications?: {
-    phoneNumber?: string;
-    email?: string;
-  };
-  isAvailable?: boolean;
-  description?: string;
-}
-
 interface TaskDetailModalProps {
   open: boolean;
   onClose: () => void;
   task?: Task;
-  service?: Service;
+  service?: ServiceManagement;
 }
 
 const iconSx = { verticalAlign: 'middle', mr: 0.75, color: '#a8f574' };
@@ -111,10 +102,6 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           </Box>
           <Typography>Name: {service?.name ?? '-'}</Typography>
           <Typography>Price: {service?.price ?? '-'}</Typography>
-          <Typography>
-            Phone: {service?.notifications?.phoneNumber ?? '-'}
-          </Typography>
-          <Typography>Email: {service?.notifications?.email ?? '-'}</Typography>
           <Typography>
             Is Available:{' '}
             {typeof service?.isAvailable === 'boolean'

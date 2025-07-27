@@ -139,14 +139,14 @@ const StyledTableRow = styled(TableRow)(() => ({
 const StatusChip = ({ status }: { status: string }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Completed':
-        return '#E8F5E8';
-      case 'Missed':
-        return '#FEE4E2';
-      case 'Follow-up':
-        return '#FEF0C7';
+      case 'Done':
+        return '#28a745'; // Green
+      case 'Cancelled':
+        return '#dc3545'; // Red
+      case 'Confirmed':
+        return '#007bff'; // Blue
       default:
-        return '#F7F8FA';
+        return '#6c757d'; // Gray
     }
   };
 
@@ -266,7 +266,7 @@ const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
                       {service.createdBy?.name ?? 'Unknown'}
                     </StyledTableCell>
                     <StyledTableCell>
-                      <StatusChip status={service.status ?? 'Follow-up'} />
+                      <StatusChip status={service.status ?? 'Confirmed'} />
                     </StyledTableCell>
                     <StyledTableCell>
                       {formatDateTime(service.dateTime ?? service.createdAt)}

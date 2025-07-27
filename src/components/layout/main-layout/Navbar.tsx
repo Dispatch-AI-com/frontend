@@ -16,12 +16,15 @@ import {
 import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useAppSelector } from '@/redux/hooks';
 
 import { AuthButton } from './navbar/AuthButton';
 import { DesktopNavItems } from './navbar/DesktopNavItems';
 import { MobileDrawer } from './navbar/MobileDrawer';
 import type { NavItemProps } from './navbar/NavItem';
+import { UserProfileDropdown } from './navbar/UserProfileDropdown';
 
 const navItems: NavItemProps[] = [
   { href: '/', text: 'Home', width: 70, textWidth: 38 },
@@ -83,13 +86,19 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
 }));
 
 interface NavbarProps {
-  variant?: 'light' | 'dark';
+  variant?: 'light' | 'dark' | 'green';
 }
 
 export default function Navbar({ variant = 'light' }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { user } = useAppSelector(state => state.auth);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -101,8 +110,12 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
       elevation={0}
       sx={{
         backgroundColor:
-          variant === 'light' ? theme.palette.background.default : '#060606',
-        color: variant === 'light' ? 'inherit' : '#ffffff',
+          variant === 'light'
+            ? theme.palette.background.default
+            : variant === 'dark'
+              ? '#060606'
+              : '#f8fff3',
+        color: variant === 'dark' ? '#ffffff' : 'inherit',
       }}
     >
       <Container maxWidth="xl">
@@ -111,7 +124,7 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
           <LogoBox>
             <Link href="/" aria-label="Dispatch AI Home">
               <Image
-                src={variant === 'light' ? '/logo.svg' : '/logo-dark.svg'}
+                src={variant === 'dark' ? '/logo-dark.svg' : '/logo.svg'}
                 alt="Dispatch AI logo"
                 width={126}
                 height={30}
@@ -126,8 +139,14 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
             <>
               <DesktopNavItems navItems={navItems} themeVariant={variant} />
               <DesktopButtonGroup direction="row" spacing={1.5}>
-                <AuthButton variant="login" themeVariant={variant} />
-                <AuthButton variant="signup" themeVariant={variant} />
+                {isHydrated && user ? (
+                  <UserProfileDropdown user={user} themeVariant={variant} />
+                ) : (
+                  <>
+                    <AuthButton variant="login" themeVariant={variant} />
+                    <AuthButton variant="signup" themeVariant={variant} />
+                  </>
+                )}
               </DesktopButtonGroup>
             </>
           )}
@@ -143,14 +162,18 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
                 backgroundColor:
                   variant === 'light'
                     ? theme.palette.background.paper
-                    : '#060606',
-                color: variant === 'light' ? 'inherit' : '#ffffff',
+                    : variant === 'dark'
+                      ? '#060606'
+                      : '#f8fff3',
+                color: variant === 'dark' ? '#ffffff' : 'inherit',
                 '&:hover': {
                   backgroundColor:
                     variant === 'light'
                       ? theme.palette.background.paper
-                      : '#060606',
-                  color: variant === 'light' ? 'inherit' : '#ffffff',
+                      : variant === 'dark'
+                        ? '#060606'
+                        : '#f8fff3',
+                  color: variant === 'dark' ? '#ffffff' : 'inherit',
                 },
                 transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
               }}
@@ -177,8 +200,10 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
             backgroundColor:
               variant === 'light'
                 ? theme.palette.background.default
-                : '#060606',
-            color: variant === 'light' ? 'inherit' : '#ffffff',
+                : variant === 'dark'
+                  ? '#060606'
+                  : '#f8fff3',
+            color: variant === 'dark' ? '#ffffff' : 'inherit',
           },
         }}
       >

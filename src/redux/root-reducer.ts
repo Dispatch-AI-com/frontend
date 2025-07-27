@@ -10,6 +10,7 @@ import { onboardingApi } from '@/features/onboarding/onboardingApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
 import { serviceApi } from '@/features/service/serviceApi';
 import { serviceBookingApi } from '@/features/service/serviceBookingApi';
+import { serviceManagementApi } from '@/features/service-management/serviceManagementApi';
 import { settingsApi } from '@/features/settings/settingsApi';
 import { subscriptionApi } from '@/features/subscription/subscriptionApi';
 import { testApi } from '@/features/test/testApiSlice';
@@ -31,6 +32,7 @@ export const rootReducer = combineReducers({
   [calendarApi.reducerPath]: calendarApi.reducer,
   [serviceBookingApi.reducerPath]: serviceBookingApi.reducer,
   [serviceApi.reducerPath]: serviceApi.reducer,
+  [serviceManagementApi.reducerPath]: serviceManagementApi.reducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

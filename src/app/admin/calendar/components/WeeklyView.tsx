@@ -7,11 +7,9 @@ import React, { useEffect, useMemo } from 'react';
 import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import { useSelector } from 'react-redux';
 
-import type { Service } from '@/features/calendar/calendarApi';
-import {
-  useGetBookingsQuery,
-  useGetServicesQuery,
-} from '@/features/calendar/calendarApi';
+import { useGetBookingsQuery } from '@/features/calendar/calendarApi';
+import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
+import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
 
 import TaskCard from './TaskCard';
 import TaskDetailModal from './TaskDetailModal';
@@ -259,9 +257,10 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
     { skip: !userId },
   ) as { data: Booking[] };
 
-  const { data: services = [] } = useGetServicesQuery() ?? [];
+  const { data: services = [] } =
+    useGetServicesQuery({ userId: userId ?? '' }, { skip: !userId }) ?? {};
   const serviceMap = useMemo(() => {
-    const map = new Map<string, Service>();
+    const map = new Map<string, ServiceManagement>();
     (Array.isArray(services) ? services : []).forEach(s => {
       if (s && typeof s._id === 'string') {
         map.set(s._id, s);
@@ -371,7 +370,7 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
             >
               <TaskCard
                 taskName={`${serviceMap.get(event.serviceId)?.name ?? ''} - ${event.client?.name ?? ''}`}
-                status={event.status as 'confirmed' | 'done' | 'pending'}
+                status={event.status as 'Confirmed' | 'Done' | 'Cancelled'}
                 onClick={() => {
                   setSelectedTask(event);
                   setModalOpen(true);
