@@ -12,11 +12,9 @@ import {
 } from 'react-big-calendar';
 import { useSelector } from 'react-redux';
 
-import type { Service } from '@/features/calendar/calendarApi';
-import {
-  useGetBookingsQuery,
-  useGetServicesQuery,
-} from '@/features/calendar/calendarApi';
+import { useGetBookingsQuery } from '@/features/calendar/calendarApi';
+import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
+import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
 
 import TaskCard from './TaskCard';
 import TaskDetailModal from './TaskDetailModal';
@@ -187,7 +185,7 @@ interface MonthlyViewProps {
 const MonthlyView: React.FC<MonthlyViewProps> = ({
   value,
   onChange,
-  selectedFilters = ['confirmed', 'done', 'pending'],
+  selectedFilters = ['Confirmed', 'Done', 'Cancelled'],
   search = '',
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -203,9 +201,10 @@ const MonthlyView: React.FC<MonthlyViewProps> = ({
       ? (bookingsQueryResult as Booking[])
       : [];
 
-  const { data: services = [] } = useGetServicesQuery() ?? {};
+  const { data: services = [] } =
+    useGetServicesQuery({ userId: userId ?? '' }, { skip: !userId }) ?? {};
   const serviceMap = React.useMemo(() => {
-    const map = new Map<string, Service>();
+    const map = new Map<string, ServiceManagement>();
     if (Array.isArray(services)) {
       services.forEach(s => {
         if (s && typeof s._id === 'string') {
@@ -272,7 +271,7 @@ const MonthlyView: React.FC<MonthlyViewProps> = ({
             return (
               <TaskCard
                 taskName={`${serviceMap.get(event.serviceId)?.name ?? ''} - ${event.client?.name ?? ''}`}
-                status={event.status as 'confirmed' | 'done' | 'pending'}
+                status={event.status as 'Confirmed' | 'Done' | 'Cancelled'}
                 onClick={() => {
                   setSelectedTask(event);
                   setModalOpen(true);
@@ -282,27 +281,31 @@ const MonthlyView: React.FC<MonthlyViewProps> = ({
           },
         }}
       />
-      <TaskDetailModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        task={
-          selectedTask
-            ? {
-                ...selectedTask,
-                serviceId:
-                  selectedTask.serviceId &&
-                  serviceMap.get(selectedTask.serviceId)
-                    ? {
-                        ...serviceMap.get(selectedTask.serviceId),
-                      }
-                    : undefined,
-              }
-            : undefined
-        }
-        service={
-          selectedTask ? serviceMap.get(selectedTask.serviceId) : undefined
-        }
-      />
+      {modalOpen && selectedTask && (
+        <>
+          <TaskDetailModal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            task={
+              selectedTask
+                ? {
+                    ...selectedTask,
+                    serviceId:
+                      selectedTask.serviceId &&
+                      serviceMap.get(selectedTask.serviceId)
+                        ? {
+                            ...serviceMap.get(selectedTask.serviceId),
+                          }
+                        : undefined,
+                  }
+                : undefined
+            }
+            service={
+              selectedTask ? serviceMap.get(selectedTask.serviceId) : undefined
+            }
+          />
+        </>
+      )}
     </StyledCalendarWrapper>
   );
 };

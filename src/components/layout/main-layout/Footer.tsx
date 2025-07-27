@@ -184,8 +184,8 @@ export default function Footer() {
               <Image
                 src="/logo.svg"
                 alt="DispatchAI Logo"
-                layout="fill"
-                objectFit="contain"
+                fill
+                style={{ objectFit: 'contain' }}
                 priority
               />
             </LogoContainer>

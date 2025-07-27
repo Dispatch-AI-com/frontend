@@ -81,14 +81,14 @@ const StatusChip = styled.div<{ status: string }>`
   color: #060606;
   background-color: ${props => {
     switch (props.status) {
-      case 'Completed':
-        return '#e7f8dc';
-      case 'Missed':
-        return '#ffebeb';
-      case 'Follow-up':
-        return '#fff0e6';
+      case 'Done':
+        return '#E8F5E8';
+      case 'Cancelled':
+        return '#FEE4E2';
+      case 'Confirmed':
+        return '#FEF0C7';
       default:
-        return '#f5f5f5';
+        return '#F7F8FA';
     }
   }};
 
@@ -101,12 +101,12 @@ const StatusChip = styled.div<{ status: string }>`
     margin-right: 6px;
     background-color: ${props => {
       switch (props.status) {
-        case 'Completed':
-          return '#2e7d32';
-        case 'Missed':
-          return '#c62828';
-        case 'Follow-up':
-          return '#f57c00';
+        case 'Done':
+          return '#28A745';
+        case 'Cancelled':
+          return '#DC3545';
+        case 'Confirmed':
+          return '#FFC107';
         default:
           return '#757575';
       }
@@ -157,7 +157,7 @@ interface InboxListProps {
   selectedId?: string;
   onSelect?: (id: string) => void;
   searchTerm?: string;
-  tag?: 'all' | 'Missed' | 'Completed' | 'Follow-up';
+  tag?: 'all' | 'Cancelled' | 'Done' | 'Confirmed';
   sort?: 'newest' | 'oldest';
   allItems?: ICallLog[];
   hasNextPage?: boolean;

@@ -22,6 +22,7 @@ import {
   useGetBookingsQuery,
   useUpdateServiceBookingMutation,
 } from '@/features/service/serviceBookingApi';
+import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 
 import DeleteConfirmModal from './DeleteConfirmModal';
@@ -152,9 +153,9 @@ const ActiveFiltersContainer = styled(Box)(() => ({
 
 // Status mapping table
 const statusMap: Record<string, string> = {
-  Completed: 'done',
-  Missed: 'pending',
-  'Follow-up': 'confirmed',
+  Done: 'Done',
+  Cancelled: 'Cancelled',
+  Confirmed: 'Confirmed',
 };
 
 const Container = styled(Box)(({ theme }) => ({
@@ -212,6 +213,12 @@ function ServiceManager() {
   // Get booking list
   const { data: bookings = [], refetch } = useGetBookingsQuery({ userId });
 
+  // Get service-management services list
+  const { data: serviceManagementServices = [] } = useGetServicesQuery(
+    { userId: userId ?? '' },
+    { skip: !userId },
+  );
+
   // Search, filter
   const filteredBookings = bookings.filter(booking => {
     const matchesSearch =
@@ -247,13 +254,13 @@ function ServiceManager() {
     );
   });
 
-  // 分页
+  // Pagination
   const totalPages = Math.ceil(sortedBookings.length / TASKS_PER_PAGE);
   const startIndex = (currentPage - 1) * TASKS_PER_PAGE;
   const endIndex = startIndex + TASKS_PER_PAGE;
   const currentBookings = sortedBookings.slice(startIndex, endIndex);
 
-  // 事件处理
+  // Event handlers
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     value: number,
@@ -265,14 +272,15 @@ function ServiceManager() {
   const handleSaveService = async (updatedService: Service): Promise<void> => {
     try {
       if (!updatedService._id) throw new Error('Booking ID is missing');
-      let bookingStatus: 'pending' | 'confirmed' | 'done' | undefined =
+      let bookingStatus: 'Cancelled' | 'Confirmed' | 'Done' | undefined =
         undefined;
-      if (updatedService.status === 'Completed') bookingStatus = 'done';
-      else if (updatedService.status === 'Missed') bookingStatus = 'pending';
-      else if (updatedService.status === 'Follow-up')
-        bookingStatus = 'confirmed';
+      if (updatedService.status === 'Done') bookingStatus = 'Done';
+      else if (updatedService.status === 'Cancelled')
+        bookingStatus = 'Cancelled';
+      else if (updatedService.status === 'Confirmed')
+        bookingStatus = 'Confirmed';
 
-      // 只传实际可编辑字段
+      // Only pass editable fields
       const payload: Partial<ServiceBooking> = {
         status: bookingStatus,
       };
@@ -280,16 +288,16 @@ function ServiceManager() {
       if (updatedService.name) {
         payload.serviceFormValues = [
           {
-            serviceFieldId: updatedService.serviceFieldId ?? 'dummy', // 用原有的
+            serviceFieldId: updatedService.serviceFieldId ?? 'dummy', // Use existing
             answer: updatedService.name,
           },
         ];
       }
-      // Date & Time -> bookingTime（转为 ISO/UTC，兼容 datetime-local 格式）
+      // Date & Time -> bookingTime (convert to ISO/UTC, compatible with datetime-local format)
       if (updatedService.dateTime) {
         let dateStr = updatedService.dateTime;
         if (!dateStr.endsWith('Z')) {
-          // 如果没有秒，补全
+          // If no seconds, complete
           if (dateStr.length === 16) dateStr += ':00';
           dateStr += 'Z';
         }
@@ -333,7 +341,7 @@ function ServiceManager() {
   };
   const handleCancelDelete = () => setDeletingServiceId(null);
 
-  // 搜索、筛选、活跃标签等 UI 逻辑
+  // Search, filter, active tags and other UI logic
   const handleSearch = (filters?: unknown) => {
     if (filters && typeof filters === 'object' && filters !== null) {
       const f = filters as Partial<{
@@ -383,14 +391,20 @@ function ServiceManager() {
     notifications: { preferNotificationType: '', phoneNumber: '', email: '' },
     isAvailable: true,
     status: (() => {
-      if (booking.status === 'done') return 'Completed';
-      if (booking.status === 'pending') return 'Missed';
-      if (booking.status === 'confirmed') return 'Follow-up';
-      return 'Follow-up';
+      if (booking.status === 'Done') return 'Done';
+      if (booking.status === 'Cancelled') return 'Cancelled';
+      if (booking.status === 'Confirmed') return 'Confirmed';
+      return 'Confirmed';
     })() as TaskStatus,
     dateTime: booking.bookingTime ?? '',
     userId: '',
-    createdBy: { name: booking.client?.name ?? 'Unknown', avatar: '' },
+    createdBy: { name: 'Test User', avatar: '' }, // Fix: use correct creator info
+    client: {
+      // Add: correctly map client info
+      name: booking.client?.name ?? '',
+      phoneNumber: booking.client?.phoneNumber ?? '',
+      address: booking.client?.address ?? '',
+    },
   }));
 
   // Unique status dropdown
@@ -423,7 +437,9 @@ function ServiceManager() {
             <StyledInput
               placeholder="Search"
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearch(e.target.value)
+              }
               onKeyDown={handleSearchKeyPress}
             />
             {search && (
@@ -558,6 +574,7 @@ function ServiceManager() {
         <ServiceModal
           onClose={() => setIsModalOpen(false)}
           onCreate={handleCreateService}
+          serviceManagementServices={serviceManagementServices}
         />
       )}
       {editingService && (
