@@ -69,7 +69,7 @@ export const settingsApi = createApi({
         method: 'PUT',
         data: profileData,
       }),
-      invalidatesTags: ['UserProfile'],
+      invalidatesTags: ['UserProfile', 'Verification'],
     }),
 
     getCompanyInfo: builder.query<CompanyInfoSettings, string>({
@@ -143,7 +143,7 @@ export const settingsApi = createApi({
         method: 'PUT',
         data: verificationData,
       }),
-      invalidatesTags: ['Verification'],
+      invalidatesTags: ['Verification', 'UserProfile'],
     }),
     verifyMobile: builder.mutation<
       { success: boolean; message: string },
