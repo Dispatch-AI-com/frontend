@@ -5,7 +5,7 @@ import React from 'react';
 const tags = [
   { label: 'Confirmed', color: '#e1f0ff', dot: '#0687ff' },
   { label: 'Done', color: '#e7f8dc', dot: '#58c112' },
-  { label: 'Cancelled', color: '#fff0e6', dot: '#ff7206' },
+  { label: 'Cancelled', color: '#ffebeb', dot: '#ff3f3f' },
 ];
 
 const Tag: React.FC = () => {
