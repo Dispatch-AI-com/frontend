@@ -7,45 +7,22 @@ import styled from 'styled-components';
 import InboxDetail from '@/app/admin/inbox/components/InboxDetail';
 import InboxList from '@/app/admin/inbox/components/InboxList';
 import InboxSearchBar from '@/app/admin/inbox/components/InboxSearchBar';
+import { AdminPageLayout } from '@/components/layout/admin-layout';
 import { useGetCallLogsQuery } from '@/features/callog/calllogApi';
 import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 import type { ICallLog } from '@/types/calllog.d';
 
-const PageContainer = styled.div`
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-  background-color: #f8faf7;
-  margin-left: 0;
-
-  ${theme.breakpoints.up('sm')} {
-    margin-left: 50px;
-  }
-
-  ${theme.breakpoints.up('md')} {
-    margin-left: 240px;
-  }
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-`;
-
 const ContentContainer = styled.div`
-  flex: 1;
   display: flex;
-  height: calc(100vh - 130px);
+  min-height: calc(100vh - 200px);
   overflow: hidden;
 `;
 
 const ListContainer = styled.div`
   width: 350px;
   background-color: #fff;
+  border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
@@ -60,7 +37,6 @@ const ListContainer = styled.div`
 const ListContent = styled.div`
   flex: 1;
   overflow-y: auto;
-  height: calc(100vh - 150px);
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -76,52 +52,39 @@ const ListContent = styled.div`
   }
 `;
 
-const LoadingSpinner = styled.div`
-  padding: 20px;
-  text-align: center;
-  color: #666;
-`;
-
 const DetailContainer = styled.div`
   flex: 1;
   background-color: #fff;
+  border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
   @media (max-width: 600px) {
-    width: 100%;
-    min-width: 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    margin-top: 16px;
   }
 `;
 
 const EmptyStateContainer = styled.div`
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  min-height: calc(100vh - 130px);
+  height: 400px;
+  text-align: center;
 `;
 
 const EmptyStateContent = styled.div`
-  text-align: center;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 16px;
 `;
 
 const EmptyStateImage = styled.img`
   width: 100px;
   height: 100px;
-  margin-bottom: 24px;
 `;
 
 const EmptyStateText = styled.div`
-  font-size: 20px;
+  font-size: 18px;
   color: #666;
   font-weight: 500;
 `;
@@ -206,84 +169,56 @@ export default function InboxPage() {
     setShowDetailMobile(false);
   };
 
-  if (errorMsg) return <div>Error loading data: {errorMsg}</div>;
-  if (isPending) {
+  if (errorMsg) {
     return (
-      <PageContainer>
-        <MainContent>
-          <LoadingSpinner>Loading...</LoadingSpinner>
-        </MainContent>
-      </PageContainer>
+      <AdminPageLayout title="Inbox">
+        <div>Error loading data: {errorMsg}</div>
+      </AdminPageLayout>
     );
   }
+
+  if (isPending) {
+    return (
+      <AdminPageLayout title="Inbox">
+        <EmptyStateContainer>
+          <EmptyStateContent>
+            <EmptyStateText>Loading...</EmptyStateText>
+          </EmptyStateContent>
+        </EmptyStateContainer>
+      </AdminPageLayout>
+    );
+  }
+
   if (!allCallLogs.length) {
     return (
-      <PageContainer>
-        <MainContent>
-          <InboxSearchBar sort={sort} onSortChange={setSort} />
-          <EmptyStateContainer>
-            <EmptyStateContent>
-              <EmptyStateImage
-                src="/dashboard/inbox/empty-inbox.svg"
-                alt="Empty inbox"
-              />
-              <EmptyStateText>Your inbox is empty.</EmptyStateText>
-            </EmptyStateContent>
-          </EmptyStateContainer>
-        </MainContent>
-      </PageContainer>
+      <AdminPageLayout
+        title="Inbox"
+        headerActions={<InboxSearchBar sort={sort} onSortChange={setSort} />}
+        padding="normal"
+      >
+        <EmptyStateContainer>
+          <EmptyStateContent>
+            <EmptyStateImage
+              src="/dashboard/inbox/empty-inbox.svg"
+              alt="Empty inbox"
+            />
+            <EmptyStateText>Your inbox is empty.</EmptyStateText>
+          </EmptyStateContent>
+        </EmptyStateContainer>
+      </AdminPageLayout>
     );
   }
 
   return (
-    <PageContainer>
-      <MainContent
-        style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
-      >
-        <InboxSearchBar sort={sort} onSortChange={setSort} />
-        <ContentContainer style={{ flex: 1, overflow: 'hidden' }}>
-          {!isSmallScreen ? (
-            <>
-              <ListContainer>
-                <ListContent>
-                  <InboxList
-                    selectedId={selectedId}
-                    onSelect={handleSelect}
-                    sort={sort}
-                    allItems={allCallLogs}
-                    hasNextPage={hasNextPage}
-                    isFetchingNextPage={isFetchingNextPage}
-                    fetchNextPage={fetchNextPage}
-                    isLoading={isPending}
-                  />
-                </ListContent>
-              </ListContainer>
-              <DetailContainer>
-                {selectedItem && <InboxDetail item={selectedItem} />}
-              </DetailContainer>
-            </>
-          ) : showDetailMobile ? (
-            <DetailContainer>
-              <div style={{ padding: '16px 0 0 16px' }}>
-                <button
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#1976d2',
-                    fontSize: 16,
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    marginBottom: 16,
-                  }}
-                  onClick={handleBack}
-                >
-                  ← Back
-                </button>
-              </div>
-              {selectedItem && <InboxDetail item={selectedItem} />}
-            </DetailContainer>
-          ) : (
-            <ListContainer style={{ width: '100%' }}>
+    <AdminPageLayout
+      title="Inbox"
+      headerActions={<InboxSearchBar sort={sort} onSortChange={setSort} />}
+      padding="normal"
+    >
+      <ContentContainer>
+        {!isSmallScreen ? (
+          <>
+            <ListContainer>
               <ListContent>
                 <InboxList
                   selectedId={selectedId}
@@ -297,9 +232,47 @@ export default function InboxPage() {
                 />
               </ListContent>
             </ListContainer>
-          )}
-        </ContentContainer>
-      </MainContent>
-    </PageContainer>
+            <DetailContainer>
+              {selectedItem && <InboxDetail item={selectedItem} />}
+            </DetailContainer>
+          </>
+        ) : showDetailMobile ? (
+          <DetailContainer>
+            <div style={{ padding: '16px 0 0 16px' }}>
+              <button
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#1976d2',
+                  fontSize: 16,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  marginBottom: 16,
+                }}
+                onClick={handleBack}
+              >
+                ← Back
+              </button>
+            </div>
+            {selectedItem && <InboxDetail item={selectedItem} />}
+          </DetailContainer>
+        ) : (
+          <ListContainer style={{ width: '100%' }}>
+            <ListContent>
+              <InboxList
+                selectedId={selectedId}
+                onSelect={handleSelect}
+                sort={sort}
+                allItems={allCallLogs}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+                isLoading={isPending}
+              />
+            </ListContent>
+          </ListContainer>
+        )}
+      </ContentContainer>
+    </AdminPageLayout>
   );
 }

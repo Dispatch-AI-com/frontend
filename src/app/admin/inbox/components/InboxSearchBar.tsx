@@ -34,16 +34,6 @@ const SearchBarContainer = styled.div`
   }
 `;
 
-const Title = styled.div`
-  font-weight: 700;
-  font-size: 22px;
-  margin-right: auto;
-  @media (max-width: 600px) {
-    margin: 0 auto;
-    text-align: center;
-  }
-`;
-
 const HideOnMobile = styled.div`
   @media (max-width: 600px) {
     display: none !important;
@@ -80,7 +70,6 @@ export default function InboxSearchBar({
 
   return (
     <SearchBarContainer>
-      <Title>Inbox</Title>
       <HideOnMobile>
         <FormControl size="small" sx={{ minWidth: 120, mr: 2 }}>
           <Select

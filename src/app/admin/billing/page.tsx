@@ -5,28 +5,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import BillingSection from '@/app/admin/billing/components/BillingSection';
+import { AdminPageLayout } from '@/components/layout/admin-layout';
 import BillingStatusModal from '@/components/ui/BillingStatusModal';
 
 import BillingHistorySection from './components/BillingHistorySection';
 
 const styles = {
-  pageContainer: {
-    display: 'flex',
-    background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
-    boxSizing: 'border-box',
-    minHeight: '100vh',
-    marginLeft: { xs: 0, sm: '50px', md: '240px' },
-  },
-
-  mainContent: {
-    margin: '8px 8px 8px 8px',
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: 'white',
-    borderRadius: '20px',
-  },
-
   contentContainer: {
     flex: 1,
     display: 'flex',
@@ -34,21 +18,14 @@ const styles = {
     borderRadius: '20px',
     overflowX: 'visible',
   },
-
-  titleBar: {
-    height: '70px',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0 24px',
-    borderBottom: '1px solid #eaeaea',
-  },
-
-  titleText: {
+  sectionTitle: {
     fontFamily: 'Roboto, sans-serif',
     fontSize: '18px',
     fontWeight: 'bold',
     color: '#060606',
-    lineHeight: 1.22,
+    lineHeight: '22px',
+    padding: '0 24px',
+    marginTop: '24px',
   },
 };
 
@@ -73,42 +50,21 @@ export default function BillingboxPage() {
 
   return (
     <>
-      <Box sx={styles.pageContainer}>
-        <Box sx={styles.mainContent}>
-          <Box sx={styles.titleBar}>
-            <Typography sx={styles.titleText}>Billing</Typography>
-          </Box>
-          <Box sx={styles.contentContainer}>
-            <BillingSection />
-          </Box>
-
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '0 24px',
-            }}
-          >
-            <Typography sx={styles.titleText}>Invoice History</Typography>
-          </Box>
-          <Box sx={styles.contentContainer}>
-            <BillingHistorySection />
-          </Box>
+      <AdminPageLayout title="Billing" padding="normal" background="solid">
+        <Box sx={styles.contentContainer}>
+          <BillingSection />
         </Box>
-      </Box>
+
+        <Typography sx={styles.sectionTitle}>Invoice History</Typography>
+        <Box sx={styles.contentContainer}>
+          <BillingHistorySection />
+        </Box>
+      </AdminPageLayout>
 
       <BillingStatusModal
         open={showModal}
         onClose={handleCloseModal}
         status={status === 'success' ? 'success' : 'failure'}
-        title={status === 'success' ? 'Payment Successful' : 'Payment Failed'}
-        message={
-          status === 'success'
-            ? 'Your subscription is now active.'
-            : 'Please try again.'
-        }
-        buttonText="Return to Billing"
-        redirectUrl="/admin/billing"
       />
     </>
   );

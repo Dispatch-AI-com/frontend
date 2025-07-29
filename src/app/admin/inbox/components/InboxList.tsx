@@ -13,18 +13,14 @@ const List = styled.div`
 `;
 
 const ListItem = styled.div<{ selected?: boolean }>`
-  padding: 16px;
+  padding: 0;
   border-bottom: 1px solid #eee;
   cursor: pointer;
   background-color: ${props => (props.selected ? '#fafafa' : 'transparent')};
   transition: background-color 0.2s;
   height: 100px;
-  width: 324px;
+  width: 100%;
   box-sizing: border-box;
-
-  @media (max-width: 600px) {
-    width: 100%;
-  }
 
   &:hover {
     background-color: ${props => (props.selected ? '#fafafa' : '#f5f5f5')};
@@ -36,6 +32,7 @@ const CallerInfo = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  padding: 16px 16px 0 16px;
 `;
 
 const CallerName = styled.div`
@@ -75,6 +72,7 @@ const PhoneRow = styled.div`
   display: flex;
   align-items: center;
   margin-top: 24px;
+  padding: 0 16px 16px 16px;
 `;
 
 const HighlightedText = styled.span`
@@ -153,8 +151,8 @@ export default function InboxList({
     getScrollElement: () => parentRef.current,
     estimateSize: () => ITEM_HEIGHT,
     overscan: 5,
-    // Maintain scroll position when new items are added
-    getItemKey: index => allItems[index]?._id ?? index,
+    // Use index as key to ensure uniqueness
+    getItemKey: index => index,
   });
 
   const handleScroll = useCallback(() => {
@@ -206,7 +204,7 @@ export default function InboxList({
 
           return (
             <VirtualItem
-              key={item._id}
+              key={virtualRow.index}
               style={{ transform: `translateY(${virtualRow.start}px)` }}
             >
               <ListItem

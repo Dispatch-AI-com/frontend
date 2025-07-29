@@ -64,16 +64,9 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <Box
-      display="flex"
-      // border="5px solid black"
-      boxSizing="border-box"
-      overflow-x="auto"
-    >
+    <Box display="flex" boxSizing="border-box" overflow-x="auto">
       <Sidebar />
-      <Box flex={1} sx={{ ml: { xs: 0, sm: '30px', md: 0 } }}>
-        {children}
-      </Box>
+      <Box flex={1}>{children}</Box>
     </Box>
   );
 }
