@@ -268,7 +268,7 @@ const ServiceModal: React.FC<Props> = ({
   const handleServiceNameChange = (serviceName: string) => {
     setName(serviceName);
     const selectedService = serviceManagementServices.find(
-      s => s.name === serviceName,
+      s => s.name === serviceName && s.isAvailable,
     );
     setSelectedServiceId(selectedService?._id ?? '');
   };
@@ -390,16 +390,20 @@ const ServiceModal: React.FC<Props> = ({
                     : JSON.stringify(selected);
                 }}
               >
-                {serviceManagementServices.length === 0 ? (
+                {serviceManagementServices.filter(
+                  service => service.isAvailable,
+                ).length === 0 ? (
                   <MenuItem disabled value="">
-                    No services available
+                    No active services available
                   </MenuItem>
                 ) : (
-                  serviceManagementServices.map(service => (
-                    <MenuItem key={service._id} value={service.name}>
-                      {service.name}
-                    </MenuItem>
-                  ))
+                  serviceManagementServices
+                    .filter(service => service.isAvailable)
+                    .map(service => (
+                      <MenuItem key={service._id} value={service.name}>
+                        {service.name}
+                      </MenuItem>
+                    ))
                 )}
               </StatusSelect>
             </FormControl>
