@@ -2,14 +2,21 @@
 
 import AddIcon from '@mui/icons-material/Add';
 import { Box } from '@mui/material';
+import { useState } from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
 
 import ServiceManagementContent from './components/ServiceManagementContent';
 
 export default function ServiceManagementPage() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   const handleCreate = () => {
-    // Handle create action
+    setIsCreateModalOpen(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
   };
 
   const headerActions = (
@@ -47,7 +54,10 @@ export default function ServiceManagementPage() {
       padding="normal"
       background="solid"
     >
-      <ServiceManagementContent />
+      <ServiceManagementContent
+        isCreateModalOpen={isCreateModalOpen}
+        onCloseCreateModal={handleCloseCreateModal}
+      />
     </AdminPageLayout>
   );
 }

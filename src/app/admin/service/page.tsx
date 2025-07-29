@@ -25,7 +25,6 @@ const SearchWrapper = styled(Box)({
 const StyledInput = styled(InputBase)(() => ({
   flex: 1,
   fontSize: '14px',
-  fontFamily: 'Roboto, sans-serif',
 }));
 
 const FilterButton = styled(Button)({

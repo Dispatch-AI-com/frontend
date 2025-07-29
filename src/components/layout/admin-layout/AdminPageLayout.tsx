@@ -27,6 +27,8 @@ const PageContainer = styled(Box)`
   min-height: 100vh;
   background: linear-gradient(to bottom, #effbf5, #fff 100%);
   margin-left: 0;
+  position: relative;
+  z-index: 1001;
 
   /* Sidebar spacing - consistent across all admin pages */
   ${theme.breakpoints.up('sm')} {

@@ -477,7 +477,7 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
                 },
               }}
             >
-              Edit Booking
+              Edit Service
             </ViewServiceButton>
           </ServiceBookingCard>
         ) : (

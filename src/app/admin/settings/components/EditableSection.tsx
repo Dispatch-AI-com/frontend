@@ -16,10 +16,24 @@ const InfoRow = styled(Box)({
   flexWrap: 'wrap',
   gap: theme.spacing(4),
   marginTop: theme.spacing(2),
+  [theme.breakpoints.down('md')]: {
+    gap: theme.spacing(3),
+    marginTop: theme.spacing(1.5),
+  },
+  [theme.breakpoints.down('sm')]: {
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    flexDirection: 'column',
+  },
 });
 
 const InfoCol = styled(Box)({
   flex: 1,
+  minWidth: 0,
+  [theme.breakpoints.down('sm')]: {
+    flex: 'none',
+    width: '100%',
+  },
 });
 
 interface Field {

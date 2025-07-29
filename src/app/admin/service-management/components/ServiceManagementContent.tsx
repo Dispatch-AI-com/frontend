@@ -43,7 +43,15 @@ const GridContainer = styled(Box)({
   minHeight: 0,
 });
 
-export default function ServiceManagementContent() {
+interface ServiceManagementContentProps {
+  isCreateModalOpen?: boolean;
+  onCloseCreateModal?: () => void;
+}
+
+export default function ServiceManagementContent({
+  isCreateModalOpen = false,
+  onCloseCreateModal,
+}: ServiceManagementContentProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedService, setSelectedService] =
@@ -96,6 +104,12 @@ export default function ServiceManagementContent() {
     setSelectedService(null);
   };
 
+  const handleCloseCreate = () => {
+    if (onCloseCreateModal) {
+      onCloseCreateModal();
+    }
+  };
+
   return (
     <ContentContainer>
       <GridContainer>
@@ -116,6 +130,12 @@ export default function ServiceManagementContent() {
         open={editOpen}
         service={selectedService}
         onClose={handleCloseEdit}
+      />
+
+      <EditServiceModal
+        open={isCreateModalOpen}
+        service={null}
+        onClose={handleCloseCreate}
       />
 
       <DeleteConfirmModal

@@ -45,12 +45,10 @@ const CardContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ServiceTitle = styled(Typography)(({ theme }) => ({
-  fontFamily: 'Roboto, sans-serif',
-  fontWeight: 700,
-  fontSize: '16px',
-  lineHeight: '20px',
+  fontWeight: 'medium',
   color: '#000',
   marginBottom: theme.spacing(2),
+  lineHeight: 1.4,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   display: '-webkit-box',
@@ -70,7 +68,6 @@ const ServiceTitle = styled(Typography)(({ theme }) => ({
 
 const StatusChip = styled(Chip)(({ theme }) => ({
   fontWeight: 'medium',
-  fontFamily: 'Roboto, sans-serif',
   '& .MuiChip-label': {
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
@@ -90,7 +87,6 @@ const StatusChip = styled(Chip)(({ theme }) => ({
 const DateTimeText = styled(Typography)(({ theme }) => ({
   color: '#666',
   marginBottom: theme.spacing(2),
-  fontFamily: 'Roboto, sans-serif',
 
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.75rem',

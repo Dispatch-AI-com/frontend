@@ -50,7 +50,6 @@ const FilterTitle = styled(Typography)({
   fontSize: '20px',
   fontWeight: 600,
   color: '#1a1a1a',
-  fontFamily: 'Roboto, sans-serif',
 });
 
 const CloseButton = styled(IconButton)({
@@ -129,7 +128,6 @@ const DateField = styled(TextField)({
 const DateSeparator = styled(Typography)({
   fontSize: '14px',
   color: '#999',
-  fontFamily: 'Roboto, sans-serif',
 });
 
 const FilterFooter = styled(Box)({
@@ -147,7 +145,6 @@ const CancelButton = styled(Button)({
   color: '#666',
   border: '1px solid #e0e0e0',
   backgroundColor: 'white',
-  fontFamily: 'Roboto, sans-serif',
   '&:hover': {
     backgroundColor: '#f5f5f5',
   },
@@ -160,7 +157,6 @@ const ApplyButton = styled(Button)({
   fontSize: '14px',
   backgroundColor: '#1a1a1a',
   color: 'white',
-  fontFamily: 'Roboto, sans-serif',
   '&:hover': {
     backgroundColor: '#333',
   },
@@ -302,7 +298,6 @@ const InboxFilterModal: React.FC<Props> = ({
                 color: '#d32f2f',
                 border: '1px solid #d32f2f',
                 backgroundColor: 'white',
-                fontFamily: 'Roboto, sans-serif',
                 '&:hover': {
                   backgroundColor: '#ffebee',
                 },
