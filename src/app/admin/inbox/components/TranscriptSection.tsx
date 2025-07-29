@@ -43,10 +43,7 @@ const ErrorText = styled(Typography)`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: 48px;
-  @media (max-width: 600px) {
-    margin-top: 32px;
-  }
+  margin-top: 8px;
 `;
 
 const FixedWidthButton = styled(Button)`

@@ -1,5 +1,5 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import type { ICallLog } from '@/types/calllog.d';
@@ -84,6 +84,8 @@ const HighlightedText = styled.span`
 const VirtualContainer = styled.div`
   width: 100%;
   position: relative;
+  flex: 1;
+  min-height: 0;
 `;
 
 const VirtualItem = styled.div`
@@ -104,6 +106,10 @@ const EndMessage = styled.div`
   color: #666;
   font-size: 14px;
   font-style: italic;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  margin-top: auto;
+  flex-shrink: 0;
 `;
 
 interface InboxListProps {
@@ -145,6 +151,7 @@ export default function InboxList({
   isLoading = false,
 }: InboxListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   const rowVirtualizer = useVirtualizer({
     count: allItems.length,
@@ -160,6 +167,10 @@ export default function InboxList({
 
     const { scrollTop, scrollHeight, clientHeight } = parentRef.current;
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+    // Check if we're at the bottom (within 10px)
+    const atBottom = distanceFromBottom <= 10;
+    setIsAtBottom(atBottom);
 
     // Trigger next page when within 200px of bottom
     if (distanceFromBottom <= 200 && hasNextPage && !isFetchingNextPage) {
@@ -247,7 +258,7 @@ export default function InboxList({
           </ListItem>
         </LoadingContainer>
       )}
-      {!hasNextPage && allItems.length > 0 && (
+      {!hasNextPage && allItems.length > 0 && isAtBottom && (
         <EndMessage>
           No more call logs to load • Total: {allItems.length} items
         </EndMessage>
