@@ -137,33 +137,59 @@ const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 const StatusChip = ({ status }: { status: string }) => {
-  const getStatusColor = (status: string) => {
+  // 直接在组件中定义颜色，不依赖外部文件
+  const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'Done':
-        return '#28a745'; // Green
-      case 'Cancelled':
-        return '#dc3545'; // Red
       case 'Confirmed':
-        return '#007bff'; // Blue
+        return { bg: '#e1f0ff', bar: '#0687ff' };
+      case 'Done':
+        return { bg: '#e7f8dc', bar: '#58c112' };
+      case 'Cancelled':
+        return { bg: '#fff0e6', bar: '#ff7206' };
       default:
-        return '#6c757d'; // Gray
+        return { bg: '#fff0e6', bar: '#ff7206' };
     }
   };
+
+  const style = getStatusStyle(status);
 
   return (
     <Box
       sx={{
-        px: 2,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        px: 1.5,
         py: 0.5,
         borderRadius: '12px',
-        backgroundColor: getStatusColor(status),
-        display: 'inline-block',
-        fontSize: '13px',
-        fontWeight: 500,
-        color: '#1A1A1A',
+        backgroundColor: style.bg,
+        width: 'fit-content',
+        height: 24,
       }}
     >
-      {status}
+      <Box
+        sx={{
+          width: 4,
+          height: 4,
+          borderRadius: '50%',
+          backgroundColor: style.bar,
+          marginRight: 1,
+        }}
+      />
+      <Typography
+        sx={{
+          fontFamily: 'Roboto',
+          fontSize: 13,
+          fontWeight: 'normal',
+          fontStretch: 'normal',
+          fontStyle: 'normal',
+          letterSpacing: 'normal',
+          lineHeight: 1.23,
+          color: '#060606',
+        }}
+      >
+        {status}
+      </Typography>
     </Box>
   );
 };

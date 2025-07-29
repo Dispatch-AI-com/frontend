@@ -422,11 +422,11 @@ function ServiceManager() {
         <Typography
           className="Service"
           sx={{
-            fontFamily: 'Roboto',
+            fontFamily: 'Roboto, sans-serif',
             fontSize: '18px',
             fontWeight: 'bold',
-            lineHeight: 1.22,
             color: '#060606',
+            lineHeight: 1.22,
           }}
         >
           Service
@@ -458,38 +458,27 @@ function ServiceManager() {
           <Box
             component="button"
             sx={{
-              width: '178px',
               height: '40px',
               padding: '10px 16px',
-              borderRadius: '12px',
-              backgroundColor: '#060606',
+              borderRadius: '8px',
+              backgroundColor: '#000',
               color: '#fff',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-start',
+              justifyContent: 'center',
+              gap: '8px',
               transition: 'background 0.2s',
               '&:hover': { backgroundColor: '#333' },
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '14px',
+              fontWeight: 'bold',
             }}
             onClick={() => setIsModalOpen(true)}
           >
             <AddIcon sx={{ width: 16, height: 16, color: '#fff' }} />
-            <Typography
-              className="Create-New-Service"
-              sx={{
-                width: '122px',
-                height: '20px',
-                margin: '0 0 0 8px',
-                fontFamily: 'Roboto',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                lineHeight: 1.43,
-                color: '#fff',
-              }}
-            >
-              Create New Service
-            </Typography>
+            Create New Service
           </Box>
         </Box>
       </HeaderContainer>
