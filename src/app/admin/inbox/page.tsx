@@ -126,13 +126,11 @@ const EmptyStateText = styled.div`
   font-weight: 500;
 `;
 
-type TagOption = 'all' | 'Cancelled' | 'Done' | 'Confirmed';
 type SortOption = 'newest' | 'oldest';
 
 export default function InboxPage() {
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [showDetailMobile, setShowDetailMobile] = useState(false);
-  const [tag, setTag] = useState<TagOption>('all');
   const [sort, setSort] = useState<SortOption>('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [allCallLogs, setAllCallLogs] = useState<ICallLog[]>([]);
@@ -149,7 +147,6 @@ export default function InboxPage() {
     {
       userId: user?._id ?? '',
       options: {
-        status: tag !== 'all' ? tag : undefined,
         sort,
         pageSize: 20,
         page: currentPage,
@@ -169,7 +166,7 @@ export default function InboxPage() {
   React.useEffect(() => {
     setCurrentPage(1);
     setAllCallLogs([]);
-  }, [tag, sort, user?._id]);
+  }, [sort, user?._id]);
 
   // Accumulate data when new page is loaded
   React.useEffect(() => {
@@ -223,12 +220,7 @@ export default function InboxPage() {
     return (
       <PageContainer>
         <MainContent>
-          <InboxSearchBar
-            tag={tag}
-            onTagChange={setTag}
-            sort={sort}
-            onSortChange={setSort}
-          />
+          <InboxSearchBar sort={sort} onSortChange={setSort} />
           <EmptyStateContainer>
             <EmptyStateContent>
               <EmptyStateImage
@@ -248,12 +240,7 @@ export default function InboxPage() {
       <MainContent
         style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
       >
-        <InboxSearchBar
-          tag={tag}
-          onTagChange={setTag}
-          sort={sort}
-          onSortChange={setSort}
-        />
+        <InboxSearchBar sort={sort} onSortChange={setSort} />
         <ContentContainer style={{ flex: 1, overflow: 'hidden' }}>
           {!isSmallScreen ? (
             <>
@@ -262,7 +249,6 @@ export default function InboxPage() {
                   <InboxList
                     selectedId={selectedId}
                     onSelect={handleSelect}
-                    tag={tag}
                     sort={sort}
                     allItems={allCallLogs}
                     hasNextPage={hasNextPage}
@@ -302,7 +288,6 @@ export default function InboxPage() {
                 <InboxList
                   selectedId={selectedId}
                   onSelect={handleSelect}
-                  tag={tag}
                   sort={sort}
                   allItems={allCallLogs}
                   hasNextPage={hasNextPage}

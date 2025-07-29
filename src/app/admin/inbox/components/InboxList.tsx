@@ -71,54 +71,9 @@ const CallerPhone = styled.div`
   flex: 1;
 `;
 
-const StatusChip = styled.div<{ status: string }>`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.8em;
-  font-weight: 500;
-  color: #060606;
-  background-color: ${props => {
-    switch (props.status) {
-      case 'Done':
-        return '#E8F5E8';
-      case 'Cancelled':
-        return '#FEE4E2';
-      case 'Confirmed':
-        return '#FEF0C7';
-      default:
-        return '#F7F8FA';
-    }
-  }};
-
-  &::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    margin-right: 6px;
-    background-color: ${props => {
-      switch (props.status) {
-        case 'Done':
-          return '#28A745';
-        case 'Cancelled':
-          return '#DC3545';
-        case 'Confirmed':
-          return '#FFC107';
-        default:
-          return '#757575';
-      }
-    }};
-  }
-`;
-
-const PhoneStatusRow = styled.div`
+const PhoneRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
   margin-top: 24px;
 `;
 
@@ -157,7 +112,6 @@ interface InboxListProps {
   selectedId?: string;
   onSelect?: (id: string) => void;
   searchTerm?: string;
-  tag?: 'all' | 'Cancelled' | 'Done' | 'Confirmed';
   sort?: 'newest' | 'oldest';
   allItems?: ICallLog[];
   hasNextPage?: boolean;
@@ -232,10 +186,9 @@ export default function InboxList({
               <CallerName>Loading...</CallerName>
               <CallTime>--:--</CallTime>
             </CallerInfo>
-            <PhoneStatusRow>
+            <PhoneRow>
               <CallerPhone>Loading...</CallerPhone>
-              <StatusChip status="loading">Loading...</StatusChip>
-            </PhoneStatusRow>
+            </PhoneRow>
           </ListItem>
         ))}
       </List>
@@ -265,22 +218,19 @@ export default function InboxList({
                     {highlightText(item.callerName ?? 'Unknown', searchTerm)}
                   </CallerName>
                   <CallTime>
-                    {item.createdAt
-                      ? new Date(item.createdAt).toLocaleString()
+                    {item.startAt
+                      ? new Date(item.startAt).toLocaleString()
                       : '--:--'}
                   </CallTime>
                 </CallerInfo>
-                <PhoneStatusRow>
+                <PhoneRow>
                   <CallerPhone>
                     {highlightText(
                       item.callerNumber ?? 'Unknown number',
                       searchTerm,
                     )}
                   </CallerPhone>
-                  <StatusChip status={item.status ?? 'Unknown'}>
-                    {item.status ?? 'Unknown'}
-                  </StatusChip>
-                </PhoneStatusRow>
+                </PhoneRow>
               </ListItem>
             </VirtualItem>
           );
@@ -293,10 +243,9 @@ export default function InboxList({
               <CallerName>Loading more...</CallerName>
               <CallTime>--:--</CallTime>
             </CallerInfo>
-            <PhoneStatusRow>
+            <PhoneRow>
               <CallerPhone>Loading...</CallerPhone>
-              <StatusChip status="loading">Loading...</StatusChip>
-            </PhoneStatusRow>
+            </PhoneRow>
           </ListItem>
         </LoadingContainer>
       )}

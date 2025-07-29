@@ -13,12 +13,9 @@ import {
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-type TagOption = 'all' | 'Cancelled' | 'Done' | 'Confirmed';
 type SortOption = 'newest' | 'oldest';
 
 interface InboxSearchBarProps {
-  tag: TagOption;
-  onTagChange: (value: TagOption) => void;
   sort: SortOption;
   onSortChange: (value: SortOption) => void;
 }
@@ -68,8 +65,6 @@ const FilterButton = styled.button`
 `;
 
 export default function InboxSearchBar({
-  tag,
-  onTagChange,
   sort,
   onSortChange,
 }: InboxSearchBarProps) {
@@ -86,22 +81,6 @@ export default function InboxSearchBar({
   return (
     <SearchBarContainer>
       <Title>Inbox</Title>
-      <HideOnMobile>
-        <FormControl size="small" sx={{ minWidth: 120, mr: 2 }}>
-          <Select
-            value={tag}
-            onChange={e => onTagChange(e.target.value as TagOption)}
-            displayEmpty
-            input={<OutlinedInput />}
-            sx={{ fontSize: 14 }}
-          >
-            <MenuItem value="all">All tags</MenuItem>
-            <MenuItem value="Done">Done</MenuItem>
-            <MenuItem value="Cancelled">Cancelled</MenuItem>
-            <MenuItem value="Confirmed">Confirmed</MenuItem>
-          </Select>
-        </FormControl>
-      </HideOnMobile>
       <HideOnMobile>
         <FormControl size="small" sx={{ minWidth: 120, mr: 2 }}>
           <Select

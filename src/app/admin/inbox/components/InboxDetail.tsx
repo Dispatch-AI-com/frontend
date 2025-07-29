@@ -1,5 +1,5 @@
 import PhoneIcon from '@mui/icons-material/Phone';
-import { Chip, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -68,40 +68,6 @@ const MainContent = styled.div`
   gap: 8px;
 `;
 
-const StatusChip = styled(Chip)<{ status: string }>`
-  height: 20px;
-  font-size: 13px;
-  margin-right: 8px;
-  background-color: ${({ status }) =>
-    status === 'Cancelled'
-      ? '#ffebeb'
-      : status === 'Done'
-        ? '#e7f8dc'
-        : '#fff0e6'} !important;
-  color: #060606 !important;
-  font-weight: 500;
-  .MuiChip-label {
-    color: #060606 !important;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    &::before {
-      content: '';
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      margin-right: 6px;
-      background-color: ${({ status }) =>
-        status === 'Cancelled'
-          ? '#c62828'
-          : status === 'Done'
-            ? '#2e7d32'
-            : '#f57c00'};
-    }
-  }
-`;
-
 const DateText = styled(Typography)`
   && {
     font-size: 15px;
@@ -156,10 +122,10 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
 
   // Date format: Apr 15, 2025 at 07:16 PM
   let formattedDate = '';
-  if (item.createdAt) {
+  if (item.startAt) {
     try {
       formattedDate = format(
-        new Date(item.createdAt),
+        new Date(item.startAt),
         "MMM dd, yyyy 'at' hh:mm a",
       );
     } catch {
@@ -200,11 +166,6 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
           <ColMain>
             <SummaryStatusRow>
               <DateText>{formattedDate}</DateText>
-              <StatusChip
-                label={item.status}
-                status={item.status}
-                size="small"
-              />
             </SummaryStatusRow>
           </ColMain>
         </ThreeColRow>
