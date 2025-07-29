@@ -6,7 +6,6 @@ import { skipToken } from '@reduxjs/toolkit/query';
 import { usePathname, useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
 
-import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import {
   useGetProgressQuery, // ← RTK-Query hook
 } from '@/features/onboarding/onboardingApi';
@@ -63,10 +62,5 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     );
   }
 
-  return (
-    <Box display="flex" boxSizing="border-box" overflow-x="auto">
-      <Sidebar />
-      <Box flex={1}>{children}</Box>
-    </Box>
-  );
+  return <>{children}</>;
 }

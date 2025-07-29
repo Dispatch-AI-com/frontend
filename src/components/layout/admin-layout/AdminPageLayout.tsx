@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { type ReactNode } from 'react';
 import styled from 'styled-components';
 
+import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import theme from '@/theme';
 
 /**
@@ -21,14 +22,15 @@ interface AdminPageLayoutProps {
   maxWidth?: string | number;
 }
 
-// Main page container with sidebar spacing
+// Main page container
 const PageContainer = styled(Box)`
   display: flex;
   min-height: 100vh;
   background: linear-gradient(to bottom, #effbf5, #fff 100%);
-  margin-left: 0;
+  flex: 1;
   position: relative;
   z-index: 1001;
+  margin-left: 0;
 
   /* Sidebar spacing - consistent across all admin pages */
   ${theme.breakpoints.up('sm')} {
@@ -165,21 +167,24 @@ export default function AdminPageLayout({
   const showHeader = Boolean(title ?? subtitle ?? headerActions);
 
   return (
-    <PageContainer>
-      <ContentWrapper $padding={padding} $background={background}>
-        {showHeader && (
-          <PageHeader $padding={padding}>
-            <HeaderContent>
-              {title && <PageTitle>{title}</PageTitle>}
-            </HeaderContent>
-            {headerActions && <HeaderActions>{headerActions}</HeaderActions>}
-          </PageHeader>
-        )}
-        <MainContent $padding={padding} $maxWidth={maxWidth}>
-          {children}
-        </MainContent>
-      </ContentWrapper>
-    </PageContainer>
+    <Box display="flex" boxSizing="border-box" overflow-x="auto">
+      <Sidebar />
+      <PageContainer>
+        <ContentWrapper $padding={padding} $background={background}>
+          {showHeader && (
+            <PageHeader $padding={padding}>
+              <HeaderContent>
+                {title && <PageTitle>{title}</PageTitle>}
+              </HeaderContent>
+              {headerActions && <HeaderActions>{headerActions}</HeaderActions>}
+            </PageHeader>
+          )}
+          <MainContent $padding={padding} $maxWidth={maxWidth}>
+            {children}
+          </MainContent>
+        </ContentWrapper>
+      </PageContainer>
+    </Box>
   );
 }
 
