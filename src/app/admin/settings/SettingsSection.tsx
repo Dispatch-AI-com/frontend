@@ -13,23 +13,23 @@ import theme from '@/theme';
 
 const SettingsContainer = styled(Box)({
   padding: theme.spacing(3, 4),
-  maxWidth: '1200px',
+  maxWidth: '580px',
   margin: '0 auto',
   [theme.breakpoints.down('lg')]: {
     padding: theme.spacing(2.5, 3.5),
-    maxWidth: '100%',
+    maxWidth: '580px',
   },
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(2, 3),
-    maxWidth: '100%',
+    maxWidth: '580px',
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1.5, 2.5),
-    maxWidth: '100%',
+    maxWidth: '580px',
   },
   [theme.breakpoints.down('xs')]: {
     padding: theme.spacing(1, 2),
-    maxWidth: '100%',
+    maxWidth: '580px',
   },
 });
 
