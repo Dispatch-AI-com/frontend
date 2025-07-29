@@ -92,12 +92,12 @@ const PageHeader = styled(Box)<{ $padding: 'normal' | 'compact' | 'none' }>`
   ${theme.breakpoints.down('sm')} {
     padding: ${props =>
       props.$padding === 'compact'
-        ? '0 16px'
+        ? '12px 16px'
         : props.$padding === 'none'
           ? '0'
-          : '0 20px'};
+          : '12px 20px'};
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     height: auto;
     min-height: 75px;
@@ -122,6 +122,7 @@ const PageTitle = styled(Typography)`
     ${theme.breakpoints.down('sm')} {
       font-size: 18px;
       line-height: 22px;
+      padding: 8px;
     }
   }
 `;
@@ -133,7 +134,7 @@ const HeaderActions = styled(Box)`
 
   ${theme.breakpoints.down('sm')} {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: center;
   }
 `;
 
