@@ -35,6 +35,7 @@ const StyledHeaderCell = styled(TableCell)(() => ({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   height: '56px',
+  fontFamily: 'Roboto, sans-serif',
 }));
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -44,6 +45,7 @@ const StyledTableCell = styled(TableCell)(() => ({
   color: '#1A1A1A',
   fontWeight: 500,
   backgroundColor: '#fff',
+  fontFamily: 'Roboto, sans-serif',
 }));
 
 const TableContentContainer = styled(Box)(() => ({
