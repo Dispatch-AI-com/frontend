@@ -74,9 +74,13 @@ interface VerificationCardProps {
   type: string;
   mobile?: string;
   email?: string;
+  mobileVerified?: boolean;
+  emailVerified?: boolean;
+  marketingPromotions?: boolean;
   showMarketingPromotions?: boolean;
   onVerifyMobile?: () => void;
   onVerifyEmail?: () => void;
+  onMarketingPromotionsChange?: (checked: boolean) => void;
   isLastCard?: boolean;
 }
 
@@ -84,24 +88,30 @@ export default function VerificationCard({
   type,
   mobile,
   email,
+  mobileVerified = false,
+  emailVerified = false,
+  marketingPromotions = false,
   showMarketingPromotions = false,
   onVerifyMobile,
   onVerifyEmail,
+  onMarketingPromotionsChange,
   isLastCard = false,
 }: VerificationCardProps) {
-  const [isMobileVerifiedState, setIsMobileVerifiedState] = useState(false);
-  const [isEmailVerifiedState, setIsEmailVerifiedState] = useState(false);
-
   const handleVerifyMobile = () => {
-    setIsMobileVerifiedState(true);
     if (onVerifyMobile) {
       onVerifyMobile();
     }
   };
   const handleVerifyEmail = () => {
-    setIsEmailVerifiedState(true);
     if (onVerifyEmail) {
       onVerifyEmail();
+    }
+  };
+  const handleMarketingPromotionsChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (onMarketingPromotionsChange) {
+      onMarketingPromotionsChange(event.target.checked);
     }
   };
 
@@ -123,7 +133,7 @@ export default function VerificationCard({
           </Typography>
           <ValueContainer>
             <Typography variant="body1">{mobile}</Typography>
-            {!isMobileVerifiedState && onVerifyMobile && (
+            {!mobileVerified && onVerifyMobile && (
               <VerifyButton
                 variant="contained"
                 size="small"
@@ -132,7 +142,7 @@ export default function VerificationCard({
                 Verify
               </VerifyButton>
             )}
-            {isMobileVerifiedState && (
+            {mobileVerified && (
               <VerificationBadge>
                 <ColorDot color={'#58c112'} /> Verified
               </VerificationBadge>
@@ -149,7 +159,7 @@ export default function VerificationCard({
           </Typography>
           <ValueContainer>
             <Typography variant="body1">{email}</Typography>
-            {!isEmailVerifiedState && onVerifyEmail && (
+            {!emailVerified && onVerifyEmail && (
               <VerifyButton
                 variant="contained"
                 size="small"
@@ -158,7 +168,7 @@ export default function VerificationCard({
                 Verify
               </VerifyButton>
             )}
-            {isEmailVerifiedState && (
+            {emailVerified && (
               <VerificationBadge>
                 <ColorDot color={'#58c112'} /> Verified
               </VerificationBadge>
@@ -171,7 +181,12 @@ export default function VerificationCard({
       {showMarketingPromotions && email && (
         <Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <StyledCheckbox style={{ margin: 0 }} size="small" />
+            <StyledCheckbox
+              style={{ margin: 0 }}
+              size="small"
+              checked={marketingPromotions}
+              onChange={handleMarketingPromotionsChange}
+            />
             <Typography variant="body2">
               Receive Marketing Promotions?
             </Typography>

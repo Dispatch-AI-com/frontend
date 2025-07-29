@@ -1,5 +1,4 @@
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 
@@ -9,8 +8,7 @@ interface SwitchProps {
 }
 
 const Switch: React.FC<SwitchProps> = ({ value, onChange }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery('(max-width:660px)');
 
   const mobileButtonSx = {
     width: 40,
