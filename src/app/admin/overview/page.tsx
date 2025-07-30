@@ -1,9 +1,11 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
+import { max } from 'lodash';
 import React from 'react';
 
 import ActivitySection from './components/ActivitySection';
+import RecentService from './components/RecentService';
 
 const styles = {
   pageContainer: {
@@ -28,6 +30,7 @@ const styles = {
     padding: '24px 24px 0 24px',
     borderRadius: '20px',
     overflowX: 'visible',
+    maxWidth: '1220px',
   },
 
   titleBar: {
@@ -72,6 +75,13 @@ export default function OverviewPage() {
 
           <Box sx={styles.contentContainer}>
             <ActivitySection />
+          </Box>
+
+          <Box sx={styles.SubTitleBar}>
+            <Typography sx={styles.SubTitleText}>Recent Services</Typography>
+          </Box>
+          <Box sx={styles.contentContainer} style={{ padding: '0 24px' }}>
+            <RecentService />
           </Box>
         </Box>
       </Box>
