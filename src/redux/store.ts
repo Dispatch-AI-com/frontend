@@ -16,6 +16,7 @@ import { calendarApi } from '@/features/calendar/calendarApi';
 import { calllogsApi } from '@/features/callog/calllogApi';
 import { companyApi } from '@/features/company/companyApi';
 import { onboardingApi } from '@/features/onboarding/onboardingApi';
+import { overviewApi } from '@/features/overview/overviewApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
 import { serviceApi } from '@/features/service/serviceApi';
 import { serviceBookingApi } from '@/features/service/serviceBookingApi';
@@ -51,6 +52,7 @@ export const store = configureStore({
       settingsApi.middleware,
       testApi.middleware,
       onboardingApi.middleware,
+      overviewApi.middleware,
       transcriptApi.middleware,
       transcriptChunksApi.middleware,
       subscriptionApi.middleware,
