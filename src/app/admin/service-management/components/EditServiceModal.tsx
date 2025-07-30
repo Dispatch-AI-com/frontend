@@ -233,6 +233,20 @@ export default function EditServiceModal({
     }
   }, [service, user?._id]);
 
+  // Reset form when modal opens for create mode
+  useEffect(() => {
+    if (open && !service) {
+      setFormData({
+        name: '',
+        description: '',
+        price: 0,
+        isAvailable: true,
+        userId: user?._id ?? '',
+      });
+      setPriceInput('0');
+    }
+  }, [open, service, user?._id]);
+
   const handleInputChange = (
     field: string,
     value: string | number | boolean,
