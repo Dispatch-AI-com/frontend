@@ -1,15 +1,16 @@
 'use client';
 
-import { Box, Typography, useMediaQuery } from '@mui/material';
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import React from 'react';
+
+import ActivitySection from './components/ActivitySection';
 
 const styles = {
   pageContainer: {
     display: 'flex',
     background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
     boxSizing: 'border-box',
-    margin: '0 0 0 240px',
+    marginLeft: { xs: 0, sm: '50px', md: '240px' },
   },
 
   mainContent: {
@@ -44,46 +45,34 @@ const styles = {
     color: '#060606',
     lineHeight: 1.22,
   },
+
+  SubTitleBar: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '24px 0 16px 24px',
+  },
+
+  SubTitleText: {
+    fontFamily: 'Roboto, sans-serif',
+    fontSize: 16,
+    fontWeight: 'bold',
+    lineHeight: 1.25,
+    color: '#060606',
+  },
 };
 
 export default function OverviewPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const status = searchParams.get('status'); // 'success' | 'failed' | null
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    if (status === 'success' || status === 'failed') {
-      setShowModal(true);
-    }
-  }, [status]);
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    const newUrl = window.location.pathname;
-    router.replace(newUrl);
-  };
-
   return (
     <>
       <Box sx={styles.pageContainer}>
         <Box sx={styles.mainContent}>
           <Box sx={styles.titleBar}>
-            <Typography sx={styles.titleText}>Billing</Typography>
+            <Typography sx={styles.titleText}>Overview</Typography>
           </Box>
-          <Box sx={styles.contentContainer}></Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '0 24px',
-            }}
-          >
-            <Typography sx={styles.titleText}>Invoice History</Typography>
+          <Box sx={styles.contentContainer}>
+            <ActivitySection />
           </Box>
-          <Box sx={styles.contentContainer}></Box>
         </Box>
       </Box>
     </>
