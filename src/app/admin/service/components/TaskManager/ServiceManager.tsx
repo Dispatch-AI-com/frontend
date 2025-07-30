@@ -85,28 +85,35 @@ export function Content({
   const [updateServiceBooking] = useUpdateServiceBookingMutation();
 
   // Convert bookings to services format
-  const bookingsAsServices: Service[] = bookings.map(booking => ({
-    _id: booking._id ?? '',
-    companyId: '',
-    name: booking.client?.name ?? 'Unknown Service',
-    description: booking.note ?? '',
-    price: 0,
-    notifications: {
-      preferNotificationType: 'email',
-      phoneNumber: booking.client?.phoneNumber ?? '',
-      email: '',
-    },
-    isAvailable: true,
-    status: booking.status ?? 'Confirmed',
-    dateTime: booking.bookingTime,
-    userId: '',
-    createdBy: { name: 'Test User', avatar: '' },
-    client: {
-      name: booking.client?.name ?? '',
-      phoneNumber: booking.client?.phoneNumber ?? '',
-      address: booking.client?.address ?? '',
-    },
-  }));
+  const bookingsAsServices: Service[] = bookings.map(booking => {
+    // Find the corresponding service name from serviceManagementServices
+    const correspondingService = serviceManagementServices.find(
+      service => service._id === booking.serviceId,
+    );
+
+    return {
+      _id: booking._id ?? '',
+      companyId: '',
+      name: correspondingService?.name ?? 'Unknown Service',
+      description: booking.note ?? '',
+      price: correspondingService?.price ?? 0,
+      notifications: {
+        preferNotificationType: 'email',
+        phoneNumber: booking.client?.phoneNumber ?? '',
+        email: '',
+      },
+      isAvailable: true,
+      status: booking.status ?? 'Confirmed',
+      dateTime: booking.bookingTime,
+      userId: '',
+      createdBy: { name: 'Test User', avatar: '' },
+      client: {
+        name: booking.client?.name ?? '',
+        phoneNumber: booking.client?.phoneNumber ?? '',
+        address: booking.client?.address ?? '',
+      },
+    };
+  });
 
   // Unique status dropdown
   const uniqueStatuses = [
