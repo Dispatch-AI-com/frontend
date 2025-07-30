@@ -372,19 +372,23 @@ const EditBookingModal: React.FC<Props> = ({
                     : JSON.stringify(selected);
                 }}
               >
-                {serviceManagementServices.length === 0 ? (
+                {serviceManagementServices.filter(
+                  service => service.isAvailable,
+                ).length === 0 ? (
                   <MenuItem disabled value="">
                     No services available for booking
                   </MenuItem>
                 ) : (
-                  serviceManagementServices.map(serviceOption => (
-                    <MenuItem
-                      key={serviceOption._id}
-                      value={serviceOption.name}
-                    >
-                      {serviceOption.name}
-                    </MenuItem>
-                  ))
+                  serviceManagementServices
+                    .filter(service => service.isAvailable)
+                    .map(serviceOption => (
+                      <MenuItem
+                        key={serviceOption._id}
+                        value={serviceOption.name}
+                      >
+                        {serviceOption.name}
+                      </MenuItem>
+                    ))
                 )}
               </StatusSelect>
             </FormControl>
