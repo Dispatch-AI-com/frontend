@@ -117,7 +117,19 @@ export function Content({
       status: booking.status ?? 'Confirmed',
       dateTime: booking.bookingTime,
       userId: '',
-      createdBy: { name: 'Test User', avatar: '' },
+      createdBy: {
+        name:
+          booking.userId === user?._id
+            ? (user?.name ??
+              (user?.firstName && user?.lastName
+                ? `${user.firstName} ${user.lastName}`.trim()
+                : (user?.firstName ??
+                  user?.lastName ??
+                  user?.email ??
+                  'Current User')))
+            : 'Unknown User',
+        avatar: '',
+      },
       client: {
         name: booking.client?.name ?? '',
         phoneNumber: booking.client?.phoneNumber ?? '',

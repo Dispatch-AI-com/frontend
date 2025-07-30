@@ -256,14 +256,22 @@ const BookingModal: React.FC<Props> = ({
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
   const userName =
-    user && (user.firstName ?? user.lastName)
+    user?.name ??
+    (user && (user.firstName ?? user.lastName)
       ? `${user.firstName ?? ''}${user.lastName ? ' ' + user.lastName : ''}`.trim()
-      : (user?.email ?? 'User');
+      : (user?.email ?? 'User'));
   const userInitials = user
-    ? (
-        (user.firstName?.[0] ?? '') + (user.lastName?.[0] ?? '')
-      ).toUpperCase() ||
-      (user.email?.[0]?.toUpperCase() ?? 'U')
+    ? user.name
+      ? user.name
+          .split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase()
+          .slice(0, 2)
+      : (
+          (user.firstName?.[0] ?? '') + (user.lastName?.[0] ?? '')
+        ).toUpperCase() ||
+        (user.email?.[0]?.toUpperCase() ?? 'U')
     : 'U';
 
   const isValid =
