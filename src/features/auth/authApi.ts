@@ -24,6 +24,45 @@ interface SignupResp {
   user: UserInfo;
 }
 
+interface LinkGoogleAccountDTO {
+  googleEmail: string;
+}
+
+interface LinkGoogleAccountResp {
+  success: boolean;
+  message: string;
+  googleAccountLink?: {
+    googleEmail: string;
+    calendarAccessGranted: boolean;
+  };
+}
+
+interface GoogleAuthURLResp {
+  authUrl: string;
+  state: string;
+}
+
+interface GoogleAuthCallbackDTO {
+  code: string;
+  state: string;
+}
+
+interface GoogleAuthCallbackResp {
+  success: boolean;
+  message: string;
+  accessToken?: string;
+  refreshToken?: string;
+  expiresIn?: number;
+  calendarAccessGranted: boolean;
+}
+
+// refresh google token
+interface RefreshGoogleTokenResp {
+  success: boolean;
+  accessToken?: string;
+  expiresIn?: number;
+}
+
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: axiosBaseQuery(),
@@ -64,6 +103,63 @@ export const authApi = createApi({
         dispatch(logout());
       },
     }),
+    // link google account
+    linkGoogleAccount: builder.mutation<
+      LinkGoogleAccountResp,
+      LinkGoogleAccountDTO
+    >({
+      query: body => ({
+        url: '/auth/link-google-account',
+        method: 'POST',
+        data: body,
+      }),
+    }),
+    // get google account link status
+    getGoogleAccountLink: builder.query<LinkGoogleAccountResp, void>({
+      query: () => ({
+        url: '/auth/google-account-link',
+        method: 'GET',
+      }),
+    }),
+    // get google oauth auth url
+    getGoogleAuthURL: builder.mutation<
+      GoogleAuthURLResp,
+      { redirectUri?: string }
+    >({
+      query: params => ({
+        url: '/auth/google/authorize',
+        method: 'POST',
+        data: params,
+      }),
+    }),
+    // google oauth callback
+    handleGoogleAuthCallback: builder.mutation<
+      GoogleAuthCallbackResp,
+      GoogleAuthCallbackDTO
+    >({
+      query: body => ({
+        url: '/auth/google/callback',
+        method: 'POST',
+        data: body,
+      }),
+    }),
+    // refresh google access token
+    refreshGoogleToken: builder.mutation<RefreshGoogleTokenResp, void>({
+      query: () => ({
+        url: '/auth/google/refresh-token',
+        method: 'POST',
+      }),
+    }),
+    // revoke google auth
+    revokeGoogleAuth: builder.mutation<
+      { success: boolean; message: string },
+      void
+    >({
+      query: () => ({
+        url: '/auth/google/revoke',
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -71,4 +167,10 @@ export const {
   useLoginUserMutation,
   useLogoutUserMutation,
   useSignupUserMutation,
+  useLinkGoogleAccountMutation,
+  useGetGoogleAccountLinkQuery,
+  useGetGoogleAuthURLMutation,
+  useHandleGoogleAuthCallbackMutation,
+  useRefreshGoogleTokenMutation,
+  useRevokeGoogleAuthMutation,
 } = authApi;

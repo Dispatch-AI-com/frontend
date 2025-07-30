@@ -1,7 +1,40 @@
-import type { CalendarEvent } from '@/features/calendar/calendarApi';
-import type { usePushCalendarEventMutation } from '@/features/calendar/calendarApi';
+import type { useRefreshGoogleTokenMutation } from '@/features/auth/authApi';
+import type {
+  CalendarEvent,
+  usePushCalendarEventMutation,
+} from '@/features/calendar/calendarApi';
+import { refreshGoogleTokenIfNeeded } from '@/utils/googleAuthUtils';
 
 export type EventType = 'booking' | 'service' | 'reminder' | 'followup';
+
+// Google Calendar集成状态
+export interface CalendarIntegrationStatus {
+  canUseGoogleCalendar: boolean;
+  isGmailAccount: boolean;
+  isGoogleLogin: boolean;
+  hasGoogleAccountLinked: boolean;
+  hasCalendarAccess: boolean;
+  reason?: string;
+  linkedGoogleEmail?: string;
+}
+
+// Google账户关联信息
+export interface GoogleAccountLink {
+  primaryEmail: string; // 用户的主要邮箱
+  googleEmail?: string; // 关联的Google邮箱
+  googleAccessToken?: string;
+  googleRefreshToken?: string;
+  tokenExpiresAt?: Date;
+  calendarAccessGranted: boolean;
+  lastSyncTime?: Date;
+}
+
+// 用户类型定义
+export interface User {
+  email?: string;
+  provider?: string;
+  googleAccountLink?: GoogleAccountLink;
+}
 
 export interface CalendarEventData {
   title: string;
@@ -23,6 +56,143 @@ export interface CalendarEventData {
   };
 }
 
+/**
+ * 检查用户是否可以使用Google Calendar集成
+ */
+export function checkCalendarIntegrationStatus(
+  user: User | null,
+): CalendarIntegrationStatus {
+  const userEmail = user?.email ?? '';
+  const provider = user?.provider;
+  const googleAccountLink = user?.googleAccountLink;
+
+  // 检查是否为Gmail账户
+  const isGmailAccount =
+    userEmail.includes('@gmail.com') || userEmail.includes('@googlemail.com');
+
+  // 检查是否为Google登录
+  const isGoogleLogin = provider === 'google';
+
+  // 检查是否有关联的Google账户
+  const hasGoogleAccountLinked = !!googleAccountLink?.googleEmail;
+
+  // 检查是否可以连接Google Calendar
+  const canUseGoogleCalendar =
+    isGmailAccount || isGoogleLogin || hasGoogleAccountLinked;
+
+  // 检查是否已有日历访问权限
+  const hasCalendarAccess =
+    (isGoogleLogin && isGmailAccount) ||
+    (hasGoogleAccountLinked && googleAccountLink?.calendarAccessGranted);
+
+  let reason: string | undefined;
+
+  if (!canUseGoogleCalendar) {
+    reason =
+      '需要Gmail账户、Google登录或关联Google账户才能使用Google Calendar集成';
+  } else if (!hasCalendarAccess) {
+    reason = '需要完成Google Calendar授权才能使用此功能';
+  }
+
+  return {
+    canUseGoogleCalendar,
+    isGmailAccount,
+    isGoogleLogin,
+    hasGoogleAccountLinked,
+    hasCalendarAccess,
+    reason,
+    linkedGoogleEmail: googleAccountLink?.googleEmail,
+  };
+}
+
+/**
+ * 获取用于日历推送的Google账户信息（包含自动刷新）
+ */
+export async function getGoogleAccountForCalendarWithRefresh(
+  user: User | null,
+  refreshGoogleToken: ReturnType<typeof useRefreshGoogleTokenMutation>[0],
+): Promise<{ email: string; accessToken?: string } | null> {
+  const userEmail = user?.email ?? '';
+  const provider = user?.provider;
+  const googleAccountLink = user?.googleAccountLink;
+
+  // 如果是Google登录的Gmail用户
+  if (
+    provider === 'google' &&
+    (userEmail.includes('@gmail.com') || userEmail.includes('@googlemail.com'))
+  ) {
+    return {
+      email: userEmail,
+      // 这里需要从JWT或session中获取access_token
+      accessToken: undefined, // 实际实现中需要获取
+    };
+  }
+
+  // 如果有关联的Google账户
+  if (
+    googleAccountLink?.googleEmail &&
+    googleAccountLink?.calendarAccessGranted
+  ) {
+    // 检查并刷新token
+    const currentTokenInfo = googleAccountLink.tokenExpiresAt
+      ? {
+          accessToken: googleAccountLink.googleAccessToken ?? '',
+          refreshToken: googleAccountLink.googleRefreshToken ?? '',
+          expiresAt: new Date(googleAccountLink.tokenExpiresAt),
+          tokenType: 'Bearer',
+        }
+      : undefined;
+
+    const refreshedToken = await refreshGoogleTokenIfNeeded(
+      refreshGoogleToken,
+      currentTokenInfo,
+    );
+
+    return {
+      email: googleAccountLink.googleEmail,
+      accessToken: refreshedToken ?? googleAccountLink.googleAccessToken,
+    };
+  }
+
+  return null;
+}
+
+/**
+ * 获取用于日历推送的Google账户信息（不包含刷新）
+ */
+export function getGoogleAccountForCalendar(
+  user: User | null,
+): { email: string; accessToken?: string } | null {
+  const userEmail = user?.email ?? '';
+  const provider = user?.provider;
+  const googleAccountLink = user?.googleAccountLink;
+
+  // if the user is a Google login Gmail user
+  if (
+    provider === 'google' &&
+    (userEmail.includes('@gmail.com') || userEmail.includes('@googlemail.com'))
+  ) {
+    return {
+      email: userEmail,
+      // here we need to get the access_token from JWT or session
+      accessToken: undefined, // actually we need to get it
+    };
+  }
+
+  // if there is a linked Google account
+  if (
+    googleAccountLink?.googleEmail &&
+    googleAccountLink?.calendarAccessGranted
+  ) {
+    return {
+      email: googleAccountLink.googleEmail,
+      accessToken: googleAccountLink.googleAccessToken,
+    };
+  }
+
+  return null;
+}
+
 export function createCalendarEventData(
   data: CalendarEventData,
 ): CalendarEvent {
@@ -41,14 +211,14 @@ export function createCalendarEventData(
   let eventDescription = description ?? '';
 
   if (eventType === 'booking' && clientInfo) {
-    eventDescription += `\n客户信息:\n姓名: ${clientInfo.name}\n电话: ${clientInfo.phone}`;
+    eventDescription += `\nClient info:\nName: ${clientInfo.name}\nPhone: ${clientInfo.phone}`;
     if (clientInfo.email) {
-      eventDescription += `\n邮箱: ${clientInfo.email}`;
+      eventDescription += `\nEmail: ${clientInfo.email}`;
     }
   }
 
   if (serviceInfo) {
-    eventDescription += `\n服务信息:\n服务: ${serviceInfo.name}\n价格: $${serviceInfo.price}\n时长: ${serviceInfo.duration}分钟`;
+    eventDescription += `\nService info:\nService: ${serviceInfo.name}\nPrice: $${serviceInfo.price}\nDuration: ${serviceInfo.duration} minutes`;
   }
 
   return {
@@ -56,7 +226,7 @@ export function createCalendarEventData(
     start: start.toISOString(),
     end: end.toISOString(),
     description: eventDescription.trim(),
-    location: location ?? '待定',
+    location: location ?? 'TBD',
     organizer: organizer ?? '',
   };
 }
@@ -66,6 +236,8 @@ export function createCalendarEventData(
  */
 export async function pushBookingEvent(
   pushCalendarEvent: ReturnType<typeof usePushCalendarEventMutation>[0],
+  refreshGoogleToken: ReturnType<typeof useRefreshGoogleTokenMutation>[0],
+  user: User | null,
   bookingData: {
     clientName: string;
     clientPhone: string;
@@ -95,11 +267,11 @@ export async function pushBookingEvent(
   const endTime = new Date(bookingTime.getTime() + serviceDuration * 60000);
 
   const eventData = createCalendarEventData({
-    title: `服务预订: ${clientName}`,
+    title: `Service booking: ${clientName}`,
     start: bookingTime,
     end: endTime,
     description: notes ?? '',
-    location: location ?? '待定',
+    location: location ?? 'TBD',
     organizer: organizer ?? '',
     eventType: 'booking',
     clientInfo: {
@@ -115,6 +287,16 @@ export async function pushBookingEvent(
   });
 
   try {
+    // get and refresh Google account info
+    const googleAccount = await getGoogleAccountForCalendarWithRefresh(
+      user,
+      refreshGoogleToken,
+    );
+
+    if (!googleAccount?.accessToken) {
+      return { success: false, error: 'Cannot get valid Google access token' };
+    }
+
     const result = await pushCalendarEvent(eventData).unwrap();
     return { success: true, data: result };
   } catch (error) {
@@ -127,6 +309,8 @@ export async function pushBookingEvent(
  */
 export async function pushServiceEvent(
   pushCalendarEvent: ReturnType<typeof usePushCalendarEventMutation>[0],
+  refreshGoogleToken: ReturnType<typeof useRefreshGoogleTokenMutation>[0],
+  user: User | null,
   serviceData: {
     serviceName: string;
     serviceDescription: string;
@@ -150,11 +334,11 @@ export async function pushServiceEvent(
   const endTime = new Date(serviceTime.getTime() + serviceDuration * 60000);
 
   const eventData = createCalendarEventData({
-    title: `服务任务: ${serviceName}`,
+    title: `Service task: ${serviceName}`,
     start: serviceTime,
     end: endTime,
     description: serviceDescription,
-    location: location ?? '待定',
+    location: location ?? 'TBD',
     organizer: organizer ?? '',
     eventType: 'service',
     serviceInfo: {
@@ -165,6 +349,16 @@ export async function pushServiceEvent(
   });
 
   try {
+    // get and refresh Google account info
+    const googleAccount = await getGoogleAccountForCalendarWithRefresh(
+      user,
+      refreshGoogleToken,
+    );
+
+    if (!googleAccount?.accessToken) {
+      return { success: false, error: 'Cannot get valid Google access token' };
+    }
+
     const result = await pushCalendarEvent(eventData).unwrap();
     return { success: true, data: result };
   } catch (error) {
@@ -174,6 +368,8 @@ export async function pushServiceEvent(
 
 export async function pushReminderEvent(
   pushCalendarEvent: ReturnType<typeof usePushCalendarEventMutation>[0],
+  refreshGoogleToken: ReturnType<typeof useRefreshGoogleTokenMutation>[0],
+  user: User | null,
   reminderData: {
     title: string;
     description: string;
@@ -195,16 +391,26 @@ export async function pushReminderEvent(
   const endTime = new Date(reminderTime.getTime() + duration * 60000);
 
   const eventData = createCalendarEventData({
-    title: `提醒: ${title}`,
+    title: `Reminder: ${title}`,
     start: reminderTime,
     end: endTime,
     description,
-    location: location ?? '待定',
+    location: location ?? 'TBD',
     organizer: organizer ?? '',
     eventType: 'reminder',
   });
 
   try {
+    // get and refresh Google account info
+    const googleAccount = await getGoogleAccountForCalendarWithRefresh(
+      user,
+      refreshGoogleToken,
+    );
+
+    if (!googleAccount?.accessToken) {
+      return { success: false, error: 'Cannot get valid Google access token' };
+    }
+
     const result = await pushCalendarEvent(eventData).unwrap();
     return { success: true, data: result };
   } catch (error) {
@@ -214,6 +420,8 @@ export async function pushReminderEvent(
 
 export async function pushFollowupEvent(
   pushCalendarEvent: ReturnType<typeof usePushCalendarEventMutation>[0],
+  refreshGoogleToken: ReturnType<typeof useRefreshGoogleTokenMutation>[0],
+  user: User | null,
   followupData: {
     clientName: string;
     clientPhone: string;
@@ -237,11 +445,11 @@ export async function pushFollowupEvent(
   const endTime = new Date(followupTime.getTime() + duration * 60000);
 
   const eventData = createCalendarEventData({
-    title: `跟进: ${clientName}`,
+    title: `Follow up: ${clientName}`,
     start: followupTime,
     end: endTime,
-    description: `跟进原因: ${reason}\n客户电话: ${clientPhone}`,
-    location: location ?? '待定',
+    description: `Follow up reason: ${reason}\nClient phone: ${clientPhone}`,
+    location: location ?? 'TBD',
     organizer: organizer ?? '',
     eventType: 'followup',
     clientInfo: {
@@ -251,6 +459,16 @@ export async function pushFollowupEvent(
   });
 
   try {
+    // get and refresh Google account info
+    const googleAccount = await getGoogleAccountForCalendarWithRefresh(
+      user,
+      refreshGoogleToken,
+    );
+
+    if (!googleAccount?.accessToken) {
+      return { success: false, error: 'Cannot get valid Google access token' };
+    }
+
     const result = await pushCalendarEvent(eventData).unwrap();
     return { success: true, data: result };
   } catch (error) {
