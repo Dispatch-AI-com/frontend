@@ -68,23 +68,14 @@ const MainContent = styled.div`
   gap: 8px;
 `;
 
-const SummaryText = styled(Typography)`
-  && {
-    font-size: 15px;
-    font-weight: 700;
-    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-    color: #222;
-  }
-`;
-
 const StatusChip = styled(Chip)<{ status: string }>`
   height: 20px;
   font-size: 13px;
   margin-right: 8px;
   background-color: ${({ status }) =>
-    status === 'Missed'
+    status === 'Cancelled'
       ? '#ffebeb'
-      : status === 'Completed'
+      : status === 'Done'
         ? '#e7f8dc'
         : '#fff0e6'} !important;
   color: #060606 !important;
@@ -102,9 +93,9 @@ const StatusChip = styled(Chip)<{ status: string }>`
       border-radius: 50%;
       margin-right: 6px;
       background-color: ${({ status }) =>
-        status === 'Missed'
+        status === 'Cancelled'
           ? '#c62828'
-          : status === 'Completed'
+          : status === 'Done'
             ? '#2e7d32'
             : '#f57c00'};
     }
@@ -208,14 +199,13 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
           </ColIcon>
           <ColMain>
             <SummaryStatusRow>
-              <SummaryText>{item.summary}</SummaryText>
+              <DateText>{formattedDate}</DateText>
               <StatusChip
                 label={item.status}
                 status={item.status}
                 size="small"
               />
             </SummaryStatusRow>
-            <DateText>{formattedDate}</DateText>
           </ColMain>
         </ThreeColRow>
       </MainContent>

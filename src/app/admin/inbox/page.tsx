@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import InboxDetail from '@/app/admin/inbox/components/InboxDetail';
 import InboxList from '@/app/admin/inbox/components/InboxList';
 import InboxSearchBar from '@/app/admin/inbox/components/InboxSearchBar';
-import Sidebar from '@/components/layout/dashboard-layout/Sidebar';
 import { useGetCallLogsQuery } from '@/features/callog/calllogApi';
 import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
@@ -15,16 +14,17 @@ import type { ICallLog } from '@/types/calllog.d';
 
 const PageContainer = styled.div`
   display: flex;
-  padding-left: 240px;
   height: 100vh;
   overflow: hidden;
+  background-color: #f8faf7;
+  margin-left: 0;
 
-  ${theme.breakpoints.down('md')} {
-    padding-left: 80px;
+  ${theme.breakpoints.up('sm')} {
+    margin-left: 50px;
   }
 
-  ${theme.breakpoints.down('sm')} {
-    padding-left: 0;
+  ${theme.breakpoints.up('md')} {
+    margin-left: 240px;
   }
 `;
 
@@ -32,7 +32,6 @@ const MainContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #f8faf7;
   height: 100vh;
   overflow: hidden;
 `;
@@ -127,7 +126,7 @@ const EmptyStateText = styled.div`
   font-weight: 500;
 `;
 
-type TagOption = 'all' | 'Missed' | 'Completed' | 'Follow-up';
+type TagOption = 'all' | 'Cancelled' | 'Done' | 'Confirmed';
 type SortOption = 'newest' | 'oldest';
 
 export default function InboxPage() {
@@ -214,7 +213,6 @@ export default function InboxPage() {
   if (isPending) {
     return (
       <PageContainer>
-        <Sidebar />
         <MainContent>
           <LoadingSpinner>Loading...</LoadingSpinner>
         </MainContent>
@@ -224,7 +222,6 @@ export default function InboxPage() {
   if (!allCallLogs.length) {
     return (
       <PageContainer>
-        <Sidebar />
         <MainContent>
           <InboxSearchBar
             tag={tag}
@@ -248,7 +245,6 @@ export default function InboxPage() {
 
   return (
     <PageContainer>
-      <Sidebar />
       <MainContent
         style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
       >

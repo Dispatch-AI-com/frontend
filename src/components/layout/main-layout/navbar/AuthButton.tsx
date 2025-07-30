@@ -8,38 +8,48 @@ interface AuthButtonProps {
   variant: 'login' | 'signup';
   isMobile?: boolean;
   onClick?: () => void;
-  themeVariant?: 'light' | 'dark';
+  themeVariant?: 'light' | 'dark' | 'green';
 }
 
 const BaseAuthButton = styled(CommonButton, {
   shouldForwardProp: prop =>
     !['isMobile', 'themeVariant'].includes(prop as string),
-})<{ isMobile?: boolean; themeVariant?: 'light' | 'dark' }>(({ isMobile }) => ({
-  ...(isMobile
-    ? { fontSize: 20, fontWeight: 'bold', padding: '12px 24px' }
-    : {}),
-}));
+})<{ isMobile?: boolean; themeVariant?: 'light' | 'dark' | 'green' }>(
+  ({ isMobile }) => ({
+    ...(isMobile
+      ? { fontSize: 20, fontWeight: 'bold', padding: '12px 24px' }
+      : {}),
+  }),
+);
 
 const LoginButton = styled(BaseAuthButton)(
   ({ theme, themeVariant = 'light' }) => ({
     backgroundColor:
-      themeVariant === 'light' ? theme.palette.background.default : '#060606',
-    color: themeVariant === 'light' ? theme.palette.text.primary : '#ffffff',
+      themeVariant === 'light'
+        ? theme.palette.background.default
+        : themeVariant === 'dark'
+          ? '#060606'
+          : '#f8fff3',
+    color: themeVariant === 'dark' ? '#ffffff' : theme.palette.text.primary,
     boxShadow: 'none',
     border: 'none',
     '&:hover': {
       backgroundColor:
-        themeVariant === 'light' ? theme.palette.background.paper : '#060606',
+        themeVariant === 'light'
+          ? theme.palette.background.paper
+          : themeVariant === 'dark'
+            ? '#060606'
+            : '#f8fff3',
     },
   }),
 );
 
 const SignupButton = styled(BaseAuthButton)(({ themeVariant = 'light' }) => ({
   whiteSpace: 'nowrap',
-  backgroundColor: themeVariant === 'light' ? undefined : '#ffffff',
-  color: themeVariant === 'light' ? undefined : '#060606',
+  backgroundColor: themeVariant === 'dark' ? '#ffffff' : undefined,
+  color: themeVariant === 'dark' ? '#060606' : undefined,
   '&:hover': {
-    backgroundColor: themeVariant === 'light' ? undefined : '#ffffff',
+    backgroundColor: themeVariant === 'dark' ? '#ffffff' : undefined,
   },
 }));
 

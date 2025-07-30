@@ -35,14 +35,11 @@ export default function OnboardingChat() {
   const router = useRouter();
   const user = useAppSelector(state => state.auth.user);
   const userId = user?._id;
-  console.log(userId);
 
   /* progress = currentStep + answers + status, refetch when saveAnswer | complete */
-  const {
-    data: progress,
-    isFetching,
-    refetch,
-  } = useGetProgressQuery(userId ?? skipToken);
+  const { data: progress, isFetching } = useGetProgressQuery(
+    userId ?? skipToken,
+  );
 
   const [saveAnswer] = useSaveAnswerMutation();
   const [completeFlow] = useCompleteMutation();
@@ -132,7 +129,7 @@ export default function OnboardingChat() {
           router.push('/admin/overview');
         }, 2000);
       }
-    } catch (err) {
+    } catch {
       addAIMessage('Server error, please try again later.');
     } finally {
       setUserInput('');

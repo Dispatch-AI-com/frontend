@@ -1,4 +1,4 @@
-export type CallLogStatus = 'Missed' | 'Completed' | 'Follow-up';
+export type CallLogStatus = 'Cancelled' | 'Done' | 'Confirmed';
 
 export interface ICallLog {
   _id?: string;
