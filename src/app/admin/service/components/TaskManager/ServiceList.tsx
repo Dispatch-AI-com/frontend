@@ -54,12 +54,15 @@ const TableContentContainer = styled(Box)(() => ({
   minHeight: 0,
   overflowX: 'auto',
   minWidth: '700px',
+  borderRadius: '16px',
+  border: '1px solid #E0E0E0',
+  backgroundColor: '#fff',
 }));
 
 const ScrollableTableContainer = styled(TableContainer)(() => ({
   flex: 1,
   border: 'none',
-  borderRadius: '0',
+  borderRadius: '16px',
   overflow: 'auto',
   minHeight: 0,
   boxShadow: 'none',
@@ -128,11 +131,22 @@ const FixedHeaderTable = styled(Table)(() => ({
 
 const TableHeaderContainer = styled(Box)({
   flexShrink: 0,
+  borderTopLeftRadius: '16px',
+  borderTopRightRadius: '16px',
+  overflow: 'hidden',
 });
 
 const StyledTableRow = styled(TableRow)(() => ({
   '&:hover': {
     backgroundColor: '#F0F2F5',
+  },
+  '&:first-of-type': {
+    borderTopLeftRadius: '16px',
+    borderTopRightRadius: '16px',
+  },
+  '&:last-of-type': {
+    borderBottomLeftRadius: '16px',
+    borderBottomRightRadius: '16px',
   },
 }));
 

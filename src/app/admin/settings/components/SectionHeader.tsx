@@ -1,8 +1,11 @@
 'use client';
 
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Image from 'next/image';
 import React from 'react';
+
+import theme from '@/theme';
 
 interface SectionHeaderProps {
   title: string;
@@ -10,18 +13,29 @@ interface SectionHeaderProps {
   showEditIcon?: boolean;
 }
 
+const HeaderContainer = styled(Box)({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: theme.spacing(2),
+  padding: theme.spacing(0, 1),
+  [theme.breakpoints.down('md')]: {
+    marginBottom: theme.spacing(1.5),
+    padding: theme.spacing(0, 0.5),
+  },
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(1),
+    padding: theme.spacing(0),
+  },
+});
+
 const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   onEdit,
   showEditIcon = true,
 }) => {
   return (
-    <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-      mb={2}
-    >
+    <HeaderContainer>
       <Typography variant="h3">{title}</Typography>
 
       {showEditIcon && onEdit && (
@@ -40,7 +54,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
           </IconButton>
         </Tooltip>
       )}
-    </Box>
+    </HeaderContainer>
   );
 };
 

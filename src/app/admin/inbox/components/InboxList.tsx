@@ -1,5 +1,5 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import type { ICallLog } from '@/types/calllog.d';
@@ -13,18 +13,14 @@ const List = styled.div`
 `;
 
 const ListItem = styled.div<{ selected?: boolean }>`
-  padding: 16px;
+  padding: 0;
   border-bottom: 1px solid #eee;
   cursor: pointer;
   background-color: ${props => (props.selected ? '#fafafa' : 'transparent')};
   transition: background-color 0.2s;
   height: 100px;
-  width: 324px;
+  width: 100%;
   box-sizing: border-box;
-
-  @media (max-width: 600px) {
-    width: 100%;
-  }
 
   &:hover {
     background-color: ${props => (props.selected ? '#fafafa' : '#f5f5f5')};
@@ -36,6 +32,7 @@ const CallerInfo = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  padding: 16px 16px 0 16px;
 `;
 
 const CallerName = styled.div`
@@ -71,55 +68,11 @@ const CallerPhone = styled.div`
   flex: 1;
 `;
 
-const StatusChip = styled.div<{ status: string }>`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.8em;
-  font-weight: 500;
-  color: #060606;
-  background-color: ${props => {
-    switch (props.status) {
-      case 'Done':
-        return '#E8F5E8';
-      case 'Cancelled':
-        return '#FEE4E2';
-      case 'Confirmed':
-        return '#FEF0C7';
-      default:
-        return '#F7F8FA';
-    }
-  }};
-
-  &::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    margin-right: 6px;
-    background-color: ${props => {
-      switch (props.status) {
-        case 'Done':
-          return '#28A745';
-        case 'Cancelled':
-          return '#DC3545';
-        case 'Confirmed':
-          return '#FFC107';
-        default:
-          return '#757575';
-      }
-    }};
-  }
-`;
-
-const PhoneStatusRow = styled.div`
+const PhoneRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
   margin-top: 24px;
+  padding: 0 16px 16px 16px;
 `;
 
 const HighlightedText = styled.span`
@@ -131,6 +84,8 @@ const HighlightedText = styled.span`
 const VirtualContainer = styled.div`
   width: 100%;
   position: relative;
+  flex: 1;
+  min-height: 0;
 `;
 
 const VirtualItem = styled.div`
@@ -151,13 +106,16 @@ const EndMessage = styled.div`
   color: #666;
   font-size: 14px;
   font-style: italic;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  margin-top: auto;
+  flex-shrink: 0;
 `;
 
 interface InboxListProps {
   selectedId?: string;
   onSelect?: (id: string) => void;
   searchTerm?: string;
-  tag?: 'all' | 'Cancelled' | 'Done' | 'Confirmed';
   sort?: 'newest' | 'oldest';
   allItems?: ICallLog[];
   hasNextPage?: boolean;
@@ -193,14 +151,15 @@ export default function InboxList({
   isLoading = false,
 }: InboxListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   const rowVirtualizer = useVirtualizer({
     count: allItems.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => ITEM_HEIGHT,
     overscan: 5,
-    // Maintain scroll position when new items are added
-    getItemKey: index => allItems[index]?._id ?? index,
+    // Use index as key to ensure uniqueness
+    getItemKey: index => index,
   });
 
   const handleScroll = useCallback(() => {
@@ -208,6 +167,10 @@ export default function InboxList({
 
     const { scrollTop, scrollHeight, clientHeight } = parentRef.current;
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+    // Check if we're at the bottom (within 10px)
+    const atBottom = distanceFromBottom <= 10;
+    setIsAtBottom(atBottom);
 
     // Trigger next page when within 200px of bottom
     if (distanceFromBottom <= 200 && hasNextPage && !isFetchingNextPage) {
@@ -232,10 +195,9 @@ export default function InboxList({
               <CallerName>Loading...</CallerName>
               <CallTime>--:--</CallTime>
             </CallerInfo>
-            <PhoneStatusRow>
+            <PhoneRow>
               <CallerPhone>Loading...</CallerPhone>
-              <StatusChip status="loading">Loading...</StatusChip>
-            </PhoneStatusRow>
+            </PhoneRow>
           </ListItem>
         ))}
       </List>
@@ -253,7 +215,7 @@ export default function InboxList({
 
           return (
             <VirtualItem
-              key={item._id}
+              key={virtualRow.index}
               style={{ transform: `translateY(${virtualRow.start}px)` }}
             >
               <ListItem
@@ -265,22 +227,19 @@ export default function InboxList({
                     {highlightText(item.callerName ?? 'Unknown', searchTerm)}
                   </CallerName>
                   <CallTime>
-                    {item.createdAt
-                      ? new Date(item.createdAt).toLocaleString()
+                    {item.startAt
+                      ? new Date(item.startAt).toLocaleString()
                       : '--:--'}
                   </CallTime>
                 </CallerInfo>
-                <PhoneStatusRow>
+                <PhoneRow>
                   <CallerPhone>
                     {highlightText(
                       item.callerNumber ?? 'Unknown number',
                       searchTerm,
                     )}
                   </CallerPhone>
-                  <StatusChip status={item.status ?? 'Unknown'}>
-                    {item.status ?? 'Unknown'}
-                  </StatusChip>
-                </PhoneStatusRow>
+                </PhoneRow>
               </ListItem>
             </VirtualItem>
           );
@@ -293,14 +252,13 @@ export default function InboxList({
               <CallerName>Loading more...</CallerName>
               <CallTime>--:--</CallTime>
             </CallerInfo>
-            <PhoneStatusRow>
+            <PhoneRow>
               <CallerPhone>Loading...</CallerPhone>
-              <StatusChip status="loading">Loading...</StatusChip>
-            </PhoneStatusRow>
+            </PhoneRow>
           </ListItem>
         </LoadingContainer>
       )}
-      {!hasNextPage && allItems.length > 0 && (
+      {!hasNextPage && allItems.length > 0 && isAtBottom && (
         <EndMessage>
           No more call logs to load • Total: {allItems.length} items
         </EndMessage>

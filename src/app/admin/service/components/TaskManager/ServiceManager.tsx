@@ -1,23 +1,11 @@
 // ServiceManager.tsx
 'use client';
 
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SearchIcon from '@mui/icons-material/Search';
-import {
-  Box,
-  Button,
-  Chip,
-  InputBase,
-  Pagination,
-  styled,
-  Typography,
-} from '@mui/material';
+import { Box, Chip, Pagination, styled } from '@mui/material';
+import React from 'react';
 import { useState } from 'react';
 
 import type { Service, TaskStatus } from '@/features/service/serviceApi';
-import type { ServiceBooking } from '@/features/service/serviceBookingApi';
 import {
   useGetBookingsQuery,
   useUpdateServiceBookingMutation,
@@ -33,379 +21,99 @@ import ServiceModal from './ServiceModal';
 
 const TASKS_PER_PAGE = 10;
 
-const HeaderContainer = styled(Box)(({ theme }) => ({
+const ActiveFiltersContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
-  height: '56px',
-  marginBottom: '15px',
-  paddingTop: '0px',
-  paddingBottom: '0px',
-  '@media (min-width: 1920px)': {
-    height: '60px',
-    marginBottom: '16px',
-    paddingTop: '0px',
-    paddingBottom: '0px',
-  },
-  '@media (min-width: 1600px) and (max-width: 1919px)': {
-    height: '58px',
-    marginBottom: '15px',
-    paddingTop: '0px',
-    paddingBottom: '0px',
-  },
-  '@media (min-width: 1200px) and (max-width: 1599px)': {
-    height: '56px',
-    marginBottom: '15px',
-    paddingTop: '0px',
-    paddingBottom: '0px',
-  },
-  [theme.breakpoints.between('md', 'lg')]: {
-    height: '56px',
-    marginBottom: '15px',
-    paddingTop: '0px',
-    paddingBottom: '0px',
-  },
-  [theme.breakpoints.down('md')]: {
-    height: '56px',
-    marginBottom: '15px',
-    paddingTop: '0px',
-    paddingBottom: '0px',
-  },
-  [theme.breakpoints.down('sm')]: {
-    height: '56px',
-    marginBottom: '15px',
-    paddingTop: '0px',
-    paddingBottom: '0px',
-  },
-}));
-
-const SearchWrapper = styled(Box)({
-  width: '232px',
-  height: '40px',
-  margin: '0 12px 0 0',
-  padding: '12px 144px 12px 16px',
-  borderRadius: '12px',
-  backgroundColor: '#fafafa',
-  display: 'flex',
-  alignItems: 'center',
-  position: 'relative',
-});
-
-const StyledInput = styled(InputBase)(() => ({
-  flex: 1,
-  fontSize: '14px',
-}));
-
-const FilterButton = styled(Button)({
-  width: '40px',
-  height: '40px',
-  margin: '0 12px 0 0',
-  padding: '12px',
-  borderRadius: '12px',
-  border: 'solid 1px #d5d5d5',
-  backgroundColor: '#fff',
-  minWidth: '40px',
-  boxSizing: 'border-box',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-const Divider = styled(Box)(({ theme }) => ({
-  width: 'calc(100% + 48px)',
-  height: '1px',
-  backgroundColor: '#eaeaea',
-  flexShrink: 0,
-  margin: '15px -24px 24px -24px',
-  '@media (min-width: 1920px)': {
-    width: 'calc(100% + 64px)',
-    margin: '16px -32px 24px -32px',
-  },
-  '@media (min-width: 1600px) and (max-width: 1919px)': {
-    width: 'calc(100% + 56px)',
-    margin: '15px -28px 24px -28px',
-  },
-  '@media (min-width: 1200px) and (max-width: 1599px)': {
-    width: 'calc(100% + 48px)',
-    margin: '15px -24px 24px -24px',
-  },
-  [theme.breakpoints.between('md', 'lg')]: {
-    width: 'calc(100% + 40px)',
-    margin: '15px -20px 24px -20px',
-  },
-  [theme.breakpoints.down('md')]: {
-    width: 'calc(100% + 36px)',
-    margin: '15px -18px 24px -18px',
-  },
-  [theme.breakpoints.down('sm')]: {
-    width: 'calc(100% + 24px)',
-    margin: '15px -12px 24px -12px',
-  },
-}));
-
-const ActiveFiltersContainer = styled(Box)(() => ({
-  display: 'flex',
-  flexWrap: 'wrap',
   gap: '8px',
-  marginBottom: '12px',
-  width: '100%',
-}));
+  marginBottom: '16px',
+  flexWrap: 'wrap',
+});
 
-// Status mapping table
-const statusMap: Record<string, string> = {
-  Done: 'Done',
-  Cancelled: 'Cancelled',
-  Confirmed: 'Confirmed',
-};
-
-const Container = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '884px',
-  margin: '0',
-  backgroundColor: 'transparent',
-  position: 'relative',
-  boxShadow: 'none',
-  border: 'none',
+const Container = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
-  padding: '24px',
-  '@media (min-width: 1920px)': {
-    padding: '28px 32px',
-  },
-  '@media (min-width: 1600px) and (max-width: 1919px)': {
-    padding: '26px 28px',
-  },
-  '@media (min-width: 1200px) and (max-width: 1599px)': {
-    padding: '24px',
-  },
-  [theme.breakpoints.between('md', 'lg')]: {
-    height: 'auto',
-    minHeight: '884px',
-    padding: '20px',
-    borderRadius: '20px',
-  },
-  [theme.breakpoints.down('md')]: {
-    padding: '18px',
-    borderRadius: '20px',
-  },
-  [theme.breakpoints.down('sm')]: {
-    margin: '0',
-    borderRadius: '12px',
-  },
-}));
+  height: '100%',
+  padding: '8px',
+  borderRadius: '16px',
+});
 
-function ServiceManager() {
-  const userId = useAppSelector(state => state.auth.user?._id);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const PaginationContainer = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '24px',
+});
+
+// Content component
+export function Content({
+  search,
+  filterAnchor,
+  onFilterClose,
+  onCreateService,
+  isCreateServiceModalOpen,
+  onCloseCreateServiceModal,
+}: {
+  search: string;
+  filterAnchor: HTMLElement | null;
+  onFilterClose: () => void;
+  onCreateService: () => void;
+  isCreateServiceModalOpen: boolean;
+  onCloseCreateServiceModal: () => void;
+}): React.JSX.Element {
+  const [currentPage, setCurrentPage] = useState(1);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [deletingServiceId, setDeletingServiceId] = useState<string | null>(
     null,
   );
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [creatorFilter, setCreatorFilter] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
-  const [updateServiceBooking] = useUpdateServiceBookingMutation();
-  const [dateFrom, setDateFrom] = useState<string>('');
-  const [dateTo, setDateTo] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<TaskStatus | null>(null);
+  const [creatorFilter, setCreatorFilter] = useState<string | null>(null);
+  const [dateFrom, setDateFrom] = useState<string | null>(null);
+  const [dateTo, setDateTo] = useState<string | null>(null);
 
-  // Get booking list
-  const { data: bookings = [], refetch } = useGetBookingsQuery({ userId });
+  const user = useAppSelector(state => state.auth.user);
+  const userId = user?._id;
 
-  // Get service-management services list
+  const { data: bookings = [] } = useGetBookingsQuery(
+    { userId: userId ?? '' },
+    { skip: !userId },
+  );
+
   const { data: serviceManagementServices = [] } = useGetServicesQuery(
     { userId: userId ?? '' },
     { skip: !userId },
   );
 
-  // Search, filter
-  const filteredBookings = bookings.filter(booking => {
-    const matchesSearch =
-      booking.serviceFormValues?.[0]?.answer
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ?? '';
-    const matchesStatus =
-      !statusFilter ||
-      booking.status === statusMap[statusFilter] ||
-      statusFilter === '';
-    const matchesCreator =
-      !creatorFilter ||
-      booking.client?.name?.toLowerCase().includes(creatorFilter.toLowerCase());
-    let matchesDate = true;
-    if (dateFrom || dateTo) {
-      const bookingDate = new Date(booking.bookingTime);
-      if (dateFrom) {
-        const fromDate = new Date(dateFrom + 'T00:00:00');
-        matchesDate = matchesDate && bookingDate >= fromDate;
-      }
-      if (dateTo) {
-        const toDate = new Date(dateTo + 'T23:59:59');
-        matchesDate = matchesDate && bookingDate <= toDate;
-      }
-    }
-    return matchesSearch && matchesStatus && matchesCreator && matchesDate;
-  });
+  const [updateServiceBooking] = useUpdateServiceBookingMutation();
 
-  // Sort by bookingTime descending
-  const sortedBookings = [...filteredBookings].sort((a, b) => {
-    return (
-      new Date(b.bookingTime).getTime() - new Date(a.bookingTime).getTime()
+  // Convert bookings to services format
+  const bookingsAsServices: Service[] = bookings.map(booking => {
+    // Find the corresponding service name from serviceManagementServices
+    const correspondingService = serviceManagementServices.find(
+      service => service._id === booking.serviceId,
     );
+
+    return {
+      _id: booking._id ?? '',
+      companyId: '',
+      name: correspondingService?.name ?? 'Unknown Service',
+      description: booking.note ?? '',
+      price: correspondingService?.price ?? 0,
+      notifications: {
+        preferNotificationType: 'email',
+        phoneNumber: booking.client?.phoneNumber ?? '',
+        email: '',
+      },
+      isAvailable: true,
+      status: booking.status ?? 'Confirmed',
+      dateTime: booking.bookingTime,
+      userId: '',
+      createdBy: { name: 'Test User', avatar: '' },
+      client: {
+        name: booking.client?.name ?? '',
+        phoneNumber: booking.client?.phoneNumber ?? '',
+        address: booking.client?.address ?? '',
+      },
+    };
   });
-
-  // Pagination
-  const totalPages = Math.ceil(sortedBookings.length / TASKS_PER_PAGE);
-  const startIndex = (currentPage - 1) * TASKS_PER_PAGE;
-  const endIndex = startIndex + TASKS_PER_PAGE;
-  const currentBookings = sortedBookings.slice(startIndex, endIndex);
-
-  // Event handlers
-  const handlePageChange = (
-    _event: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
-    setCurrentPage(value);
-  };
-  const handleEditService = (service: Service) => setEditingService(service);
-  const handleCreateService = () => setIsModalOpen(false);
-  const handleSaveService = async (updatedService: Service): Promise<void> => {
-    try {
-      if (!updatedService._id) throw new Error('Booking ID is missing');
-      let bookingStatus: 'Cancelled' | 'Confirmed' | 'Done' | undefined =
-        undefined;
-      if (updatedService.status === 'Done') bookingStatus = 'Done';
-      else if (updatedService.status === 'Cancelled')
-        bookingStatus = 'Cancelled';
-      else if (updatedService.status === 'Confirmed')
-        bookingStatus = 'Confirmed';
-
-      // Only pass editable fields
-      const payload: Partial<ServiceBooking> = {
-        status: bookingStatus,
-      };
-      // Service Name -> serviceFormValues[0].answer
-      if (updatedService.name) {
-        payload.serviceFormValues = [
-          {
-            serviceFieldId: updatedService.serviceFieldId ?? 'dummy', // Use existing
-            answer: updatedService.name,
-          },
-        ];
-      }
-      // Date & Time -> bookingTime (convert to ISO/UTC, compatible with datetime-local format)
-      if (updatedService.dateTime) {
-        let dateStr = updatedService.dateTime;
-        if (!dateStr.endsWith('Z')) {
-          // If no seconds, complete
-          if (dateStr.length === 16) dateStr += ':00';
-          dateStr += 'Z';
-        }
-        const isoString = new Date(dateStr).toISOString();
-        payload.bookingTime = isoString;
-      }
-      // Description -> note
-      if (updatedService.description !== undefined) {
-        payload.note = updatedService.description;
-      }
-      await updateServiceBooking({
-        id: updatedService._id,
-        data: payload,
-      }).unwrap();
-      await refetch();
-      setEditingService(null);
-    } catch (error: unknown) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to update booking:', error, JSON.stringify(error));
-      let message = 'Failed to update booking.';
-      if (typeof error === 'object' && error !== null && 'data' in error) {
-        const errData = (error as { data?: { message?: string } }).data;
-        if (errData && typeof errData.message === 'string') {
-          message =
-            'Failed to update booking: ' +
-            (errData.message ?? JSON.stringify(error));
-        } else {
-          message = 'Failed to update booking: ' + JSON.stringify(error);
-        }
-      } else {
-        message = 'Failed to update booking: ' + JSON.stringify(error);
-      }
-      alert(message);
-    }
-  };
-  const handleDeleteFromEdit = (serviceId: string) =>
-    setDeletingServiceId(serviceId);
-  const handleConfirmDelete = () => {
-    setDeletingServiceId(null);
-    setEditingService(null);
-  };
-  const handleCancelDelete = () => setDeletingServiceId(null);
-
-  // Search, filter, active tags and other UI logic
-  const handleSearch = (filters?: unknown) => {
-    if (filters && typeof filters === 'object' && filters !== null) {
-      const f = filters as Partial<{
-        status: string;
-        createdBy: string;
-        serviceName: string;
-        dateFrom: string;
-        dateTo: string;
-      }>;
-      if (f.status !== undefined) setStatusFilter(f.status);
-      if (f.createdBy !== undefined) setCreatorFilter(f.createdBy);
-      if (f.serviceName !== undefined) setSearch(f.serviceName);
-      if (f.dateFrom !== undefined) setDateFrom(f.dateFrom);
-      if (f.dateTo !== undefined) setDateTo(f.dateTo);
-    }
-    setCurrentPage(1);
-  };
-  const handleSearchKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') handleSearch();
-  };
-  const handleClearSearch = () => {
-    setSearch('');
-    setCurrentPage(1);
-  };
-  const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) =>
-    setFilterAnchor(event.currentTarget);
-  const handleFilterClose = () => setFilterAnchor(null);
-  const handleClearFilter = (
-    field: 'status' | 'createdBy' | 'serviceName' | 'dateFrom' | 'dateTo',
-  ) => {
-    if (field === 'status') setStatusFilter('');
-    if (field === 'createdBy') setCreatorFilter('');
-    if (field === 'serviceName') setSearch('');
-    if (field === 'dateFrom') setDateFrom('');
-    if (field === 'dateTo') setDateTo('');
-    setCurrentPage(1);
-  };
-
-  // Map booking to Service type (only keep display fields)
-  const bookingsAsServices = currentBookings.map(booking => ({
-    _id: booking._id,
-    name: booking.serviceFormValues?.[0]?.answer ?? '',
-    serviceFieldId: booking.serviceFormValues?.[0]?.serviceFieldId ?? '',
-    companyId: booking.companyId ?? '',
-    description: booking.note ?? '',
-    price: 0,
-    notifications: { preferNotificationType: '', phoneNumber: '', email: '' },
-    isAvailable: true,
-    status: (() => {
-      if (booking.status === 'Done') return 'Done';
-      if (booking.status === 'Cancelled') return 'Cancelled';
-      if (booking.status === 'Confirmed') return 'Confirmed';
-      return 'Confirmed';
-    })() as TaskStatus,
-    dateTime: booking.bookingTime ?? '',
-    userId: '',
-    createdBy: { name: 'Test User', avatar: '' }, // Fix: use correct creator info
-    client: {
-      // Add: correctly map client info
-      name: booking.client?.name ?? '',
-      phoneNumber: booking.client?.phoneNumber ?? '',
-      address: booking.client?.address ?? '',
-    },
-  }));
 
   // Unique status dropdown
   const uniqueStatuses = [
@@ -416,74 +124,116 @@ function ServiceManager() {
     ),
   ];
 
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setCurrentPage(value);
+  };
+
+  const handleEditService = (service: Service) => setEditingService(service);
+
+  const handleSaveService = async (updatedService: Service): Promise<void> => {
+    try {
+      // Find the corresponding booking
+      const booking = bookings.find(b => b._id === updatedService._id);
+      if (booking) {
+        await updateServiceBooking({
+          id: booking._id!,
+          data: {
+            status: updatedService.status,
+            note: updatedService.description,
+          },
+        }).unwrap();
+      }
+      setEditingService(null);
+    } catch (error) {
+      console.error('Failed to update service:', error);
+    }
+  };
+
+  const handleCancelEdit = () => setEditingService(null);
+
+  const handleDeleteFromEdit = (serviceId: string) =>
+    setDeletingServiceId(serviceId);
+
+  const handleConfirmDelete = () => {
+    // Handle delete logic
+    setDeletingServiceId(null);
+  };
+
+  const handleCancelDelete = () => setDeletingServiceId(null);
+
+  const handleSearch = (filters?: Record<string, unknown> | string) => {
+    if (typeof filters === 'string') {
+      // Handle search clear
+      return;
+    }
+
+    if (filters) {
+      // Handle filter logic from FilterModal
+      if (filters.status) {
+        setStatusFilter(filters.status as TaskStatus);
+      }
+      if (filters.createdBy) {
+        setCreatorFilter(filters.createdBy as string);
+      }
+      if (filters.dateFrom) {
+        setDateFrom(filters.dateFrom as string);
+      }
+      if (filters.dateTo) {
+        setDateTo(filters.dateTo as string);
+      }
+    }
+  };
+
+  const handleClearFilter = (
+    field: 'status' | 'createdBy' | 'serviceName' | 'dateFrom' | 'dateTo',
+  ) => {
+    switch (field) {
+      case 'status':
+        setStatusFilter(null);
+        break;
+      case 'createdBy':
+        setCreatorFilter(null);
+        break;
+      case 'dateFrom':
+        setDateFrom(null);
+        break;
+      case 'dateTo':
+        setDateTo(null);
+        break;
+    }
+  };
+
+  // Filter services based on search and filters
+  const filteredServices = bookingsAsServices.filter(service => {
+    const matchesSearch =
+      !search ||
+      service.name.toLowerCase().includes(search.toLowerCase()) ||
+      Boolean(
+        service.description?.toLowerCase().includes(search.toLowerCase()),
+      ) ||
+      Boolean(
+        service.client?.name.toLowerCase().includes(search.toLowerCase()),
+      );
+
+    const matchesStatus = !statusFilter || service.status === statusFilter;
+    const matchesCreator =
+      !creatorFilter || service.createdBy?.name === creatorFilter;
+
+    return matchesSearch && matchesStatus && matchesCreator;
+  });
+
+  // Pagination
+  const totalPages = Math.ceil(filteredServices.length / TASKS_PER_PAGE);
+  const startIndex = (currentPage - 1) * TASKS_PER_PAGE;
+  const endIndex = startIndex + TASKS_PER_PAGE;
+  const paginatedServices = filteredServices.slice(startIndex, endIndex);
+
   return (
     <Container>
-      <HeaderContainer>
-        <Typography
-          className="Service"
-          sx={{
-            fontFamily: 'Roboto, sans-serif',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            color: '#060606',
-            lineHeight: 1.22,
-          }}
-        >
-          Service
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <SearchWrapper>
-            <SearchIcon sx={{ color: '#999', fontSize: 20 }} />
-            <StyledInput
-              placeholder="Search"
-              value={search}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSearch(e.target.value)
-              }
-              onKeyDown={handleSearchKeyPress}
-            />
-            {search && (
-              <ClearIcon
-                sx={{ color: '#ccc', fontSize: 18, cursor: 'pointer' }}
-                onClick={handleClearSearch}
-              />
-            )}
-          </SearchWrapper>
-          <FilterButton
-            onClick={handleFilterClick}
-            className={filterAnchor ? 'active' : ''}
-          >
-            <FilterListIcon sx={{ color: '#666' }} />
-          </FilterButton>
-          <Box
-            component="button"
-            sx={{
-              height: '40px',
-              padding: '10px 16px',
-              borderRadius: '8px',
-              backgroundColor: '#000',
-              color: '#fff',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              transition: 'background 0.2s',
-              '&:hover': { backgroundColor: '#333' },
-              fontFamily: 'Roboto, sans-serif',
-              fontSize: '14px',
-              fontWeight: 'bold',
-            }}
-            onClick={() => setIsModalOpen(true)}
-          >
-            <AddIcon sx={{ width: 16, height: 16, color: '#fff' }} />
-            Create New Service
-          </Box>
-        </Box>
-      </HeaderContainer>
-
-      {(statusFilter || creatorFilter || search || dateFrom || dateTo) && (
+      {(statusFilter ?? creatorFilter ?? search ?? dateFrom ?? dateTo) && (
         <ActiveFiltersContainer>
           {statusFilter && (
             <Chip
@@ -501,21 +251,21 @@ function ServiceManager() {
           )}
           {search && (
             <Chip
-              label={`Service Name: ${String(search)}`}
-              onDelete={() => handleClearFilter('serviceName')}
+              label={`Search: ${search}`}
+              onDelete={() => handleSearch('')}
               sx={{ fontSize: '13px', background: '#f5f5f5', color: '#333' }}
             />
           )}
           {dateFrom && (
             <Chip
-              label={`From: ${String(dateFrom)}`}
+              label={`From: ${dateFrom}`}
               onDelete={() => handleClearFilter('dateFrom')}
               sx={{ fontSize: '13px', background: '#f5f5f5', color: '#333' }}
             />
           )}
           {dateTo && (
             <Chip
-              label={`To: ${String(dateTo)}`}
+              label={`To: ${dateTo}`}
               onDelete={() => handleClearFilter('dateTo')}
               sx={{ fontSize: '13px', background: '#f5f5f5', color: '#333' }}
             />
@@ -523,78 +273,62 @@ function ServiceManager() {
         </ActiveFiltersContainer>
       )}
 
-      <Divider />
+      <ServiceList
+        services={paginatedServices}
+        onServiceClick={handleEditService}
+      />
 
-      <Box
-        sx={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: 0,
-          border: '1px solid #eaeaea',
-          borderRadius: '12px',
-          overflow: 'hidden',
-          boxShadow: 'none',
-          background: '#fff',
-        }}
-      >
-        <ServiceList
-          services={bookingsAsServices}
-          onServiceClick={handleEditService}
-        />
-      </Box>
-
-      {bookings.length > 0 && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          mt={2}
-          sx={{ flexShrink: 0 }}
-        >
+      {totalPages > 1 && (
+        <PaginationContainer>
           <Pagination
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}
+            color="primary"
           />
-        </Box>
+        </PaginationContainer>
       )}
 
-      {isModalOpen && (
+      {/* Modals */}
+      {isCreateServiceModalOpen && (
         <ServiceModal
-          onClose={() => setIsModalOpen(false)}
-          onCreate={handleCreateService}
+          onClose={onCloseCreateServiceModal}
+          onCreate={onCreateService}
           serviceManagementServices={serviceManagementServices}
         />
       )}
+
       {editingService && (
         <EditServiceModal
           service={editingService}
-          onClose={() => setEditingService(null)}
-          onSave={(service: Service) => void handleSaveService(service)}
+          onClose={handleCancelEdit}
+          onSave={(updatedService: Service) => {
+            void handleSaveService(updatedService);
+          }}
           onDelete={handleDeleteFromEdit}
         />
       )}
+
       {deletingServiceId && (
         <DeleteConfirmModal
-          serviceId={deletingServiceId}
           onClose={handleCancelDelete}
           onConfirm={handleConfirmDelete}
+          serviceId={deletingServiceId}
         />
       )}
 
-      {/* Filter Modal */}
       <FilterModal
         anchorEl={filterAnchor}
-        onClose={handleFilterClose}
+        onClose={onFilterClose}
         onApply={handleSearch}
         currentFilters={{
           serviceName: search,
-          createdBy: creatorFilter,
-          status: statusFilter,
+          createdBy: creatorFilter ?? '',
+          status: statusFilter ?? '',
           dateTime: '',
           description: '',
-          dateFrom: dateFrom,
-          dateTo: dateTo,
+          dateFrom: dateFrom ?? '',
+          dateTo: dateTo ?? '',
         }}
         uniqueStatuses={uniqueStatuses}
       />
@@ -602,4 +336,40 @@ function ServiceManager() {
   );
 }
 
-export default ServiceManager;
+// Legacy component for backward compatibility
+export default function ServiceManager({
+  search = '',
+  filterAnchor = null,
+  onFilterClose = () => {
+    // Default empty function
+  },
+  isCreateServiceModalOpen = false,
+  onCloseCreateServiceModal = () => {
+    // Default empty function
+  },
+}: {
+  search?: string;
+  filterAnchor?: HTMLElement | null;
+  onFilterClose?: () => void;
+  isCreateServiceModalOpen?: boolean;
+  onCloseCreateServiceModal?: () => void;
+}) {
+  const handleFilterClose = () => {
+    onFilterClose();
+  };
+
+  return (
+    <Container>
+      <Content
+        search={search}
+        filterAnchor={filterAnchor}
+        onFilterClose={handleFilterClose}
+        onCreateService={() => {
+          // This will be handled by the Content component
+        }}
+        isCreateServiceModalOpen={isCreateServiceModalOpen}
+        onCloseCreateServiceModal={onCloseCreateServiceModal}
+      />
+    </Container>
+  );
+}

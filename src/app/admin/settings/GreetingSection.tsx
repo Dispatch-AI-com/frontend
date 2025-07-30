@@ -54,8 +54,83 @@ export default function GreetingSection() {
     return <Box>Loading...</Box>;
   }
 
+  if (error) {
+    // 检查是否是 404 错误（Company not found）
+    const errorMessage =
+      typeof error === 'string'
+        ? error
+        : 'data' in error
+          ? error.data
+          : 'message' in error
+            ? error.message
+            : 'Unknown error';
+
+    if (
+      typeof errorMessage === 'string' &&
+      (errorMessage.includes('Company not found') ||
+        ('status' in error && error.status === 404))
+    ) {
+      return (
+        <Box>
+          <SectionHeader title="Greeting" />
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: '#fff3cd',
+              border: '1px solid #ffeaa7',
+              borderRadius: 1,
+              color: '#856404',
+            }}
+          >
+            <Typography variant="body2">
+              No company information found. Please complete your company profile
+              first.
+            </Typography>
+          </Box>
+        </Box>
+      );
+    }
+
+    return (
+      <Box>
+        <SectionHeader title="Greeting" />
+        <Box
+          sx={{
+            p: 2,
+            backgroundColor: '#f8d7da',
+            border: '1px solid #f5c6cb',
+            borderRadius: 1,
+            color: '#721c24',
+          }}
+        >
+          <Typography variant="body2">
+            Error loading greeting data: {errorMessage}
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
+
   if (!greeting) {
-    return <Box>Error loading greeting data</Box>;
+    return (
+      <Box>
+        <SectionHeader title="Greeting" />
+        <Box
+          sx={{
+            p: 2,
+            backgroundColor: '#d1ecf1',
+            border: '1px solid #bee5eb',
+            borderRadius: 1,
+            color: '#0c5460',
+          }}
+        >
+          <Typography variant="body2">
+            No greeting data available. Please contact support if this issue
+            persists.
+          </Typography>
+        </Box>
+      </Box>
+    );
   }
 
   return (
