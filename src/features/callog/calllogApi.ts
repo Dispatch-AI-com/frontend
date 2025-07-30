@@ -57,13 +57,29 @@ export const calllogsApi = createApi({
       }),
       providesTags: ['CallLog'],
     }),
+
+    getTodayMetrics: builder.query<
+      { totalCalls: number; liveCalls: number },
+      string
+    >({
+      query: userId => ({
+        url: `/users/${userId}/calllogs/metrics/today`,
+        method: 'GET',
+      }),
+      providesTags: ['CallLog'],
+    }),
   }),
 });
 
 // Export hooks
-export const { useGetCallLogsQuery, useGetTranscriptChunksQuery } = calllogsApi;
+export const {
+  useGetCallLogsQuery,
+  useGetTranscriptChunksQuery,
+  useGetTodayMetricsQuery,
+} = calllogsApi;
 
 // Export raw API functions
 export const getCallLogs = calllogsApi.endpoints.getCallLogs.initiate;
 export const getTranscriptChunks =
   calllogsApi.endpoints.getTranscriptChunks.initiate;
+export const getTodayMetrics = calllogsApi.endpoints.getTodayMetrics.initiate;
