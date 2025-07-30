@@ -58,15 +58,8 @@ const StyledCalendarWrapper = styled('div')(({ theme }) => ({
   border: '1px solid #eee',
   [theme.breakpoints.down('lg')]: {
     maxWidth: '100vw',
+    overflowX: 'auto',
     borderRadius: 0,
-  },
-  '@media (min-width:600px) and (max-width:900px)': {
-    maxWidth: 'calc(100vw - 80px)',
-    width: 'calc(100vw - 80px)',
-  },
-  '@media (min-width:900px) and (max-width:1155px)': {
-    maxWidth: 'calc(100vw - 240px)',
-    width: 'calc(100vw - 240px)',
   },
   '.rbc-month-view .rbc-date-cell': {
     position: 'relative',
@@ -191,15 +184,11 @@ const MonthlyView: React.FC<MonthlyViewProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Booking | null>(null);
   const userId = useSelector((state: RootState) => state.auth?.user?._id);
-  const bookingsQueryResult = useGetBookingsQuery(
+
+  const { data: bookings = [] } = useGetBookingsQuery(
     { userId },
     { skip: !userId },
   );
-  const bookingList: Booking[] = Array.isArray(bookingsQueryResult?.data)
-    ? (bookingsQueryResult.data as Booking[])
-    : Array.isArray(bookingsQueryResult)
-      ? (bookingsQueryResult as Booking[])
-      : [];
 
   const { data: services = [] } =
     useGetServicesQuery({ userId: userId ?? '' }, { skip: !userId }) ?? {};
@@ -215,30 +204,38 @@ const MonthlyView: React.FC<MonthlyViewProps> = ({
     return map;
   }, [services]);
 
-  const filteredBookings = bookingList.filter(item => {
+  const filteredBookings = bookings.filter(item => {
+    if (!item) return false;
+
     const clientName = (item.client?.name ?? '').toLowerCase();
     const serviceName = (
       serviceMap.get(item.serviceId)?.name ?? ''
     ).toLowerCase();
+    const searchLower = search.toLowerCase();
+
     return (
-      clientName.includes(search.toLowerCase()) ||
-      serviceName.includes(search.toLowerCase())
+      clientName.includes(searchLower) || serviceName.includes(searchLower)
     );
   });
 
-  const allEvents = filteredBookings.map((item: Booking) => ({
-    ...item,
-    id: item._id,
-    title: `
-      ${serviceMap.get(item.serviceId)?.name ?? ''} - ${item.client?.name ?? ''}
-    `,
-    start: new Date(item.bookingTime),
-    end: new Date(item.bookingTime),
-  }));
+  const allEvents = filteredBookings.map((item: Booking) => {
+    const service = serviceMap.get(item.serviceId);
+    const serviceName = service?.name ?? 'Unknown Service';
+    const clientName = item.client?.name ?? 'Unknown Client';
 
-  const events = allEvents.filter(event =>
-    selectedFilters.includes(event.status),
-  );
+    return {
+      ...item,
+      id: item._id,
+      title: `${serviceName} - ${clientName}`,
+      start: new Date(item.bookingTime),
+      end: new Date(item.bookingTime),
+    };
+  });
+
+  const events = allEvents.filter(event => {
+    const isIncluded = selectedFilters.includes(event.status);
+    return isIncluded;
+  });
 
   return (
     <StyledCalendarWrapper>
@@ -282,29 +279,27 @@ const MonthlyView: React.FC<MonthlyViewProps> = ({
         }}
       />
       {modalOpen && selectedTask && (
-        <>
-          <TaskDetailModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            task={
-              selectedTask
-                ? {
-                    ...selectedTask,
-                    serviceId:
-                      selectedTask.serviceId &&
-                      serviceMap.get(selectedTask.serviceId)
-                        ? {
-                            ...serviceMap.get(selectedTask.serviceId),
-                          }
-                        : undefined,
-                  }
-                : undefined
-            }
-            service={
-              selectedTask ? serviceMap.get(selectedTask.serviceId) : undefined
-            }
-          />
-        </>
+        <TaskDetailModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          task={
+            selectedTask
+              ? {
+                  ...selectedTask,
+                  serviceId:
+                    selectedTask.serviceId &&
+                    serviceMap.get(selectedTask.serviceId)
+                      ? {
+                          ...serviceMap.get(selectedTask.serviceId),
+                        }
+                      : undefined,
+                }
+              : undefined
+          }
+          service={
+            selectedTask ? serviceMap.get(selectedTask.serviceId) : undefined
+          }
+        />
       )}
     </StyledCalendarWrapper>
   );

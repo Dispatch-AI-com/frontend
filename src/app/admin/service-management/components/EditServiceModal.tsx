@@ -136,6 +136,7 @@ export default function EditServiceModal({
     isAvailable: true,
     userId: '',
   });
+  const [priceInput, setPriceInput] = useState('0');
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
@@ -153,6 +154,7 @@ export default function EditServiceModal({
         isAvailable: service.isAvailable ?? true,
         userId: service.userId ?? '',
       });
+      setPriceInput(service.price?.toString() ?? '0');
     } else {
       setFormData({
         name: '',
@@ -161,6 +163,7 @@ export default function EditServiceModal({
         isAvailable: true,
         userId: user?._id ?? '',
       });
+      setPriceInput('0');
     }
   }, [service, user?._id]);
 
@@ -249,19 +252,23 @@ export default function EditServiceModal({
 
           <TextField
             label="Price"
-            value={formData.price}
-            onChange={e =>
-              handleInputChange(
-                'price',
-                isNaN(parseFloat(e.target.value))
-                  ? 0
-                  : parseFloat(e.target.value),
-              )
-            }
+            value={priceInput}
+            onChange={e => {
+              const value = e.target.value;
+              setPriceInput(value);
+              if (value === '') {
+                handleInputChange('price', 0);
+              } else {
+                const numValue = parseFloat(value);
+                if (!isNaN(numValue)) {
+                  handleInputChange('price', numValue);
+                }
+              }
+            }}
             fullWidth
             size={isExtraSmallScreen ? 'small' : 'small'}
             type="number"
-            inputProps={{ min: 0, step: 0.01 }}
+            inputProps={{ min: 0, step: 10 }}
             required
           />
 

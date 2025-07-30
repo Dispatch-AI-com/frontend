@@ -23,7 +23,11 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
+  fontFamily: 'Roboto, sans-serif',
+  fontSize: '18px',
   fontWeight: 'bold',
+  color: '#060606',
+  lineHeight: 1.22,
 
   [theme.breakpoints.down('sm')]: {
     fontSize: '1.5rem',
@@ -38,8 +42,17 @@ const Title = styled(Typography)(({ theme }) => ({
 const CreateButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#000',
   color: '#fff',
-  padding: theme.spacing(1.5, 3),
-  borderRadius: theme.spacing(1),
+  height: '40px',
+  padding: '10px 16px',
+  borderRadius: '8px',
+  fontFamily: 'Roboto, sans-serif',
+  fontSize: '14px',
+  fontWeight: 'bold',
+  textTransform: 'none',
+
+  '&:hover': {
+    backgroundColor: '#333',
+  },
 
   [theme.breakpoints.down('sm')]: {
     width: '100%',

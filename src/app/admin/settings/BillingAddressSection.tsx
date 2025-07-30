@@ -38,10 +38,72 @@ const validateStreetAddress = (street: string): ValidationResult => {
 };
 
 const validateSuburb = (suburb: string): ValidationResult => {
-  return combineValidations(
+  const basicValidation = combineValidations(
     validateRequired(suburb, 'Suburb'),
     validateMaxLength(suburb, 50, 'Suburb'),
   );
+
+  if (!basicValidation.isValid) {
+    return basicValidation;
+  }
+
+  // Check if user accidentally entered a state name in suburb field
+  const stateNames = [
+    'New South Wales',
+    'NSW',
+    'Victoria',
+    'VIC',
+    'Queensland',
+    'QLD',
+    'Western Australia',
+    'WA',
+    'South Australia',
+    'SA',
+    'Tasmania',
+    'TAS',
+    'Australian Capital Territory',
+    'ACT',
+    'Northern Territory',
+    'NT',
+  ];
+
+  // Check if user accidentally entered a city name in suburb field
+  const cityNames = [
+    'Sydney',
+    'Melbourne',
+    'Brisbane',
+    'Perth',
+    'Adelaide',
+    'Gold Coast',
+    'Newcastle',
+    'Canberra',
+    'Central Coast',
+    'Wollongong',
+    'Logan City',
+  ];
+
+  const suburbLower = suburb.trim().toLowerCase();
+  const isStateName = stateNames.some(
+    state => state.toLowerCase() === suburbLower,
+  );
+  const isCityName = cityNames.some(city => city.toLowerCase() === suburbLower);
+
+  if (isStateName) {
+    return {
+      isValid: false,
+      error:
+        'Please enter the suburb name, not the state. Use the State dropdown below.',
+    };
+  }
+
+  if (isCityName) {
+    return {
+      isValid: false,
+      error: 'Please enter the specific suburb name, not the city name.',
+    };
+  }
+
+  return { isValid: true };
 };
 
 const validatePostcode = (postcode: string): ValidationResult => {

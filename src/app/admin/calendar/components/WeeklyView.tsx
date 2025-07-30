@@ -1,6 +1,7 @@
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { styled } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { format, getDay, isSameDay, parse, startOfWeek } from 'date-fns';
 import { enGB } from 'date-fns/locale';
 import React, { useEffect, useMemo } from 'react';
@@ -71,8 +72,7 @@ const StyledWeeklyCalendarWrapper = styled('div')(({ theme }) => ({
     paddingTop: 0,
   },
   '.rbc-header:last-child': {
-    marginRight: -17,
-    borderRight: '2px solid #eee',
+    borderRight: 'none',
   },
   '.rbc-time-content': {
     overflowY: 'auto !important',
@@ -80,7 +80,6 @@ const StyledWeeklyCalendarWrapper = styled('div')(({ theme }) => ({
     boxSizing: 'border-box !important',
     marginRight: 0,
     paddingRight: 0,
-    scrollbarGutter: 'stable',
   },
   '.rbc-row.rbc-row-bg, .rbc-row.rbc-day-bg, .rbc-day-bg': {
     display: 'none !important',
@@ -183,6 +182,7 @@ const DayHeader: React.FC<{ date: Date }> = ({ date }) => {
   const dayNumber = date.getDate();
   const dayName = format(date, 'EEEE', { locale: enGB });
   const isToday = isSameDay(date, new Date());
+  const isSmallScreen = useMediaQuery('(max-width:800px)');
 
   return (
     <div
@@ -233,13 +233,13 @@ const DayHeader: React.FC<{ date: Date }> = ({ date }) => {
       </div>
       <div
         style={{
-          fontSize: 14,
+          fontSize: isSmallScreen ? 20 : 14,
           color: '#6d6d6d',
           fontWeight: 400,
           lineHeight: 1,
         }}
       >
-        {dayName}
+        {isSmallScreen ? dayName.substring(0, 3) : dayName}
       </div>
     </div>
   );
@@ -255,7 +255,7 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
   const { data: bookings = [] } = useGetBookingsQuery(
     { userId },
     { skip: !userId },
-  ) as { data: Booking[] };
+  );
 
   const { data: services = [] } =
     useGetServicesQuery({ userId: userId ?? '' }, { skip: !userId }) ?? {};
@@ -269,26 +269,41 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
     return map;
   }, [services]);
 
-  const events = bookings
-    .filter((item: Booking) => {
-      const matchesSearch =
-        (item.client?.name ?? '')
-          .toLowerCase()
-          .includes(search.toLowerCase()) ||
-        (serviceMap.get(item.serviceId)?.name ?? '')
-          .toLowerCase()
-          .includes(search.toLowerCase());
-      if (!matchesSearch) return false;
-      if (selectedFilters.length === 0) return false;
-      return selectedFilters.includes(item.status);
-    })
-    .map((item: Booking) => ({
+  const filteredBookings = bookings.filter(item => {
+    if (!item) return false;
+
+    const clientName = (item.client?.name ?? '').toLowerCase();
+    const serviceName = (
+      serviceMap.get(item.serviceId)?.name ?? ''
+    ).toLowerCase();
+    const searchLower = search.toLowerCase();
+
+    return (
+      clientName.includes(searchLower) || serviceName.includes(searchLower)
+    );
+  });
+
+  const allEvents = filteredBookings.map((item: Booking) => {
+    const service = serviceMap.get(item.serviceId);
+    const serviceName = service?.name ?? 'Unknown Service';
+    const clientName = item.client?.name ?? 'Unknown Client';
+
+    return {
       ...item,
       id: item._id,
-      title: `${serviceMap.get(item.serviceId)?.name ?? ''} - ${item.client?.name ?? ''}`,
+      title: `${serviceName} - ${clientName}`,
       start: new Date(item.bookingTime),
       end: new Date(item.bookingTime),
-    }));
+    };
+  });
+
+  const events = allEvents.filter(event => {
+    const isIncluded = selectedFilters.includes(event.status);
+    return isIncluded;
+  });
+
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [selectedTask, setSelectedTask] = React.useState<Booking | null>(null);
 
   const { minTime, maxTime } = useMemo(() => {
     const min = new Date(value);
@@ -313,9 +328,6 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
     },
   });
 
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedTask, setSelectedTask] = React.useState<Booking | null>(null);
-
   useEffect(() => {
     function syncHeaderPadding() {
       const content = document.querySelector('.rbc-time-content');
@@ -324,7 +336,10 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
         const scrollbarWidth =
           (content as HTMLElement).offsetWidth -
           (content as HTMLElement).clientWidth;
-        (header as HTMLElement).style.paddingRight = `${scrollbarWidth}px`;
+
+        if (scrollbarWidth === 0) {
+          (header as HTMLElement).style.paddingRight = '0px';
+        }
       }
     }
     syncHeaderPadding();
@@ -358,26 +373,28 @@ const WeeklyView: React.FC<WeeklyViewProps> = ({
         culture="en-GB"
         components={{
           week: { header: DayHeader },
-          event: ({ event }: { event: Booking }) => (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                height: 24,
-                lineHeight: '24px',
-                width: '100%',
-              }}
-            >
-              <TaskCard
-                taskName={`${serviceMap.get(event.serviceId)?.name ?? ''} - ${event.client?.name ?? ''}`}
-                status={event.status as 'Confirmed' | 'Done' | 'Cancelled'}
-                onClick={() => {
-                  setSelectedTask(event);
-                  setModalOpen(true);
+          event: ({ event }: { event: Booking }) => {
+            return (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: 24,
+                  lineHeight: '24px',
+                  width: '100%',
                 }}
-              />
-            </div>
-          ),
+              >
+                <TaskCard
+                  taskName={`${serviceMap.get(event.serviceId)?.name ?? ''} - ${event.client?.name ?? ''}`}
+                  status={event.status as 'Confirmed' | 'Done' | 'Cancelled'}
+                  onClick={() => {
+                    setSelectedTask(event);
+                    setModalOpen(true);
+                  }}
+                />
+              </div>
+            );
+          },
         }}
         eventPropGetter={eventPropGetter}
         showMultiDayTimes={false}
