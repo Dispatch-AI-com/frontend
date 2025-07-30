@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import EditServiceModal from '@/app/admin/service/components/TaskManager/EditServiceModal';
+import EditBookingModal from '@/app/admin/booking/components/TaskManager/EditBookingModal';
 import type { Service } from '@/features/service/serviceApi';
 import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
 import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
@@ -488,7 +488,7 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
       </ServiceBookingSection>
 
       {isEditModalOpen && editingService && (
-        <EditServiceModal
+        <EditBookingModal
           service={editingService}
           onClose={handleCloseEditModal}
           onSave={handleSaveService}

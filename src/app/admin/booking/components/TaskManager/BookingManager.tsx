@@ -1,23 +1,31 @@
-// ServiceManager.tsx
+// BookingManager.tsx
 'use client';
 
-import { Box, Chip, Pagination, styled } from '@mui/material';
+import {
+  Box,
+  Chip,
+  Pagination,
+  styled,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import React from 'react';
 import { useState } from 'react';
 
 import type { Service, TaskStatus } from '@/features/service/serviceApi';
 import {
+  type ServiceBooking,
   useGetBookingsQuery,
   useUpdateServiceBookingMutation,
 } from '@/features/service/serviceBookingApi';
 import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 
+import BookingList from './BookingList';
+import BookingModal from './BookingModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
-import EditServiceModal from './EditServiceModal';
+import EditBookingModal from './EditBookingModal';
 import FilterModal from './FilterModal';
-import ServiceList from './ServiceList';
-import ServiceModal from './ServiceModal';
 
 const TASKS_PER_PAGE = 10;
 
@@ -48,20 +56,23 @@ export function Content({
   search,
   filterAnchor,
   onFilterClose,
-  onCreateService,
-  isCreateServiceModalOpen,
-  onCloseCreateServiceModal,
+  onCreateBooking,
+  isCreateBookingModalOpen,
+  onCloseCreateBookingModal,
 }: {
   search: string;
   filterAnchor: HTMLElement | null;
   onFilterClose: () => void;
-  onCreateService: () => void;
-  isCreateServiceModalOpen: boolean;
-  onCloseCreateServiceModal: () => void;
+  onCreateBooking: () => void;
+  isCreateBookingModalOpen: boolean;
+  onCloseCreateBookingModal: () => void;
 }): React.JSX.Element {
+  const theme = useTheme();
+  useMediaQuery(theme.breakpoints.down('sm'));
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [editingService, setEditingService] = useState<Service | null>(null);
-  const [deletingServiceId, setDeletingServiceId] = useState<string | null>(
+  const [editingBooking, setEditingBooking] = useState<Service | null>(null);
+  const [deletingBookingId, setDeletingBookingId] = useState<string | null>(
     null,
   );
   const [statusFilter, setStatusFilter] = useState<TaskStatus | null>(null);
@@ -84,7 +95,7 @@ export function Content({
 
   const [updateServiceBooking] = useUpdateServiceBookingMutation();
 
-  // Convert bookings to services format
+  // Convert bookings to display format
   const bookingsAsServices: Service[] = bookings.map(booking => {
     // Find the corresponding service name from serviceManagementServices
     const correspondingService = serviceManagementServices.find(
@@ -94,7 +105,7 @@ export function Content({
     return {
       _id: booking._id ?? '',
       companyId: '',
-      name: correspondingService?.name ?? 'Unknown Service',
+      name: correspondingService?.name ?? 'Unknown Booking',
       description: booking.note ?? '',
       price: correspondingService?.price ?? 0,
       notifications: {
@@ -131,38 +142,62 @@ export function Content({
     setCurrentPage(value);
   };
 
-  const handleEditService = (service: Service) => setEditingService(service);
+  const handleEditBooking = (booking: Service) => setEditingBooking(booking);
 
-  const handleSaveService = async (updatedService: Service): Promise<void> => {
+  const handleSaveBooking = async (updatedBooking: Service): Promise<void> => {
     try {
       // Find the corresponding booking
-      const booking = bookings.find(b => b._id === updatedService._id);
+      const booking = bookings.find(b => b._id === updatedBooking._id);
       if (booking) {
+        // Find the corresponding service ID by service name
+        const selectedService = serviceManagementServices.find(
+          service => service.name === updatedBooking.name,
+        );
+
+        // Prepare the update data
+        const updateData: Partial<ServiceBooking> = {
+          status: updatedBooking.status,
+          note: updatedBooking.description,
+          bookingTime: updatedBooking.dateTime,
+          client: {
+            name: updatedBooking.client?.name ?? booking.client?.name ?? '',
+            phoneNumber:
+              updatedBooking.client?.phoneNumber ??
+              booking.client?.phoneNumber ??
+              '',
+            address:
+              updatedBooking.client?.address ?? booking.client?.address ?? '',
+          },
+        };
+
+        // Only update serviceId if a different service was selected
+        if (selectedService && selectedService._id !== booking.serviceId) {
+          updateData.serviceId = selectedService._id;
+        }
+
         await updateServiceBooking({
           id: booking._id!,
-          data: {
-            status: updatedService.status,
-            note: updatedService.description,
-          },
+          data: updateData,
         }).unwrap();
       }
-      setEditingService(null);
+      setEditingBooking(null);
     } catch (error) {
-      console.error('Failed to update service:', error);
+      // eslint-disable-next-line no-console
+      console.error('Failed to update booking:', error);
     }
   };
 
-  const handleCancelEdit = () => setEditingService(null);
+  const handleCancelEdit = () => setEditingBooking(null);
 
-  const handleDeleteFromEdit = (serviceId: string) =>
-    setDeletingServiceId(serviceId);
+  const handleDeleteFromEdit = (bookingId: string) =>
+    setDeletingBookingId(bookingId);
 
   const handleConfirmDelete = () => {
     // Handle delete logic
-    setDeletingServiceId(null);
+    setDeletingBookingId(null);
   };
 
-  const handleCancelDelete = () => setDeletingServiceId(null);
+  const handleCancelDelete = () => setDeletingBookingId(null);
 
   const handleSearch = (filters?: Record<string, unknown> | string) => {
     if (typeof filters === 'string') {
@@ -273,9 +308,9 @@ export function Content({
         </ActiveFiltersContainer>
       )}
 
-      <ServiceList
+      <BookingList
         services={paginatedServices}
-        onServiceClick={handleEditService}
+        onServiceClick={handleEditBooking}
       />
 
       {totalPages > 1 && (
@@ -290,30 +325,30 @@ export function Content({
       )}
 
       {/* Modals */}
-      {isCreateServiceModalOpen && (
-        <ServiceModal
-          onClose={onCloseCreateServiceModal}
-          onCreate={onCreateService}
+      {isCreateBookingModalOpen && (
+        <BookingModal
+          onClose={onCloseCreateBookingModal}
+          onCreate={onCreateBooking}
           serviceManagementServices={serviceManagementServices}
         />
       )}
 
-      {editingService && (
-        <EditServiceModal
-          service={editingService}
+      {editingBooking && (
+        <EditBookingModal
+          service={editingBooking}
           onClose={handleCancelEdit}
-          onSave={(updatedService: Service) => {
-            void handleSaveService(updatedService);
+          onSave={(updatedBooking: Service) => {
+            void handleSaveBooking(updatedBooking);
           }}
           onDelete={handleDeleteFromEdit}
         />
       )}
 
-      {deletingServiceId && (
+      {deletingBookingId && (
         <DeleteConfirmModal
           onClose={handleCancelDelete}
           onConfirm={handleConfirmDelete}
-          serviceId={deletingServiceId}
+          serviceId={deletingBookingId}
         />
       )}
 
@@ -337,22 +372,22 @@ export function Content({
 }
 
 // Legacy component for backward compatibility
-export default function ServiceManager({
+export default function BookingManager({
   search = '',
   filterAnchor = null,
   onFilterClose = () => {
     // Default empty function
   },
-  isCreateServiceModalOpen = false,
-  onCloseCreateServiceModal = () => {
+  isCreateBookingModalOpen = false,
+  onCloseCreateBookingModal = () => {
     // Default empty function
   },
 }: {
   search?: string;
   filterAnchor?: HTMLElement | null;
   onFilterClose?: () => void;
-  isCreateServiceModalOpen?: boolean;
-  onCloseCreateServiceModal?: () => void;
+  isCreateBookingModalOpen?: boolean;
+  onCloseCreateBookingModal?: () => void;
 }) {
   const handleFilterClose = () => {
     onFilterClose();
@@ -364,11 +399,11 @@ export default function ServiceManager({
         search={search}
         filterAnchor={filterAnchor}
         onFilterClose={handleFilterClose}
-        onCreateService={() => {
+        onCreateBooking={() => {
           // This will be handled by the Content component
         }}
-        isCreateServiceModalOpen={isCreateServiceModalOpen}
-        onCloseCreateServiceModal={onCloseCreateServiceModal}
+        isCreateBookingModalOpen={isCreateBookingModalOpen}
+        onCloseCreateBookingModal={onCloseCreateBookingModal}
       />
     </Container>
   );

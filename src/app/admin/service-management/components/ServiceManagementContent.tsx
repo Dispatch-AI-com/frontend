@@ -96,7 +96,10 @@ export default function ServiceManagementContent({
 
   const handleCloseEdit = () => {
     setEditOpen(false);
-    setSelectedService(null);
+    // Delay clearing selectedService to avoid title flicker during modal close animation
+    setTimeout(() => {
+      setSelectedService(null);
+    }, 300);
   };
 
   const handleCloseDelete = () => {

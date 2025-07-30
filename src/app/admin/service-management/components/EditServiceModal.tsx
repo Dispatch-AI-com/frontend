@@ -2,14 +2,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
+  Modal,
   Select,
   TextField,
   Typography,
@@ -30,93 +26,163 @@ import {
 import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialog-paper': {
-    borderRadius: theme.spacing(2),
-
-    [theme.breakpoints.down('sm')]: {
-      margin: theme.spacing(2),
-      width: 'calc(100% - 32px)',
-      maxWidth: 'none',
-    },
-
-    [theme.breakpoints.down('xs')]: {
-      margin: theme.spacing(1),
-      width: 'calc(100% - 16px)',
-    },
+const ModalContainer = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 480,
+  backgroundColor: 'white',
+  borderRadius: 16,
+  padding: 0,
+  outline: 'none',
+  boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.1)',
+  [theme.breakpoints.down('sm')]: {
+    width: '95vw',
+    height: '90vh',
+    borderRadius: 12,
+    margin: '5vh 2.5vw',
   },
 }));
 
-const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
+const ModalHeader = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  paddingBottom: theme.spacing(1),
+  padding: '24px 24px 0',
+  marginBottom: '24px',
+}));
 
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(2, 2, 1, 2),
-  },
+const ModalTitle = styled(Typography)(() => ({
+  fontSize: '20px',
+  fontWeight: 600,
+  color: '#1a1a1a',
+}));
 
-  [theme.breakpoints.down('xs')]: {
-    padding: theme.spacing(1.5, 1.5, 0.5, 1.5),
+const CloseButton = styled(IconButton)(() => ({
+  padding: 4,
+  color: '#666',
+  '&:hover': {
+    backgroundColor: '#f5f5f5',
   },
 }));
 
-const DialogContentStyled = styled(DialogContent)(({ theme }) => ({
-  paddingTop: theme.spacing(2),
-
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(1, 2, 2, 2),
-  },
-
-  [theme.breakpoints.down('xs')]: {
-    padding: theme.spacing(0.5, 1.5, 1.5, 1.5),
-  },
+const ModalContent = styled(Box)(() => ({
+  padding: '0 24px',
+  maxHeight: '60vh',
+  overflowY: 'auto',
 }));
 
-const DialogActionsStyled = styled(DialogActions)(({ theme }) => ({
-  padding: theme.spacing(3, 3, 1, 3),
-
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(2, 2, 1, 2),
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-  },
-
-  [theme.breakpoints.down('xs')]: {
-    padding: theme.spacing(1.5, 1.5, 0.5, 1.5),
-  },
-}));
-
-const FormContainer = styled(Box)(({ theme }) => ({
+const ModalFooter = styled(Box)(() => ({
   display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(3),
+  justifyContent: 'flex-end',
+  gap: '12px',
+  padding: '24px',
+  borderTop: '1px solid #f0f0f0',
+  marginTop: '24px',
+}));
 
-  [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(2),
+const FormField = styled(Box)(() => ({
+  marginBottom: '20px',
+}));
+
+const FieldLabel = styled(Typography)(() => ({
+  fontSize: '14px',
+  fontWeight: 500,
+  color: '#1a1a1a',
+  marginBottom: '8px',
+}));
+
+const StyledTextField = styled(TextField)(() => ({
+  width: '100%',
+  '& .MuiOutlinedInput-root': {
+    minHeight: '40px',
+    borderRadius: '12px',
+    backgroundColor: '#fafafa',
+    '& fieldset': {
+      borderColor: '#d5d5d5',
+    },
+    '&:hover fieldset': {
+      borderColor: '#bdbdbd',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#1976d2',
+    },
+    '&.MuiInputBase-multiline': {
+      height: 'auto',
+      minHeight: '60px',
+      padding: 0,
+    },
   },
-
-  [theme.breakpoints.down('xs')]: {
-    gap: theme.spacing(1.5),
+  '& .MuiInputBase-input': {
+    padding: '12px 16px',
+    fontSize: '14px',
+    fontFamily: 'Roboto',
+    height: '16px',
+    '&.MuiInputBase-inputMultiline': {
+      height: 'auto',
+      minHeight: '24px',
+      resize: 'none',
+    },
   },
 }));
 
-const CustomFormSection = styled(Box)(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    marginTop: theme.spacing(1),
+const StatusSelect = styled(Select)(() => ({
+  width: '100%',
+  height: '40px',
+  borderRadius: '12px',
+  backgroundColor: '#fafafa',
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderColor: '#d5d5d5',
+  },
+  '&:hover .MuiOutlinedInput-notchedOutline': {
+    borderColor: '#bdbdbd',
+  },
+  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    borderColor: '#1976d2',
+  },
+  '& .MuiSelect-select': {
+    padding: '12px 16px',
+    fontSize: '14px',
+    fontFamily: 'Roboto',
+    fontWeight: 'normal',
+    lineHeight: 1.14,
+    color: '#060606',
+    height: '16px',
+    display: 'flex',
+    alignItems: 'center',
   },
 }));
 
-const ActionButton = styled(Button)(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    padding: theme.spacing(1.5, 2),
+const CancelButton = styled(Button)(() => ({
+  padding: '8px 24px',
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontSize: '14px',
+  fontWeight: 500,
+  color: '#666',
+  border: '1px solid #e0e0e0',
+  backgroundColor: 'white',
+  '&:hover': {
+    backgroundColor: '#f5f5f5',
+    borderColor: '#bdbdbd',
   },
+}));
 
-  [theme.breakpoints.down('xs')]: {
-    padding: theme.spacing(1, 2),
-    fontSize: '0.875rem',
+const SaveButton = styled(Button)(() => ({
+  padding: '8px 24px',
+  borderRadius: '8px',
+  textTransform: 'none',
+  fontSize: '14px',
+  fontWeight: 500,
+  backgroundColor: '#1a1a1a',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: '#333',
+  },
+  '&:disabled': {
+    backgroundColor: '#f0f0f0',
+    color: '#999',
   },
 }));
 
@@ -138,8 +204,8 @@ export default function EditServiceModal({
   });
   const [priceInput, setPriceInput] = useState('0');
 
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  useMediaQuery(theme.breakpoints.down('sm'));
+  useMediaQuery(theme.breakpoints.down('xs'));
   const user = useAppSelector(state => state.auth.user);
 
   const [createService, { isLoading: isCreating }] = useCreateServiceMutation();
@@ -198,104 +264,90 @@ export default function EditServiceModal({
   const isLoading = isCreating || isUpdating;
 
   return (
-    <StyledDialog
-      open={open}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-      fullScreen={isExtraSmallScreen}
-    >
-      <DialogTitleStyled>
-        {/* 直接用 span 保留样式，避免嵌套 heading */}
-        <span
-          style={{
-            fontWeight: 'bold',
-            fontSize: isSmallScreen ? '1.25rem' : '1.5rem',
-            lineHeight: 1.2,
-          }}
-        >
-          {service ? 'Edit Service' : 'Create Service'}
-        </span>
-        <IconButton
-          onClick={onClose}
-          size={isExtraSmallScreen ? 'small' : 'small'}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitleStyled>
+    <Modal open={open} onClose={onClose}>
+      <ModalContainer>
+        <ModalHeader>
+          <ModalTitle>{service ? 'Edit Service' : 'Create Service'}</ModalTitle>
+          <CloseButton onClick={onClose}>
+            <CloseIcon fontSize="small" />
+          </CloseButton>
+        </ModalHeader>
 
-      <DialogContentStyled>
-        <FormContainer>
-          <TextField
-            label="Service Name"
-            value={formData.name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleInputChange('name', e.target.value)
-            }
-            fullWidth
-            size={isExtraSmallScreen ? 'small' : 'small'}
-            required
-          />
+        <ModalContent>
+          <FormField>
+            <FieldLabel>Service Name</FieldLabel>
+            <StyledTextField
+              value={formData.name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange('name', e.target.value)
+              }
+              placeholder="Enter service name"
+              required
+            />
+          </FormField>
 
-          <TextField
-            label="Description"
-            value={formData.description}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              handleInputChange('description', e.target.value)
-            }
-            fullWidth
-            multiline
-            rows={isSmallScreen ? 2 : 3}
-            size={isExtraSmallScreen ? 'small' : 'small'}
-            placeholder="Enter service description"
-          />
+          <FormField>
+            <FieldLabel>Description</FieldLabel>
+            <StyledTextField
+              value={formData.description}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                handleInputChange('description', e.target.value)
+              }
+              multiline
+              rows={3}
+              placeholder="Enter service description"
+            />
+          </FormField>
 
-          <TextField
-            label="Price"
-            value={priceInput}
-            onChange={e => {
-              const value = e.target.value;
-              setPriceInput(value);
-              if (value === '') {
-                handleInputChange('price', 0);
-              } else {
-                const numValue = parseFloat(value);
-                if (!isNaN(numValue)) {
-                  handleInputChange('price', numValue);
+          <FormField>
+            <FieldLabel>Price</FieldLabel>
+            <StyledTextField
+              value={priceInput}
+              onChange={e => {
+                const value = e.target.value;
+                setPriceInput(value);
+                if (value === '') {
+                  handleInputChange('price', 0);
+                } else {
+                  const numValue = parseFloat(value);
+                  if (!isNaN(numValue)) {
+                    handleInputChange('price', numValue);
+                  }
                 }
-              }
-            }}
-            fullWidth
-            size={isExtraSmallScreen ? 'small' : 'small'}
-            type="number"
-            inputProps={{ min: 0, step: 10 }}
-            required
-          />
+              }}
+              type="number"
+              inputProps={{ min: 0, step: 10 }}
+              placeholder="Enter price"
+              required
+            />
+          </FormField>
 
-          <FormControl fullWidth size={isExtraSmallScreen ? 'small' : 'small'}>
-            <InputLabel>Status</InputLabel>
-            <Select
-              value={formData.isAvailable ? 'active' : 'inactive'}
-              label="Status"
-              onChange={e =>
-                handleInputChange('isAvailable', e.target.value === 'active')
-              }
-            >
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="inactive">Inactive</MenuItem>
-            </Select>
-          </FormControl>
+          <FormField>
+            <FieldLabel>Status</FieldLabel>
+            <FormControl fullWidth>
+              <StatusSelect
+                value={formData.isAvailable ? 'active' : 'inactive'}
+                onChange={e =>
+                  handleInputChange('isAvailable', e.target.value === 'active')
+                }
+                displayEmpty
+                renderValue={selected => {
+                  if (!selected) {
+                    return <span style={{ color: '#999' }}>Please Select</span>;
+                  }
+                  return selected === 'active' ? 'Active' : 'Inactive';
+                }}
+              >
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </StatusSelect>
+            </FormControl>
+          </FormField>
 
-          <CustomFormSection>
-            <Typography
-              variant={isSmallScreen ? 'body2' : 'body2'}
-              sx={{ mb: 1, fontWeight: 'medium' }}
-            >
-              Custom Form
-            </Typography>
+          <FormField>
+            <FieldLabel>Custom Form</FieldLabel>
             <Button
               variant="outlined"
-              size={isExtraSmallScreen ? 'small' : 'small'}
               sx={{
                 borderColor: '#000',
                 color: '#000',
@@ -307,41 +359,23 @@ export default function EditServiceModal({
             >
               Set it up
             </Button>
-          </CustomFormSection>
-        </FormContainer>
-      </DialogContentStyled>
+          </FormField>
+        </ModalContent>
 
-      <DialogActionsStyled>
-        <ActionButton
-          onClick={onClose}
-          variant="outlined"
-          disabled={isLoading}
-          sx={{
-            border: '1px solid #000',
-            color: '#000',
-            '&:hover': {
-              borderColor: '#333',
-              backgroundColor: 'rgba(0,0,0,0.04)',
-            },
-          }}
-        >
-          Cancel
-        </ActionButton>
-        <ActionButton
-          onClick={() => {
-            void handleSubmit();
-          }}
-          variant="contained"
-          disabled={isLoading}
-          sx={{
-            backgroundColor: '#000',
-            color: '#fff',
-            '&:hover': { backgroundColor: '#333' },
-          }}
-        >
-          {isLoading ? 'Saving...' : service ? 'Update' : 'Create'}
-        </ActionButton>
-      </DialogActionsStyled>
-    </StyledDialog>
+        <ModalFooter>
+          <CancelButton onClick={onClose} disabled={isLoading}>
+            Cancel
+          </CancelButton>
+          <SaveButton
+            onClick={() => {
+              void handleSubmit();
+            }}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Saving...' : service ? 'Update' : 'Create'}
+          </SaveButton>
+        </ModalFooter>
+      </ModalContainer>
+    </Modal>
   );
 }

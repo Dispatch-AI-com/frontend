@@ -3,7 +3,7 @@
 import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
-import { useMediaQuery } from '@mui/material';
+import { styled as muiStyled, useMediaQuery, useTheme } from '@mui/material';
 import { Box, Button, IconButton, InputBase } from '@mui/material';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -97,7 +97,7 @@ const EmptyStateText = styled.div`
   font-weight: 500;
 `;
 
-const SearchWrapper = styled(Box)({
+const SearchWrapper = muiStyled(Box)(({ theme }) => ({
   width: '232px',
   height: '40px',
   margin: '0 12px 0 0',
@@ -107,14 +107,23 @@ const SearchWrapper = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   position: 'relative',
-});
+  [theme.breakpoints.down('md')]: {
+    width: '180px',
+    margin: '0 8px 0 0',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '150px',
+    margin: '0 4px 0 0',
+    padding: '12px 8px',
+  },
+}));
 
-const StyledInput = styled(InputBase)(() => ({
+const StyledInput = muiStyled(InputBase)(() => ({
   flex: 1,
   fontSize: '14px',
 }));
 
-const FilterButton = styled(Button)({
+const FilterButton = muiStyled(Button)(({ theme }) => ({
   width: '40px',
   height: '40px',
   minWidth: '40px',
@@ -134,9 +143,12 @@ const FilterButton = styled(Button)({
   '&.active': {
     backgroundColor: '#e0e0e0',
   },
-});
+  [theme.breakpoints.down('sm')]: {
+    margin: '0 4px 0 0',
+  },
+}));
 
-const SortButton = styled(Box)({
+const SortButton = muiStyled(Box)(({ theme }) => ({
   height: '40px',
   padding: '10px 16px',
   borderRadius: '8px',
@@ -155,9 +167,18 @@ const SortButton = styled(Box)({
   fontFamily: 'Roboto, sans-serif',
   fontSize: '14px',
   fontWeight: 'bold',
-});
+  [theme.breakpoints.down('md')]: {
+    padding: '8px 12px',
+    fontSize: '13px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: '8px 10px',
+    fontSize: '12px',
+    minWidth: '60px',
+  },
+}));
 
-const ClearFilterButton = styled(IconButton)({
+const ClearFilterButton = muiStyled(IconButton)(({ theme }) => ({
   width: '32px',
   height: '32px',
   borderRadius: '50%',
@@ -175,9 +196,14 @@ const ClearFilterButton = styled(IconButton)({
     backgroundColor: '#d32f2f',
     color: '#fff',
   },
-});
+  [theme.breakpoints.down('sm')]: {
+    width: '28px',
+    height: '28px',
+    margin: '0 4px 0 0',
+  },
+}));
 
-const ActiveFiltersContainer = styled(Box)({
+const ActiveFiltersContainer = muiStyled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
@@ -187,9 +213,14 @@ const ActiveFiltersContainer = styled(Box)({
   borderRadius: '8px',
   border: '1px solid #e9ecef',
   minHeight: '40px',
-});
+  [theme.breakpoints.down('sm')]: {
+    gap: '4px',
+    padding: '6px 8px',
+    minHeight: '36px',
+  },
+}));
 
-const FilterChip = styled(Box)({
+const FilterChip = muiStyled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: '6px',
@@ -200,11 +231,21 @@ const FilterChip = styled(Box)({
   fontSize: '12px',
   fontWeight: 500,
   border: '1px solid #bbdefb',
-});
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '11px',
+    padding: '3px 6px',
+    gap: '4px',
+  },
+}));
 
 type SortOption = 'newest' | 'oldest';
 
 export default function InboxPage() {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  useMediaQuery(theme.breakpoints.down('md'));
+
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [showDetailMobile, setShowDetailMobile] = useState(false);
   const [sort, setSort] = useState<SortOption>('newest');
@@ -215,8 +256,6 @@ export default function InboxPage() {
   const [callerNameFilter, setCallerNameFilter] = useState<string>('');
   const [dateFromFilter, setDateFromFilter] = useState<string>('');
   const [dateToFilter, setDateToFilter] = useState<string>('');
-
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const user = useAppSelector(state => state.auth.user);
   const {
@@ -368,11 +407,19 @@ export default function InboxPage() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '12px',
+        gap: isMobile ? '8px' : '12px',
         width: '100%',
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: isMobile ? 'wrap' : 'nowrap',
+          gap: isMobile ? 1 : 0,
+          justifyContent: isMobile ? 'space-between' : 'flex-start',
+        }}
+      >
         <SearchWrapper>
           <SearchIcon sx={{ color: '#999', fontSize: 20 }} />
           <StyledInput
@@ -412,7 +459,14 @@ export default function InboxPage() {
       </Box>
       {hasActiveFilters && (
         <ActiveFiltersContainer>
-          <span style={{ fontSize: '14px', color: '#666', fontWeight: 500 }}>
+          <span
+            style={{
+              fontSize: isMobile ? '12px' : '14px',
+              color: '#666',
+              fontWeight: 500,
+              display: isMobile ? 'none' : 'inline',
+            }}
+          >
             Active Filters:
           </span>
           {callerNameFilter && (
