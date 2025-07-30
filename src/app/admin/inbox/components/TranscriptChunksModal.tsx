@@ -80,9 +80,12 @@ export default function TranscriptChunksModal({
     data: chunks,
     isLoading: loading,
     error,
-  } = useGetTranscriptChunksQuery(transcriptId, {
-    skip: !transcriptId,
-  });
+  } = useGetTranscriptChunksQuery(
+    { transcriptId, limit: 1000 }, // 获取所有 chunks，设置一个大的 limit
+    {
+      skip: !transcriptId,
+    },
+  );
 
   const getSpeaker = (chunk: ITranscriptChunk) => {
     return chunk.speakerType.toLowerCase() === 'user' ? 'user' : 'ai';

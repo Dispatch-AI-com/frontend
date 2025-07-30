@@ -8,17 +8,25 @@ export const transcriptChunksApi = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ['TranscriptChunk'],
   endpoints: builder => ({
-    getTranscriptChunks: builder.query<ITranscriptChunk[], string>({
-      query: transcriptId => {
+    getTranscriptChunks: builder.query<
+      ITranscriptChunk[],
+      { transcriptId: string; limit?: number; page?: number }
+    >({
+      query: ({ transcriptId, limit, page }) => {
         if (!transcriptId) {
           throw new Error('transcriptId is required');
         }
+        const params: Record<string, string> = {};
+        if (limit) params.limit = limit.toString();
+        if (page) params.page = page.toString();
+
         return {
           url: `/transcripts/${transcriptId}/chunks`,
           method: 'GET',
+          params,
         };
       },
-      providesTags: (result, error, transcriptId) => [
+      providesTags: (result, error, { transcriptId }) => [
         { type: 'TranscriptChunk', id: transcriptId },
       ],
     }),
