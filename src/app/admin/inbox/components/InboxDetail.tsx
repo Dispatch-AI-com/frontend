@@ -11,7 +11,12 @@ import styled from 'styled-components';
 
 import EditServiceModal from '@/app/admin/service/components/TaskManager/EditServiceModal';
 import type { Service } from '@/features/service/serviceApi';
-import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
+import {
+  type ServiceBooking,
+  useDeleteServiceBookingMutation,
+  useGetBookingsQuery,
+  useUpdateServiceBookingMutation,
+} from '@/features/service/serviceBookingApi';
 import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 import type { ICallLog } from '@/types/calllog.d';
@@ -143,7 +148,7 @@ const TranscriptContainer = styled.div`
 
 const ServiceBookingSection = styled.div`
   margin-top: 24px;
-  padding: 0 32px;
+  padding: 0 32px 16px 32px;
 `;
 
 const ServiceBookingCard = styled.div`
@@ -249,7 +254,7 @@ const ViewServiceButton = styled(Button)`
   && {
     min-width: 160px;
     margin-top: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 4px;
     width: auto;
     align-self: flex-start;
   }
@@ -280,6 +285,10 @@ export default function InboxDetail({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  // Service booking mutations
+  const [updateServiceBooking] = useUpdateServiceBookingMutation();
+  const [deleteServiceBooking] = useDeleteServiceBookingMutation();
 
   // Fetch service bookings for this call log
   const { data: bookings = [] } = useGetBookingsQuery(
@@ -370,14 +379,54 @@ export default function InboxDetail({
     setEditingService(null);
   };
 
-  const handleSaveService = (_updatedService: Service) => {
-    // Handle save logic here if needed
-    handleCloseEditModal();
+  const handleSaveService = async (updatedService: Service) => {
+    if (!serviceBooking?._id) return;
+
+    try {
+      // Find the new service by name if it changed
+      let newServiceId = serviceBooking.serviceId;
+
+      if (service?.name !== updatedService.name) {
+        const newService = services.find(s => s.name === updatedService.name);
+        if (newService?._id) {
+          newServiceId = newService._id;
+        }
+      }
+
+      // Map the service data back to booking format
+      const bookingUpdate: Partial<ServiceBooking> = {
+        serviceId: newServiceId,
+        status: updatedService.status as ServiceBooking['status'],
+        bookingTime: updatedService.dateTime,
+        client: {
+          name: updatedService.client.name,
+          phoneNumber: updatedService.client.phoneNumber,
+          address: updatedService.client.address,
+        },
+      };
+
+      await updateServiceBooking({
+        id: serviceBooking._id,
+        data: bookingUpdate,
+      }).unwrap();
+
+      handleCloseEditModal();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to update service booking:', error);
+    }
   };
 
-  const handleDeleteService = (_serviceId: string) => {
-    // Handle delete logic here if needed
-    handleCloseEditModal();
+  const handleDeleteService = async (_serviceId: string) => {
+    if (!serviceBooking?._id) return;
+
+    try {
+      await deleteServiceBooking(serviceBooking._id).unwrap();
+      handleCloseEditModal();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to delete service booking:', error);
+    }
   };
 
   const handleDeleteCallLog = () => {
@@ -532,8 +581,8 @@ export default function InboxDetail({
         <EditServiceModal
           service={editingService}
           onClose={handleCloseEditModal}
-          onSave={handleSaveService}
-          onDelete={handleDeleteService}
+          onSave={service => void handleSaveService(service)}
+          onDelete={serviceId => void handleDeleteService(serviceId)}
         />
       )}
 

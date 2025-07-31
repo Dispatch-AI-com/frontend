@@ -362,19 +362,23 @@ const EditServiceModal: React.FC<Props> = ({
                     : JSON.stringify(selected);
                 }}
               >
-                {serviceManagementServices.length === 0 ? (
+                {serviceManagementServices.filter(
+                  serviceOption => serviceOption.isAvailable === true,
+                ).length === 0 ? (
                   <MenuItem disabled value="">
-                    No services available
+                    No active services available
                   </MenuItem>
                 ) : (
-                  serviceManagementServices.map(serviceOption => (
-                    <MenuItem
-                      key={serviceOption._id}
-                      value={serviceOption.name}
-                    >
-                      {serviceOption.name}
-                    </MenuItem>
-                  ))
+                  serviceManagementServices
+                    .filter(serviceOption => serviceOption.isAvailable === true)
+                    .map(serviceOption => (
+                      <MenuItem
+                        key={serviceOption._id}
+                        value={serviceOption.name}
+                      >
+                        {serviceOption.name}
+                      </MenuItem>
+                    ))
                 )}
               </StatusSelect>
             </FormControl>
