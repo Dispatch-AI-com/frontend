@@ -19,7 +19,10 @@ import type { ICallLog } from '@/types/calllog.d';
 
 const ContentContainer = styled.div`
   display: flex;
-  height: calc(100vh - 120px);
+  flex: 1;
+  min-height: 0;
+  gap: 16px;
+  padding: 16px;
   overflow: hidden;
 `;
 
@@ -31,7 +34,7 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
+  min-height: 0;
 
   ${theme.breakpoints.down('sm')} {
     width: 100%;
@@ -64,11 +67,9 @@ const DetailContainer = styled.div`
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   overflow-y: auto;
-  height: 100%;
-
-  @media (max-width: 600px) {
-    margin-top: 16px;
-  }
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 `;
 
 const EmptyStateContainer = styled.div`
@@ -548,7 +549,7 @@ export default function InboxPage() {
             )}
           </DetailContainer>
         ) : (
-          <ListContainer style={{ width: '100%' }}>
+          <ListContainer>
             <ListContent>
               <InboxList
                 selectedId={selectedId}
