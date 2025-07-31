@@ -56,10 +56,10 @@ const navItems = [
     href: '/admin/inbox',
   },
   {
-    label: 'Service',
+    label: 'Booking',
     iconSrc: '/dashboard/sidebar/service.svg',
-    iconAlt: 'Service',
-    href: '/admin/service',
+    iconAlt: 'Booking',
+    href: '/admin/booking',
   },
   {
     label: 'Service Management',

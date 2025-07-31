@@ -1,4 +1,4 @@
-// EditServiceModal.tsx
+// EditBookingModal.tsx
 'use client';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -16,6 +16,8 @@ import {
   TextareaAutosize,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -23,7 +25,7 @@ import type { Service, TaskStatus } from '@/features/service/serviceApi';
 import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 
-const ModalContainer = styled(Box)(() => ({
+const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -34,6 +36,12 @@ const ModalContainer = styled(Box)(() => ({
   padding: 0,
   outline: 'none',
   boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.1)',
+  [theme.breakpoints.down('sm')]: {
+    width: '95vw',
+    height: '90vh',
+    borderRadius: 12,
+    margin: '5vh 2.5vw',
+  },
 }));
 
 const ModalHeader = styled(Box)(() => ({
@@ -254,7 +262,7 @@ interface Props {
   service: Service;
   onClose: () => void;
   onSave: (updatedService: Service) => void;
-  onDelete: (serviceId: string) => void;
+  onDelete: (bookingId: string) => void;
 }
 
 // Utility function: Convert ISO string to datetime-local format (local time)
@@ -274,12 +282,14 @@ function formatForDateTimeLocal(isoString: string): string {
   }
 }
 
-const EditServiceModal: React.FC<Props> = ({
+const EditBookingModal: React.FC<Props> = ({
   service,
   onClose,
   onSave,
   onDelete,
 }) => {
+  const theme = useTheme();
+  useMediaQuery(theme.breakpoints.down('sm'));
   const [name, setName] = useState(service.name);
   const [description, setDescription] = useState(service.description ?? '');
   const [status, setStatus] = useState<TaskStatus>(
@@ -337,7 +347,7 @@ const EditServiceModal: React.FC<Props> = ({
     <Modal open onClose={onClose}>
       <ModalContainer>
         <ModalHeader>
-          <ModalTitle>Edit Service</ModalTitle>
+          <ModalTitle>Edit Booking</ModalTitle>
           <CloseButton onClick={onClose}>
             <CloseIcon fontSize="small" />
           </CloseButton>
@@ -488,4 +498,4 @@ const EditServiceModal: React.FC<Props> = ({
   );
 };
 
-export default EditServiceModal;
+export default EditBookingModal;

@@ -1,4 +1,4 @@
-// ServiceModal.tsx
+// BookingModal.tsx
 'use client';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -16,6 +16,8 @@ import {
   TextareaAutosize,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import React from 'react';
 import { useState } from 'react';
@@ -31,7 +33,7 @@ interface Props {
   serviceManagementServices: ServiceManagement[];
 }
 
-const ModalContainer = styled(Box)({
+const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -42,7 +44,13 @@ const ModalContainer = styled(Box)({
   padding: 0,
   outline: 'none',
   boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.1)',
-});
+  [theme.breakpoints.down('sm')]: {
+    width: '95vw',
+    height: '90vh',
+    borderRadius: 12,
+    margin: '5vh 2.5vw',
+  },
+}));
 
 const ModalHeader = styled(Box)({
   display: 'flex',
@@ -225,11 +233,13 @@ const CreateButton = styled(Button)({
   },
 });
 
-const ServiceModal: React.FC<Props> = ({
+const BookingModal: React.FC<Props> = ({
   onClose,
   onCreate,
   serviceManagementServices,
 }) => {
+  const theme = useTheme();
+  useMediaQuery(theme.breakpoints.down('sm'));
   const [name, setName] = useState('');
   const [selectedServiceId, setSelectedServiceId] = useState(''); // 新增：保存选中的 service _id
   const [status, setStatus] = useState('');
@@ -246,14 +256,22 @@ const ServiceModal: React.FC<Props> = ({
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
   const userName =
-    user && (user.firstName ?? user.lastName)
+    user?.name ??
+    (user && (user.firstName ?? user.lastName)
       ? `${user.firstName ?? ''}${user.lastName ? ' ' + user.lastName : ''}`.trim()
-      : (user?.email ?? 'User');
+      : (user?.email ?? 'User'));
   const userInitials = user
-    ? (
-        (user.firstName?.[0] ?? '') + (user.lastName?.[0] ?? '')
-      ).toUpperCase() ||
-      (user.email?.[0]?.toUpperCase() ?? 'U')
+    ? user.name
+      ? user.name
+          .split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase()
+          .slice(0, 2)
+      : (
+          (user.firstName?.[0] ?? '') + (user.lastName?.[0] ?? '')
+        ).toUpperCase() ||
+        (user.email?.[0]?.toUpperCase() ?? 'U')
     : 'U';
 
   const isValid =
@@ -364,7 +382,7 @@ const ServiceModal: React.FC<Props> = ({
     <Modal open onClose={onClose}>
       <ModalContainer>
         <ModalHeader>
-          <ModalTitle>Create New Service</ModalTitle>
+          <ModalTitle>Create New Booking</ModalTitle>
           <CloseButton onClick={onClose}>
             <CloseIcon fontSize="small" />
           </CloseButton>
@@ -394,7 +412,7 @@ const ServiceModal: React.FC<Props> = ({
                   service => service.isAvailable,
                 ).length === 0 ? (
                   <MenuItem disabled value="">
-                    No active services available
+                    No services available for booking
                   </MenuItem>
                 ) : (
                   serviceManagementServices
@@ -510,7 +528,7 @@ const ServiceModal: React.FC<Props> = ({
         <ModalFooter>
           <CancelButton onClick={onClose}>Cancel</CancelButton>
           <CreateButton onClick={() => void handleCreate()} disabled={!isValid}>
-            Create
+            Create Booking
           </CreateButton>
         </ModalFooter>
       </ModalContainer>
@@ -518,4 +536,4 @@ const ServiceModal: React.FC<Props> = ({
   );
 };
 
-export default ServiceModal;
+export default BookingModal;

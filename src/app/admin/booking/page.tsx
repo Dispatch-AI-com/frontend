@@ -4,13 +4,20 @@ import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Button, InputBase, styled } from '@mui/material';
+import {
+  Box,
+  Button,
+  InputBase,
+  styled,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { useState } from 'react';
 
-import ServiceManager from '@/app/admin/service/components/TaskManager/ServiceManager';
+import BookingManager from '@/app/admin/booking/components/TaskManager/BookingManager';
 import { AdminPageLayout } from '@/components/layout/admin-layout';
 
-const SearchWrapper = styled(Box)({
+const SearchWrapper = styled(Box)(({ theme }) => ({
   width: '232px',
   height: '40px',
   margin: '0 12px 0 0',
@@ -20,14 +27,23 @@ const SearchWrapper = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   position: 'relative',
-});
+  [theme.breakpoints.down('md')]: {
+    width: '180px',
+    margin: '0 8px 0 0',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '150px',
+    margin: '0 4px 0 0',
+    padding: '12px 8px',
+  },
+}));
 
 const StyledInput = styled(InputBase)(() => ({
   flex: 1,
   fontSize: '14px',
 }));
 
-const FilterButton = styled(Button)({
+const FilterButton = styled(Button)(({ theme }) => ({
   width: '40px',
   height: '40px',
   minWidth: '40px',
@@ -47,9 +63,12 @@ const FilterButton = styled(Button)({
   '&.active': {
     backgroundColor: '#e0e0e0',
   },
-});
+  [theme.breakpoints.down('sm')]: {
+    margin: '0 4px 0 0',
+  },
+}));
 
-const CreateButton = styled(Box)({
+const CreateButton = styled(Box)(({ theme }) => ({
   height: '40px',
   padding: '10px 16px',
   borderRadius: '8px',
@@ -68,12 +87,27 @@ const CreateButton = styled(Box)({
   fontFamily: 'Roboto, sans-serif',
   fontSize: '14px',
   fontWeight: 'bold',
-});
+  [theme.breakpoints.down('md')]: {
+    padding: '8px 12px',
+    fontSize: '13px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: '8px',
+    minWidth: '40px',
+    '& span': {
+      display: 'none',
+    },
+  },
+}));
 
-export default function ServicePage() {
+export default function BookingPage() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  useMediaQuery(theme.breakpoints.down('md'));
+
   const [search, setSearch] = useState('');
   const [filterAnchor, setFilterAnchor] = useState<HTMLElement | null>(null);
-  const [isCreateServiceModalOpen, setIsCreateServiceModalOpen] =
+  const [isCreateBookingModalOpen, setIsCreateBookingModalOpen] =
     useState(false);
 
   const handleSearch = (searchTerm: string) => {
@@ -92,16 +126,25 @@ export default function ServicePage() {
     setFilterAnchor(null);
   };
 
-  const handleCreateServiceClick = () => {
-    setIsCreateServiceModalOpen(true);
+  const handleCreateBookingClick = () => {
+    setIsCreateBookingModalOpen(true);
   };
 
-  const handleCloseCreateServiceModal = () => {
-    setIsCreateServiceModalOpen(false);
+  const handleCloseCreateBookingModal = () => {
+    setIsCreateBookingModalOpen(false);
   };
 
   const headerActions = (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        flexWrap: isMobile ? 'wrap' : 'nowrap',
+        gap: isMobile ? 1 : 0,
+        width: '100%',
+        justifyContent: isMobile ? 'space-between' : 'flex-start',
+      }}
+    >
       <SearchWrapper>
         <SearchIcon sx={{ color: '#999', fontSize: 20 }} />
         <StyledInput
@@ -124,26 +167,27 @@ export default function ServicePage() {
       >
         <FilterListIcon sx={{ color: '#666' }} />
       </FilterButton>
-      <CreateButton onClick={handleCreateServiceClick}>
+      <CreateButton onClick={handleCreateBookingClick}>
         <AddIcon sx={{ width: 16, height: 16, color: '#fff' }} />
-        Create New Service
+        {!isMobile && <span>Create New Booking</span>}
+        {isMobile && <span style={{ display: 'none' }}>Create</span>}
       </CreateButton>
     </Box>
   );
 
   return (
     <AdminPageLayout
-      title="Service"
+      title="Booking"
       headerActions={headerActions}
       padding="normal"
       background="solid"
     >
-      <ServiceManager
+      <BookingManager
         search={search}
         filterAnchor={filterAnchor}
         onFilterClose={handleFilterClose}
-        isCreateServiceModalOpen={isCreateServiceModalOpen}
-        onCloseCreateServiceModal={handleCloseCreateServiceModal}
+        isCreateBookingModalOpen={isCreateBookingModalOpen}
+        onCloseCreateBookingModal={handleCloseCreateBookingModal}
       />
     </AdminPageLayout>
   );

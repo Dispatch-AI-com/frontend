@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import EditServiceModal from '@/app/admin/service/components/TaskManager/EditServiceModal';
+import EditBookingModal from '@/app/admin/booking/components/TaskManager/EditBookingModal';
 import type { Service } from '@/features/service/serviceApi';
 import {
   type ServiceBooking,
@@ -351,7 +351,7 @@ export default function InboxDetail({
       const serviceForEdit = {
         _id: serviceBooking._id,
         name: service.name,
-        description: service.description ?? '',
+        description: serviceBooking.note ?? '', // Use booking note, not service description
         status: serviceBooking.status ?? 'Confirmed',
         dateTime: serviceBooking.bookingTime,
         client: {
@@ -379,53 +379,56 @@ export default function InboxDetail({
     setEditingService(null);
   };
 
-  const handleSaveService = async (updatedService: Service) => {
-    if (!serviceBooking?._id) return;
-
+  const handleSaveService = async (updatedService: Service): Promise<void> => {
     try {
-      // Find the new service by name if it changed
-      let newServiceId = serviceBooking.serviceId;
+      // Find the corresponding booking
+      const booking = bookings.find(b => b._id === updatedService._id);
+      if (booking) {
+        // Find the corresponding service ID by service name
+        const selectedService = services.find(
+          service => service.name === updatedService.name,
+        );
 
-      if (service?.name !== updatedService.name) {
-        const newService = services.find(s => s.name === updatedService.name);
-        if (newService?._id) {
-          newServiceId = newService._id;
+        // Prepare the update data
+        const updateData: Partial<ServiceBooking> = {
+          status: updatedService.status,
+          note: updatedService.description,
+          bookingTime: updatedService.dateTime,
+          client: {
+            name: updatedService.client?.name ?? booking.client?.name ?? '',
+            phoneNumber:
+              updatedService.client?.phoneNumber ??
+              booking.client?.phoneNumber ??
+              '',
+            address:
+              updatedService.client?.address ?? booking.client?.address ?? '',
+          },
+        };
+
+        // Only update serviceId if a different service was selected
+        if (selectedService && selectedService._id !== booking.serviceId) {
+          updateData.serviceId = selectedService._id;
         }
+
+        await updateServiceBooking({
+          id: booking._id!,
+          data: updateData,
+        }).unwrap();
       }
-
-      // Map the service data back to booking format
-      const bookingUpdate: Partial<ServiceBooking> = {
-        serviceId: newServiceId,
-        status: updatedService.status as ServiceBooking['status'],
-        bookingTime: updatedService.dateTime,
-        client: {
-          name: updatedService.client.name,
-          phoneNumber: updatedService.client.phoneNumber,
-          address: updatedService.client.address,
-        },
-      };
-
-      await updateServiceBooking({
-        id: serviceBooking._id,
-        data: bookingUpdate,
-      }).unwrap();
-
       handleCloseEditModal();
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Failed to update service booking:', error);
+      console.error('Failed to update booking:', error);
     }
   };
 
-  const handleDeleteService = async (_serviceId: string) => {
-    if (!serviceBooking?._id) return;
-
+  const handleDeleteService = async (serviceId: string): Promise<void> => {
     try {
-      await deleteServiceBooking(serviceBooking._id).unwrap();
+      await deleteServiceBooking(serviceId).unwrap();
       handleCloseEditModal();
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Failed to delete service booking:', error);
+      console.error('Failed to delete booking:', error);
     }
   };
 
@@ -578,11 +581,15 @@ export default function InboxDetail({
       </ServiceBookingSection>
 
       {isEditModalOpen && editingService && (
-        <EditServiceModal
+        <EditBookingModal
           service={editingService}
           onClose={handleCloseEditModal}
-          onSave={service => void handleSaveService(service)}
-          onDelete={serviceId => void handleDeleteService(serviceId)}
+          onSave={(updatedService: Service) => {
+            void handleSaveService(updatedService);
+          }}
+          onDelete={(serviceId: string) => {
+            void handleDeleteService(serviceId);
+          }}
         />
       )}
 
