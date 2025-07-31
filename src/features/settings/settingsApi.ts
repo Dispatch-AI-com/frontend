@@ -25,7 +25,7 @@ export interface UserSetting {
   _id: string;
   userId: string;
   category: string;
-  settings: Record<string, any>;
+  settings: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 }
@@ -117,7 +117,7 @@ export const settingsApi = createApi({
       providesTags: ['Greeting'],
     }),
     updateGreeting: builder.mutation<
-      any,
+      GreetingSettings,
       { userId: string } & GreetingSettings
     >({
       query: ({ userId, ...greetingData }) => ({

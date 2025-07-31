@@ -390,9 +390,19 @@ export default function InboxPage() {
 
     // Date range filter
     if (dateFromFilter || dateToFilter) {
-      const callDate = new Date(item.createdAt ?? '');
+      const callDate = new Date(item.startAt ?? '');
+
+      // Set start of day for fromDate (00:00:00)
       const fromDate = dateFromFilter ? new Date(dateFromFilter) : null;
+      if (fromDate) {
+        fromDate.setHours(0, 0, 0, 0);
+      }
+
+      // Set end of day for toDate (23:59:59.999)
       const toDate = dateToFilter ? new Date(dateToFilter) : null;
+      if (toDate) {
+        toDate.setHours(23, 59, 59, 999);
+      }
 
       if (fromDate && callDate < fromDate) {
         return false;
