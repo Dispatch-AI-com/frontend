@@ -88,7 +88,7 @@ export default function DeleteCallLogModal({
   const [deleteCallLog] = useDeleteCallLogMutation();
 
   const handleDelete = async () => {
-    if (!callLog || !user?._id) return;
+    if (!callLog || !user?._id || !callLog._id) return;
 
     setIsDeleting(true);
     try {
