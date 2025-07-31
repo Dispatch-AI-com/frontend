@@ -49,11 +49,21 @@ export const calllogsApi = createApi({
       },
       providesTags: ['CallLog'],
     }),
+    deleteCallLog: builder.mutation<
+      ICallLog,
+      { userId: string; calllogId: string }
+    >({
+      query: ({ userId, calllogId }) => ({
+        url: `/users/${userId}/calllogs/${calllogId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['CallLog'],
+    }),
   }),
 });
 
 // Export hooks
-export const { useGetCallLogsQuery } = calllogsApi;
+export const { useGetCallLogsQuery, useDeleteCallLogMutation } = calllogsApi;
 
 // Export raw API functions
 export const getCallLogs = calllogsApi.endpoints.getCallLogs.initiate;

@@ -325,8 +325,20 @@ export default function InboxPage() {
     setSelectedId(id);
     if (isSmallScreen) setShowDetailMobile(true);
   };
+
   const handleBack = () => {
     setShowDetailMobile(false);
+  };
+
+  const handleCallLogDeleted = () => {
+    // Reset selected item if it was deleted
+    setSelectedId(undefined);
+    if (isSmallScreen) {
+      setShowDetailMobile(false);
+    }
+    // Reset pagination to refresh the list
+    setCurrentPage(1);
+    setAllCallLogs([]);
   };
 
   const handleSearch = (searchTerm: string) => {
@@ -502,7 +514,12 @@ export default function InboxPage() {
               </ListContent>
             </ListContainer>
             <DetailContainer>
-              {selectedItem && <InboxDetail item={selectedItem} />}
+              {selectedItem && (
+                <InboxDetail
+                  item={selectedItem}
+                  onCallLogDeleted={handleCallLogDeleted}
+                />
+              )}
             </DetailContainer>
           </>
         ) : showDetailMobile ? (
@@ -523,7 +540,12 @@ export default function InboxPage() {
                 ← Back
               </button>
             </div>
-            {selectedItem && <InboxDetail item={selectedItem} />}
+            {selectedItem && (
+              <InboxDetail
+                item={selectedItem}
+                onCallLogDeleted={handleCallLogDeleted}
+              />
+            )}
           </DetailContainer>
         ) : (
           <ListContainer style={{ width: '100%' }}>
