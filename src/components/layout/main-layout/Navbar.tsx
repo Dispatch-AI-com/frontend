@@ -1,7 +1,5 @@
 'use client';
 
-import CloseIcon from '@mui/icons-material/Close';
-import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
   Box,
@@ -40,19 +38,20 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   top: 0,
   left: 0,
   right: 0,
-  height: 72,
   marginBottom: '0',
   zIndex: theme.zIndex.drawer + 1,
+  [theme.breakpoints.down('md')]: {
+    borderBottom: '0.5px solid rgba(0, 0, 0, 0.12)',
+  },
 }));
 
-const StyledToolbar = styled(Toolbar)(() => ({
+const StyledToolbar = styled(Toolbar)({
   width: '100%',
   maxWidth: '1920px',
   display: 'flex',
   justifyContent: 'space-between',
-  height: '72px',
   transition: 'padding 0.3s ease',
-}));
+});
 
 const LogoBox = styled(Box)({
   display: 'flex',
@@ -68,9 +67,13 @@ const DesktopButtonGroup = styled(Stack)({
 const MobileMenuButton = styled(IconButton)(() => ({
   marginLeft: 'auto',
   transition: 'transform 0.3s ease',
-  borderRadius: 12,
-  width: 40,
-  height: 40,
+  width: 20,
+  height: 20,
+  padding: 0,
+  minWidth: 'auto',
+  '&:hover': {
+    backgroundColor: 'transparent',
+  },
 }));
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
@@ -80,7 +83,8 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
     boxSizing: 'border-box',
     width: '100vw',
     height: '100vh',
-    padding: 20,
+    padding: 0,
+    margin: 0,
     transition: 'transform 0.3s ease-in-out',
   },
 }));
@@ -119,7 +123,7 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
       }}
     >
       <Container maxWidth="xl">
-        <StyledToolbar disableGutters>
+        <StyledToolbar disableGutters sx={{ minHeight: { xs: 48, md: 72 } }}>
           {/* Logo */}
           <LogoBox>
             <Link href="/" aria-label="Dispatch AI Home">
@@ -179,9 +183,21 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
               }}
             >
               {mobileOpen ? (
-                <CloseIcon fontSize="medium" />
+                <Image
+                  src="/navbar_close.svg"
+                  alt="Close"
+                  width={20}
+                  height={20}
+                  style={{ filter: variant === 'dark' ? 'invert(1)' : 'none' }}
+                />
               ) : (
-                <MenuIcon fontSize="medium" />
+                <Image
+                  src="/navbar_menu.svg"
+                  alt="Menu"
+                  width={20}
+                  height={20}
+                  style={{ filter: variant === 'dark' ? 'invert(1)' : 'none' }}
+                />
               )}
             </MobileMenuButton>
           )}
