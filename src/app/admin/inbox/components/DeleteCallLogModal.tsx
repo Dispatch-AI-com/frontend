@@ -145,8 +145,7 @@ export default function DeleteCallLogModal({
         <Box display="flex" alignItems="center" gap={1}>
           <WarningIcon color="warning" />
           <WarningText variant="body2">
-            This will also delete the associated transcript and conversation
-            chunks.
+            This will also delete the associated transcript.
           </WarningText>
         </Box>
       </StyledDialogContent>
