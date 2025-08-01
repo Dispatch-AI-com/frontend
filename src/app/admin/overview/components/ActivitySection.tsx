@@ -24,20 +24,36 @@ function formatSubscriptionPeriod(
   }
 }
 
-const SectionContainer = styled(Box)({
-  display: 'flex',
-  gap: '24px',
+const SectionContainer = styled(Box)`
+  display: flex;
+  gap: 24px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
 
-  flexWrap: 'nowrap',
-  overflowX: 'auto',
-  WebkitOverflowScrolling: 'touch',
-  scrollSnapType: 'x mandatory',
-  paddingBottom: 8,
-  '& > *': {
-    flex: '0 0 auto',
-    scrollSnapAlign: 'start',
-  },
-});
+  & > * {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  @media (max-width: 600px) {
+    max-width: 400px;
+  }
+  @media (min-width: 600px) and (max-width: 800px) {
+    max-width: 650px;
+  }
+  @media (min-width: 800px) and (max-width: 1100px) {
+    max-width: 720px;
+  }
+  @media (min-width: 1100px) and (max-width: 1200px) {
+    max-width: 800px;
+  }
+  @media (min-width: 1200px) {
+    max-width: 1220px;
+  }
+`;
 
 const Title = styled(Typography)({
   fontSize: 16,

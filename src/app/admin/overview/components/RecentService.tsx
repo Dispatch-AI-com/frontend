@@ -14,7 +14,7 @@ const styles = {
     height: '244px',
     backgroundColor: 'white',
     borderRadius: '12px',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #eaeaea',
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
