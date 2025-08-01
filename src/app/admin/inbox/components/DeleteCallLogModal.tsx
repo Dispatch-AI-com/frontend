@@ -154,15 +154,15 @@ const ModalActions = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding: 24px 0px 8px 0px;
+  padding: 24px 0px 2px 0px;
 
   @media (max-width: 600px) {
-    padding: 16px 0px 8px 0px;
+    padding: 16px 0px 2px 0px;
     gap: 8px;
   }
 
   @media (max-width: 400px) {
-    padding: 12px 0px 4px 0px;
+    padding: 12px 0px 2px 0px;
   }
 `;
 
