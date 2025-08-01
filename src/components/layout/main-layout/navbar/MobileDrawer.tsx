@@ -2,13 +2,9 @@
 
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
-
-import { useAppSelector } from '@/redux/hooks';
 
 import type { NavItemProps as OriginalNavItemProps } from './NavItem';
 import { NavItem } from './NavItem';
-import { UserProfileDropdown } from './UserProfileDropdown';
 
 interface NavItemProps extends Omit<OriginalNavItemProps, 'href'> {
   href: string;
@@ -19,15 +15,6 @@ interface MobileDrawerProps {
   navItems: NavItemProps[];
   themeVariant?: 'light' | 'dark' | 'green';
 }
-
-const ActionArea = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 16,
-  alignItems: 'center',
-  marginTop: 'auto',
-  marginBottom: 48,
-});
 
 const MobileDrawerContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -48,12 +35,6 @@ export function MobileDrawer({
   navItems,
   themeVariant = 'light',
 }: MobileDrawerProps) {
-  const [isHydrated, setIsHydrated] = useState(false);
-  const { user } = useAppSelector(state => state.auth);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
   return (
     <MobileDrawerContainer>
       <MobileNavContainer spacing={0}>
@@ -67,12 +48,6 @@ export function MobileDrawer({
           />
         ))}
       </MobileNavContainer>
-
-      <ActionArea>
-        {isHydrated && user && (
-          <UserProfileDropdown user={user} themeVariant={themeVariant} />
-        )}
-      </ActionArea>
     </MobileDrawerContainer>
   );
 }
