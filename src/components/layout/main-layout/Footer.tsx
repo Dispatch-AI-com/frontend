@@ -105,9 +105,9 @@ const CopyrightText = styled(Typography)(({ theme }) => ({
 
 const NavLinksBox = styled(Box)(({ theme }) => ({
   flex: 5,
-  display: 'none',
-  [theme.breakpoints.up('lg')]: {
-    display: 'block',
+  paddingRight: theme.spacing(4),
+  '@media (min-width: 600px) and (max-width: 1130px)': {
+    display: 'none',
   },
 }));
 
@@ -115,6 +115,7 @@ const NavLinksStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
   gap: theme.spacing(4),
   whiteSpace: 'nowrap',
+  justifyContent: 'flex-end',
 }));
 
 const NavLink = styled(Link)(({ theme }) => ({
@@ -136,7 +137,7 @@ const SupportLink = styled(Link)(({ theme }) => ({
 }));
 
 const FreeTrialBox = styled(Box)(({ theme }) => ({
-  flex: 2,
+  flex: 1,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
