@@ -181,18 +181,6 @@ export default function TranscriptChunksModal({
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <StyledDialogTitle>
         Transcript
-        {chunksResponse && (
-          <span
-            style={{
-              fontSize: '14px',
-              fontWeight: 'normal',
-              marginLeft: '8px',
-              color: '#666',
-            }}
-          >
-            ({allChunks.length} of {chunksResponse.pagination.total} messages)
-          </span>
-        )}
         <IconButton
           onClick={onClose}
           sx={{ position: 'absolute', right: 8, top: 8 }}
