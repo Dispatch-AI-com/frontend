@@ -77,7 +77,8 @@ export const steps: Step[] = [
       return sum % 89 === 0;
     },
     onValidResponse: () => 'Thanks, ABN stored.',
-    retryMessage: 'ABN should be 11 digits. Could you double-check it?',
+    retryMessage:
+      'Hmm, that doesn’t seem like a real ABN. Could you double-check it?',
   },
 
   {
