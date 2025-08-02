@@ -6,6 +6,9 @@ export const TeamCardContainer = styled(Box)(({ theme }) => ({
   gridTemplateColumns: 'repeat(3, 1fr)',
   gap: theme.spacing(4),
   marginBottom: theme.spacing(10),
+  width: '100%',
+  justifyItems: 'center',
+  padding: 0,
   [theme.breakpoints.down('md')]: {
     gridTemplateColumns: 'repeat(2, 1fr)',
   },
