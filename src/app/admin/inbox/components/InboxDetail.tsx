@@ -1,8 +1,9 @@
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import DeleteIcon from '@mui/icons-material/Delete';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { Button, Typography } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -20,6 +21,7 @@ import { useGetServicesQuery } from '@/features/service-management/serviceManage
 import { useAppSelector } from '@/redux/hooks';
 import type { ICallLog } from '@/types/calllog.d';
 
+import DeleteCallLogModal from './DeleteCallLogModal';
 import TranscriptSection from './TranscriptSection';
 
 const DetailContainer = styled.div`
@@ -31,6 +33,25 @@ const AvatarSection = styled.div`
   align-items: center;
   gap: 16px;
   padding: 0 16px;
+  position: relative;
+`;
+
+const DeleteButton = styled(IconButton)`
+  && {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #d32f2f;
+      background-color: #ffebee;
+    }
+  }
 `;
 
 const AvatarImg = styled.div`
@@ -127,7 +148,7 @@ const TranscriptContainer = styled.div`
 
 const ServiceBookingSection = styled.div`
   margin-top: 24px;
-  padding: 0 32px;
+  padding: 0 32px 16px 32px;
 `;
 
 const ServiceBookingCard = styled.div`
@@ -233,7 +254,7 @@ const ViewServiceButton = styled(Button)`
   && {
     min-width: 160px;
     margin-top: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 4px;
     width: auto;
     align-self: flex-start;
   }
@@ -250,13 +271,22 @@ const NoBookingMessage = styled.div`
   margin-top: 16px;
 `;
 
-export default function InboxDetail({ item }: { item?: ICallLog }) {
+interface InboxDetailProps {
+  item?: ICallLog;
+  onCallLogDeleted?: () => void;
+}
+
+export default function InboxDetail({
+  item,
+  onCallLogDeleted,
+}: InboxDetailProps) {
   const user = useAppSelector(state => state.auth.user);
   const userId = user?._id;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // Add mutations for update and delete
+  // Service booking mutations
   const [updateServiceBooking] = useUpdateServiceBookingMutation();
   const [deleteServiceBooking] = useDeleteServiceBookingMutation();
 
@@ -402,6 +432,14 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
     }
   };
 
+  const handleDeleteCallLog = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    onCallLogDeleted?.();
+  };
+
   return (
     <DetailContainer>
       <AvatarSection>
@@ -417,6 +455,9 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
           <UserName>{item.callerName}</UserName>
           <UserPhone>{formatPhoneNumber(item.callerNumber)}</UserPhone>
         </UserInfo>
+        <DeleteButton onClick={handleDeleteCallLog} title="Delete call log">
+          <DeleteIcon fontSize="small" />
+        </DeleteButton>
       </AvatarSection>
       <Divider />
       <MainContent>
@@ -551,6 +592,13 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
           }}
         />
       )}
+
+      <DeleteCallLogModal
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        callLog={item}
+        onDeleteSuccess={handleDeleteSuccess}
+      />
     </DetailContainer>
   );
 }

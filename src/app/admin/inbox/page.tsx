@@ -19,55 +19,68 @@ import type { ICallLog } from '@/types/calllog.d';
 
 const ContentContainer = styled.div`
   display: flex;
-  height: calc(100vh - 120px);
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
+  background: #f5f5f5;
 `;
 
 const ListContainer = styled.div`
   width: 350px;
   background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
+  min-height: 100%;
 
   ${theme.breakpoints.down('sm')} {
     width: 100%;
     min-width: 0;
+    border-right: none;
   }
 `;
 
 const ListContent = styled.div`
   flex: 1;
   overflow-y: auto;
-  height: 100%;
+  min-height: 0;
+
   &::-webkit-scrollbar {
     width: 6px;
   }
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #f8f9fa;
   }
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #ccc;
     border-radius: 3px;
   }
   &::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #999;
   }
 `;
 
 const DetailContainer = styled.div`
   flex: 1;
   background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   overflow-y: auto;
-  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 
-  @media (max-width: 600px) {
-    margin-top: 16px;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f8f9fa;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #999;
   }
 `;
 
@@ -77,6 +90,38 @@ const EmptyStateContainer = styled.div`
   justify-content: center;
   height: 400px;
   text-align: center;
+`;
+
+const EmptyDetailContainer = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  color: #666;
+  font-size: 16px;
+  min-height: 100%;
+`;
+
+const MobileBackButton = styled.button`
+  background: none;
+  border: none;
+  color: #1976d2;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &:active {
+    background-color: #e3f2fd;
+  }
 `;
 
 const EmptyStateContent = styled.div`
@@ -345,9 +390,19 @@ export default function InboxPage() {
 
     // Date range filter
     if (dateFromFilter || dateToFilter) {
-      const callDate = new Date(item.createdAt ?? '');
+      const callDate = new Date(item.startAt ?? '');
+
+      // Set start of day for fromDate (00:00:00)
       const fromDate = dateFromFilter ? new Date(dateFromFilter) : null;
+      if (fromDate) {
+        fromDate.setHours(0, 0, 0, 0);
+      }
+
+      // Set end of day for toDate (23:59:59.999)
       const toDate = dateToFilter ? new Date(dateToFilter) : null;
+      if (toDate) {
+        toDate.setHours(23, 59, 59, 999);
+      }
 
       if (fromDate && callDate < fromDate) {
         return false;
@@ -364,8 +419,20 @@ export default function InboxPage() {
     setSelectedId(id);
     if (isSmallScreen) setShowDetailMobile(true);
   };
+
   const handleBack = () => {
     setShowDetailMobile(false);
+  };
+
+  const handleCallLogDeleted = () => {
+    // Reset selected item if it was deleted
+    setSelectedId(undefined);
+    if (isSmallScreen) {
+      setShowDetailMobile(false);
+    }
+    // Reset pagination to refresh the list
+    setCurrentPage(1);
+    setAllCallLogs([]);
   };
 
   const handleSearch = (searchTerm: string) => {
@@ -555,32 +622,33 @@ export default function InboxPage() {
                 />
               </ListContent>
             </ListContainer>
-            <DetailContainer>
-              {selectedItem && <InboxDetail item={selectedItem} />}
-            </DetailContainer>
+            {selectedItem ? (
+              <DetailContainer>
+                <InboxDetail
+                  item={selectedItem}
+                  onCallLogDeleted={handleCallLogDeleted}
+                />
+              </DetailContainer>
+            ) : (
+              <EmptyDetailContainer>
+                Select a call to view details
+              </EmptyDetailContainer>
+            )}
           </>
         ) : showDetailMobile ? (
           <DetailContainer>
-            <div style={{ padding: '16px 0 0 16px' }}>
-              <button
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#1976d2',
-                  fontSize: 16,
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  marginBottom: 16,
-                }}
-                onClick={handleBack}
-              >
-                ← Back
-              </button>
-            </div>
-            {selectedItem && <InboxDetail item={selectedItem} />}
+            <MobileBackButton onClick={handleBack}>
+              ← Back to calls
+            </MobileBackButton>
+            {selectedItem && (
+              <InboxDetail
+                item={selectedItem}
+                onCallLogDeleted={handleCallLogDeleted}
+              />
+            )}
           </DetailContainer>
         ) : (
-          <ListContainer style={{ width: '100%' }}>
+          <ListContainer>
             <ListContent>
               <InboxList
                 selectedId={selectedId}

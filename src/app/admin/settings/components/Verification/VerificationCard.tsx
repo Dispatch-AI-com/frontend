@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React from 'react';
 
 import theme from '@/theme';
 
