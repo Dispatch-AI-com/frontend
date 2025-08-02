@@ -65,7 +65,6 @@ const DesktopButtonGroup = styled(Stack)({
 });
 
 const MobileMenuButton = styled(IconButton)(() => ({
-  marginLeft: 'auto',
   transition: 'transform 0.3s ease',
   width: 20,
   height: 20,
@@ -130,8 +129,8 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
               <Image
                 src={variant === 'dark' ? '/logo-dark.svg' : '/logo.svg'}
                 alt="Dispatch AI logo"
-                width={126}
-                height={30}
+                width={isMobile ? 105 : 126}
+                height={isMobile ? 25 : 30}
                 priority
                 style={{ cursor: 'pointer', display: 'block' }}
               />
@@ -157,20 +156,29 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
 
           {/* Mobile */}
           {isMobile && (
-            <MobileMenuButton
-              color="inherit"
-              aria-label="toggle drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{
-                backgroundColor:
-                  variant === 'light'
-                    ? theme.palette.background.paper
-                    : variant === 'dark'
-                      ? '#060606'
-                      : '#f8fff3',
-                color: variant === 'dark' ? '#ffffff' : 'inherit',
-                '&:hover': {
+            <Stack
+              direction="row"
+              spacing={1.5}
+              sx={{ marginLeft: 'auto', alignItems: 'center' }}
+            >
+              {/* Auth Buttons for Mobile */}
+              <Stack direction="row" spacing={1} sx={{ marginRight: 2.5 }}>
+                {isHydrated && user ? (
+                  <UserProfileDropdown user={user} themeVariant={variant} />
+                ) : (
+                  <>
+                    <AuthButton variant="login" themeVariant={variant} />
+                    <AuthButton variant="signup" themeVariant={variant} />
+                  </>
+                )}
+              </Stack>
+
+              <MobileMenuButton
+                color="inherit"
+                aria-label="toggle drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{
                   backgroundColor:
                     variant === 'light'
                       ? theme.palette.background.paper
@@ -178,28 +186,41 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
                         ? '#060606'
                         : '#f8fff3',
                   color: variant === 'dark' ? '#ffffff' : 'inherit',
-                },
-                transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-              }}
-            >
-              {mobileOpen ? (
-                <Image
-                  src="/navbar_close.svg"
-                  alt="Close"
-                  width={20}
-                  height={20}
-                  style={{ filter: variant === 'dark' ? 'invert(1)' : 'none' }}
-                />
-              ) : (
-                <Image
-                  src="/navbar_menu.svg"
-                  alt="Menu"
-                  width={20}
-                  height={20}
-                  style={{ filter: variant === 'dark' ? 'invert(1)' : 'none' }}
-                />
-              )}
-            </MobileMenuButton>
+                  '&:hover': {
+                    backgroundColor:
+                      variant === 'light'
+                        ? theme.palette.background.paper
+                        : variant === 'dark'
+                          ? '#060606'
+                          : '#f8fff3',
+                    color: variant === 'dark' ? '#ffffff' : 'inherit',
+                  },
+                  transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                }}
+              >
+                {mobileOpen ? (
+                  <Image
+                    src="/navbar_close.svg"
+                    alt="Close"
+                    width={20}
+                    height={20}
+                    style={{
+                      filter: variant === 'dark' ? 'invert(1)' : 'none',
+                    }}
+                  />
+                ) : (
+                  <Image
+                    src="/navbar_menu.svg"
+                    alt="Menu"
+                    width={20}
+                    height={20}
+                    style={{
+                      filter: variant === 'dark' ? 'invert(1)' : 'none',
+                    }}
+                  />
+                )}
+              </MobileMenuButton>
+            </Stack>
           )}
         </StyledToolbar>
       </Container>
