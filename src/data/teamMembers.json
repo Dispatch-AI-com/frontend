@@ -48,6 +48,12 @@
     "image": "/assets/images/team-members/Freya.jpeg"
   },
   {
+    "name": "Kevin",
+    "role": "Developer",
+    "linkedin": "https://www.linkedin.com/in/kevinbanbj/",
+    "image": "/assets/images/team-members/Kevin.jpg"
+  },
+  {
     "name": "Leo",
     "role": "Developer",
     "linkedin": "https://www.linkedin.com/in/leo-li-aus/",
@@ -64,11 +70,5 @@
     "role": "Developer",
     "linkedin": "https://www.linkedin.com/in/tim-yichen-tian",
     "image": "/assets/images/team-members/Tim.jpeg"
-  },
-  {
-    "name": "David",
-    "role": "Developer",
-    "linkedin": "https://www.linkedin.com/in/shenghongzhong/",
-    "image": "/assets/images/team-members/David.jpeg"
   }
 ]
