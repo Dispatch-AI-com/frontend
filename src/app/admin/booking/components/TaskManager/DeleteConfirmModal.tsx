@@ -135,7 +135,7 @@ const DeleteConfirmModal: React.FC<Props> = ({
 
         <ModalContent>
           <MessageText>
-            Deleted service cannot be retrieved, continue?
+            Deleted booking cannot be retrieved, continue?
           </MessageText>
         </ModalContent>
 

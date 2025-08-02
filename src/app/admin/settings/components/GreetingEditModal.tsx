@@ -99,14 +99,12 @@ const GreetingEditModal: React.FC<GreetingEditModalProps> = ({
     setError('');
   };
 
-  const defaultMessage = `"
-  Hello! I'm an Dispatch AI assistant working for you.
+  const defaultMessage = `We will generate a greeting message based on your service list. 
+    
+Here's an example:
 
-Your team is not available to take the call right now.
-
-I can take a message for you, or help you book an appointment with your team. What can I do for you today?
-
-你也可以和我说普通话。`;
+Welcome! We are ABC Auto Repair. We provide car maintenance, engine diagnostics, and brake repair services. May I get your name please?
+`;
 
   return (
     <Dialog

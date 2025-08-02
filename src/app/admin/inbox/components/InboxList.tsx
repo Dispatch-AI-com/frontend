@@ -1,5 +1,5 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import type { ICallLog } from '@/types/calllog.d';
@@ -100,18 +100,6 @@ const LoadingContainer = styled.div`
   margin-top: 8px;
 `;
 
-const EndMessage = styled.div`
-  padding: 16px;
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-  font-style: italic;
-  background-color: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-  margin-top: auto;
-  flex-shrink: 0;
-`;
-
 interface InboxListProps {
   selectedId?: string;
   onSelect?: (id: string) => void;
@@ -151,7 +139,6 @@ export default function InboxList({
   isLoading = false,
 }: InboxListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
-  const [isAtBottom, setIsAtBottom] = useState(false);
 
   const rowVirtualizer = useVirtualizer({
     count: allItems.length,
@@ -167,10 +154,6 @@ export default function InboxList({
 
     const { scrollTop, scrollHeight, clientHeight } = parentRef.current;
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-
-    // Check if we're at the bottom (within 10px)
-    const atBottom = distanceFromBottom <= 10;
-    setIsAtBottom(atBottom);
 
     // Trigger next page when within 200px of bottom
     if (distanceFromBottom <= 200 && hasNextPage && !isFetchingNextPage) {
@@ -257,11 +240,6 @@ export default function InboxList({
             </PhoneRow>
           </ListItem>
         </LoadingContainer>
-      )}
-      {!hasNextPage && allItems.length > 0 && isAtBottom && (
-        <EndMessage>
-          No more call logs to load • Total: {allItems.length} items
-        </EndMessage>
       )}
     </List>
   );

@@ -1,20 +1,27 @@
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import DeleteIcon from '@mui/icons-material/Delete';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { Button, Typography } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import EditServiceModal from '@/app/admin/service/components/TaskManager/EditServiceModal';
+import EditBookingModal from '@/app/admin/booking/components/TaskManager/EditBookingModal';
 import type { Service } from '@/features/service/serviceApi';
-import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
+import {
+  type ServiceBooking,
+  useDeleteServiceBookingMutation,
+  useGetBookingsQuery,
+  useUpdateServiceBookingMutation,
+} from '@/features/service/serviceBookingApi';
 import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 import type { ICallLog } from '@/types/calllog.d';
 
+import DeleteCallLogModal from './DeleteCallLogModal';
 import TranscriptSection from './TranscriptSection';
 
 const DetailContainer = styled.div`
@@ -26,6 +33,25 @@ const AvatarSection = styled.div`
   align-items: center;
   gap: 16px;
   padding: 0 16px;
+  position: relative;
+`;
+
+const DeleteButton = styled(IconButton)`
+  && {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #d32f2f;
+      background-color: #ffebee;
+    }
+  }
 `;
 
 const AvatarImg = styled.div`
@@ -122,7 +148,7 @@ const TranscriptContainer = styled.div`
 
 const ServiceBookingSection = styled.div`
   margin-top: 24px;
-  padding: 0 32px;
+  padding: 0 32px 16px 32px;
 `;
 
 const ServiceBookingCard = styled.div`
@@ -228,7 +254,7 @@ const ViewServiceButton = styled(Button)`
   && {
     min-width: 160px;
     margin-top: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 4px;
     width: auto;
     align-self: flex-start;
   }
@@ -245,11 +271,24 @@ const NoBookingMessage = styled.div`
   margin-top: 16px;
 `;
 
-export default function InboxDetail({ item }: { item?: ICallLog }) {
+interface InboxDetailProps {
+  item?: ICallLog;
+  onCallLogDeleted?: () => void;
+}
+
+export default function InboxDetail({
+  item,
+  onCallLogDeleted,
+}: InboxDetailProps) {
   const user = useAppSelector(state => state.auth.user);
   const userId = user?._id;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  // Service booking mutations
+  const [updateServiceBooking] = useUpdateServiceBookingMutation();
+  const [deleteServiceBooking] = useDeleteServiceBookingMutation();
 
   // Fetch service bookings for this call log
   const { data: bookings = [] } = useGetBookingsQuery(
@@ -312,7 +351,7 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
       const serviceForEdit = {
         _id: serviceBooking._id,
         name: service.name,
-        description: service.description ?? '',
+        description: serviceBooking.note ?? '', // Use booking note, not service description
         status: serviceBooking.status ?? 'Confirmed',
         dateTime: serviceBooking.bookingTime,
         client: {
@@ -340,14 +379,65 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
     setEditingService(null);
   };
 
-  const handleSaveService = (_updatedService: Service) => {
-    // Handle save logic here if needed
-    handleCloseEditModal();
+  const handleSaveService = async (updatedService: Service): Promise<void> => {
+    try {
+      // Find the corresponding booking
+      const booking = bookings.find(b => b._id === updatedService._id);
+      if (booking) {
+        // Find the corresponding service ID by service name
+        const selectedService = services.find(
+          service => service.name === updatedService.name,
+        );
+
+        // Prepare the update data
+        const updateData: Partial<ServiceBooking> = {
+          status: updatedService.status,
+          note: updatedService.description,
+          bookingTime: updatedService.dateTime,
+          client: {
+            name: updatedService.client?.name ?? booking.client?.name ?? '',
+            phoneNumber:
+              updatedService.client?.phoneNumber ??
+              booking.client?.phoneNumber ??
+              '',
+            address:
+              updatedService.client?.address ?? booking.client?.address ?? '',
+          },
+        };
+
+        // Only update serviceId if a different service was selected
+        if (selectedService && selectedService._id !== booking.serviceId) {
+          updateData.serviceId = selectedService._id;
+        }
+
+        await updateServiceBooking({
+          id: booking._id!,
+          data: updateData,
+        }).unwrap();
+      }
+      handleCloseEditModal();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to update booking:', error);
+    }
   };
 
-  const handleDeleteService = (_serviceId: string) => {
-    // Handle delete logic here if needed
-    handleCloseEditModal();
+  const handleDeleteService = async (serviceId: string): Promise<void> => {
+    try {
+      await deleteServiceBooking(serviceId).unwrap();
+      handleCloseEditModal();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to delete booking:', error);
+    }
+  };
+
+  const handleDeleteCallLog = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    onCallLogDeleted?.();
   };
 
   return (
@@ -365,6 +455,9 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
           <UserName>{item.callerName}</UserName>
           <UserPhone>{formatPhoneNumber(item.callerNumber)}</UserPhone>
         </UserInfo>
+        <DeleteButton onClick={handleDeleteCallLog} title="Delete call log">
+          <DeleteIcon fontSize="small" />
+        </DeleteButton>
       </AvatarSection>
       <Divider />
       <MainContent>
@@ -488,13 +581,24 @@ export default function InboxDetail({ item }: { item?: ICallLog }) {
       </ServiceBookingSection>
 
       {isEditModalOpen && editingService && (
-        <EditServiceModal
+        <EditBookingModal
           service={editingService}
           onClose={handleCloseEditModal}
-          onSave={handleSaveService}
-          onDelete={handleDeleteService}
+          onSave={(updatedService: Service) => {
+            void handleSaveService(updatedService);
+          }}
+          onDelete={(serviceId: string) => {
+            void handleDeleteService(serviceId);
+          }}
         />
       )}
+
+      <DeleteCallLogModal
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        callLog={item}
+        onDeleteSuccess={handleDeleteSuccess}
+      />
     </DetailContainer>
   );
 }

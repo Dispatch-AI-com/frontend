@@ -13,9 +13,13 @@ export default function ReduxTestPage() {
   const user = useAppSelector(state => state.auth.user);
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
     console.groupCollapsed('🔑 Auth State');
+    // eslint-disable-next-line no-console
     console.log('Token:', token);
+    // eslint-disable-next-line no-console
     console.log('User:', user);
+    // eslint-disable-next-line no-console
     console.groupEnd();
   }, [token, user]);
 
@@ -26,6 +30,7 @@ export default function ReduxTestPage() {
     try {
       await triggerUnauthorized(undefined).unwrap();
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log('❌ API Error:', JSON.stringify(err, null, 2));
     }
   };
