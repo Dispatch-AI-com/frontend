@@ -140,13 +140,12 @@ const validateState = (state: string): ValidationResult => {
 export default function BillingAddressSection() {
   const user = useAppSelector(state => state.auth.user);
 
-  const {
-    data: billingData,
-    isLoading,
-    error,
-  } = useGetBillingAddressQuery(user?._id ?? '', {
-    skip: !user?._id,
-  });
+  const { data: billingData, isLoading } = useGetBillingAddressQuery(
+    user?._id ?? '',
+    {
+      skip: !user?._id,
+    },
+  );
 
   const [updateBillingAddress] = useUpdateBillingAddressMutation();
   const handleSave = async (values: Record<string, string>) => {

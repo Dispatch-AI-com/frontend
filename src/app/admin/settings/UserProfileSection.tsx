@@ -18,13 +18,12 @@ import {
 export default function UserProfileSection() {
   const user = useAppSelector(state => state.auth.user);
 
-  const {
-    data: profileData,
-    isLoading,
-    error,
-  } = useGetUserProfileQuery(user?._id ?? '', {
-    skip: !user?._id,
-  });
+  const { data: profileData, isLoading } = useGetUserProfileQuery(
+    user?._id ?? '',
+    {
+      skip: !user?._id,
+    },
+  );
 
   const [updateProfile] = useUpdateUserProfileMutation();
   const handleSave = async (values: Record<string, string>) => {

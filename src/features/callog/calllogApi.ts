@@ -2,7 +2,6 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { axiosBaseQuery } from '@/lib/axiosBaseQuery';
 import type { ICallLog } from '@/types/calllog.d';
-import type { ITranscriptChunk } from '@/types/transcript-chunk.d';
 
 type SortOption = 'newest' | 'oldest';
 
@@ -50,20 +49,21 @@ export const calllogsApi = createApi({
       },
       providesTags: ['CallLog'],
     }),
-    getTranscriptChunks: builder.query<ITranscriptChunk[], string>({
-      query: transcriptId => ({
-        url: `/transcripts/${transcriptId}/chunks`,
-        method: 'GET',
+    deleteCallLog: builder.mutation<
+      ICallLog,
+      { userId: string; calllogId: string }
+    >({
+      query: ({ userId, calllogId }) => ({
+        url: `/users/${userId}/calllogs/${calllogId}`,
+        method: 'DELETE',
       }),
-      providesTags: ['CallLog'],
+      invalidatesTags: ['CallLog'],
     }),
   }),
 });
 
 // Export hooks
-export const { useGetCallLogsQuery, useGetTranscriptChunksQuery } = calllogsApi;
+export const { useGetCallLogsQuery, useDeleteCallLogMutation } = calllogsApi;
 
 // Export raw API functions
 export const getCallLogs = calllogsApi.endpoints.getCallLogs.initiate;
-export const getTranscriptChunks =
-  calllogsApi.endpoints.getTranscriptChunks.initiate;

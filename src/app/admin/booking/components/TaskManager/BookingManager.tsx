@@ -205,8 +205,9 @@ export function Content({
     setDeletingBookingId(bookingId);
 
   const handleConfirmDelete = () => {
-    // Handle delete logic
+    // Close both delete modal and edit modal after successful deletion
     setDeletingBookingId(null);
+    setEditingBooking(null);
   };
 
   const handleCancelDelete = () => setDeletingBookingId(null);
@@ -269,7 +270,33 @@ export function Content({
     const matchesCreator =
       !creatorFilter || service.createdBy?.name === creatorFilter;
 
-    return matchesSearch && matchesStatus && matchesCreator;
+    // Date range filter
+    const matchesDateRange = (() => {
+      if (!dateFrom && !dateTo) return true;
+
+      if (!service.dateTime) return false;
+
+      const bookingDate = new Date(service.dateTime);
+
+      // Set start of day for fromDate (00:00:00)
+      const fromDate = dateFrom ? new Date(dateFrom) : null;
+      if (fromDate) {
+        fromDate.setHours(0, 0, 0, 0);
+      }
+
+      // Set end of day for toDate (23:59:59.999)
+      const toDate = dateTo ? new Date(dateTo) : null;
+      if (toDate) {
+        toDate.setHours(23, 59, 59, 999);
+      }
+
+      if (fromDate && bookingDate < fromDate) return false;
+      if (toDate && bookingDate > toDate) return false;
+
+      return true;
+    })();
+
+    return matchesSearch && matchesStatus && matchesCreator && matchesDateRange;
   });
 
   // Pagination
