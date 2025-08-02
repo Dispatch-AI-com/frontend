@@ -31,13 +31,13 @@ export const HeaderContainer = styled(Container)(({ theme }) => ({
   justifyContent: 'center',
   gap: theme.spacing(10),
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(5, 5),
-    flexDirection: 'column',
+    padding: theme.spacing(1, 1),
+    flexDirection: 'column-reverse',
     textAlign: 'center',
   },
   [theme.breakpoints.only('sm')]: {
-    padding: theme.spacing(5, 5),
-    flexDirection: 'column',
+    padding: theme.spacing(1, 1),
+    flexDirection: 'column-reverse',
     textAlign: 'center',
   },
 }));
