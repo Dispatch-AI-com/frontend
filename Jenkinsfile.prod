@@ -110,6 +110,7 @@ pipeline {
                                     git diff-index --quiet HEAD || git commit -m "Automated commit from Jenkins"
                                     git push origin main
                                 '''
+                            }
                         }
                     }
                 }
