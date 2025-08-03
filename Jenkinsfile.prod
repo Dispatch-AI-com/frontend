@@ -31,22 +31,19 @@ pipeline {
             }
         }
 
-
-        // stage('checkout repos') {
-        //     when {
-        //         buildingTag()
-        //     }
-        //     steps {
-        //         // container('dispatchai-jenkins-agent') {
-        //             dir('argo') {
-        //                 git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
-        //             }
-        //         // }
-
-        //     }
-        // }
-
-
+        stage('checkout repos') {
+            when {
+                buildingTag()
+            }
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    dir('argo') {
+                        git branch: "main", credentialsId: 'a8aed8cf-5694-4d2c-880a-964501f33c1f', url: 'git@github.com:Dispatch-AI-com/argo.git'
+                        // git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
+                    }
+                }
+            }
+        }
 
         // stage('install, test and build') {
         //     steps {
@@ -89,29 +86,35 @@ pipeline {
         // }
 
 
-        // stage('Update values.yaml for ArgoCD') {
-        //     when {
-        //         buildingTag()
-        //     }
+        stage('Update values.yaml for ArgoCD') {
+            when {
+                buildingTag()
+            }
 
-        //     steps {
-        //         container('dispatchai-jenkins-agent') {
-        //             dir('argo/envs/prod/frontend') {
-        //                 script {
-        //                     sh """
-        //                         export IMAGE_TAG="${env.TAG_NAME}"
-        //                         yq e '.image.tag = strenv(IMAGE_TAG)' -i values-frontend-prod.yaml
-        //                     """
-        //                     // sh "git config user.name 'jenkins'"
-        //                     // sh "git config user.email 'ci@dispatchai.com'"
-        //                     sh "git add values-frontend-prod.yaml"
-        //                     sh "git commit -m 'ci: update frontend image tag to ${env.TAG_NAME}' || echo 'No changes to commit'"
-        //                     sh "git push origin main"
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    dir('argo/envs/prod/frontend') {
+                        script {
+                            sh """
+                                export IMAGE_TAG="${env.TAG_NAME}"
+                                export IMAGE_TAG="lawrence-v1"
+                                yq e '.image.tag = strenv(IMAGE_TAG)' -i values-frontend-prod.yaml
+                            """
+                            sshagent(
+                                credentialsId: 'a8aed8cf-5694-4d2c-880a-964501f33c1f'
+                            ) {
+                                sh '''
+                                    git config user.name "Jenkins"
+                                    git config user.email "lawrence.wenboli@gmail.com"
+                                    git add values-frontend-prod.yaml
+                                    git diff-index --quiet HEAD || git commit -m "Automated commit from Jenkins"
+                                    git push origin main
+                                '''
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // post {
