@@ -1,12 +1,10 @@
 pipeline {
-    // agent {
-    //     kubernetes {
-    //         cloud 'EKS-Agent-PROD-lawrence'
-    //         yamlFile 'jenkins-agent-prod.yaml'
-    //     }
-    // }
-
-    agent any
+    agent {
+        kubernetes {
+            cloud 'EKS-Agent-PROD-lawrence'
+            yamlFile 'jenkins-agent-prod.yaml'
+        }
+    }
 
     environment {
         ENVIRONMENT     = "prod"
@@ -27,14 +25,26 @@ pipeline {
                 buildingTag()
             }
             steps {
-                // container('dispatchai-jenkins-agent') {
-                    dir('argo') {
-                        git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
-                    }
-                // }
-
+                container('dispatchai-jenkins-agent') {
+                    sh "echo testing agent.${env.TAG_NAME}"
+                }
             }
         }
+
+
+        // stage('checkout repos') {
+        //     when {
+        //         buildingTag()
+        //     }
+        //     steps {
+        //         // container('dispatchai-jenkins-agent') {
+        //             dir('argo') {
+        //                 git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
+        //             }
+        //         // }
+
+        //     }
+        // }
 
 
 
@@ -53,11 +63,11 @@ pipeline {
         //     }
         // }
 
-        stage('Manual Approval for Deployment') {
-            steps {
-                input message: "Proceed to deploy frontend:${env.TAG_NAME} to production environment?", ok: 'Yes!'
-            }
-        }
+        // stage('Manual Approval for Deployment') {
+        //     steps {
+        //         input message: "Proceed to deploy frontend:${env.TAG_NAME} to production environment?", ok: 'Yes!'
+        //     }
+        // }
 
         // stage('build docker image') {
         //     steps {
@@ -79,29 +89,29 @@ pipeline {
         // }
 
 
-        stage('Update values.yaml for ArgoCD') {
-            when {
-                buildingTag()
-            }
-            
-            steps {
-                container('dispatchai-jenkins-agent') {
-                    dir('argo/envs/prod/frontend') {
-                        script {
-                            sh """
-                                export IMAGE_TAG="${env.TAG_NAME}"
-                                yq e '.image.tag = strenv(IMAGE_TAG)' -i values-frontend-prod.yaml
-                            """
-                            // sh "git config user.name 'jenkins'"
-                            // sh "git config user.email 'ci@dispatchai.com'"
-                            sh "git add values-frontend-prod.yaml"
-                            sh "git commit -m 'ci: update frontend image tag to ${env.TAG_NAME}' || echo 'No changes to commit'"
-                            sh "git push origin main"
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Update values.yaml for ArgoCD') {
+        //     when {
+        //         buildingTag()
+        //     }
+
+        //     steps {
+        //         container('dispatchai-jenkins-agent') {
+        //             dir('argo/envs/prod/frontend') {
+        //                 script {
+        //                     sh """
+        //                         export IMAGE_TAG="${env.TAG_NAME}"
+        //                         yq e '.image.tag = strenv(IMAGE_TAG)' -i values-frontend-prod.yaml
+        //                     """
+        //                     // sh "git config user.name 'jenkins'"
+        //                     // sh "git config user.email 'ci@dispatchai.com'"
+        //                     sh "git add values-frontend-prod.yaml"
+        //                     sh "git commit -m 'ci: update frontend image tag to ${env.TAG_NAME}' || echo 'No changes to commit'"
+        //                     sh "git push origin main"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     // post {
