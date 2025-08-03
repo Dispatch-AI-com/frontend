@@ -9,7 +9,7 @@ spec:
       args: ['99d']
       tty: true
     - name: dispatchai-jenkins-agent
-      image: 981349713333.dkr.ecr.ap-southeast-2.amazonaws.com/dispatchai-jenkins-agent:lawrence
+      image: 981349713333.dkr.ecr.ap-southeast-2.amazonaws.com/dispatchai-jenkins-agent:latest
       imagePullPolicy: Always
       command: ['sleep']
       args: ['99d']
