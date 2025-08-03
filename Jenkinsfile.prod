@@ -1,14 +1,3 @@
-String gitTagName() {
-    // commit = getCommit()
-    // if (commit) {
-    tag = sh(script: "git tag --sort=version:refname | tail -1", returnStdout: true)?.trim()
-    if (tag) {
-        return tag
-    }
-    // }
-    return null
-}
-
 pipeline {
     // agent {
     //     kubernetes {
@@ -25,7 +14,7 @@ pipeline {
         AWS_REGION      = "ap-southeast-2"
         ECR_REPO        = "dispatchai-frontend"
         IMAGE_NAME      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
-        BACKEND_URL = "https://backend.getdispatch.ai/api"
+        BACKEND_URL     = "https://backend.getdispatch.ai/api"
     }
 
     stages {
@@ -38,33 +27,12 @@ pipeline {
                 buildingTag()
             }
             steps {
-                // container('node') {
-                    // dir('frontend') {
-                    //     git branch: "${env.BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/frontend.git'
-                    // }
-                // }
                 // container('dispatchai-jenkins-agent') {
-                    dir('helm') {
-                        git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
-                    }
                     dir('argo') {
                         git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
                     }
                 // }
 
-            }
-        }
-
-        stage('Init Tag') {
-            steps {
-                // container('dispatchai-jenkins-agent') {
-                    script {
-                        env.IMAGE_TAG = gitTagName()
-                    }
-                    echo "IMAGE_TAG is: ${env.IMAGE_TAG}"
-                    echo "IMAGE_TAG1 is: ${env.TAG_NAME}"
-
-                // }
             }
         }
 
@@ -102,7 +70,7 @@ pipeline {
 
         stage('Manual Approval for Deployment') {
             steps {
-                input message: "Proceed to deploy backend:${IMAGE_TAG} or ${env.TAG_NAME} to UAT?", ok: 'Yes, Deploy!'
+                input message: "Proceed to deploy frontend:${env.TAG_NAME} to production environment?", ok: 'Yes!'
             }
         }
 
