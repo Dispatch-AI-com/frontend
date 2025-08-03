@@ -102,15 +102,18 @@ pipeline {
                                     yq e '.image.tag = strenv(IMAGE_TAG)' -i values-frontend-prod.yaml
                                 """
 
-                                // Commit and push the changes to the arogo repository
-                                sh '''
-                                    git config user.name "Jenkins"
-                                    git config user.email "lawrence.wenboli@gmail.com"
-                                    git add values-frontend-prod.yaml
-                                    git diff-index --quiet HEAD || git commit -m "Automated commit from Jenkins"
-                                    git push origin main
-                                '''
-                            }
+                        }
+                        sshagent(
+                            credentialsId: 'a8aed8cf-5694-4d2c-880a-964501f33c1f'
+                        ) {
+                            // Commit and push the changes to the arogo repository
+                            sh '''
+                                git config user.name "Jenkins"
+                                git config user.email "lawrence.wenboli@gmail.com"
+                                git add values-frontend-prod.yaml
+                                git diff-index --quiet HEAD || git commit -m "Automated commit from Jenkins"
+                                git push origin main
+                            '''
                         }
                     }
                 }
