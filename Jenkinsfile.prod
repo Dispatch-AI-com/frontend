@@ -38,6 +38,7 @@ pipeline {
             steps {
                 container('node') {
                     // dir('frontend') {
+                        sh "ls"
                         sh "npm install -g pnpm"
                         sh "pnpm install"
                         sh "pnpm run type-check"
