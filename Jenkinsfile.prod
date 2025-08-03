@@ -1,0 +1,159 @@
+String gitTagName() {
+    // commit = getCommit()
+    // if (commit) {
+    tag = sh(script: "git tag --sort=version:refname | tail -1", returnStdout: true)?.trim()
+    if (tag) {
+        return tag
+    }
+    // }
+    return null
+}
+
+pipeline {
+    // agent {
+    //     kubernetes {
+    //         cloud 'EKS-Agent-PROD-lawrence'
+    //         yamlFile 'jenkins-agent-prod.yaml'
+    //     }
+    // }
+
+    agent any
+
+    environment {
+        ENVIRONMENT     = "prod"
+        AWS_ACCOUNT_ID  = "981349713333"
+        AWS_REGION      = "ap-southeast-2"
+        ECR_REPO        = "dispatchai-frontend"
+        IMAGE_NAME      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
+        BACKEND_URL = "https://backend.getdispatch.ai/api"
+    }
+
+    stages {
+        stage('Clean workspace') {
+            steps { cleanWs() }
+        }
+
+        stage('checkout repos') {
+            when {
+                buildingTag()
+            }
+            steps {
+                // container('node') {
+                    dir('frontend') {
+                        git branch: "${env.BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/frontend.git'
+                    }
+                // }
+                // container('dispatchai-jenkins-agent') {
+                    dir('helm') {
+                        git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/helm.git'
+                    }
+                    dir('argo') {
+                        git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
+                    }
+                // }
+
+            }
+        }
+
+        stage('Init Tag') {
+            steps {
+                // container('dispatchai-jenkins-agent') {
+                    script {
+                        env.IMAGE_TAG = gitTagName()  // 在 Groovy 代码块中动态赋值
+                    }
+                    echo "tag is: ${env.IMAGE_TAG}"   // 后面都能用
+                // }
+            }
+        }
+
+        // stage('Build & Test') {
+        //     steps {
+        //         container('dispatchai-jenkins-agent') {
+        //             dir('backend') {
+        //                 // 你后端的测试和打包命令，假如用的是 Node.js
+        //                 sh "npm install"
+        //                 sh "npm test"
+        //                 sh "npm run build"
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage('Build and Push Docker Image') {
+        //     steps {
+        //         container('dispatchai-jenkins-agent') {
+        //             dir('backend') {
+        //                 script {
+        //                     sh """
+        //                         docker-credential-ecr-login list
+        //                         buildctl --addr=tcp://localhost:1234 build \\
+        //                           --frontend=dockerfile.v0 \\
+        //                           --local context=. \\
+        //                           --local dockerfile=. \\
+        //                           --output type=image,name=${IMAGE_NAME}:${IMAGE_TAG},push=true
+        //                     """
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        stage('Manual Approval for Deployment') {
+            steps {
+                input message: "Proceed to deploy backend:${IMAGE_TAG} to UAT?", ok: 'Yes, Deploy!'
+            }
+        }
+
+        // stage('Update values.yaml for ArgoCD') {
+        //     steps {
+        //         container('dispatchai-jenkins-agent') {
+        //             dir('helm/envs/uat') {
+        //                 script {
+        //                     // 替换 values.yaml 中的镜像 tag
+        //                     sh """
+        //                         yq e '.backend.image.tag = "${IMAGE_TAG}"' -i values-backend-uat.yaml
+        //                     """
+        //                     // 也可以用 sed，推荐 yq 这样更易维护
+        //                     sh "git config user.name 'jenkins'"
+        //                     sh "git config user.email 'ci@dispatchai.com'"
+        //                     sh "git add values-backend-uat.yaml"
+        //                     sh "git commit -m 'ci: update backend image tag to ${IMAGE_TAG}' || echo 'No changes to commit'"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage('Push to ArgoCD repo') {
+        //     steps {
+        //         container('dispatchai-jenkins-agent') {
+        //             dir('helm') {
+        //                 // 推送刚才的更改
+        //                 sh "git push origin main"
+        //             }
+        //         }
+        //     }
+        // }
+    }
+
+    // post {
+    //     success {
+    //         echo "✅ Backend has been deployed successfully with image: ${IMAGE_NAME}:${IMAGE_TAG}"
+    //         emailext(
+    //             to: "lawrence.wenboli@gmail.com",
+    //             subject: "✅ DispatchAI Backend pipeline succeeded.",
+    //             body: "Backend deployed!<br/>Job: ${env.JOB_NAME}, Tag: ${IMAGE_TAG}, Build: ${env.BUILD_NUMBER}<br/>URL: ${env.BUILD_URL}",
+    //             attachLog: false
+    //         )
+    //     }
+    //     failure {
+    //         emailext(
+    //             to: "lawrence.wenboli@gmail.com",
+    //             subject: "❌ DispatchAI Backend pipeline failed.",
+    //             body: "Pipeline failed!<br/>Job: ${env.JOB_NAME}, Build: ${env.BUILD_NUMBER}<br/>URL: ${env.BUILD_URL}",
+    //             attachLog: false
+    //         )
+    //     }
+    // }
+}
