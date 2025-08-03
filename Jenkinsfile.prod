@@ -37,14 +37,14 @@ pipeline {
         stage('install, test and build') {
             steps {
                 container('node') {
-                    dir('frontend') {
+                    // dir('frontend') {
                         sh "npm install -g pnpm"
                         sh "pnpm install"
                         sh "pnpm run type-check"
                         sh "pnpm run lint"
                         sh "pnpm test"
                         sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
-                    }
+                    // }
                 }
             }
         }
@@ -58,7 +58,7 @@ pipeline {
         stage('build docker image') {
             steps {
                 container('dispatchai-jenkins-agent') {
-                    dir('frontend') {
+                    // dir('frontend') {
                         script {
                             // Use BuildKit to build docker image and push to ECR
                             sh """
@@ -70,7 +70,7 @@ pipeline {
                                   --output type=image,name=${IMAGE_NAME}:${env.TAG_NAME},push=true
                             """
                         }
-                    }
+                    // }
                 }
             }
         }
