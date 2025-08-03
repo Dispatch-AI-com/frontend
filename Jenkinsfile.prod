@@ -25,7 +25,6 @@ pipeline {
         AWS_REGION      = "ap-southeast-2"
         ECR_REPO        = "dispatchai-frontend"
         IMAGE_NAME      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
-        IMAGE_TAG1      = "${env.TAG_NAME}"
         BACKEND_URL = "https://backend.getdispatch.ai/api"
     }
 
@@ -63,7 +62,7 @@ pipeline {
                         env.IMAGE_TAG = gitTagName()
                     }
                     echo "IMAGE_TAG is: ${env.IMAGE_TAG}"
-                    echo "IMAGE_TAG1 is: ${env.IMAGE_TAG1}"
+                    echo "IMAGE_TAG1 is: ${env.TAG_NAME}"
 
                     IMAGE_TAG1
                 // }
