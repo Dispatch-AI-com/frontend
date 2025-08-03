@@ -9,6 +9,8 @@ import {
   MenuItem,
   styled,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -66,6 +68,8 @@ export function UserProfileDropdown({
   themeVariant = 'light',
 }: UserProfileDropdownProps) {
   const dispatch = useAppDispatch();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -105,10 +109,19 @@ export function UserProfileDropdown({
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         themeVariant={themeVariant}
+        sx={{
+          padding: isMobile ? '4px' : 'auto',
+          minWidth: isMobile ? 'auto' : 'unset',
+          gap: isMobile ? '0px' : 'auto',
+        }}
       >
         <UserAvatar>{getInitials(user.firstName ?? 'User')}</UserAvatar>
-        <UserName>{user.firstName ?? 'User'}</UserName>
-        <DropdownArrow />
+        {!isMobile && (
+          <>
+            <UserName>{user.firstName ?? 'User'}</UserName>
+            <DropdownArrow />
+          </>
+        )}
       </UserProfileButton>
 
       <Menu
