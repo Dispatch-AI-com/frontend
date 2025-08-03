@@ -102,9 +102,7 @@ pipeline {
                             """
 
                         }
-                        sshagent(
-                            credentialsId: 'a8aed8cf-5694-4d2c-880a-964501f33c1f'
-                        ) {
+                        sshagent(['a8aed8cf-5694-4d2c-880a-964501f33c1f']) {
                             // Commit and push the changes to the arogo repository
                             sh '''
                                 git config user.name "Jenkins"
