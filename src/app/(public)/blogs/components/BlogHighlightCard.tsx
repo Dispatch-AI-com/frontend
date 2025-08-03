@@ -1,64 +1,39 @@
 'use client';
 
-import { Box, Card } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 import { useMediaQuery, useTheme } from '@mui/material';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const items = [
-  {
-    title: 'Automated Call Handling',
-    content: (
-      <Image
-        src="/blog/call_handling.png"
-        alt="call_handling"
-        fill
-        style={{ objectFit: 'fill', borderRadius: '24px' }}
-      />
-    ),
-  },
-  {
-    title: 'Follow-Up Actions',
-    content: (
-      <Image
-        src="/blog/follow_up.png"
-        alt="follow_up"
-        fill
-        style={{ objectFit: 'fill', borderRadius: '24px' }}
-      />
-    ),
-  },
-  {
-    title: 'Trusted by Small Businesses',
-    content: (
-      <Image
-        src="/blog/testimonial.png"
-        alt="testimonial"
-        fill
-        style={{ objectFit: 'fill', borderRadius: '24px' }}
-      />
-    ),
-  },
-];
+import type { Blog } from '@/types/blog';
 
-export default function BlogHighlightCard() {
+interface BlogHighlightCardProps {
+  blogs: Blog[];
+}
+
+export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
   const [centerIndex, setCenterIndex] = useState(0);
-
+  const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
+  const displayBlogs = blogs.slice(0, 3);
+
   useEffect(() => {
+    if (displayBlogs.length <= 1) return;
+
     const interval = setInterval(() => {
-      setCenterIndex(prev => {
-        return (prev + 1) % items.length;
-      });
+      setCenterIndex(prev => (prev + 1) % displayBlogs.length);
     }, 4000);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+    return () => clearInterval(interval);
+  }, [displayBlogs.length]);
+
+  const handleBlogClick = (id: string) => {
+    router.push(`/blogs/${id}`);
+  };
 
   return (
     <Box
@@ -73,11 +48,12 @@ export default function BlogHighlightCard() {
         overflow: 'visible',
       }}
     >
-      {items.map((item, index) => {
+      {displayBlogs.map((blog, index) => {
         const isCenter = index === centerIndex;
         const isLeft =
-          index === (centerIndex - 1 + items.length) % items.length;
-        const isRight = index === (centerIndex + 1) % items.length;
+          index ===
+          (centerIndex - 1 + displayBlogs.length) % displayBlogs.length;
+        const isRight = index === (centerIndex + 1) % displayBlogs.length;
 
         const cardWidth = isMobile ? 280 : isTablet ? 380 : 741.6;
         const cardHeight = isMobile ? 140 : isTablet ? 180 : 238.5;
@@ -85,31 +61,97 @@ export default function BlogHighlightCard() {
         const sideCardScale = isMobile ? 0.9 : 0.75;
 
         const offsetString = isLeft
-          ? `- ${offset.toFixed(0)}px`
+          ? `- ${offset}px`
           : isRight
-            ? `+ ${offset.toFixed(0)}px`
+            ? `+ ${offset}px`
             : '';
 
         return (
           <Card
-            key={index}
+            key={blog._id}
+            onClick={() => handleBlogClick(blog._id)}
             sx={{
               width: cardWidth,
               height: cardHeight,
               borderRadius: 3,
               boxShadow: 3,
               position: 'absolute',
-              left: `calc(50% - ${(cardWidth / 2).toFixed(1)}px ${offsetString})`,
-              top: `calc(50% - ${(cardHeight / 2).toFixed(1)}px)`,
-              transform: isCenter
-                ? 'scale(1)'
-                : `scale(${sideCardScale.toFixed(2)})`,
+              left: `calc(50% - ${cardWidth / 2}px ${offsetString})`,
+              top: `calc(50% - ${cardHeight / 2}px)`,
+              transform: isCenter ? 'scale(1)' : `scale(${sideCardScale})`,
               zIndex: isCenter ? 3 : 1,
               opacity: isCenter ? 1 : 0.7,
               transition: 'all 0.6s ease',
+              cursor: 'pointer',
+              overflow: 'hidden',
+              '&:hover': {
+                opacity: 1,
+                zIndex: 4,
+              },
             }}
           >
-            {item.content}
+            {/* 博客图片 */}
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+              }}
+            >
+              {blog.imageUrl && (
+                <Image
+                  src={blog.imageUrl}
+                  alt={blog.title}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              )}
+
+              {/* 中间卡片的内容覆盖层 */}
+              {isCenter && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background:
+                      'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
+                    color: 'white',
+                    padding: 2,
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 700,
+                      mb: 1,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                  >
+                    {blog.title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: '0.875rem',
+                      opacity: 0.9,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                  >
+                    {blog.summary}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           </Card>
         );
       })}
