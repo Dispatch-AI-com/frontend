@@ -20,17 +20,6 @@ pipeline {
             steps { cleanWs() }
         }
 
-        stage('testing connection') {
-            when {
-                buildingTag()
-            }
-            steps {
-                container('dispatchai-jenkins-agent') {
-                    sh "echo testing agent.${env.TAG_NAME}"
-                }
-            }
-        }
-
         stage('checkout repos') {
             when {
                 buildingTag()
@@ -45,20 +34,20 @@ pipeline {
             }
         }
 
-        // stage('install, test and build') {
-        //     steps {
-        //         container('node') {
-        //             dir('frontend') {
-        //                 sh "npm install -g pnpm"
-        //                 sh "pnpm install"
-        //                 sh "pnpm run type-check"
-        //                 sh "pnpm run lint"
-        //                 sh "pnpm test"
-        //                 sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
-        //             }
-        //         }
-        //     }
-        // }
+        stage('install, test and build') {
+            steps {
+                container('node') {
+                    dir('frontend') {
+                        sh "npm install -g pnpm"
+                        sh "pnpm install"
+                        sh "pnpm run type-check"
+                        sh "pnpm run lint"
+                        sh "pnpm test"
+                        sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
+                    }
+                }
+            }
+        }
 
         // stage('Manual Approval for Deployment') {
         //     steps {
@@ -66,25 +55,25 @@ pipeline {
         //     }
         // }
 
-        // stage('build docker image') {
-        //     steps {
-        //         container('dispatchai-jenkins-agent') {
-        //             dir('frontend') {
-        //                 script {
-        //                     sh """
-        //                         docker-credential-ecr-login list
-        //                         buildctl --addr=tcp://localhost:1234 build \\
-        //                           --frontend=dockerfile.v0 \\
-        //                           --local context=. \\
-        //                           --local dockerfile=. \\
-        //                           --output type=image,name=${IMAGE_NAME}:${env.TAG_NAME},push=true
-        //                     """
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
+        stage('build docker image') {
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    dir('frontend') {
+                        script {
+                            // Use BuildKit to build docker image and push to ECR
+                            sh """
+                                docker-credential-ecr-login list
+                                buildctl --addr=tcp://localhost:1234 build \\
+                                  --frontend=dockerfile.v0 \\
+                                  --local context=. \\
+                                  --local dockerfile=. \\
+                                  --output type=image,name=${IMAGE_NAME}:${env.TAG_NAME},push=true
+                            """
+                        }
+                    }
+                }
+            }
+        }
 
         stage('Update values.yaml for ArgoCD') {
             when {
@@ -98,9 +87,8 @@ pipeline {
                                 // Update the image tag in values-frontend-prod.yaml
                                 sh """
                                     export IMAGE_TAG="${env.TAG_NAME}"
-                                    export IMAGE_TAG="lawrence-v1"
+                                    # export IMAGE_TAG="lawrence-v1"
                                     yq e '.image.tag = strenv(IMAGE_TAG)' -i values-frontend-prod.yaml
-                                    cat values-frontend-prod.yaml
                                 """
                             }
                             sshagent(['a8aed8cf-5694-4d2c-880a-964501f33c1f']) {
@@ -112,7 +100,7 @@ pipeline {
                                     git config user.email "lawrence.wenboli@gmail.com"
                                     git add values-frontend-prod.yaml
                                     git diff --cached values-frontend-prod.yaml
-                                    git diff-index --quiet HEAD || git commit -m "Automated commit from Jenkins"
+                                    git diff-index --quiet HEAD || git commit -m "[Jenkins] Automated commit in Jenkins pipeline."
                                     git push origin main
                                 '''
                             }
