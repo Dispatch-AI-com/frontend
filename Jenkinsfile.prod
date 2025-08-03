@@ -23,56 +23,56 @@ pipeline {
             steps {
                 container('dispatchai-jenkins-agent') {
                     sh "ls"
-                    // dir('frontend') {
-                    //     git branch: "refs/tags/${env.TAG_NAME}", credentialsId: 'a8aed8cf-5694-4d2c-880a-964501f33c1f', url: 'git@github.com:Dispatch-AI-com/frontend.git'
-                    //     // git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
-                    // }
                     dir('argo') {
                         git branch: "main", credentialsId: 'a8aed8cf-5694-4d2c-880a-964501f33c1f', url: 'git@github.com:Dispatch-AI-com/argo.git'
-                        // git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
                     }
                 }
             }
         }
 
         stage('install, test and build') {
+            when {
+                buildingTag()
+            }
             steps {
                 container('node') {
-                    // dir('frontend') {
-                        sh "ls"
-                        sh "npm install -g pnpm"
-                        sh "pnpm install"
-                        sh "pnpm run type-check"
-                        sh "pnpm run lint"
-                        sh "pnpm test"
-                        sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
-                    // }
+                    sh "ls"
+                    sh "npm install -g pnpm"
+                    sh "pnpm install"
+                    sh "pnpm run type-check"
+                    sh "pnpm run lint"
+                    sh "pnpm test"
+                    sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
                 }
             }
         }
 
-        // stage('Manual Approval for Deployment') {
-        //     steps {
-        //         input message: "Proceed to deploy frontend:${env.TAG_NAME} to production environment?", ok: 'Yes!'
-        //     }
-        // }
+        stage('Manual Approval for Deployment') {
+            when {
+                buildingTag()
+            }
+            steps {
+                input message: "Proceed to deploy frontend:${env.TAG_NAME} to production environment?", ok: 'Yes!'
+            }
+        }
 
         stage('build docker image') {
+            when {
+                buildingTag()
+            }
             steps {
                 container('dispatchai-jenkins-agent') {
-                    // dir('frontend') {
-                        script {
-                            // Use BuildKit to build docker image and push to ECR
-                            sh """
-                                docker-credential-ecr-login list
-                                buildctl --addr=tcp://localhost:1234 build \\
-                                  --frontend=dockerfile.v0 \\
-                                  --local context=. \\
-                                  --local dockerfile=. \\
-                                  --output type=image,name=${IMAGE_NAME}:${env.TAG_NAME},push=true
-                            """
-                        }
-                    // }
+                    script {
+                        // Use BuildKit to build docker image and push to ECR
+                        sh """
+                            docker-credential-ecr-login list
+                            buildctl --addr=tcp://localhost:1234 build \\
+                                --frontend=dockerfile.v0 \\
+                                --local context=. \\
+                                --local dockerfile=. \\
+                                --output type=image,name=${IMAGE_NAME}:${env.TAG_NAME},push=true
+                        """
+                    }
                 }
             }
         }
@@ -117,23 +117,23 @@ pipeline {
         }
     }
 
-    // post {
-    //     success {
-    //         echo "✅ Backend has been deployed successfully with image: ${IMAGE_NAME}:${IMAGE_TAG}"
-    //         emailext(
-    //             to: "lawrence.wenboli@gmail.com",
-    //             subject: "✅ DispatchAI Backend pipeline succeeded.",
-    //             body: "Backend deployed!<br/>Job: ${env.JOB_NAME}, Tag: ${IMAGE_TAG}, Build: ${env.BUILD_NUMBER}<br/>URL: ${env.BUILD_URL}",
-    //             attachLog: false
-    //         )
-    //     }
-    //     failure {
-    //         emailext(
-    //             to: "lawrence.wenboli@gmail.com",
-    //             subject: "❌ DispatchAI Backend pipeline failed.",
-    //             body: "Pipeline failed!<br/>Job: ${env.JOB_NAME}, Build: ${env.BUILD_NUMBER}<br/>URL: ${env.BUILD_URL}",
-    //             attachLog: false
-    //         )
-    //     }
-    // }
+    post {
+        success {
+            echo "✅ Frontend has been deployed successfully with image: ${IMAGE_NAME}:${env.TAG_NAME}"
+            emailext(
+                to: "lawrence.wenboli@gmail.com",
+                subject: "✅ DispatchAI Frontend pipeline succeeded.",
+                body: "Frontend deployed!<br/>Job: ${env.JOB_NAME}, Tag: ${env.TAG_NAME}, Build: ${env.BUILD_NUMBER}<br/>URL: ${env.BUILD_URL}",
+                attachLog: false
+            )
+        }
+        failure {
+            emailext(
+                to: "lawrence.wenboli@gmail.com",
+                subject: "❌ DispatchAI Frontend pipeline failed.",
+                body: "Pipeline failed!<br/>Job: ${env.JOB_NAME}, Tag: ${env.TAG_NAME}, Build: ${env.BUILD_NUMBER}<br/>URL: ${env.BUILD_URL}",
+                attachLog: false
+            )
+        }
+    }
 }
