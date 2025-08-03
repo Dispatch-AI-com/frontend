@@ -26,6 +26,10 @@ pipeline {
             }
             steps {
                 container('dispatchai-jenkins-agent') {
+                    dir('frontend') {
+                        git branch: "refs/tags/${env.TAG_NAME}", credentialsId: 'a8aed8cf-5694-4d2c-880a-964501f33c1f', url: 'git@github.com:Dispatch-AI-com/frontend.git'
+                        // git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
+                    }
                     dir('argo') {
                         git branch: "main", credentialsId: 'a8aed8cf-5694-4d2c-880a-964501f33c1f', url: 'git@github.com:Dispatch-AI-com/argo.git'
                         // git branch: "main", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/argo.git'
@@ -37,7 +41,7 @@ pipeline {
         stage('install, test and build') {
             steps {
                 container('node') {
-                    // dir('frontend') {
+                    dir('frontend') {
                         sh "ls"
                         sh "npm install -g pnpm"
                         sh "pnpm install"
@@ -45,7 +49,7 @@ pipeline {
                         sh "pnpm run lint"
                         sh "pnpm test"
                         sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
-                    // }
+                    }
                 }
             }
         }
@@ -59,7 +63,7 @@ pipeline {
         stage('build docker image') {
             steps {
                 container('dispatchai-jenkins-agent') {
-                    // dir('frontend') {
+                    dir('frontend') {
                         script {
                             // Use BuildKit to build docker image and push to ECR
                             sh """
@@ -71,7 +75,7 @@ pipeline {
                                   --output type=image,name=${IMAGE_NAME}:${env.TAG_NAME},push=true
                             """
                         }
-                    // }
+                    }
                 }
             }
         }
