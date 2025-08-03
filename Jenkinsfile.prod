@@ -102,7 +102,7 @@ pipeline {
 
         stage('Manual Approval for Deployment') {
             steps {
-                input message: "Proceed to deploy backend:${IMAGE_TAG} to UAT?", ok: 'Yes, Deploy!'
+                input message: "Proceed to deploy backend:${IMAGE_TAG} or ${env.TAG_NAME} to UAT?", ok: 'Yes, Deploy!'
             }
         }
 
