@@ -34,14 +34,14 @@ pipeline {
         }
 
         stage('checkout repos') {
-            // when {
-            //     buildingTag()
-            // }
+            when {
+                buildingTag()
+            }
             steps {
                 // container('node') {
-                    dir('frontend') {
-                        git branch: "${env.BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/frontend.git'
-                    }
+                    // dir('frontend') {
+                    //     git branch: "${env.BRANCH_NAME}", credentialsId: '2c8f4c5f-0bc2-48ee-b820-f107d08db968', url: 'https://github.com/Dispatch-AI-com/frontend.git'
+                    // }
                 // }
                 // container('dispatchai-jenkins-agent') {
                     dir('helm') {
