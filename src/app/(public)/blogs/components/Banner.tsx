@@ -3,7 +3,6 @@ import { Box, styled, Typography } from '@mui/material';
 
 const BannerWrapper = styled(Box)(({ theme }) => ({
   width: '100%',
-  maxWidth: '1920px',
   height: 400,
   margin: '0 auto 80px auto',
   backgroundColor: '#060606',
