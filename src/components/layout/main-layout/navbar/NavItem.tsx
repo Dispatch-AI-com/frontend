@@ -29,8 +29,10 @@ const NavItemContainer = styled(Box, {
 })<NavItemContainerProps>(
   ({ theme, width, themeVariant = 'light', isMobile }) => ({
     width: isMobile ? 'auto' : width,
-    height: 36,
-    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+    height: isMobile ? 64 : 36,
+    padding: isMobile
+      ? `0 ${theme.spacing(2)}`
+      : `${theme.spacing(1)} ${theme.spacing(2)}`,
     borderRadius: 12,
     marginRight: theme.spacing(1),
     backgroundColor:
@@ -75,7 +77,7 @@ const NavItemText = styled(Typography, {
   whiteSpace: 'nowrap',
   color: themeVariant === 'dark' ? '#ffffff' : theme.palette.text.primary,
   ...(isMobile && {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 500,
   }),
 }));

@@ -2,11 +2,17 @@ import { Box, Card } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const TeamCardContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
   gap: theme.spacing(4),
   marginBottom: theme.spacing(10),
+  maxWidth: `calc(3 * 324px + 2 * ${theme.spacing(4)})`,
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  [theme.breakpoints.down('md')]: {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    maxWidth: `calc(2 * 324px + ${theme.spacing(4)})`,
+  },
 }));
 
 export const TeamMemberCard = styled(Card)(({ theme }) => ({
@@ -21,6 +27,11 @@ export const TeamMemberCard = styled(Card)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
   textAlign: 'center',
+  [theme.breakpoints.down('sm')]: {
+    maxWidth: '100%',
+    height: 'auto',
+    padding: theme.spacing(1),
+  },
 }));
 
 export const TeamMemberImage = styled('div')<{ backgroundImage: string }>(
@@ -33,5 +44,9 @@ export const TeamMemberImage = styled('div')<{ backgroundImage: string }>(
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundImage: `url(${backgroundImage})`,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: '200px',
+    },
   }),
 );

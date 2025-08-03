@@ -1,8 +1,10 @@
-// ServiceList.tsx
+// BookingList.tsx
 'use client';
 
 import {
   Box,
+  Card,
+  CardContent,
   styled,
   Table,
   TableBody,
@@ -11,6 +13,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import Image from 'next/image';
 
@@ -54,12 +58,15 @@ const TableContentContainer = styled(Box)(() => ({
   minHeight: 0,
   overflowX: 'auto',
   minWidth: '700px',
+  borderRadius: '16px',
+  border: '1px solid #E0E0E0',
+  backgroundColor: '#fff',
 }));
 
 const ScrollableTableContainer = styled(TableContainer)(() => ({
   flex: 1,
   border: 'none',
-  borderRadius: '0',
+  borderRadius: '16px',
   overflow: 'auto',
   minHeight: 0,
   boxShadow: 'none',
@@ -82,26 +89,26 @@ const ScrollableTableContainer = styled(TableContainer)(() => ({
   },
 }));
 
-const NoServicesImage = styled(Image)(({ theme }) => ({
+const NoServicesImage = styled(Image)(() => ({
   width: '120px',
   height: '120px',
   margin: '0 0 24px',
   objectFit: 'contain',
-  [theme.breakpoints.down('sm')]: {
+  '@media (max-width: 600px)': {
     width: '90px',
     height: '90px',
     margin: '0 0 16px',
   },
 }));
 
-const NoServicesText = styled(Typography)(({ theme }) => ({
+const NoServicesText = styled(Typography)(() => ({
   fontFamily: 'Roboto',
   fontSize: '16px',
   fontWeight: 700,
   lineHeight: '24px',
   color: '#1A1A1A',
   textAlign: 'center',
-  [theme.breakpoints.down('sm')]: {
+  '@media (max-width: 600px)': {
     fontSize: '13px',
     lineHeight: '20px',
   },
@@ -128,42 +135,79 @@ const FixedHeaderTable = styled(Table)(() => ({
 
 const TableHeaderContainer = styled(Box)({
   flexShrink: 0,
+  borderTopLeftRadius: '16px',
+  borderTopRightRadius: '16px',
+  overflow: 'hidden',
 });
 
 const StyledTableRow = styled(TableRow)(() => ({
   '&:hover': {
     backgroundColor: '#F0F2F5',
   },
+  '&:first-of-type': {
+    borderTopLeftRadius: '16px',
+    borderTopRightRadius: '16px',
+  },
+  '&:last-of-type': {
+    borderBottomLeftRadius: '16px',
+    borderBottomRightRadius: '16px',
+  },
 }));
 
 const StatusChip = ({ status }: { status: string }) => {
-  const getStatusColor = (status: string) => {
+  // 直接在组件中定义颜色，不依赖外部文件
+  const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'Done':
-        return '#28a745'; // Green
-      case 'Cancelled':
-        return '#dc3545'; // Red
       case 'Confirmed':
-        return '#007bff'; // Blue
+        return { bg: '#e1f0ff', bar: '#0687ff' };
+      case 'Done':
+        return { bg: '#e7f8dc', bar: '#58c112' };
+      case 'Cancelled':
+        return { bg: '#fff0e6', bar: '#ff7206' };
       default:
-        return '#6c757d'; // Gray
+        return { bg: '#fff0e6', bar: '#ff7206' };
     }
   };
+
+  const style = getStatusStyle(status);
 
   return (
     <Box
       sx={{
-        px: 2,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        px: 1.5,
         py: 0.5,
         borderRadius: '12px',
-        backgroundColor: getStatusColor(status),
-        display: 'inline-block',
-        fontSize: '13px',
-        fontWeight: 500,
-        color: '#1A1A1A',
+        backgroundColor: style.bg,
+        width: 'fit-content',
+        height: 24,
       }}
     >
-      {status}
+      <Box
+        sx={{
+          width: 4,
+          height: 4,
+          borderRadius: '50%',
+          backgroundColor: style.bar,
+          marginRight: 1,
+        }}
+      />
+      <Typography
+        sx={{
+          fontFamily: 'Roboto',
+          fontSize: 13,
+          fontWeight: 'normal',
+          fontStretch: 'normal',
+          fontStyle: 'normal',
+          letterSpacing: 'normal',
+          lineHeight: '16px',
+          color: '#060606',
+        }}
+      >
+        {status}
+      </Typography>
     </Box>
   );
 };
@@ -173,7 +217,9 @@ interface Props {
   onServiceClick?: (service: Service) => void;
 }
 
-const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
+const BookingList: React.FC<Props> = ({ services, onServiceClick }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const handleRowClick = (service: Service) => {
     if (onServiceClick) {
       onServiceClick(service);
@@ -222,6 +268,124 @@ const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
 
   const placeholderCount = Math.max(0, 10 - services.length);
 
+  // Mobile Card Component
+  const BookingCard = ({ service }: { service: Service }) => (
+    <Card
+      sx={{
+        mb: 2,
+        cursor: onServiceClick ? 'pointer' : 'default',
+        '&:hover': {
+          boxShadow: 2,
+        },
+      }}
+      onClick={() => onServiceClick && onServiceClick(service)}
+    >
+      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            mb: 1,
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ fontSize: '16px', fontWeight: 600, flex: 1 }}
+          >
+            {service.name}
+          </Typography>
+          <StatusChip status={service.status ?? 'Confirmed'} />
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{ color: '#666', fontWeight: 500, minWidth: '80px' }}
+            >
+              Created By:
+            </Typography>
+            <Typography variant="body2">
+              {service.createdBy?.name ?? 'Unknown'}
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{ color: '#666', fontWeight: 500, minWidth: '80px' }}
+            >
+              Date & Time:
+            </Typography>
+            <Typography variant="body2">
+              {formatDateTime(service.dateTime ?? service.createdAt)}
+            </Typography>
+          </Box>
+
+          {service.client && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: '#666', fontWeight: 500, minWidth: '80px' }}
+              >
+                Client:
+              </Typography>
+              <Typography variant="body2">{service.client.name}</Typography>
+            </Box>
+          )}
+
+          {service.description && (
+            <Box sx={{ mt: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: '#666', fontWeight: 500 }}
+              >
+                Description:
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 0.5 }}>
+                {service.description}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </CardContent>
+    </Card>
+  );
+
+  if (isMobile) {
+    return (
+      <Box sx={{ p: 1 }}>
+        {services.length === 0 ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '300px',
+              textAlign: 'center',
+            }}
+          >
+            <Image
+              src="/avatars/service/no-tasks.svg"
+              alt="No bookings"
+              width={120}
+              height={120}
+            />
+            <Typography sx={{ mt: 2, color: '#666' }}>
+              No bookings found.
+            </Typography>
+          </Box>
+        ) : (
+          services.map(service => (
+            <BookingCard key={service._id} service={service} />
+          ))
+        )}
+      </Box>
+    );
+  }
+
   return (
     <TableContentContainer>
       <TableHeaderContainer>
@@ -233,7 +397,7 @@ const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
               <StyledHeaderCell>Status</StyledHeaderCell>
               <StyledHeaderCell>Date & Time</StyledHeaderCell>
               <StyledHeaderCell>Description</StyledHeaderCell>
-              <StyledHeaderCell>Service Form</StyledHeaderCell>
+              <StyledHeaderCell>Booking Form</StyledHeaderCell>
             </TableRow>
           </StyledTableHead>
         </FixedHeaderTable>
@@ -243,11 +407,11 @@ const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
         <EmptyStateContainer>
           <NoServicesImage
             src="/avatars/service/no-tasks.svg"
-            alt="No services"
+            alt="No bookings"
             width={120}
             height={120}
           />
-          <NoServicesText>No tasks found.</NoServicesText>
+          <NoServicesText>No bookings found.</NoServicesText>
         </EmptyStateContainer>
       ) : (
         <ScrollableTableContainer>
@@ -287,4 +451,4 @@ const ServiceList: React.FC<Props> = ({ services, onServiceClick }) => {
   );
 };
 
-export default ServiceList;
+export default BookingList;

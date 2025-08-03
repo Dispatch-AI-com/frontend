@@ -11,6 +11,7 @@ export interface GoogleAccountLink {
 export interface UserInfo {
   _id: string;
   email: string;
+  name?: string;
   firstName?: string;
   lastName?: string;
   role: Role;

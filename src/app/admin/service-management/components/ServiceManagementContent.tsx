@@ -9,38 +9,49 @@ import { useAppSelector } from '@/redux/hooks';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import EditServiceModal from './EditServiceModal';
 import ServiceCardGrid from './ServiceCardGrid';
-import ServiceHeader from './ServiceHeader';
 import ServicePagination from './ServicePagination';
 
 const ContentContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
-  padding: theme.spacing(3),
-
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(2),
+  padding: '24px',
+  '@media (min-width: 1920px)': {
+    padding: '28px 32px',
   },
-
-  [theme.breakpoints.down('xs')]: {
-    padding: theme.spacing(1.5),
+  '@media (min-width: 1600px) and (max-width: 1919px)': {
+    padding: '26px 28px',
+  },
+  '@media (min-width: 1200px) and (max-width: 1599px)': {
+    padding: '24px',
+  },
+  [theme.breakpoints.between('md', 'lg')]: {
+    padding: '20px',
+  },
+  [theme.breakpoints.down('md')]: {
+    padding: '18px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: '18px',
   },
 }));
 
-const GridContainer = styled(Box)(({ theme }) => ({
+const GridContainer = styled(Box)({
   flex: 1,
-  marginBottom: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: 0,
+});
 
-  [theme.breakpoints.down('sm')]: {
-    marginBottom: theme.spacing(3),
-  },
+interface ServiceManagementContentProps {
+  isCreateModalOpen?: boolean;
+  onCloseCreateModal?: () => void;
+}
 
-  [theme.breakpoints.down('xs')]: {
-    marginBottom: theme.spacing(2),
-  },
-}));
-
-export default function ServiceManagementContent() {
+export default function ServiceManagementContent({
+  isCreateModalOpen = false,
+  onCloseCreateModal,
+}: ServiceManagementContentProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedService, setSelectedService] =
@@ -73,11 +84,6 @@ export default function ServiceManagementContent() {
 
   const totalPages = Math.max(1, Math.ceil(services.length / itemsPerPage));
 
-  const handleCreate = () => {
-    setSelectedService(null);
-    setEditOpen(true);
-  };
-
   const handleEdit = (service: ServiceManagement) => {
     setSelectedService(service);
     setEditOpen(true);
@@ -90,7 +96,10 @@ export default function ServiceManagementContent() {
 
   const handleCloseEdit = () => {
     setEditOpen(false);
-    setSelectedService(null);
+    // Delay clearing selectedService to avoid title flicker during modal close animation
+    setTimeout(() => {
+      setSelectedService(null);
+    }, 300);
   };
 
   const handleCloseDelete = () => {
@@ -98,10 +107,14 @@ export default function ServiceManagementContent() {
     setSelectedService(null);
   };
 
+  const handleCloseCreate = () => {
+    if (onCloseCreateModal) {
+      onCloseCreateModal();
+    }
+  };
+
   return (
     <ContentContainer>
-      <ServiceHeader onCreate={handleCreate} />
-
       <GridContainer>
         <ServiceCardGrid
           page={page}
@@ -120,6 +133,12 @@ export default function ServiceManagementContent() {
         open={editOpen}
         service={selectedService}
         onClose={handleCloseEdit}
+      />
+
+      <EditServiceModal
+        open={isCreateModalOpen}
+        service={null}
+        onClose={handleCloseCreate}
       />
 
       <DeleteConfirmModal

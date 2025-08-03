@@ -26,6 +26,7 @@ const SidebarContainer = styled(Box, {
   justifyContent: 'space-between',
   background: 'linear-gradient(to bottom, #effbf5, #fff 100%)',
   padding: theme.spacing(2, 0),
+  zIndex: 1000,
 }));
 
 const LogoBox = styled(Box, {
@@ -55,10 +56,10 @@ const navItems = [
     href: '/admin/inbox',
   },
   {
-    label: 'Service',
+    label: 'Booking',
     iconSrc: '/dashboard/sidebar/service.svg',
-    iconAlt: 'Service',
-    href: '/admin/service',
+    iconAlt: 'Booking',
+    href: '/admin/booking',
   },
   {
     label: 'Service Management',

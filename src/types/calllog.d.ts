@@ -1,12 +1,9 @@
-export type CallLogStatus = 'Cancelled' | 'Done' | 'Confirmed';
-
 export interface ICallLog {
   _id?: string;
   companyId: string;
   serviceBookedId?: string;
   callerNumber: string;
   callerName?: string;
-  status: CallLogStatus;
   startAt: string | Date;
   endAt?: string | Date;
   audioId?: string;
