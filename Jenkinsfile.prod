@@ -64,7 +64,6 @@ pipeline {
                     echo "IMAGE_TAG is: ${env.IMAGE_TAG}"
                     echo "IMAGE_TAG1 is: ${env.TAG_NAME}"
 
-                    IMAGE_TAG1
                 // }
             }
         }
