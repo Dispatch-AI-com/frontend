@@ -35,9 +35,11 @@ export default function AboutPage() {
           Curious Thing started in July 2018 after our three founders asked each
           other, “What if we can make an AI curious?”
           <br />
+          <br />
           Seeing the limitations of today&apos;s intent-matching AI framework,
           they sought to build an AI that is designed to ask open-content
           questions and derive insights from people.
+          <br />
           <br />
           Today, our platform allows businesses to redefine how they communicate
           with their customers through proactive engagement. We have processed
