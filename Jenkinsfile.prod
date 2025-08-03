@@ -36,37 +36,22 @@ pipeline {
             }
         }
 
-        // stage('Build & Test') {
+
+
+        // stage('install, test and build') {
         //     steps {
-        //         container('dispatchai-jenkins-agent') {
-        //             dir('backend') {
-        //                 sh "npm install"
-        //                 sh "npm test"
-        //                 sh "npm run build"
+        //         container('node') {
+        //             dir('frontend') {
+        //                 sh "npm install -g pnpm"
+        //                 sh "pnpm install"
+        //                 sh "pnpm run type-check"
+        //                 sh "pnpm run lint"
+        //                 sh "pnpm test"
+        //                 sh "NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL} pnpm build"
         //             }
         //         }
         //     }
         // }
-
-        // stage('Build and Push Docker Image') {
-        //     steps {
-        //         container('dispatchai-jenkins-agent') {
-        //             dir('backend') {
-        //                 script {
-        //                     sh """
-        //                         docker-credential-ecr-login list
-        //                         buildctl --addr=tcp://localhost:1234 build \\
-        //                           --frontend=dockerfile.v0 \\
-        //                           --local context=. \\
-        //                           --local dockerfile=. \\
-        //                           --output type=image,name=${IMAGE_NAME}:${IMAGE_TAG},push=true
-        //                     """
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
 
         stage('Manual Approval for Deployment') {
             steps {
@@ -74,33 +59,49 @@ pipeline {
             }
         }
 
-        // stage('Update values.yaml for ArgoCD') {
+        // stage('build docker image') {
         //     steps {
         //         container('dispatchai-jenkins-agent') {
-        //             dir('helm/envs/uat') {
+        //             dir('frontend') {
         //                 script {
         //                     sh """
-        //                         yq e '.backend.image.tag = "${IMAGE_TAG}"' -i values-backend-uat.yaml
+        //                         docker-credential-ecr-login list
+        //                         buildctl --addr=tcp://localhost:1234 build \\
+        //                           --frontend=dockerfile.v0 \\
+        //                           --local context=. \\
+        //                           --local dockerfile=. \\
+        //                           --output type=image,name=${IMAGE_NAME}:${env.TAG_NAME},push=true
         //                     """
-        //                     sh "git config user.name 'jenkins'"
-        //                     sh "git config user.email 'ci@dispatchai.com'"
-        //                     sh "git add values-backend-uat.yaml"
-        //                     sh "git commit -m 'ci: update backend image tag to ${IMAGE_TAG}' || echo 'No changes to commit'"
         //                 }
         //             }
         //         }
         //     }
         // }
 
-        // stage('Push to ArgoCD repo') {
-        //     steps {
-        //         container('dispatchai-jenkins-agent') {
-        //             dir('helm') {
-        //                 sh "git push origin main"
-        //             }
-        //         }
-        //     }
-        // }
+
+        stage('Update values.yaml for ArgoCD') {
+            when {
+                buildingTag()
+            }
+            
+            steps {
+                container('dispatchai-jenkins-agent') {
+                    dir('argo/envs/prod/frontend') {
+                        script {
+                            sh """
+                                export IMAGE_TAG="${env.TAG_NAME}"
+                                yq e '.image.tag = strenv(IMAGE_TAG)' -i values-frontend-prod.yaml
+                            """
+                            // sh "git config user.name 'jenkins'"
+                            // sh "git config user.email 'ci@dispatchai.com'"
+                            sh "git add values-frontend-prod.yaml"
+                            sh "git commit -m 'ci: update frontend image tag to ${env.TAG_NAME}' || echo 'No changes to commit'"
+                            sh "git push origin main"
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // post {
