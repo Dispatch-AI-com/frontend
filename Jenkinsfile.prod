@@ -25,6 +25,7 @@ pipeline {
         AWS_REGION      = "ap-southeast-2"
         ECR_REPO        = "dispatchai-frontend"
         IMAGE_NAME      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
+        IMAGE_TAG1      = ${env.TAG_NAME}
         BACKEND_URL = "https://backend.getdispatch.ai/api"
     }
 
@@ -59,9 +60,12 @@ pipeline {
             steps {
                 // container('dispatchai-jenkins-agent') {
                     script {
-                        env.IMAGE_TAG = gitTagName()  // 在 Groovy 代码块中动态赋值
+                        env.IMAGE_TAG = gitTagName()
                     }
-                    echo "tag is: ${env.IMAGE_TAG}"   // 后面都能用
+                    echo "IMAGE_TAG is: ${env.IMAGE_TAG}"
+                    echo "IMAGE_TAG1 is: ${env.IMAGE_TAG1}"
+
+                    IMAGE_TAG1
                 // }
             }
         }
@@ -70,7 +74,6 @@ pipeline {
         //     steps {
         //         container('dispatchai-jenkins-agent') {
         //             dir('backend') {
-        //                 // 你后端的测试和打包命令，假如用的是 Node.js
         //                 sh "npm install"
         //                 sh "npm test"
         //                 sh "npm run build"
@@ -110,11 +113,9 @@ pipeline {
         //         container('dispatchai-jenkins-agent') {
         //             dir('helm/envs/uat') {
         //                 script {
-        //                     // 替换 values.yaml 中的镜像 tag
         //                     sh """
         //                         yq e '.backend.image.tag = "${IMAGE_TAG}"' -i values-backend-uat.yaml
         //                     """
-        //                     // 也可以用 sed，推荐 yq 这样更易维护
         //                     sh "git config user.name 'jenkins'"
         //                     sh "git config user.email 'ci@dispatchai.com'"
         //                     sh "git add values-backend-uat.yaml"
@@ -129,7 +130,6 @@ pipeline {
         //     steps {
         //         container('dispatchai-jenkins-agent') {
         //             dir('helm') {
-        //                 // 推送刚才的更改
         //                 sh "git push origin main"
         //             }
         //         }
