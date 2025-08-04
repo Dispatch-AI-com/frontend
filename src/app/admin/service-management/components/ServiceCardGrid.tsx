@@ -3,9 +3,11 @@ import {
   Box,
   CircularProgress,
   Grid,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Image from 'next/image';
 
 import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
 import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
@@ -38,6 +40,42 @@ const LoadingContainer = styled(Box)({
 const ErrorContainer = styled(Box)({
   padding: '20px',
 });
+
+const NoServicesImage = styled(Image)(() => ({
+  width: '120px',
+  height: '120px',
+  margin: '0 0 24px',
+  objectFit: 'contain',
+  '@media (max-width: 600px)': {
+    width: '90px',
+    height: '90px',
+    margin: '0 0 16px',
+  },
+}));
+
+const NoServicesText = styled(Typography)(() => ({
+  fontFamily: 'Roboto',
+  fontSize: '16px',
+  fontWeight: 700,
+  lineHeight: '24px',
+  color: '#1A1A1A',
+  textAlign: 'center',
+  '@media (max-width: 600px)': {
+    fontSize: '13px',
+    lineHeight: '20px',
+  },
+}));
+
+const EmptyStateContainer = styled(Box)(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flex: 1,
+  width: '100%',
+  height: '100%',
+  minHeight: '600px',
+}));
 
 export default function ServiceCardGrid({
   page,
@@ -90,11 +128,15 @@ export default function ServiceCardGrid({
 
   if (!services || services.length === 0) {
     return (
-      <ErrorContainer>
-        <Alert severity="info">
-          No services found. Create your first service to get started.
-        </Alert>
-      </ErrorContainer>
+      <EmptyStateContainer>
+        <NoServicesImage
+          src="/avatars/service/no-tasks.svg"
+          alt="No services"
+          width={120}
+          height={120}
+        />
+        <NoServicesText>Create a new service to get started!</NoServicesText>
+      </EmptyStateContainer>
     );
   }
 
