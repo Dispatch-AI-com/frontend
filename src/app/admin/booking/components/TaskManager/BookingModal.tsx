@@ -255,6 +255,21 @@ const BookingModal: React.FC<Props> = ({
   });
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
+
+  // Get current date and time in local format for min attribute
+  const getCurrentDateTimeLocal = () => {
+    const now = new Date();
+    return now.toISOString().slice(0, 16);
+  };
+
+  // Validate if selected datetime is in the past
+  const isDateTimeInPast = (dateTimeString: string) => {
+    if (!dateTimeString) return false;
+    const selectedDate = new Date(dateTimeString);
+    const now = new Date();
+    return selectedDate < now;
+  };
+
   const userName =
     user?.name ??
     (user && (user.firstName ?? user.lastName)
@@ -264,7 +279,7 @@ const BookingModal: React.FC<Props> = ({
     ? user.name
       ? user.name
           .split(' ')
-          .map(n => n[0])
+          .map((n: string) => n[0])
           .join('')
           .toUpperCase()
           .slice(0, 2)
@@ -279,6 +294,7 @@ const BookingModal: React.FC<Props> = ({
     selectedServiceId && // 修改：检查 selectedServiceId
     status &&
     datetime &&
+    !isDateTimeInPast(datetime) &&
     client.name &&
     client.phoneNumber &&
     client.address;
@@ -286,7 +302,7 @@ const BookingModal: React.FC<Props> = ({
   const handleServiceNameChange = (serviceName: string) => {
     setName(serviceName);
     const selectedService = serviceManagementServices.find(
-      s => s.name === serviceName && s.isAvailable,
+      s => s.name === serviceName,
     );
     setSelectedServiceId(selectedService?._id ?? '');
   };
@@ -339,6 +355,10 @@ const BookingModal: React.FC<Props> = ({
       const bookingTime = toBackendDateString(datetime);
       if (!bookingTime) {
         alert('Please select a valid date and time');
+        return;
+      }
+      if (isDateTimeInPast(datetime)) {
+        alert('You cannot book a service for a past date and time.');
         return;
       }
       await createServiceBooking({
@@ -408,20 +428,16 @@ const BookingModal: React.FC<Props> = ({
                     : JSON.stringify(selected);
                 }}
               >
-                {serviceManagementServices.filter(
-                  service => service.isAvailable,
-                ).length === 0 ? (
+                {serviceManagementServices.length === 0 ? (
                   <MenuItem disabled value="">
                     No services available for booking
                   </MenuItem>
                 ) : (
-                  serviceManagementServices
-                    .filter(service => service.isAvailable)
-                    .map(service => (
-                      <MenuItem key={service._id} value={service.name}>
-                        {service.name}
-                      </MenuItem>
-                    ))
+                  serviceManagementServices.map(service => (
+                    <MenuItem key={service._id} value={service.name}>
+                      {service.name}
+                    </MenuItem>
+                  ))
                 )}
               </StatusSelect>
             </FormControl>
@@ -510,6 +526,13 @@ const BookingModal: React.FC<Props> = ({
                 setDatetime(e.target.value)
               }
               InputLabelProps={{ shrink: true }}
+              inputProps={{ min: getCurrentDateTimeLocal() }}
+              error={isDateTimeInPast(datetime)}
+              helperText={
+                isDateTimeInPast(datetime)
+                  ? 'Date and time cannot be in the past'
+                  : ''
+              }
             />
           </FormField>
 

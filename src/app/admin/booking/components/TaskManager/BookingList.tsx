@@ -3,8 +3,10 @@
 
 import {
   Box,
+  Button,
   Card,
   CardContent,
+  CircularProgress,
   styled,
   Table,
   TableBody,
@@ -17,8 +19,21 @@ import {
   useTheme,
 } from '@mui/material';
 import Image from 'next/image';
+import { useState } from 'react';
 
 import type { Service } from '@/features/service/serviceApi';
+
+import ViewFormModal from './ViewFormModal';
+
+// 加载动画组件
+const LoadingSpinner = styled(CircularProgress)({
+  width: '12px !important',
+  height: '12px !important',
+  marginRight: '6px',
+  '& .MuiCircularProgress-circle': {
+    stroke: '#fff',
+  },
+});
 
 const StyledTableHead = styled(TableHead)(() => ({
   backgroundColor: '#F7F8FA',
@@ -49,6 +64,72 @@ const StyledTableCell = styled(TableCell)(() => ({
   fontWeight: 500,
   backgroundColor: '#fff',
 }));
+
+// 专门用于处理长文本的单元格样式
+const DescriptionTableCell = styled(TableCell)(() => ({
+  border: 'none',
+  padding: '12px 16px',
+  fontSize: '15px',
+  color: '#1A1A1A',
+  fontWeight: 500,
+  backgroundColor: '#fff',
+  maxWidth: '250px', // 限制最大宽度
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}));
+
+// 用于显示截断文本的组件
+const TruncatedText = ({
+  text,
+  maxLength = 50,
+}: {
+  text?: string;
+  maxLength?: number;
+}) => {
+  if (!text) return null;
+
+  if (text.length <= maxLength) {
+    return <span>{text}</span>;
+  }
+
+  return <span title={text}>{text.substring(0, maxLength)}...</span>;
+};
+
+// View Form按钮样式
+const ViewFormButton = styled(Button)({
+  padding: '6px 12px',
+  textTransform: 'none',
+  fontSize: '15px',
+  fontWeight: 500,
+  backgroundColor: 'transparent',
+  color: '#0687ff',
+  border: 'none',
+  transition: 'all 0.2s ease-in-out',
+  minWidth: 'auto',
+  height: 'auto',
+  boxShadow: 'none',
+  fontFamily: 'inherit',
+  '&:hover': {
+    backgroundColor: 'transparent',
+    color: '#0687ff',
+    textDecoration: 'none',
+    transform: 'none',
+  },
+  '&:active': {
+    transform: 'none',
+  },
+  '&:focus': {
+    outline: 'none',
+    textDecoration: 'none',
+  },
+  '&:disabled': {
+    backgroundColor: 'transparent',
+    color: '#999',
+    textDecoration: 'none',
+    cursor: 'not-allowed',
+  },
+});
 
 const TableContentContainer = styled(Box)(() => ({
   height: '100%',
@@ -220,10 +301,31 @@ interface Props {
 const BookingList: React.FC<Props> = ({ services, onServiceClick }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [selectedServiceForForm, setSelectedServiceForForm] =
+    useState<Service | null>(null);
+  const [loadingServiceId, setLoadingServiceId] = useState<string | null>(null);
+
   const handleRowClick = (service: Service) => {
     if (onServiceClick) {
       onServiceClick(service);
     }
+  };
+
+  const handleViewForm = (service: Service, event: React.MouseEvent) => {
+    event.stopPropagation(); // 防止触发行点击事件
+    if (service._id) {
+      setLoadingServiceId(service._id);
+
+      // 添加轻微的延迟来模拟加载效果
+      setTimeout(() => {
+        setSelectedServiceForForm(service);
+        setLoadingServiceId(null);
+      }, 150);
+    }
+  };
+
+  const handleCloseViewForm = () => {
+    setSelectedServiceForForm(null);
   };
 
   const formatDateTime = (datetime?: string) => {
@@ -343,7 +445,20 @@ const BookingList: React.FC<Props> = ({ services, onServiceClick }) => {
               >
                 Description:
               </Typography>
-              <Typography variant="body2" sx={{ mt: 0.5 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 0.5,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  lineHeight: '1.4',
+                  maxHeight: '2.8em',
+                }}
+                title={service.description}
+              >
                 {service.description}
               </Typography>
             </Box>
@@ -387,67 +502,95 @@ const BookingList: React.FC<Props> = ({ services, onServiceClick }) => {
   }
 
   return (
-    <TableContentContainer>
-      <TableHeaderContainer>
-        <FixedHeaderTable>
-          <StyledTableHead>
-            <TableRow>
-              <StyledHeaderCell>Service Name</StyledHeaderCell>
-              <StyledHeaderCell>Created By</StyledHeaderCell>
-              <StyledHeaderCell>Status</StyledHeaderCell>
-              <StyledHeaderCell>Date & Time</StyledHeaderCell>
-              <StyledHeaderCell>Description</StyledHeaderCell>
-              <StyledHeaderCell>Booking Form</StyledHeaderCell>
-            </TableRow>
-          </StyledTableHead>
-        </FixedHeaderTable>
-      </TableHeaderContainer>
-
-      {services.length === 0 ? (
-        <EmptyStateContainer>
-          <NoServicesImage
-            src="/avatars/service/no-tasks.svg"
-            alt="No bookings"
-            width={120}
-            height={120}
-          />
-          <NoServicesText>No bookings found.</NoServicesText>
-        </EmptyStateContainer>
-      ) : (
-        <ScrollableTableContainer>
+    <>
+      <TableContentContainer>
+        <TableHeaderContainer>
           <FixedHeaderTable>
-            <TableBody>
-              {services.map(service => {
-                return (
-                  <StyledTableRow
-                    key={service._id}
-                    hover
-                    sx={{ cursor: onServiceClick ? 'pointer' : 'default' }}
-                    onClick={() => handleRowClick(service)}
-                  >
-                    <StyledTableCell>{service.name}</StyledTableCell>
-                    <StyledTableCell>
-                      {service.createdBy?.name ?? 'Unknown'}
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <StatusChip status={service.status ?? 'Confirmed'} />
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      {formatDateTime(service.dateTime ?? service.createdAt)}
-                    </StyledTableCell>
-                    <StyledTableCell>{service.description}</StyledTableCell>
-                    <StyledTableCell className="col-serviceform">
-                      {/* Place a button or leave it blank */}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                );
-              })}
-              {createPlaceholderRows(placeholderCount)}
-            </TableBody>
+            <StyledTableHead>
+              <TableRow>
+                <StyledHeaderCell>Service Name</StyledHeaderCell>
+                <StyledHeaderCell>Created By</StyledHeaderCell>
+                <StyledHeaderCell>Status</StyledHeaderCell>
+                <StyledHeaderCell>Date & Time</StyledHeaderCell>
+                <StyledHeaderCell>Description</StyledHeaderCell>
+                <StyledHeaderCell>Booking Form</StyledHeaderCell>
+              </TableRow>
+            </StyledTableHead>
           </FixedHeaderTable>
-        </ScrollableTableContainer>
+        </TableHeaderContainer>
+
+        {services.length === 0 ? (
+          <EmptyStateContainer>
+            <NoServicesImage
+              src="/avatars/service/no-tasks.svg"
+              alt="No bookings"
+              width={120}
+              height={120}
+            />
+            <NoServicesText>No bookings found.</NoServicesText>
+          </EmptyStateContainer>
+        ) : (
+          <ScrollableTableContainer>
+            <FixedHeaderTable>
+              <TableBody>
+                {services.map(service => {
+                  return (
+                    <StyledTableRow
+                      key={service._id}
+                      hover
+                      sx={{ cursor: onServiceClick ? 'pointer' : 'default' }}
+                      onClick={() => handleRowClick(service)}
+                    >
+                      <StyledTableCell>{service.name}</StyledTableCell>
+                      <StyledTableCell>
+                        {service.createdBy?.name ?? 'Unknown'}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        <StatusChip status={service.status ?? 'Confirmed'} />
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {formatDateTime(service.dateTime ?? service.createdAt)}
+                      </StyledTableCell>
+                      <DescriptionTableCell>
+                        <TruncatedText
+                          text={service.description}
+                          maxLength={60}
+                        />
+                      </DescriptionTableCell>
+                      <StyledTableCell className="col-serviceform">
+                        <ViewFormButton
+                          onClick={e => handleViewForm(service, e)}
+                          size="small"
+                          disabled={loadingServiceId === service._id}
+                        >
+                          {loadingServiceId === service._id ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <LoadingSpinner />
+                              Loading...
+                            </Box>
+                          ) : (
+                            'View Form'
+                          )}
+                        </ViewFormButton>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })}
+                {createPlaceholderRows(placeholderCount)}
+              </TableBody>
+            </FixedHeaderTable>
+          </ScrollableTableContainer>
+        )}
+      </TableContentContainer>
+
+      {/* View Form Modal */}
+      {selectedServiceForForm && (
+        <ViewFormModal
+          service={selectedServiceForForm}
+          onClose={handleCloseViewForm}
+        />
       )}
-    </TableContentContainer>
+    </>
   );
 };
 
