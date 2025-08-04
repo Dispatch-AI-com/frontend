@@ -7,6 +7,7 @@ import { calendarApi } from '@/features/calendar/calendarApi';
 import { calllogsApi } from '@/features/callog/calllogApi';
 import { companyApi } from '@/features/company/companyApi';
 import { onboardingApi } from '@/features/onboarding/onboardingApi';
+import { overviewApi } from '@/features/overview/overviewApi';
 import { publicApiSlice } from '@/features/public/publicApiSlice';
 import { serviceApi } from '@/features/service/serviceApi';
 import { serviceBookingApi } from '@/features/service/serviceBookingApi';
@@ -26,6 +27,7 @@ export const rootReducer = combineReducers({
   [settingsApi.reducerPath]: settingsApi.reducer,
   [testApi.reducerPath]: testApi.reducer,
   [onboardingApi.reducerPath]: onboardingApi.reducer,
+  [overviewApi.reducerPath]: overviewApi.reducer,
   [transcriptApi.reducerPath]: transcriptApi.reducer,
   [transcriptChunksApi.reducerPath]: transcriptChunksApi.reducer,
   [subscriptionApi.reducerPath]: subscriptionApi.reducer,

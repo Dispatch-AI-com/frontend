@@ -79,6 +79,16 @@ const TableRow = styled(Box)(({ theme }) => ({
   '&:last-child': {
     borderBottom: 'none',
   },
+  // Two-column layout for 800px and below
+  [theme.breakpoints.down(800)]: {
+    gridTemplateColumns: '1fr 1fr',
+    '&.header': {
+      gridTemplateColumns: '1fr 1fr',
+    },
+    '&.diy, &.ai': {
+      gridTemplateColumns: '1fr 1fr',
+    },
+  },
 }));
 
 const TableCell = styled(Box)(({ theme }) => ({
@@ -116,23 +126,33 @@ export default function FeaturersComparison() {
         DIY vs AI Assistant
       </Typography>
       {isSmall ? (
-        <Box>
-          <TableContainer className="mb6">
-            <TableRow className="diy">
-              <TableCell className="center">
-                <Typography variant="h3">DIY</Typography>
-              </TableCell>
-            </TableRow>
+        <>
+          {/* Header row for screens below 800px */}
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              maxWidth: 900,
+              margin: '0 auto',
+              mb: 2,
+              px: 3,
+            }}
+          >
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h3">DIY</Typography>
+            </Box>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h3">AI Assistant</Typography>
+            </Box>
+          </Box>
+          <TableContainer>
             {rows.map((row, idx) => (
-              <TableRow
-                className={`diy${idx % 2 === 1 ? ' even' : ''}`}
-                key={idx}
-              >
+              <TableRow className={idx % 2 === 0 ? 'even' : ''} key={idx}>
                 <TableCell>
                   <IconText>
                     <Image
                       src="/features/arrow.svg"
-                      alt="arrow"
+                      alt=""
                       width={20}
                       height={20}
                       style={{ marginRight: 16 }}
@@ -140,25 +160,11 @@ export default function FeaturersComparison() {
                     <Typography variant="body1">{row.diy}</Typography>
                   </IconText>
                 </TableCell>
-              </TableRow>
-            ))}
-          </TableContainer>
-          <TableContainer>
-            <TableRow className="ai">
-              <TableCell className="center">
-                <Typography variant="h3">AI Assistant</Typography>
-              </TableCell>
-            </TableRow>
-            {rows.map((row, idx) => (
-              <TableRow
-                className={`ai${idx % 2 === 1 ? ' even' : ''}`}
-                key={idx}
-              >
                 <TableCell>
                   <IconText>
                     <Image
                       src="/features/tick.svg"
-                      alt="tick"
+                      alt=""
                       width={20}
                       height={20}
                       style={{ marginRight: 16 }}
@@ -169,7 +175,7 @@ export default function FeaturersComparison() {
               </TableRow>
             ))}
           </TableContainer>
-        </Box>
+        </>
       ) : (
         <TableContainer>
           <TableRow className="header">
@@ -181,7 +187,7 @@ export default function FeaturersComparison() {
             </TableCell>
           </TableRow>
           {rows.map((row, idx) => (
-            <TableRow className={idx % 2 === 1 ? 'even' : ''} key={idx}>
+            <TableRow className={idx % 2 === 0 ? 'even' : ''} key={idx}>
               <TableCell>
                 <IconText>
                   <Image
