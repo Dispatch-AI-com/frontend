@@ -1,0 +1,24 @@
+<svg width="342" height="171" viewBox="0 0 342 171" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="gwbyiz1i4b">
+            <stop stop-color="#F7FAF5" offset="0%"/>
+            <stop stop-color="#FFF" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="2v0bykiwxa">
+            <stop stop-color="#E8F7DE" offset="0%"/>
+            <stop stop-color="#FFF" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="eda1gxmv9d">
+            <stop stop-color="#E5F5DA" offset=".036%"/>
+            <stop stop-color="#FFF" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="mmksuncxkc">
+            <stop stop-color="#CDEFB6" offset="0%"/>
+            <stop stop-color="#FFF" stop-opacity="0" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M340 170C340 76.112 263.888 0 170 0S0 76.112 0 170" stroke="url(#2v0bykiwxa)" fill="url(#gwbyiz1i4b)" transform="translate(1 1)"/>
+        <path d="M310 170c0-77.32-62.68-140-140-140S30 92.68 30 170" stroke="url(#mmksuncxkc)" fill="url(#eda1gxmv9d)" transform="translate(1 1)"/>
+    </g>
+</svg>

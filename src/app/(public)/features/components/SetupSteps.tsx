@@ -53,6 +53,15 @@ const StepContainer = styled(Box)(({ theme }) => ({
     columnGap: theme.spacing(1),
     marginTop: theme.spacing(4),
   },
+  // Styles for 529px and below
+  [theme.breakpoints.down(530)]: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: theme.spacing(3),
+    maxWidth: '400px',
+    margin: '0 auto',
+    marginTop: theme.spacing(4),
+  },
 }));
 
 const StepCard = styled(Box)(({ theme, bgcolor }) => ({
@@ -75,6 +84,18 @@ const StepCard = styled(Box)(({ theme, bgcolor }) => ({
     height: 110,
     padding: theme.spacing(1.5),
   },
+  // Styles for 529px and below
+  [theme.breakpoints.down(530)]: {
+    width: '100%',
+    maxWidth: '350px',
+    height: '80px !important',
+    minHeight: '80px !important',
+    maxHeight: '80px !important',
+    alignItems: 'center',
+    textAlign: 'center',
+    padding: theme.spacing(1.5, 1),
+    justifyContent: 'center',
+  },
 }));
 
 const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
@@ -93,6 +114,15 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   [theme.breakpoints.down('md')]: {
     top: -18,
   },
+  // Styles for 529px and below - center display
+  [theme.breakpoints.down(530)]: {
+    position: 'absolute',
+    top: '-16px !important',
+    left: '50% !important',
+    transform: 'translateX(-50%) !important',
+    width: '28px !important',
+    height: '28px !important',
+  },
 }));
 
 const StepNumberText = styled(Typography)(({ color }) => ({
@@ -101,11 +131,18 @@ const StepNumberText = styled(Typography)(({ color }) => ({
   fontWeight: 700,
 }));
 
-const StepLabel = styled(Typography)(({ color }) => ({
+const StepLabel = styled(Typography)(({ color, theme }) => ({
   color: color === 'green' ? '#060606' : '#ffffff',
   fontSize: '16px',
   fontWeight: 700,
   lineHeight: 1.3,
+  // Styles for 529px and below
+  [theme.breakpoints.down(530)]: {
+    marginTop: '0 !important',
+    fontSize: '14px !important',
+    lineHeight: '1.1 !important',
+    fontWeight: '600 !important',
+  },
 }));
 
 const Arrow = styled(Box)(({ theme }) => ({
@@ -115,6 +152,24 @@ const Arrow = styled(Box)(({ theme }) => ({
   alignSelf: 'center',
   [theme.breakpoints.down('md')]: {
     fontSize: 8,
+  },
+  // Show downward arrow for 529px and below
+  [theme.breakpoints.down(530)]: {
+    fontSize: 16,
+    transform: 'rotate(90deg)',
+    margin: theme.spacing(1, 0),
+  },
+}));
+
+// New: Small screen connector line component
+const ConnectorLine = styled(Box)(({ theme }) => ({
+  display: 'none',
+  [theme.breakpoints.down(530)]: {
+    display: 'block',
+    width: '2px',
+    height: theme.spacing(2),
+    background: '#a8f574',
+    margin: '0 auto',
   },
 }));
 
@@ -150,7 +205,9 @@ export default function SetupSteps() {
                   {'0' + String(idx + 1)}
                 </StepNumberText>
               </StepNumber>
-              <StepLabel color={step.color}>{step.label}</StepLabel>
+              <StepLabel color={step.color} theme={undefined}>
+                {step.label}
+              </StepLabel>
             </StepCard>
             {idx < steps.length - 1 && <Arrow as="span">&gt;&gt;</Arrow>}
           </React.Fragment>
