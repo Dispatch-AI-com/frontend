@@ -1,0 +1,24 @@
+<svg width="502" height="251" viewBox="0 0 502 251" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="0ofmdizk8b">
+            <stop stop-color="#F7FAF5" offset="0%"/>
+            <stop stop-color="#FFF" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="rrkcwjq0ra">
+            <stop stop-color="#E8F7DE" offset="0%"/>
+            <stop stop-color="#FFF" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="cuxowr78kd">
+            <stop stop-color="#E5F5DA" offset=".036%"/>
+            <stop stop-color="#FFF" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="9bgw9ngc0c">
+            <stop stop-color="#CDEFB6" offset="0%"/>
+            <stop stop-color="#FFF" stop-opacity="0" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M500 250C500 111.929 388.071 0 250 0S0 111.929 0 250" stroke="url(#rrkcwjq0ra)" fill="url(#0ofmdizk8b)" transform="translate(1 1)"/>
+        <path d="M450 250c0-110.457-89.543-200-200-200S50 139.543 50 250" stroke="url(#9bgw9ngc0c)" fill="url(#cuxowr78kd)" transform="translate(1 1)"/>
+    </g>
+</svg>

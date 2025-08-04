@@ -1,3 +1,4 @@
+//FeaturersComparison.tsx
 'use client';
 
 import { Box, Typography, useMediaQuery } from '@mui/material';
@@ -79,6 +80,16 @@ const TableRow = styled(Box)(({ theme }) => ({
   '&:last-child': {
     borderBottom: 'none',
   },
+  // 800px及以下的双列样式
+  [theme.breakpoints.down(800)]: {
+    gridTemplateColumns: '1fr 1fr',
+    '&.header': {
+      gridTemplateColumns: '1fr 1fr',
+    },
+    '&.diy, &.ai': {
+      gridTemplateColumns: '1fr 1fr',
+    },
+  },
 }));
 
 const TableCell = styled(Box)(({ theme }) => ({
@@ -116,60 +127,44 @@ export default function FeaturersComparison() {
         DIY vs AI Assistant
       </Typography>
       {isSmall ? (
-        <Box>
-          <TableContainer className="mb6">
-            <TableRow className="diy">
-              <TableCell className="center">
-                <Typography variant="h3">DIY</Typography>
+        <TableContainer>
+          <TableRow className="header">
+            <TableCell className="center">
+              <Typography variant="h3">DIY</Typography>
+            </TableCell>
+            <TableCell className="center">
+              <Typography variant="h3">AI Assistant</Typography>
+            </TableCell>
+          </TableRow>
+          {rows.map((row, idx) => (
+            <TableRow className={idx % 2 === 1 ? 'even' : ''} key={idx}>
+              <TableCell>
+                <IconText>
+                  <Image
+                    src="/features/arrow.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    style={{ marginRight: 16 }}
+                  />
+                  <Typography variant="body1">{row.diy}</Typography>
+                </IconText>
+              </TableCell>
+              <TableCell>
+                <IconText>
+                  <Image
+                    src="/features/tick.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    style={{ marginRight: 16 }}
+                  />
+                  <Typography variant="body1">{row.ai}</Typography>
+                </IconText>
               </TableCell>
             </TableRow>
-            {rows.map((row, idx) => (
-              <TableRow
-                className={`diy${idx % 2 === 1 ? ' even' : ''}`}
-                key={idx}
-              >
-                <TableCell>
-                  <IconText>
-                    <Image
-                      src="/features/arrow.svg"
-                      alt="arrow"
-                      width={20}
-                      height={20}
-                      style={{ marginRight: 16 }}
-                    />
-                    <Typography variant="body1">{row.diy}</Typography>
-                  </IconText>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableContainer>
-          <TableContainer>
-            <TableRow className="ai">
-              <TableCell className="center">
-                <Typography variant="h3">AI Assistant</Typography>
-              </TableCell>
-            </TableRow>
-            {rows.map((row, idx) => (
-              <TableRow
-                className={`ai${idx % 2 === 1 ? ' even' : ''}`}
-                key={idx}
-              >
-                <TableCell>
-                  <IconText>
-                    <Image
-                      src="/features/tick.svg"
-                      alt="tick"
-                      width={20}
-                      height={20}
-                      style={{ marginRight: 16 }}
-                    />
-                    <Typography variant="body1">{row.ai}</Typography>
-                  </IconText>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableContainer>
-        </Box>
+          ))}
+        </TableContainer>
       ) : (
         <TableContainer>
           <TableRow className="header">

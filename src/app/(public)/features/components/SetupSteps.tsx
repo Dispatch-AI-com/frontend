@@ -53,6 +53,15 @@ const StepContainer = styled(Box)(({ theme }) => ({
     columnGap: theme.spacing(1),
     marginTop: theme.spacing(4),
   },
+  // 529px及以下的样式
+  [theme.breakpoints.down(530)]: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: theme.spacing(3),
+    maxWidth: '400px',
+    margin: '0 auto',
+    marginTop: theme.spacing(4),
+  },
 }));
 
 const StepCard = styled(Box)(({ theme, bgcolor }) => ({
@@ -75,6 +84,15 @@ const StepCard = styled(Box)(({ theme, bgcolor }) => ({
     height: 110,
     padding: theme.spacing(1.5),
   },
+  // 529px及以下的样式
+  [theme.breakpoints.down(530)]: {
+    width: '100%',
+    maxWidth: '350px',
+    height: 120,
+    alignItems: 'center',
+    textAlign: 'center',
+    padding: theme.spacing(3, 2.5),
+  },
 }));
 
 const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
@@ -93,6 +111,13 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   [theme.breakpoints.down('md')]: {
     top: -18,
   },
+  // 529px及以下的样式 - 居中显示
+  [theme.breakpoints.down(530)]: {
+    position: 'absolute',
+    top: -16,
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
 }));
 
 const StepNumberText = styled(Typography)(({ color }) => ({
@@ -101,11 +126,15 @@ const StepNumberText = styled(Typography)(({ color }) => ({
   fontWeight: 700,
 }));
 
-const StepLabel = styled(Typography)(({ color }) => ({
+const StepLabel = styled(Typography)(({ color, theme }) => ({
   color: color === 'green' ? '#060606' : '#ffffff',
   fontSize: '16px',
   fontWeight: 700,
   lineHeight: 1.3,
+  // 529px及以下的样式
+  [theme.breakpoints.down(530)]: {
+    marginTop: theme.spacing(1),
+  },
 }));
 
 const Arrow = styled(Box)(({ theme }) => ({
@@ -115,6 +144,24 @@ const Arrow = styled(Box)(({ theme }) => ({
   alignSelf: 'center',
   [theme.breakpoints.down('md')]: {
     fontSize: 8,
+  },
+  // 529px及以下显示向下箭头
+  [theme.breakpoints.down(530)]: {
+    fontSize: 16,
+    transform: 'rotate(90deg)',
+    margin: theme.spacing(1, 0),
+  },
+}));
+
+// 新增：小屏幕连接线组件
+const ConnectorLine = styled(Box)(({ theme }) => ({
+  display: 'none',
+  [theme.breakpoints.down(530)]: {
+    display: 'block',
+    width: '2px',
+    height: theme.spacing(2),
+    background: '#a8f574',
+    margin: '0 auto',
   },
 }));
 
@@ -150,7 +197,9 @@ export default function SetupSteps() {
                   {'0' + String(idx + 1)}
                 </StepNumberText>
               </StepNumber>
-              <StepLabel color={step.color}>{step.label}</StepLabel>
+              <StepLabel color={step.color} theme={undefined}>
+                {step.label}
+              </StepLabel>
             </StepCard>
             {idx < steps.length - 1 && <Arrow as="span">&gt;&gt;</Arrow>}
           </React.Fragment>
