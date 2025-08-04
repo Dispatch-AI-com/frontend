@@ -151,10 +151,10 @@ export default function BillingSection() {
         className="keen-slider"
         sx={{
           maxWidth: {
-            xs: 350,
+            xs: 330,
             sm: 600,
-            md: 750,
-            lg: 1150,
+            md: 700,
+            lg: 1050,
           },
           overflow: 'hidden',
         }}

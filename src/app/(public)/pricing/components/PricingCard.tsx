@@ -21,7 +21,6 @@ const CardContainer = styled('div')(() => ({
   flexDirection: 'column',
   maxWidth: '448px',
   height: '464px',
-  width: '100%',
   flexShrink: 0,
   padding: '30px',
   borderRadius: '24px',

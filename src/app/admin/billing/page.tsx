@@ -12,9 +12,11 @@ import BillingHistorySection from './components/BillingHistorySection';
 
 const styles = {
   contentContainer: {
-    flex: 1,
     display: 'flex',
-    padding: '24px 24px 0 24px',
+    padding: {
+      xs: '16px 16px 0 16px',
+      sm: '24px 24px 0 24px',
+    },
     borderRadius: '20px',
     overflowX: 'visible',
   },

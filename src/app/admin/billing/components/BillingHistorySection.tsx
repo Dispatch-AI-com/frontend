@@ -95,10 +95,10 @@ const BillingHistorySection = () => {
           elevation={1}
           sx={{
             maxWidth: {
-              xs: 350,
+              xs: 330,
               sm: 600,
               md: 750,
-              lg: 1100,
+              lg: 1050,
             },
             overflowX: 'auto',
           }}
