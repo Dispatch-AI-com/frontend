@@ -38,6 +38,8 @@ const BaseCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   marginBottom: theme.spacing(4),
+  position: 'relative',
+  overflow: 'hidden',
   // Unified responsive styles
   '@media (max-width: 1399px)': {
     alignItems: 'center',
@@ -75,6 +77,11 @@ const FirstRowCard = styled(BaseCard)(({ theme }) => ({
   '@media (max-width: 1399px)': {
     justifyContent: 'flex-start',
   },
+  [theme.breakpoints.down('md')]: {
+    alignItems: 'flex-start',
+    padding: theme.spacing(3, 3),
+    justifyContent: 'flex-start',
+  },
 }));
 
 const SecondRowCard = styled(BaseCard)(({ theme }) => ({
@@ -82,13 +89,21 @@ const SecondRowCard = styled(BaseCard)(({ theme }) => ({
   minHeight: 420,
   padding: theme.spacing(4, 3),
   alignItems: 'flex-start',
+  [theme.breakpoints.down('md')]: {
+    alignItems: 'flex-start',
+    padding: theme.spacing(3, 3),
+  },
 }));
 
-const CardTitle = styled(Typography)({
+const CardTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   fontSize: 20,
   marginBottom: 8,
-});
+  [theme.breakpoints.down('md')]: {
+    textAlign: 'left',
+    marginBottom: theme.spacing(1),
+  },
+}));
 
 const CardDesc = styled(Typography)(({ theme }) => ({
   color: '#444',
@@ -101,15 +116,17 @@ const CardDesc = styled(Typography)(({ theme }) => ({
     marginRight: 'auto',
   },
   [theme.breakpoints.down('md')]: {
-    textAlign: 'center',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    textAlign: 'left',
+    marginLeft: 0,
+    marginRight: 0,
+    maxWidth: 'none',
+    marginBottom: theme.spacing(1),
   },
 }));
 
 const BackgroundCircle = styled(Box, {
   shouldForwardProp: prop => prop !== 'size',
-})<{ size: 'large' | 'small' }>(({ size }) => ({
+})<{ size: 'large' | 'small' }>(({ size, theme }) => ({
   margin: 0,
   padding: 0,
   position: 'absolute',
@@ -118,20 +135,41 @@ const BackgroundCircle = styled(Box, {
   pointerEvents: 'none',
   ...(size === 'large' && {
     width: '500px',
-    height: '250px',
-    backgroundImage: 'linear-gradient(to bottom, #e8f7de 0%, #fff 100%)',
-    borderTopLeftRadius: '250px',
-    borderTopRightRadius: '250px',
-    right: 0,
+    height: '280px',
+    backgroundImage: 'url(/features/cardbg-l.svg)',
+    backgroundSize: 'contain',
+    backgroundPosition: 'bottom center',
+    backgroundRepeat: 'no-repeat',
+    right: '0px',
   }),
   ...(size === 'small' && {
     width: '400px',
-    height: '200px',
-    backgroundImage: 'linear-gradient(to bottom, #cdefb6 0%,#ffffff)',
-    borderTopLeftRadius: '200px',
-    borderTopRightRadius: '200px',
-    right: 50,
+    height: '220px',
+    backgroundImage: 'url(/features/cardbg-l.svg)',
+    backgroundSize: 'contain',
+    backgroundPosition: 'bottom center',
+    backgroundRepeat: 'no-repeat',
+    right: '50px',
   }),
+  // Mobile optimization
+  [theme.breakpoints.down('md')]: {
+    ...(size === 'large' && {
+      width: '100%',
+      height: '70%',
+      backgroundImage: 'url(/features/cardbg-s.svg)',
+      backgroundSize: 'contain',
+      left: '0',
+      right: '0',
+    }),
+    ...(size === 'small' && {
+      width: '80%',
+      height: '60%',
+      backgroundImage: 'url(/features/cardbg-s.svg)',
+      backgroundSize: 'contain',
+      left: '10%',
+      right: '10%',
+    }),
+  },
 }));
 
 const CircleBgContainer = styled(Box)(({ theme }) => ({
@@ -139,7 +177,7 @@ const CircleBgContainer = styled(Box)(({ theme }) => ({
   right: 0,
   bottom: 0,
   width: 500,
-  height: 246,
+  height: 280,
   zIndex: 0,
   pointerEvents: 'none',
   '@media (max-width: 1399px)': {
@@ -148,16 +186,18 @@ const CircleBgContainer = styled(Box)(({ theme }) => ({
     transform: 'translateX(-50%)',
   },
   [theme.breakpoints.down('md')]: {
-    left: '50%',
-    right: 'auto',
-    transform: 'translateX(-50%)',
+    left: '0',
+    right: '0',
+    transform: 'none',
+    width: '100%',
+    height: '70%',
   },
 }));
 
-const PhoneImageContainer = styled(Box)(() => ({
+const PhoneImageContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
   left: '50%',
-  bottom: 16,
+  bottom: 30,
   transform: 'translateX(-50%)',
   width: 121,
   height: 246,
@@ -166,8 +206,13 @@ const PhoneImageContainer = styled(Box)(() => ({
   alignItems: 'center',
   pointerEvents: 'auto',
   '@media (max-width: 1399px)': {
-    bottom: 10,
+    bottom: 40,
     zIndex: 2,
+  },
+  [theme.breakpoints.down('md')]: {
+    width: 100,
+    height: 200,
+    bottom: 45,
   },
 }));
 
@@ -189,12 +234,13 @@ const DialogContainer = styled(Box)(({ theme }) => ({
   },
   [theme.breakpoints.down('md')]: {
     position: 'static',
-    width: '135%',
-    maxWidth: 350,
-    alignItems: 'center',
-    paddingTop: theme.spacing(4),
-    marginLeft: '-20%',
-    marginTop: theme.spacing(2),
+    width: '100%',
+    maxWidth: '100%',
+    alignItems: 'stretch',
+    margin: '0',
+    marginTop: theme.spacing(7),
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(0, 1),
   },
 }));
 
@@ -211,7 +257,8 @@ const DialogBubble = styled(Box, {
   wordBreak: 'break-word',
   boxShadow: isUser ? 'none' : '0 2px 8px 0 rgba(0,0,0,0.06)',
   [theme.breakpoints.down('md')]: {
-    maxWidth: '80%',
+    maxWidth: isUser ? '85%' : '85%',
+    padding: theme.spacing(1.5, 2),
   },
 }));
 
@@ -234,26 +281,42 @@ const GridContainer = styled('div')(({ theme }) => ({
   },
 }));
 
-const ContentWrapper = styled(Box)({
+const ContentWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
   zIndex: 1,
   width: '100%',
   height: '100%',
-});
+  [theme.breakpoints.down('md')]: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    paddingTop: theme.spacing(1),
+  },
+}));
 
-const ImageContainer = styled(Box)({
-  marginTop: 16,
+const ImageContainer = styled(Box)(({ theme }) => ({
+  marginTop: 20,
   display: 'flex',
   justifyContent: 'center',
   width: '100%',
-});
+  position: 'relative',
+  zIndex: 1,
+  [theme.breakpoints.down('md')]: {
+    justifyContent: 'center',
+    marginTop: theme.spacing(4),
+  },
+}));
 
-const StyledImage = styled(Image)({
+const StyledImage = styled(Image)(({ theme }) => ({
   width: '100%',
   maxWidth: '100%',
   display: 'block',
   height: 'auto',
-});
+  [theme.breakpoints.down('md')]: {
+    width: '90%',
+    height: 'auto',
+  },
+}));
 
 export default function FeaturesSection() {
   return (
@@ -267,8 +330,12 @@ export default function FeaturesSection() {
         <GridContainer>
           <FirstRowCard>
             <CircleBgContainer>
-              <BackgroundCircle size="large" />
-              <BackgroundCircle size="small" />
+              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
+              <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
               <PhoneImageContainer>
                 <Image
                   src="/features/phone.jpg"
@@ -289,8 +356,12 @@ export default function FeaturesSection() {
 
           <FirstRowCard>
             <CircleBgContainer>
-              <BackgroundCircle size="large" />
-              <BackgroundCircle size="small" />
+              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
+              <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
             </CircleBgContainer>
             <ContentWrapper>
               <CardTitle>AI Interaction</CardTitle>
@@ -299,7 +370,7 @@ export default function FeaturesSection() {
                 handle it for you.
               </CardDesc>
               <DialogContainer>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
                   <Image
                     src="/avatars/AI-avatar.svg"
                     alt="AI Avatar"
@@ -308,7 +379,10 @@ export default function FeaturesSection() {
                     style={{ marginRight: 12, flexShrink: 0 }}
                   />
                   <DialogBubble>
-                    <Typography variant="body1" sx={{ color: '#222' }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: '#222', textAlign: 'left' }}
+                    >
                       Hi, this is your AI Assistant. How can I help today?
                     </Typography>
                   </DialogBubble>
@@ -316,12 +390,16 @@ export default function FeaturesSection() {
                 <Box
                   sx={{
                     display: 'flex',
-                    alignItems: 'flex-end',
+                    alignItems: 'flex-start',
                     justifyContent: 'flex-end',
+                    position: 'relative',
                   }}
                 >
                   <DialogBubble isUser sx={{ mr: 1.5 }}>
-                    <Typography variant="body1" sx={{ color: '#060606' }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: '#060606', textAlign: 'left' }}
+                    >
                       Make an appointment for maintenance services after hail
                       weather.
                     </Typography>
@@ -331,7 +409,10 @@ export default function FeaturesSection() {
                     alt="User Avatar"
                     width={36}
                     height={36}
-                    style={{ borderRadius: '50%' }}
+                    style={{
+                      borderRadius: '50%',
+                      alignSelf: 'flex-start',
+                    }}
                   />
                 </Box>
               </DialogContainer>
@@ -342,46 +423,76 @@ export default function FeaturesSection() {
         {/* Second Row - Service Cards */}
         <GridContainer>
           <SecondRowCard>
-            <CardTitle>Auto Task Creation</CardTitle>
-            <CardDesc>
-              We write down the job details so you don't have to.
-            </CardDesc>
-            <ImageContainer>
-              <StyledImage
-                src="/features/inbox.jpg"
-                alt="Inbox Illustration"
-                width={303}
-                height={180}
-              />
-            </ImageContainer>
+            <CircleBgContainer>
+              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
+              <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
+            </CircleBgContainer>
+            <ContentWrapper>
+              <CardTitle>Auto Task Creation</CardTitle>
+              <CardDesc>
+                We write down the job details so you don't have to.
+              </CardDesc>
+              <ImageContainer>
+                <StyledImage
+                  src="/features/inbox.jpg"
+                  alt="Inbox Illustration"
+                  width={303}
+                  height={180}
+                />
+              </ImageContainer>
+            </ContentWrapper>
           </SecondRowCard>
 
           <SecondRowCard>
-            <CardTitle>Reminders & Follow-ups</CardTitle>
-            <CardDesc>Show SMS/notification bubble.</CardDesc>
-            <ImageContainer>
-              <StyledImage
-                src="/features/calendar.jpg"
-                alt="Calendar Illustration"
-                width={303}
-                height={180}
-              />
-            </ImageContainer>
+            <CircleBgContainer>
+              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
+              <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
+            </CircleBgContainer>
+            <ContentWrapper>
+              <CardTitle>Reminders & Follow-ups</CardTitle>
+              <CardDesc>Show SMS/notification bubble.</CardDesc>
+              <ImageContainer>
+                <StyledImage
+                  src="/features/calendar.jpg"
+                  alt="Calendar Illustration"
+                  width={303}
+                  height={180}
+                />
+              </ImageContainer>
+            </ContentWrapper>
           </SecondRowCard>
 
           <SecondRowCard>
-            <CardTitle>History & Management</CardTitle>
-            <CardDesc>
-              We have prepared your services that need to be done today.
-            </CardDesc>
-            <ImageContainer>
-              <StyledImage
-                src="/features/service.jpg"
-                alt="Service Illustration"
-                width={303}
-                height={180}
-              />
-            </ImageContainer>
+            <CircleBgContainer>
+              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
+              <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                <BackgroundCircle size="large" />
+              </Box>
+            </CircleBgContainer>
+            <ContentWrapper>
+              <CardTitle>History & Management</CardTitle>
+              <CardDesc>
+                We have prepared your services that need to be done today.
+              </CardDesc>
+              <ImageContainer>
+                <StyledImage
+                  src="/features/service.jpg"
+                  alt="Service Illustration"
+                  width={303}
+                  height={180}
+                />
+              </ImageContainer>
+            </ContentWrapper>
           </SecondRowCard>
         </GridContainer>
       </SectionContainer>
