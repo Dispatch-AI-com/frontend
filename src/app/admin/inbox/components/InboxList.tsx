@@ -128,6 +128,15 @@ const highlightText = (text: string, searchTerm: string) => {
   );
 };
 
+const getDisplayName = (name?: string) => {
+  const trimmed = name?.trim();
+  return trimmed && trimmed.length > 0 ? trimmed : 'Unknown Caller';
+};
+const getDisplayNumber = (number?: string) => {
+  const trimmed = number?.trim();
+  return trimmed && trimmed.length > 0 ? trimmed : 'Unknown number';
+};
+
 export default function InboxList({
   selectedId,
   onSelect,
@@ -207,7 +216,7 @@ export default function InboxList({
               >
                 <CallerInfo>
                   <CallerName>
-                    {highlightText(item.callerName ?? 'Unknown', searchTerm)}
+                    {highlightText(getDisplayName(item.callerName), searchTerm)}
                   </CallerName>
                   <CallTime>
                     {item.startAt
@@ -218,7 +227,7 @@ export default function InboxList({
                 <PhoneRow>
                   <CallerPhone>
                     {highlightText(
-                      item.callerNumber ?? 'Unknown number',
+                      getDisplayNumber(item.callerNumber),
                       searchTerm,
                     )}
                   </CallerPhone>

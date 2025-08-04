@@ -161,18 +161,6 @@ const Arrow = styled(Box)(({ theme }) => ({
   },
 }));
 
-// New: Small screen connector line component
-const ConnectorLine = styled(Box)(({ theme }) => ({
-  display: 'none',
-  [theme.breakpoints.down(530)]: {
-    display: 'block',
-    width: '2px',
-    height: theme.spacing(2),
-    background: '#a8f574',
-    margin: '0 auto',
-  },
-}));
-
 const Container = styled(Box)(({ theme }) => ({
   width: '100%',
   maxWidth: 1844,
