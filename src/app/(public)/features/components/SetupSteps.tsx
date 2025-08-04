@@ -88,10 +88,13 @@ const StepCard = styled(Box)(({ theme, bgcolor }) => ({
   [theme.breakpoints.down(530)]: {
     width: '100%',
     maxWidth: '350px',
-    height: 120,
+    height: '80px !important',
+    minHeight: '80px !important',
+    maxHeight: '80px !important',
     alignItems: 'center',
     textAlign: 'center',
-    padding: theme.spacing(3, 2.5),
+    padding: theme.spacing(1.5, 1),
+    justifyContent: 'center',
   },
 }));
 
@@ -114,9 +117,11 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   // Styles for 529px and below - center display
   [theme.breakpoints.down(530)]: {
     position: 'absolute',
-    top: -16,
-    left: '50%',
-    transform: 'translateX(-50%)',
+    top: '-16px !important',
+    left: '50% !important',
+    transform: 'translateX(-50%) !important',
+    width: '28px !important',
+    height: '28px !important',
   },
 }));
 
@@ -133,7 +138,10 @@ const StepLabel = styled(Typography)(({ color, theme }) => ({
   lineHeight: 1.3,
   // Styles for 529px and below
   [theme.breakpoints.down(530)]: {
-    marginTop: theme.spacing(1),
+    marginTop: '0 !important',
+    fontSize: '14px !important',
+    lineHeight: '1.1 !important',
+    fontWeight: '600 !important',
   },
 }));
 
