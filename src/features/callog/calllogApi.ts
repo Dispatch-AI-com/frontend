@@ -74,7 +74,11 @@ export const calllogsApi = createApi({
 });
 
 // Export hooks
-export const { useGetCallLogsQuery, useDeleteCallLogMutation, useGetTodayMetricsQuery, } = calllogsApi;
+export const {
+  useGetCallLogsQuery,
+  useDeleteCallLogMutation,
+  useGetTodayMetricsQuery,
+} = calllogsApi;
 
 // Export raw API functions
 export const getCallLogs = calllogsApi.endpoints.getCallLogs.initiate;
