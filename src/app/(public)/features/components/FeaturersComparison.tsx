@@ -1,4 +1,3 @@
-//FeaturersComparison.tsx
 'use client';
 
 import { Box, Typography, useMediaQuery } from '@mui/material';
@@ -80,7 +79,7 @@ const TableRow = styled(Box)(({ theme }) => ({
   '&:last-child': {
     borderBottom: 'none',
   },
-  // 800px及以下的双列样式
+  // Two-column layout for 800px and below
   [theme.breakpoints.down(800)]: {
     gridTemplateColumns: '1fr 1fr',
     '&.header': {

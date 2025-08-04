@@ -53,7 +53,7 @@ const StepContainer = styled(Box)(({ theme }) => ({
     columnGap: theme.spacing(1),
     marginTop: theme.spacing(4),
   },
-  // 529px及以下的样式
+  // Styles for 529px and below
   [theme.breakpoints.down(530)]: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -84,7 +84,7 @@ const StepCard = styled(Box)(({ theme, bgcolor }) => ({
     height: 110,
     padding: theme.spacing(1.5),
   },
-  // 529px及以下的样式
+  // Styles for 529px and below
   [theme.breakpoints.down(530)]: {
     width: '100%',
     maxWidth: '350px',
@@ -111,7 +111,7 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   [theme.breakpoints.down('md')]: {
     top: -18,
   },
-  // 529px及以下的样式 - 居中显示
+  // Styles for 529px and below - center display
   [theme.breakpoints.down(530)]: {
     position: 'absolute',
     top: -16,
@@ -131,7 +131,7 @@ const StepLabel = styled(Typography)(({ color, theme }) => ({
   fontSize: '16px',
   fontWeight: 700,
   lineHeight: 1.3,
-  // 529px及以下的样式
+  // Styles for 529px and below
   [theme.breakpoints.down(530)]: {
     marginTop: theme.spacing(1),
   },
@@ -145,7 +145,7 @@ const Arrow = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     fontSize: 8,
   },
-  // 529px及以下显示向下箭头
+  // Show downward arrow for 529px and below
   [theme.breakpoints.down(530)]: {
     fontSize: 16,
     transform: 'rotate(90deg)',
@@ -153,7 +153,7 @@ const Arrow = styled(Box)(({ theme }) => ({
   },
 }));
 
-// 新增：小屏幕连接线组件
+// New: Small screen connector line component
 const ConnectorLine = styled(Box)(({ theme }) => ({
   display: 'none',
   [theme.breakpoints.down(530)]: {

@@ -1,4 +1,3 @@
-//FeaturesSection.tsx
 'use client';
 
 import { Box, Container, Typography } from '@mui/material';
@@ -39,8 +38,8 @@ const BaseCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   marginBottom: theme.spacing(4),
-  position: 'relative', // 添加相对定位支持背景
-  overflow: 'hidden', // 确保背景不溢出
+  position: 'relative',
+  overflow: 'hidden',
   // Unified responsive styles
   '@media (max-width: 1399px)': {
     alignItems: 'center',
@@ -79,8 +78,8 @@ const FirstRowCard = styled(BaseCard)(({ theme }) => ({
     justifyContent: 'flex-start',
   },
   [theme.breakpoints.down('md')]: {
-    alignItems: 'flex-start', // 移动端顶部对齐
-    padding: theme.spacing(3, 3), // 调整移动端内边距
+    alignItems: 'flex-start',
+    padding: theme.spacing(3, 3),
     justifyContent: 'flex-start',
   },
 }));
@@ -91,8 +90,8 @@ const SecondRowCard = styled(BaseCard)(({ theme }) => ({
   padding: theme.spacing(4, 3),
   alignItems: 'flex-start',
   [theme.breakpoints.down('md')]: {
-    alignItems: 'flex-start', // 移动端左对齐
-    padding: theme.spacing(3, 3), // 调整移动端内边距
+    alignItems: 'flex-start',
+    padding: theme.spacing(3, 3),
   },
 }));
 
@@ -101,8 +100,8 @@ const CardTitle = styled(Typography)(({ theme }) => ({
   fontSize: 20,
   marginBottom: 8,
   [theme.breakpoints.down('md')]: {
-    textAlign: 'left', // 移动端左对齐
-    marginBottom: theme.spacing(1), // 减少标题下方间距
+    textAlign: 'left',
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -117,11 +116,11 @@ const CardDesc = styled(Typography)(({ theme }) => ({
     marginRight: 'auto',
   },
   [theme.breakpoints.down('md')]: {
-    textAlign: 'left', // 移动端左对齐
+    textAlign: 'left',
     marginLeft: 0,
     marginRight: 0,
-    maxWidth: 'none', // 移动端移除最大宽度限制
-    marginBottom: theme.spacing(1), // 减少描述下方间距
+    maxWidth: 'none',
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -136,27 +135,27 @@ const BackgroundCircle = styled(Box, {
   pointerEvents: 'none',
   ...(size === 'large' && {
     width: '500px',
-    height: '280px', // 增加高度避免截断
+    height: '280px',
     backgroundImage: 'url(/features/cardbg-l.svg)',
-    backgroundSize: 'contain', // 改为contain确保完整显示
+    backgroundSize: 'contain',
     backgroundPosition: 'bottom center',
     backgroundRepeat: 'no-repeat',
     right: '0px',
   }),
   ...(size === 'small' && {
     width: '400px',
-    height: '220px', // 增加高度
+    height: '220px',
     backgroundImage: 'url(/features/cardbg-l.svg)',
     backgroundSize: 'contain',
     backgroundPosition: 'bottom center',
     backgroundRepeat: 'no-repeat',
     right: '50px',
   }),
-  // 移动端优化
+  // Mobile optimization
   [theme.breakpoints.down('md')]: {
     ...(size === 'large' && {
       width: '100%',
-      height: '70%', // 增加移动端高度
+      height: '70%',
       backgroundImage: 'url(/features/cardbg-s.svg)',
       backgroundSize: 'contain',
       left: '0',
@@ -178,7 +177,7 @@ const CircleBgContainer = styled(Box)(({ theme }) => ({
   right: 0,
   bottom: 0,
   width: 500,
-  height: 280, // 增加容器高度
+  height: 280,
   zIndex: 0,
   pointerEvents: 'none',
   '@media (max-width: 1399px)': {
@@ -191,14 +190,14 @@ const CircleBgContainer = styled(Box)(({ theme }) => ({
     right: '0',
     transform: 'none',
     width: '100%',
-    height: '70%', // 移动端增加高度
+    height: '70%',
   },
 }));
 
 const PhoneImageContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
   left: '50%',
-  bottom: 30, // 进一步提高手机位置
+  bottom: 30,
   transform: 'translateX(-50%)',
   width: 121,
   height: 246,
@@ -213,7 +212,7 @@ const PhoneImageContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     width: 100,
     height: 200,
-    bottom: 45, // 移动端也相应提高
+    bottom: 45,
   },
 }));
 
@@ -239,8 +238,8 @@ const DialogContainer = styled(Box)(({ theme }) => ({
     maxWidth: '100%',
     alignItems: 'stretch',
     margin: '0',
-    marginTop: theme.spacing(7), // 还原到原来的间距
-    marginBottom: theme.spacing(2), // 保持底部间距
+    marginTop: theme.spacing(7),
+    marginBottom: theme.spacing(2),
     padding: theme.spacing(0, 1),
   },
 }));
@@ -258,8 +257,8 @@ const DialogBubble = styled(Box, {
   wordBreak: 'break-word',
   boxShadow: isUser ? 'none' : '0 2px 8px 0 rgba(0,0,0,0.06)',
   [theme.breakpoints.down('md')]: {
-    maxWidth: isUser ? '85%' : '85%', // 增加移动端宽度
-    padding: theme.spacing(1.5, 2), // 调整移动端内边距
+    maxWidth: isUser ? '85%' : '85%',
+    padding: theme.spacing(1.5, 2),
   },
 }));
 
@@ -290,8 +289,8 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-start', // 移动端内容顶部对齐
-    paddingTop: theme.spacing(1), // 减少顶部间距
+    justifyContent: 'flex-start',
+    paddingTop: theme.spacing(1),
   },
 }));
 
@@ -301,10 +300,10 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   width: '100%',
   position: 'relative',
-  zIndex: 1, // 确保图片在背景之上
+  zIndex: 1,
   [theme.breakpoints.down('md')]: {
-    justifyContent: 'center', // 移动端也保持居中
-    marginTop: theme.spacing(4), // 减少顶部间距
+    justifyContent: 'center',
+    marginTop: theme.spacing(4),
   },
 }));
 
@@ -314,7 +313,7 @@ const StyledImage = styled(Image)(({ theme }) => ({
   display: 'block',
   height: 'auto',
   [theme.breakpoints.down('md')]: {
-    width: '90%', // 移动端稍微缩小图片
+    width: '90%',
     height: 'auto',
   },
 }));
@@ -331,12 +330,9 @@ export default function FeaturesSection() {
         <GridContainer>
           <FirstRowCard>
             <CircleBgContainer>
-              {/* 大屏幕显示双圆圈背景 */}
               <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                 <BackgroundCircle size="large" />
-                <BackgroundCircle size="small" />
               </Box>
-              {/* 小屏幕只显示一个背景 */}
               <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                 <BackgroundCircle size="large" />
               </Box>
@@ -360,12 +356,9 @@ export default function FeaturesSection() {
 
           <FirstRowCard>
             <CircleBgContainer>
-              {/* 大屏幕显示双圆圈背景 */}
               <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                 <BackgroundCircle size="large" />
-                <BackgroundCircle size="small" />
               </Box>
-              {/* 小屏幕只显示一个背景 */}
               <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                 <BackgroundCircle size="large" />
               </Box>
@@ -430,14 +423,10 @@ export default function FeaturesSection() {
         {/* Second Row - Service Cards */}
         <GridContainer>
           <SecondRowCard>
-            {/* 添加背景容器 */}
             <CircleBgContainer>
-              {/* 大屏幕显示双圆圈背景 */}
               <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                 <BackgroundCircle size="large" />
-                <BackgroundCircle size="small" />
               </Box>
-              {/* 小屏幕只显示一个背景 */}
               <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                 <BackgroundCircle size="large" />
               </Box>
@@ -459,14 +448,10 @@ export default function FeaturesSection() {
           </SecondRowCard>
 
           <SecondRowCard>
-            {/* 添加背景容器 */}
             <CircleBgContainer>
-              {/* 大屏幕显示双圆圈背景 */}
               <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                 <BackgroundCircle size="large" />
-                <BackgroundCircle size="small" />
               </Box>
-              {/* 小屏幕只显示一个背景 */}
               <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                 <BackgroundCircle size="large" />
               </Box>
@@ -486,14 +471,10 @@ export default function FeaturesSection() {
           </SecondRowCard>
 
           <SecondRowCard>
-            {/* 添加背景容器 */}
             <CircleBgContainer>
-              {/* 大屏幕显示双圆圈背景 */}
               <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                 <BackgroundCircle size="large" />
-                <BackgroundCircle size="small" />
               </Box>
-              {/* 小屏幕只显示一个背景 */}
               <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                 <BackgroundCircle size="large" />
               </Box>

@@ -29,8 +29,8 @@ const BannerSection = styled('section')(({ theme }) => ({
     paddingBottom: theme.spacing(0),
   },
   [theme.breakpoints.down('md')]: {
-    minHeight: 'auto', // 移动端只包含标题
-    paddingBottom: theme.spacing(4), // 标题下方少量间距就结束
+    minHeight: 'auto',
+    paddingBottom: theme.spacing(4),
   },
 }));
 
@@ -59,12 +59,12 @@ const FeatureCard = styled(Paper)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     width: '100%',
     maxWidth: 380,
-    alignItems: 'flex-start', // 移动端左对齐
+    alignItems: 'flex-start',
   },
   [theme.breakpoints.down('sm')]: {
     width: '100%',
     maxWidth: '100%',
-    alignItems: 'flex-start', // 确保左对齐
+    alignItems: 'flex-start',
   },
 }));
 
@@ -79,7 +79,7 @@ const FeatureIconBox = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   marginBottom: theme.spacing(0.5),
   [theme.breakpoints.down('md')]: {
-    alignSelf: 'flex-start', // 移动端图标左对齐
+    alignSelf: 'flex-start',
   },
 }));
 
@@ -89,7 +89,7 @@ const FeatureTitle = styled(Typography)(({ theme }) => ({
   color: '#060606',
   paddingBottom: 2,
   [theme.breakpoints.down('md')]: {
-    textAlign: 'left', // 移动端标题左对齐
+    textAlign: 'left',
   },
 }));
 
@@ -100,7 +100,7 @@ const FeatureDesc = styled(Typography)(({ theme }) => ({
   lineHeight: 1.5,
   paddingBottom: theme.spacing(1),
   [theme.breakpoints.down('md')]: {
-    textAlign: 'left', // 移动端描述左对齐
+    textAlign: 'left',
   },
 }));
 
@@ -120,7 +120,7 @@ const FloatingCardsWrapper = styled(Box)(({ theme }) => ({
     minHeight: '320px',
   },
   [theme.breakpoints.down('md')]: {
-    position: 'static', // 899px及更窄改为静态定位
+    position: 'static', // Change to static positioning for 899px and narrower
     marginTop: theme.spacing(2),
     minHeight: 'auto',
   },
@@ -186,7 +186,7 @@ export default function FeaturesBanner() {
             Let Us Answer While You Get the Job Done
           </BannerTitle>
 
-          {/* 375px及更窄设备的4行标题 */}
+          {/* 4-line title for devices 375px and narrower */}
           <BannerTitle
             sx={{
               display: { xs: 'block', sm: 'block', md: 'none' },
