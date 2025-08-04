@@ -41,6 +41,23 @@ const LogoContainer = styled.div`
   }
 `;
 
+const LogoImageWrapper = styled.div`
+  width: 200px;
+  height: 100px;
+
+  @media (max-width: 600px) {
+    margin-top: 32px;
+    width: 105px;
+    height: 25px;
+  }
+
+  img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+  }
+`;
+
 export default function SigninPage() {
   const [mounted, setMounted] = useState(false);
 
@@ -69,7 +86,9 @@ export default function SigninPage() {
     <PageContainer>
       <FormContainer>
         <LogoContainer>
-          <Image src="/logo.svg" alt="Logo" width={200} height={100} />
+          <LogoImageWrapper>
+            <Image src="/logo.svg" alt="Logo" width={200} height={100} />
+          </LogoImageWrapper>
         </LogoContainer>
         <LoginForm />
       </FormContainer>

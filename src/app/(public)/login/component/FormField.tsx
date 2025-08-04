@@ -20,13 +20,17 @@ const FieldContainer = styled.div<{
 }>`
   width: 100%;
   min-height: ${props => sizeMap[props.$size]};
-  margin-bottom: ${props => props.$mb * 8}px;
+  margin-bottom: ${props => props.$mb * 0.5}px;
 `;
 
 const Label = styled.div`
   font-size: 16px;
   margin-left: 4px;
   margin-bottom: 6.4px;
+
+  @media (max-width: 600px) {
+    font-size: 13px;
+  }
 `;
 
 export default function FormField({

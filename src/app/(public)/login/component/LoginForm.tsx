@@ -26,6 +26,32 @@ const WelcomeText = styled.h1`
   font-weight: 600;
   color: #1a1a1a;
   margin-bottom: 32px;
+
+  @media (max-width: 600px) {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 64px;
+  }
+`;
+
+const PolicyLinks = styled.div`
+  text-align: center;
+  margin-top: 32px;
+
+  a {
+    text-decoration: underline;
+    color: #1a1a1a;
+    font-weight: 500;
+    margin: 0 8px;
+  }
+`;
+
+const SsoLinkWrapper = styled(PolicyLinks)`
+  font-weight: 700 !important;
+
+  @media (max-width: 600px) {
+    margin-bottom: 100px;
+  }
 `;
 
 const ErrorMessage = styled.div`
@@ -61,7 +87,7 @@ export default function LoginForm() {
     <form onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
       <WelcomeText>Welcome to Dispatch AI!</WelcomeText>
       <GoogleOAuthButton disabled={isLoading} />
-      <FormField label="Email address">
+      <FormField label="Email address" mb={0}>
         <ControllerInput
           name="workEmail"
           control={control}
@@ -69,7 +95,7 @@ export default function LoginForm() {
           disabled={isLoading}
         />
       </FormField>
-      <FormField label="Password">
+      <FormField label="Password" mb={0}>
         <ControllerInput
           name="password"
           control={control}
@@ -84,6 +110,21 @@ export default function LoginForm() {
       <Button type="submit" fullWidth sx={{ mt: 2 }} disabled={isLoading}>
         {isLoading ? 'Logging in…' : 'Log In'}
       </Button>
+
+      <SsoLinkWrapper>
+        <a href="/sso" target="_blank" rel="noopener noreferrer">
+          Use Single Sign-On
+        </a>
+      </SsoLinkWrapper>
+      <PolicyLinks>
+        <a href="/terms" target="_blank" rel="noopener noreferrer">
+          Terms of Service
+        </a>
+        &nbsp; &amp; &nbsp;
+        <a href="/privacy" target="_blank" rel="noopener noreferrer">
+          Privacy Policy
+        </a>
+      </PolicyLinks>
     </form>
   );
 }

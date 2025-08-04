@@ -26,6 +26,12 @@ const StyledInput = styled.input<{ $hasError?: boolean }>`
   outline: none;
   transition: border-color 0.2s;
 
+  &::placeholder {
+    color: #bdbdbd;
+    font-size: 14px;
+    opacity: 1;
+  }
+
   &:focus {
     border-color: ${props => (props.$hasError ? '#d32f2f' : '#1976d2')};
   }

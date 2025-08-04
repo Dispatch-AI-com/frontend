@@ -15,10 +15,10 @@ export default function Button({
       variant="contained"
       {...props}
       sx={{
-        height,
-        borderRadius: '16px',
+        height: { xs: '40px', sm: height },
+        borderRadius: { xs: '12px', sm: '16px' },
         bgcolor: '#060606',
-        fontSize: '18px',
+        fontSize: '14px',
         fontWeight: 'bold',
         color: '#fff',
         '&:hover': {
