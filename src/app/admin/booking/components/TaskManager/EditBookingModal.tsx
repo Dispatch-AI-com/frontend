@@ -373,14 +373,14 @@ const EditBookingModal: React.FC<Props> = ({
                 }}
               >
                 {serviceManagementServices.filter(
-                  service => service.isAvailable,
+                  serviceOption => serviceOption.isAvailable === true,
                 ).length === 0 ? (
                   <MenuItem disabled value="">
-                    No services available for booking
+                    No active services available
                   </MenuItem>
                 ) : (
                   serviceManagementServices
-                    .filter(service => service.isAvailable)
+                    .filter(serviceOption => serviceOption.isAvailable === true)
                     .map(serviceOption => (
                       <MenuItem
                         key={serviceOption._id}

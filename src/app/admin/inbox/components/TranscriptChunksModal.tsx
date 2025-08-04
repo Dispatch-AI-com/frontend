@@ -1,11 +1,13 @@
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Avatar,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
 } from '@mui/material';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import { useGetTranscriptChunksQuery } from '@/features/transcript-chunk/transcriptChunksApi';
@@ -61,7 +63,31 @@ const StyledDialogContent = styled(DialogContent)`
     padding: 36px;
     max-height: 60vh;
     overflow-y: auto;
+    position: relative;
   }
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  color: #666;
+`;
+
+const EndMessage = styled.div`
+  text-align: center;
+  padding: 16px;
+  color: #888;
+  font-size: 14px;
+  font-style: italic;
+`;
+
+const ErrorMessage = styled.div`
+  text-align: center;
+  padding: 16px;
+  color: #d32f2f;
+  font-size: 14px;
 `;
 
 // Main Component
@@ -76,13 +102,76 @@ export default function TranscriptChunksModal({
   onClose,
   transcriptId,
 }: TranscriptChunksModalProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allChunks, setAllChunks] = useState<ITranscriptChunk[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const {
-    data: chunks,
+    data: chunksResponse,
     isLoading: loading,
     error,
-  } = useGetTranscriptChunksQuery(transcriptId, {
-    skip: !transcriptId,
-  });
+    isFetching,
+  } = useGetTranscriptChunksQuery(
+    { transcriptId, page: currentPage, limit: 20 },
+    {
+      skip: !transcriptId || !open,
+    },
+  );
+
+  // Reset state when modal opens/closes or transcriptId changes
+  useEffect(() => {
+    if (open && transcriptId) {
+      setCurrentPage(1);
+      setAllChunks([]);
+      setHasMore(true);
+      setIsLoadingMore(false);
+    }
+  }, [open, transcriptId]);
+
+  // Update chunks when new data arrives
+  useEffect(() => {
+    if (chunksResponse) {
+      if (currentPage === 1) {
+        // First page - replace all chunks
+        setAllChunks(chunksResponse.data);
+      } else {
+        // Subsequent pages - append chunks
+        setAllChunks(prev => [...prev, ...chunksResponse.data]);
+      }
+      setHasMore(chunksResponse.pagination.hasNextPage);
+      setIsLoadingMore(false);
+    }
+  }, [chunksResponse, currentPage]);
+
+  const loadNextPage = useCallback(() => {
+    if (!hasMore || loading || isFetching || isLoadingMore) return;
+
+    setIsLoadingMore(true);
+    setCurrentPage(prev => prev + 1);
+  }, [hasMore, loading, isFetching, isLoadingMore]);
+
+  const handleScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container || !hasMore || isLoadingMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+    // Load more when within 100px of bottom
+    if (distanceFromBottom <= 100) {
+      loadNextPage();
+    }
+  }, [hasMore, isLoadingMore, loadNextPage]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll]);
 
   const getSpeaker = (chunk: ITranscriptChunk) => {
     return chunk.speakerType.toLowerCase() === 'user' ? 'user' : 'ai';
@@ -99,19 +188,26 @@ export default function TranscriptChunksModal({
           <CloseIcon />
         </IconButton>
       </StyledDialogTitle>
-      <StyledDialogContent dividers>
-        {loading && <div>Loading...</div>}
-        {error != null && (
-          <div>
-            Error loading transcript chunks for transcriptId: {transcriptId}
-          </div>
+      <StyledDialogContent dividers ref={scrollContainerRef}>
+        {loading && currentPage === 1 && (
+          <LoadingContainer>
+            <CircularProgress size={24} sx={{ marginRight: 2 }} />
+            Loading transcript...
+          </LoadingContainer>
         )}
+
+        {error && (
+          <ErrorMessage>
+            Error loading transcript chunks for transcriptId: {transcriptId}
+          </ErrorMessage>
+        )}
+
         <ChatContainer>
-          {chunks?.map((chunk, idx) => {
+          {allChunks.map((chunk, idx) => {
             const speaker = getSpeaker(chunk);
             const isUser = speaker === 'user';
             return (
-              <MessageRow key={idx} $isUser={isUser}>
+              <MessageRow key={`${chunk._id}-${idx}`} $isUser={isUser}>
                 {!isUser && (
                   <ChatAvatar
                     $isUser={isUser}
@@ -130,6 +226,21 @@ export default function TranscriptChunksModal({
               </MessageRow>
             );
           })}
+
+          {/* Loading more indicator */}
+          {isLoadingMore && (
+            <LoadingContainer>
+              <CircularProgress size={20} sx={{ marginRight: 1 }} />
+              Loading more messages...
+            </LoadingContainer>
+          )}
+
+          {/* End of messages indicator */}
+          {!hasMore && allChunks.length > 0 && (
+            <EndMessage>
+              End of conversation • {allChunks.length} messages total
+            </EndMessage>
+          )}
         </ChatContainer>
       </StyledDialogContent>
     </Dialog>

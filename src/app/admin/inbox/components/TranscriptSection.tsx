@@ -49,7 +49,7 @@ const ButtonContainer = styled.div`
 const FixedWidthButton = styled(Button)`
   min-width: 160px;
   margin-top: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   width: auto;
   align-self: flex-start;
 `;

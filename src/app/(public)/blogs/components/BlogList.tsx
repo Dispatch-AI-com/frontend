@@ -36,7 +36,7 @@ export default function BlogList() {
   const topic = searchParams.get('topic') ?? '';
   const limit = 9;
   const page = Number(searchParams.get('page') ?? '1');
-  const [total, setTotal] = useState(0);
+  const [, setTotal] = useState(0);
 
   useEffect(() => {
     const fetchBlogs = async () => {

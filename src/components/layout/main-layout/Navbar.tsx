@@ -1,7 +1,5 @@
 'use client';
 
-import CloseIcon from '@mui/icons-material/Close';
-import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
   Box,
@@ -40,19 +38,20 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   top: 0,
   left: 0,
   right: 0,
-  height: 72,
   marginBottom: '0',
   zIndex: theme.zIndex.drawer + 1,
+  [theme.breakpoints.down('md')]: {
+    borderBottom: '0.5px solid rgba(0, 0, 0, 0.12)',
+  },
 }));
 
-const StyledToolbar = styled(Toolbar)(() => ({
+const StyledToolbar = styled(Toolbar)({
   width: '100%',
   maxWidth: '1920px',
   display: 'flex',
   justifyContent: 'space-between',
-  height: '72px',
   transition: 'padding 0.3s ease',
-}));
+});
 
 const LogoBox = styled(Box)({
   display: 'flex',
@@ -66,11 +65,14 @@ const DesktopButtonGroup = styled(Stack)({
 });
 
 const MobileMenuButton = styled(IconButton)(() => ({
-  marginLeft: 'auto',
   transition: 'transform 0.3s ease',
-  borderRadius: 12,
-  width: 40,
-  height: 40,
+  width: 20,
+  height: 20,
+  padding: 0,
+  minWidth: 'auto',
+  '&:hover': {
+    backgroundColor: 'transparent',
+  },
 }));
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
@@ -80,7 +82,8 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
     boxSizing: 'border-box',
     width: '100vw',
     height: '100vh',
-    padding: 20,
+    padding: 0,
+    margin: 0,
     transition: 'transform 0.3s ease-in-out',
   },
 }));
@@ -119,15 +122,15 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
       }}
     >
       <Container maxWidth="xl">
-        <StyledToolbar disableGutters>
+        <StyledToolbar disableGutters sx={{ minHeight: { xs: 48, md: 72 } }}>
           {/* Logo */}
           <LogoBox>
             <Link href="/" aria-label="Dispatch AI Home">
               <Image
                 src={variant === 'dark' ? '/logo-dark.svg' : '/logo.svg'}
                 alt="Dispatch AI logo"
-                width={126}
-                height={30}
+                width={isMobile ? 105 : 126}
+                height={isMobile ? 25 : 30}
                 priority
                 style={{ cursor: 'pointer', display: 'block' }}
               />
@@ -153,20 +156,29 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
 
           {/* Mobile */}
           {isMobile && (
-            <MobileMenuButton
-              color="inherit"
-              aria-label="toggle drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{
-                backgroundColor:
-                  variant === 'light'
-                    ? theme.palette.background.paper
-                    : variant === 'dark'
-                      ? '#060606'
-                      : '#f8fff3',
-                color: variant === 'dark' ? '#ffffff' : 'inherit',
-                '&:hover': {
+            <Stack
+              direction="row"
+              spacing={1.5}
+              sx={{ marginLeft: 'auto', alignItems: 'center' }}
+            >
+              {/* Auth Buttons for Mobile */}
+              <Stack direction="row" spacing={1} sx={{ marginRight: 2.5 }}>
+                {isHydrated && user ? (
+                  <UserProfileDropdown user={user} themeVariant={variant} />
+                ) : (
+                  <>
+                    <AuthButton variant="login" themeVariant={variant} />
+                    <AuthButton variant="signup" themeVariant={variant} />
+                  </>
+                )}
+              </Stack>
+
+              <MobileMenuButton
+                color="inherit"
+                aria-label="toggle drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{
                   backgroundColor:
                     variant === 'light'
                       ? theme.palette.background.paper
@@ -174,16 +186,41 @@ export default function Navbar({ variant = 'light' }: NavbarProps) {
                         ? '#060606'
                         : '#f8fff3',
                   color: variant === 'dark' ? '#ffffff' : 'inherit',
-                },
-                transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-              }}
-            >
-              {mobileOpen ? (
-                <CloseIcon fontSize="medium" />
-              ) : (
-                <MenuIcon fontSize="medium" />
-              )}
-            </MobileMenuButton>
+                  '&:hover': {
+                    backgroundColor:
+                      variant === 'light'
+                        ? theme.palette.background.paper
+                        : variant === 'dark'
+                          ? '#060606'
+                          : '#f8fff3',
+                    color: variant === 'dark' ? '#ffffff' : 'inherit',
+                  },
+                  transform: mobileOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                }}
+              >
+                {mobileOpen ? (
+                  <Image
+                    src="/navbar_close.svg"
+                    alt="Close"
+                    width={20}
+                    height={20}
+                    style={{
+                      filter: variant === 'dark' ? 'invert(1)' : 'none',
+                    }}
+                  />
+                ) : (
+                  <Image
+                    src="/navbar_menu.svg"
+                    alt="Menu"
+                    width={20}
+                    height={20}
+                    style={{
+                      filter: variant === 'dark' ? 'invert(1)' : 'none',
+                    }}
+                  />
+                )}
+              </MobileMenuButton>
+            </Stack>
           )}
         </StyledToolbar>
       </Container>
