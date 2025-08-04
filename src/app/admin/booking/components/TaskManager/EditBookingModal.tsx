@@ -415,7 +415,7 @@ const EditBookingModal: React.FC<Props> = ({
             </FormControl>
           </FormField>
 
-          {/* 新增 client 信息输入框 */}
+          {/* New client information input fields */}
           <FormField>
             <FieldLabel>Client Name</FieldLabel>
             <StyledTextField

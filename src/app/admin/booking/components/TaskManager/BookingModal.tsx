@@ -241,7 +241,7 @@ const BookingModal: React.FC<Props> = ({
   const theme = useTheme();
   useMediaQuery(theme.breakpoints.down('sm'));
   const [name, setName] = useState('');
-  const [selectedServiceId, setSelectedServiceId] = useState(''); // 新增：保存选中的 service _id
+  const [selectedServiceId, setSelectedServiceId] = useState(''); // New: Save selected service _id
   const [status, setStatus] = useState('');
   const [datetime, setDatetime] = useState(() => {
     const now = new Date();
@@ -291,14 +291,14 @@ const BookingModal: React.FC<Props> = ({
 
   const isValid =
     name &&
-    selectedServiceId && // 修改：检查 selectedServiceId
+    selectedServiceId && // Modified: Check selectedServiceId
     status &&
     datetime &&
     !isDateTimeInPast(datetime) &&
     client.name &&
     client.phoneNumber &&
     client.address;
-  // 新增：根据选中的 service name 找到对应的 service _id
+  // New: Find corresponding service _id based on selected service name
   const handleServiceNameChange = (serviceName: string) => {
     setName(serviceName);
     const selectedService = serviceManagementServices.find(
@@ -323,7 +323,7 @@ const BookingModal: React.FC<Props> = ({
     }
   };
 
-  // 工具函数：将 datetime-local 补全为后端需要的 UTC 字符串（标准 ISO/UTC，不手动加 Z）
+  // Utility function: Convert datetime-local to UTC string format required by backend (standard ISO/UTC, no manual Z addition)
   function toBackendDateString(datetime: string) {
     if (!datetime) return '';
     try {
@@ -362,7 +362,7 @@ const BookingModal: React.FC<Props> = ({
         return;
       }
       await createServiceBooking({
-        serviceId: selectedServiceId, // 修改：使用选中的 service _id
+        serviceId: selectedServiceId, // Modified: Use selected service _id
         client: {
           name: client.name,
           phoneNumber: client.phoneNumber,
@@ -416,7 +416,7 @@ const BookingModal: React.FC<Props> = ({
                 value={name}
                 onChange={
                   (e: SelectChangeEvent<unknown>) =>
-                    handleServiceNameChange(e.target.value as string) // 修改：使用新的处理函数
+                    handleServiceNameChange(e.target.value as string) // Modified: Use new handler function
                 }
                 displayEmpty
                 renderValue={selected => {
@@ -443,7 +443,7 @@ const BookingModal: React.FC<Props> = ({
             </FormControl>
           </FormField>
 
-          {/* 新增 client 信息输入框 */}
+          {/* New client information input fields */}
           <FormField>
             <FieldLabel>Client Name</FieldLabel>
             <StyledTextField

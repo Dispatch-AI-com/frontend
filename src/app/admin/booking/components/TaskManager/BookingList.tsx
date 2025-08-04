@@ -25,7 +25,7 @@ import type { Service } from '@/features/service/serviceApi';
 
 import ViewFormModal from './ViewFormModal';
 
-// 加载动画组件
+// Loading animation component
 const LoadingSpinner = styled(CircularProgress)({
   width: '12px !important',
   height: '12px !important',
@@ -65,7 +65,7 @@ const StyledTableCell = styled(TableCell)(() => ({
   backgroundColor: '#fff',
 }));
 
-// 专门用于处理长文本的单元格样式
+// Special cell style for handling long text
 const DescriptionTableCell = styled(TableCell)(() => ({
   border: 'none',
   padding: '12px 16px',
@@ -73,13 +73,13 @@ const DescriptionTableCell = styled(TableCell)(() => ({
   color: '#1A1A1A',
   fontWeight: 500,
   backgroundColor: '#fff',
-  maxWidth: '250px', // 限制最大宽度
+  maxWidth: '250px', // Limit maximum width
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
 }));
 
-// 用于显示截断文本的组件
+// Component for displaying truncated text
 const TruncatedText = ({
   text,
   maxLength = 50,
@@ -96,7 +96,7 @@ const TruncatedText = ({
   return <span title={text}>{text.substring(0, maxLength)}...</span>;
 };
 
-// View Form按钮样式
+// View Form button styles
 const ViewFormButton = styled(Button)({
   padding: '6px 12px',
   textTransform: 'none',
@@ -236,7 +236,7 @@ const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 const StatusChip = ({ status }: { status: string }) => {
-  // 直接在组件中定义颜色，不依赖外部文件
+  // Define colors directly in component, not dependent on external files
   const getStatusStyle = (status: string) => {
     switch (status) {
       case 'Confirmed':
@@ -312,11 +312,11 @@ const BookingList: React.FC<Props> = ({ services, onServiceClick }) => {
   };
 
   const handleViewForm = (service: Service, event: React.MouseEvent) => {
-    event.stopPropagation(); // 防止触发行点击事件
+    event.stopPropagation(); // Prevent row click event
     if (service._id) {
       setLoadingServiceId(service._id);
 
-      // 添加轻微的延迟来模拟加载效果
+      // Add slight delay to simulate loading effect
       setTimeout(() => {
         setSelectedServiceForForm(service);
         setLoadingServiceId(null);
