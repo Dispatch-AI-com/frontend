@@ -431,14 +431,14 @@ export default function CustomFormModal({
                     position: 'relative',
                   }}
                 >
-                  {/* 连续竖线 - 从label框底部开始，延伸到Add Option的水平连接线处 */}
+                  {/* Continuous vertical line - starts from label box bottom, extends to Add Option horizontal connection line */}
                   <Box
                     sx={{
                       position: 'absolute',
                       left: '-12px',
-                      top: '-8px', // 调整位置，让竖线从label框底部边缘开始
+                      top: '-8px', // Adjust position to make vertical line start from label box bottom edge
                       width: '1px',
-                      height: 'calc(100% - 8px)', // 调整高度，确保竖线在Add Option的水平连接线处结束
+                      height: 'calc(100% - 8px)', // Adjust height to ensure vertical line ends at Add Option horizontal connection line
                       backgroundColor: '#e0e0e0',
                     }}
                   />
@@ -453,7 +453,7 @@ export default function CustomFormModal({
                         position: 'relative',
                       }}
                     >
-                      {/* 水平连接线 */}
+                      {/* Horizontal connection line */}
                       <Box
                         sx={{
                           position: 'absolute',
@@ -504,7 +504,7 @@ export default function CustomFormModal({
                       position: 'relative',
                     }}
                   >
-                    {/* 水平连接线 */}
+                    {/* Horizontal connection line */}
                     <Box
                       sx={{
                         position: 'absolute',
@@ -554,7 +554,7 @@ export default function CustomFormModal({
                       }}
                     />
                     <Box sx={{ width: 32 }} />{' '}
-                    {/* 占位符，与删除按钮宽度一致 */}
+                    {/* Placeholder, same width as delete button */}
                   </Box>
                 </Box>
               )}
