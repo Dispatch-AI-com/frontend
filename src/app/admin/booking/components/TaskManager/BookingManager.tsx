@@ -124,7 +124,7 @@ export function Content({
         phoneNumber: booking.client?.phoneNumber ?? '',
         email: '',
       },
-      isAvailable: correspondingService?.isAvailable && !isServiceDeleted, // Mark as unavailable if service is deleted
+      isAvailable: !!(correspondingService?.isAvailable && !isServiceDeleted), // Mark as unavailable if service is deleted
       status: booking.status ?? 'Confirmed',
       dateTime: booking.bookingTime,
       userId: '',
