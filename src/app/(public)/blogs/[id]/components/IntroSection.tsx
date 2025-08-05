@@ -18,9 +18,13 @@ const SectionContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
 }));
 
-const SectionTitle = styled(Typography)(() => ({
+const SectionTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 600,
   margin: 0,
+  marginBottom: theme.spacing(3),
+  [theme.breakpoints.down('md')]: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 const Paragraph = styled(Typography)<TypographyProps>(({ theme }) => ({
@@ -43,11 +47,13 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginBottom: theme.spacing(2),
+  marginBottom: theme.spacing(4),
+  marginTop: theme.spacing(3),
   [theme.breakpoints.down('md')]: {
-    flexDirection: 'row', // 保持水平布局
-    alignItems: 'flex-start', // 顶部对齐
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     gap: theme.spacing(1),
+    marginTop: theme.spacing(1),
   },
 }));
 
@@ -58,14 +64,20 @@ const AuthorContainer = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
     marginTop: 0,
-    flexDirection: 'row', // 移动端改为水平布局
-    alignItems: 'center', // 居中对齐
-    gap: theme.spacing(1.5), // 增加间距
-    minHeight: '60px', // 确保容器高度
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    minHeight: '60px',
+  },
+  [theme.breakpoints.up('md')]: {
+    marginTop: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    minHeight: '80px',
   },
 }));
 
-// 头像容器
 const AvatarContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -75,8 +87,14 @@ const AvatarContainer = styled(Box)(({ theme }) => ({
     height: '60px',
     borderRadius: '50%',
     backgroundColor: '#f5f5f5',
-    // border: '1px',
-    overflow: 'hidden', // 确保圆形边界
+    overflow: 'hidden',
+    flexShrink: 0,
+  },
+  [theme.breakpoints.up('md')]: {
+    width: '80px',
+    height: '80px',
+    borderRadius: '50%',
+    overflow: 'hidden',
     flexShrink: 0,
   },
 }));
@@ -87,10 +105,21 @@ const AvatarImage = styled('img')(({ theme }) => ({
   paddingTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
-    width: '100%', // 占满容器
-    height: '100%', // 占满容器
-    objectFit: 'contain', // 确保完整显示，不会被裁剪
-    objectPosition: 'center', // 居中显示
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+    objectPosition: 'center',
+    paddingTop: 0,
+    marginBottom: 0,
+    display: 'block',
+  },
+  [theme.breakpoints.up('md')]: {
+    width: '80px',
+    height: '80px',
+    borderRadius: '50%',
+    objectFit: 'contain',
+    objectPosition: 'center',
+    backgroundColor: '#f5f5f5',
     paddingTop: 0,
     marginBottom: 0,
     display: 'block',
@@ -100,10 +129,16 @@ const AvatarImage = styled('img')(({ theme }) => ({
 const AuthorName = styled(Typography)(({ theme }) => ({
   fontWeight: 600,
   [theme.breakpoints.down('md')]: {
-    fontSize: '0.8rem', // 移动端稍微增大字体
+    fontSize: '0.8rem',
     fontWeight: 600,
     margin: 0,
-    lineHeight: 1.2, // 调整行高
+    lineHeight: 1.2,
+  },
+  [theme.breakpoints.up('md')]: {
+    fontSize: '1.125rem',
+    fontWeight: 600,
+    margin: 0,
+    lineHeight: 1.2,
   },
 }));
 
@@ -115,30 +150,43 @@ const MetaInfo = styled(Typography)(({ theme }) => ({
   width: 'fit-content',
   [theme.breakpoints.down('md')]: {
     marginLeft: 0,
-    marginTop: theme.spacing(0.5), // 与名字的间距
-    fontSize: '0.875rem', // 移动端字体大小
+    marginTop: 0,
+    fontSize: '0.875rem',
     color: theme.palette.text.secondary,
-    lineHeight: 1.2, // 调整行高
+    lineHeight: 1.2,
   },
 }));
 
-// 新增：作者信息容器（头像右侧的文字部分）
+const MobileDateContainer = styled(Box)(({ theme }) => ({
+  display: 'block',
+  [theme.breakpoints.up('md')]: {
+    display: 'none',
+  },
+  [theme.breakpoints.down('md')]: {
+    marginTop: theme.spacing(0.5),
+  },
+}));
+
 const AuthorInfoContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
   [theme.breakpoints.down('md')]: {
-    flex: 1, // 占据剩余空间
-    minHeight: '60px', // 确保容器高度与头像一致
-    justifyContent: 'center', // 垂直居中
+    flex: 1,
+    minHeight: '60px',
+    justifyContent: 'center',
+  },
+  [theme.breakpoints.up('md')]: {
+    flex: 1,
+    minHeight: '80px',
+    justifyContent: 'center',
   },
 }));
 
-// 修改：移动端社交媒体容器，与头像左右平行
 const MobileSocialContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'flex-end', // 靠右对齐
+  justifyContent: 'flex-end',
   alignItems: 'center',
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
@@ -148,10 +196,54 @@ const MobileSocialContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     marginTop: 0,
     marginBottom: 0,
-    flex: 1, // 占据剩余空间
-    justifyContent: 'flex-end', // 确保靠右
-    alignItems: 'center', // 居中对齐
-    minHeight: '60px', // 确保容器高度与头像一致
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    minHeight: '60px',
+  },
+}));
+
+const DesktopDateContainer = styled(Box)(({ theme }) => ({
+  display: 'none',
+  [theme.breakpoints.up('md')]: {
+    display: 'block',
+  },
+}));
+
+const BlogImageContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  height: 'auto',
+  marginBottom: theme.spacing(3),
+  borderRadius: theme.spacing(2),
+  overflow: 'hidden',
+}));
+
+const BlogImage = styled('img')({
+  width: '100%',
+  height: 'auto',
+  borderRadius: 'inherit',
+});
+
+const VideoContainer = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+  position: 'relative',
+  paddingTop: '56.25%',
+}));
+
+const VideoIframe = styled('iframe')({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  border: 0,
+});
+
+const DesktopSocialContainer = styled(Box)(({ theme }) => ({
+  flexShrink: 0,
+  display: 'none',
+  [theme.breakpoints.up('md')]: {
+    display: 'block',
   },
 }));
 
@@ -172,47 +264,31 @@ export default function IntroSection({ blog }: IntroSectionProps) {
                   <AvatarImage src={blog.avatarUrl} alt={blog.title} />
                 </AvatarContainer>
               )}
-              {/* 作者信息容器 */}
               <AuthorInfoContainer>
                 <AuthorName>{blog.author}</AuthorName>
-                {/* 移动端日期显示在名字下面 */}
-                <MetaInfo variant="caption">
-                  {new Date(blog.date).toLocaleDateString()}
-                </MetaInfo>
+                <MobileDateContainer>
+                  <MetaInfo variant="caption">
+                    {new Date(blog.date).toLocaleDateString()}
+                  </MetaInfo>
+                </MobileDateContainer>
               </AuthorInfoContainer>
             </AuthorContainer>
 
-            {/* 桌面端日期保持原位置 */}
-            <Box
-              sx={{
-                display: {
-                  xs: 'none',
-                  md: 'block',
-                },
-              }}
-            >
+            <DesktopDateContainer>
               <MetaInfo variant="caption">
                 {new Date(blog.date).toLocaleDateString()}
               </MetaInfo>
-            </Box>
+            </DesktopDateContainer>
 
-            {/* 移动端社交媒体组件 - 与头像左右平行 */}
             <MobileSocialContainer>
               <SocialMedia />
             </MobileSocialContainer>
           </HeaderContainer>
 
           {blog.imageUrl && (
-            <Box
-              component="img"
-              src={blog.imageUrl}
-              alt={blog.title}
-              sx={{
-                width: '100%',
-                height: 'auto',
-                marginBottom: 3, // 使用数字而不是theme函数
-              }}
-            />
+            <BlogImageContainer>
+              <BlogImage src={blog.imageUrl} alt={blog.title} />
+            </BlogImageContainer>
           )}
 
           <Paragraph
@@ -222,36 +298,19 @@ export default function IntroSection({ blog }: IntroSectionProps) {
           />
 
           {blog.videoEmbedUrl && (
-            <Box mb={4} sx={{ position: 'relative', pt: '56.25%' /* 16:9 */ }}>
-              <iframe
+            <VideoContainer>
+              <VideoIframe
                 src={blog.videoEmbedUrl}
                 title="Video"
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  border: 0,
-                }}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
-            </Box>
+            </VideoContainer>
           )}
         </LeftContainer>
-        {/* 桌面端社交媒体组件 */}
-        <Box
-          sx={{
-            flexShrink: 0,
-            display: {
-              xs: 'none',
-              md: 'block',
-            },
-          }}
-        >
+        <DesktopSocialContainer>
           <SocialMedia />
-        </Box>
+        </DesktopSocialContainer>
       </IntroWrapper>
     </SectionContainer>
   );
