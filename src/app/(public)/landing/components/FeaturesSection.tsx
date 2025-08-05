@@ -17,11 +17,15 @@ const FeaturesWrapper = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(8),
   paddingBottom: theme.spacing(20),
   backgroundColor: theme.palette.background.default,
+  [theme.breakpoints.down('sm')]: {
+    paddingTop: theme.spacing(7),
+    paddingBottom: theme.spacing(7),
+  },
 }));
 
 const StyledContainer = styled(Container)(({ theme }) => ({
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
+  paddingLeft: 0,
+  paddingRight: 0,
   [theme.breakpoints.up('sm')]: {
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
@@ -37,6 +41,11 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   whiteSpace: 'normal',
   [theme.breakpoints.up('md')]: {
     whiteSpace: 'nowrap',
+  },
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '20px',
+    letterSpacing: '-0.8px',
+    marginBottom: theme.spacing(4),
   },
   textAlign: 'center',
   marginBottom: theme.spacing(8),
@@ -67,6 +76,10 @@ const FeatureIconContainer = styled(Box)(({ theme }) => ({
   alignSelf: 'flex-start',
   marginLeft: 0,
   borderRadius: '50%',
+  [theme.breakpoints.down('sm')]: {
+    width: '64px',
+    height: '64px',
+  },
 }));
 
 const FeatureTitle = styled(Typography)(({ theme }) => ({
@@ -76,6 +89,9 @@ const FeatureTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   textAlign: 'left',
   whiteSpace: 'nowrap',
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(1),
+  },
 }));
 
 const FeatureDescription = styled(Typography)(({ theme }) => ({
@@ -89,6 +105,9 @@ const FeatureDescription = styled(Typography)(({ theme }) => ({
   WebkitBoxOrient: 'vertical',
   marginTop: theme.spacing(2.5),
   color: theme.palette.text.secondary,
+  [theme.breakpoints.down('sm')]: {
+    marginTop: theme.spacing(1.5),
+  },
 }));
 
 interface Feature {
@@ -164,7 +183,7 @@ export default function FeaturesSection() {
           Automated Calls, Save Time, Grow Your Business
         </SectionTitle>
 
-        <Grid container spacing={10}>
+        <Grid container spacing={{ xs: 4, sm: 10 }}>
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} key={index}>
               <FeatureCard>
