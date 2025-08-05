@@ -15,7 +15,7 @@ const styles = {
     padding: '24px 24px 0 24px',
     borderRadius: '20px',
     overflowX: 'visible',
-    maxWidth: '1220px',
+    maxWidth: '1180px',
   },
 
   sectionTitle: {
@@ -40,7 +40,7 @@ export default function OverviewPage() {
         <CampaignProgressSection />
       </Box>
 
-      <Typography sx={styles.sectionTitle}>Recent Services</Typography>
+      <Typography sx={styles.sectionTitle}>Recent Bookings</Typography>
       <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
         <RecentService />
       </Box>

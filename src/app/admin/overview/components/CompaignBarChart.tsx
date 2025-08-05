@@ -16,14 +16,14 @@ export default function CampaignBarChart({
   isService = false,
 }: CampaignBarChartProps) {
   if (isLoading) return <Typography>Loading...</Typography>;
-  if (!data || data.length === 0)
-    return <Typography>No data available</Typography>;
+  if (!data || data.length === 0) return <Typography> </Typography>;
 
   const xLabels = data.map(d => d.name);
 
   return (
     <Box sx={{ width: '100%', height: 320 }}>
       <BarChart
+        margin={{ left: 0 }}
         grid={{ horizontal: true, vertical: false }}
         borderRadius={5}
         xAxis={[
@@ -35,7 +35,7 @@ export default function CampaignBarChart({
         ]}
         yAxis={[
           {
-            label: isService ? 'Number of Services' : 'Number of Phone Calls',
+            label: isService ? 'Number of Bookings' : 'Number of Phone Calls',
             tickMinStep: 1,
           },
         ]}
@@ -44,12 +44,12 @@ export default function CampaignBarChart({
             ? [
                 {
                   data: data.map(d => (d.type === 'service' ? d.completed : 0)),
-                  label: 'Booked',
+                  label: 'Done',
                   color: '#90CAF9',
                 },
                 {
                   data: data.map(d => (d.type === 'service' ? d.followUp : 0)),
-                  label: 'Follow-up',
+                  label: 'Confirmed',
                   color: '#8df556',
                 },
               ]
@@ -75,7 +75,7 @@ export default function CampaignBarChart({
         height={300}
         sx={{
           '.MuiChartsAxis-left .MuiChartsAxis-label': {
-            transform: 'translate(-12px, 0)',
+            transform: 'translate(5px, 0)',
             fill: '#060606',
             fontSize: 13,
           },

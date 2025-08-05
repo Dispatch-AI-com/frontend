@@ -6,7 +6,8 @@ import Image from 'next/image';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { useGetRecentServicesQuery } from '@/features/overview/overviewApi';
+import { useGetServiceByIdQuery } from '@/features/service/serviceApi';
+import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
 import type { RootState } from '@/redux/store';
 
 const styles = {
@@ -29,65 +30,20 @@ const styles = {
     borderBottom: '1px solid #eaeaea',
   },
   headerText: {
-    fontFamily:
-      'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontSize: '14px',
-    fontWeight: 'normal',
-    fontStretch: 'normal',
-    fontStyle: 'normal',
-    lineHeight: 1.43,
-    letterSpacing: 'normal',
     color: '#6d6d6d',
-    textAlign: 'left',
   },
   content: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    padding: '10px 20px 10px 20px',
+    padding: '10px 20px',
   },
   row: {
     display: 'flex',
     alignItems: 'center',
     minHeight: '36px',
-    fontFamily:
-      'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontSize: '14px',
-    fontWeight: 'normal',
-    fontStretch: 'normal',
-    fontStyle: 'normal',
-    lineHeight: 1.43,
-    letterSpacing: 'normal',
-    color: '#060606',
-  },
-  firstRow: {
-    display: 'flex',
-    alignItems: 'center',
-    minHeight: '36px',
-    fontFamily:
-      'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
-    fontSize: '14px',
-    fontWeight: 'normal',
-    fontStretch: 'normal',
-    fontStyle: 'normal',
-    lineHeight: 1.43,
-    letterSpacing: 'normal',
-    color: '#060606',
-  },
-  lastRow: {
-    display: 'flex',
-    alignItems: 'center',
-    minHeight: '36px',
-    fontFamily:
-      'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
-    fontSize: '14px',
-    fontWeight: 'normal',
-    fontStretch: 'normal',
-    fontStyle: 'normal',
-    lineHeight: 1.43,
-    letterSpacing: 'normal',
     color: '#060606',
   },
   cell: {
@@ -96,10 +52,9 @@ const styles = {
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    height: '36px',
+    height: '52px',
     paddingRight: '8px',
   },
-  // mobile card style
   cardContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -120,37 +75,20 @@ const styles = {
     marginBottom: '12px',
   },
   cardTitle: {
-    fontFamily:
-      'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontSize: '16px',
-    fontWeight: '600',
+    fontWeight: 600,
     color: '#060606',
-    flex: 1,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-  cardContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  },
-  cardRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
   cardLabel: {
-    fontFamily:
-      'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontSize: '12px',
-    fontWeight: '500',
+    fontWeight: 500,
     color: '#6d6d6d',
     minWidth: '80px',
   },
   cardValue: {
-    fontFamily:
-      'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontSize: '14px',
     color: '#060606',
     flex: 1,
@@ -160,57 +98,39 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    textAlign: 'center',
     height: '100%',
   },
-  emptyStateContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyStateText: {
-    fontFamily:
-      'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
-    fontSize: '14px',
-    fontWeight: 'normal',
-    fontStretch: 'normal',
-    fontStyle: 'normal',
-    lineHeight: 1.43,
-    letterSpacing: 'normal',
-    color: '#060606',
-    marginTop: '8px',
-  },
+};
+
+const ServiceName = ({ serviceId }: { serviceId: string }) => {
+  const { data, isLoading } = useGetServiceByIdQuery(serviceId, {
+    skip: !serviceId,
+  });
+  return <>{isLoading ? 'Loading...' : (data?.name ?? serviceId)}</>;
 };
 
 export default function RecentService() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md')); // 900px以下
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const user = useSelector((state: RootState) => state.auth.user);
-  const {
-    data: services,
-    isLoading,
-    error,
-  } = useGetRecentServicesQuery(user?._id);
   const fullName =
     [user?.firstName, user?.lastName].filter(Boolean).join(' ') ??
     user?.email ??
     'Unknown';
 
+  const {
+    data: bookings,
+    isLoading,
+    error,
+  } = useGetBookingsQuery({ userId: user?._id }, { skip: !user?._id });
+
   const renderDesktopRows = () => {
-    if (!services || services.length === 0) return null;
-    return services.slice(0, 3).map((service, index) => (
-      <Box
-        key={service._id}
-        sx={
-          index === 0
-            ? styles.firstRow
-            : index === services.length - 1
-              ? styles.lastRow
-              : styles.row
-        }
-      >
-        <Box sx={{ ...styles.cell, flex: 1.2 }}>{service.name}</Box>
+    if (!bookings || bookings.length === 0) return null;
+    return bookings.slice(0, 3).map(booking => (
+      <Box key={booking._id} sx={styles.row}>
+        <Box sx={{ ...styles.cell, flex: 1.2 }}>
+          <ServiceName serviceId={booking.serviceId} />
+        </Box>
         <Box sx={{ ...styles.cell, flex: 1 }}>
           <Image
             src={user?.avatar ?? '/avatars/user-avatar.jpg'}
@@ -222,22 +142,24 @@ export default function RecentService() {
           {fullName}
         </Box>
         <Box sx={{ ...styles.cell, flex: 1 }}>
-          {dayjs(service.createdAt).format('YYYY/MM/DD HH:mm:ss')}
+          {dayjs(booking.bookingTime).format('YYYY/MM/DD HH:mm:ss')}
         </Box>
-        <Box sx={{ ...styles.cell, flex: 1 }}>{service.description ?? '-'}</Box>
+        <Box sx={{ ...styles.cell, flex: 1 }}>{booking.note}</Box>
       </Box>
     ));
   };
 
   const renderMobileCards = () => {
-    if (!services || services.length === 0) return null;
-    return services.slice(0, 3).map(service => (
-      <Box key={service._id} sx={styles.card}>
+    if (!bookings || bookings.length === 0) return null;
+    return bookings.slice(0, 3).map(booking => (
+      <Box key={booking._id} sx={styles.card}>
         <Box sx={styles.cardHeader}>
-          <Typography sx={styles.cardTitle}>{service.name}</Typography>
+          <Typography sx={styles.cardTitle}>
+            <ServiceName serviceId={booking.serviceId} />
+          </Typography>
         </Box>
-        <Box sx={styles.cardContent}>
-          <Box sx={styles.cardRow}>
+        <Box>
+          <Box sx={{ display: 'flex', gap: '8px', marginBottom: '6px' }}>
             <Typography sx={styles.cardLabel}>Created By:</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
               <Image
@@ -250,17 +172,15 @@ export default function RecentService() {
               <Typography sx={styles.cardValue}>{fullName}</Typography>
             </Box>
           </Box>
-          <Box sx={styles.cardRow}>
+          <Box sx={{ display: 'flex', gap: '8px', marginBottom: '6px' }}>
             <Typography sx={styles.cardLabel}>Date & Time:</Typography>
             <Typography sx={styles.cardValue}>
-              {dayjs(service.createdAt).format('YYYY/MM/DD HH:mm:ss')}
+              {dayjs(booking.bookingTime).format('YYYY/MM/DD HH:mm:ss')}
             </Typography>
           </Box>
-          <Box sx={styles.cardRow}>
+          <Box sx={{ display: 'flex', gap: '8px' }}>
             <Typography sx={styles.cardLabel}>Description:</Typography>
-            <Typography sx={styles.cardValue}>
-              {service.description ?? '-'}
-            </Typography>
+            <Typography sx={styles.cardValue}>{booking.note}</Typography>
           </Box>
         </Box>
       </Box>
@@ -289,16 +209,14 @@ export default function RecentService() {
       )}
       <Box sx={isMobile ? styles.cardContainer : styles.content}>
         {isLoading ? (
-          <Typography
-            sx={{ color: '#6d6d6d', textAlign: 'center', width: '100%' }}
-          >
+          <Typography sx={{ color: '#6d6d6d', textAlign: 'center' }}>
             Loading...
           </Typography>
         ) : error ? (
-          <Typography sx={{ color: 'red', textAlign: 'center', width: '100%' }}>
+          <Typography sx={{ color: 'red', textAlign: 'center' }}>
             Failed to load
           </Typography>
-        ) : services && services.length > 0 ? (
+        ) : bookings && bookings.length > 0 ? (
           isMobile ? (
             renderMobileCards()
           ) : (
@@ -306,18 +224,14 @@ export default function RecentService() {
           )
         ) : (
           <Box sx={styles.emptyState}>
-            <Box sx={styles.emptyStateContent}>
-              <Image
-                src="/overview/invalid-name.svg"
-                alt="No services"
-                width={100}
-                height={100}
-                priority
-              />
-              <Typography sx={styles.emptyStateText}>
-                No services found
-              </Typography>
-            </Box>
+            <Image
+              src="/overview/invalid-name.svg"
+              alt="No bookings"
+              width={100}
+              height={100}
+              priority
+            />
+            <Typography sx={{ marginTop: '8px' }}>No bookings found</Typography>
           </Box>
         )}
       </Box>

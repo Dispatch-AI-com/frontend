@@ -19,6 +19,18 @@ export interface Service {
   updatedAt: string;
 }
 
+interface TwilioPhoneNumberResponse {
+  twilioPhoneNumber: string;
+}
+
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  twilioPhoneNumber?: string;
+}
+
 export const overviewApi = createApi({
   reducerPath: 'overviewApi',
   baseQuery: axiosBaseQuery(),
@@ -32,7 +44,18 @@ export const overviewApi = createApi({
       }),
       providesTags: ['Service'],
     }),
+
+    getTwilioPhoneNumber: builder.query<TwilioPhoneNumberResponse, string>({
+      query: userId => ({
+        url: `/users/${userId}`,
+        method: 'GET',
+      }),
+      transformResponse: (response: User): TwilioPhoneNumberResponse => ({
+        twilioPhoneNumber: response.twilioPhoneNumber ?? '',
+      }),
+    }),
   }),
 });
 
-export const { useGetRecentServicesQuery } = overviewApi;
+export const { useGetRecentServicesQuery, useGetTwilioPhoneNumberQuery } =
+  overviewApi;

@@ -7,8 +7,8 @@ import Image from 'next/image';
 
 import HalfCircleProgress from '@/components/ui/HalfCircleProgress';
 import { useGetTodayMetricsQuery } from '@/features/callog/calllogApi';
+import { useGetTwilioPhoneNumberQuery } from '@/features/overview/overviewApi';
 import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
-import { useGetUserProfileQuery } from '@/features/settings/settingsApi';
 import { useSubscription } from '@/features/subscription/useSubscription';
 import { useAppSelector } from '@/redux/hooks';
 
@@ -39,7 +39,7 @@ const SectionContainer = styled(Box)`
   }
 
   @media (max-width: 600px) {
-    max-width: 400px;
+    max-width: 340px;
   }
   @media (min-width: 600px) and (max-width: 800px) {
     max-width: 650px;
@@ -64,12 +64,12 @@ const Title = styled(Typography)({
 
 const CardContainer = styled(Box)({
   display: 'flex',
-  gap: '8px',
+  gap: '12px',
   flexWrap: 'wrap',
 });
 
 const StatCard = styled(Box)({
-  width: 196,
+  width: 180,
   height: 152,
   padding: '20px 20px 24px',
   borderRadius: 16,
@@ -151,7 +151,6 @@ export default function ActivitySection() {
   const userId = useAppSelector(state => state.auth.user?._id);
   const { data } = useGetTodayMetricsQuery(userId ?? '', { skip: !userId });
   const { subscription } = useSubscription();
-  const userInfo = useGetUserProfileQuery(userId ?? '', { skip: !userId });
 
   const { data: bookings } = useGetBookingsQuery({ userId }, { skip: !userId });
 
@@ -163,10 +162,17 @@ export default function ActivitySection() {
     return isToday(time);
   });
 
-  const bookedToday = todayBookings.filter(b => b.status === 'Done').length;
-  const followUpToday = todayBookings.filter(
+  const doneToday = todayBookings.filter(b => b.status === 'Done').length;
+  const confirmedToday = todayBookings.filter(
     b => b.status === 'Confirmed',
   ).length;
+
+  const { data: { twilioPhoneNumber } = {} } = useGetTwilioPhoneNumberQuery(
+    userId ?? '',
+    {
+      skip: !userId,
+    },
+  );
 
   return (
     <SectionContainer>
@@ -198,9 +204,9 @@ export default function ActivitySection() {
                   height={16}
                 />
               </IconWrapper>
-              <Label>Number of Phone Service Booked</Label>
+              <Label>Number of Bookings Done</Label>
             </Box>
-            <Value>{bookedToday}</Value>
+            <Value>{doneToday}</Value>
           </StatCard>
 
           <StatCard>
@@ -213,9 +219,9 @@ export default function ActivitySection() {
                   height={16}
                 />
               </IconWrapper>
-              <Label>Number of Follow Up Services</Label>
+              <Label>Number of Bookings Confirmed</Label>
             </Box>
-            <Value>{followUpToday}</Value>
+            <Value>{confirmedToday}</Value>
           </StatCard>
         </CardContainer>
       </Box>
@@ -302,7 +308,7 @@ export default function ActivitySection() {
                 fontWeight: 'normal',
               }}
             >
-              {userInfo.data?.contact ?? 'Not Set'}
+              {twilioPhoneNumber ?? 'No number assigned'}
             </Typography>
 
             <Box

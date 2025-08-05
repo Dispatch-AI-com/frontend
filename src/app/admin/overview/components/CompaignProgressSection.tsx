@@ -1,6 +1,11 @@
 'use client';
 
-import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import {
+  Box,
+  ToggleButton,
+  ToggleButtonGroup,
+  useMediaQuery,
+} from '@mui/material';
 import React, { useMemo, useState } from 'react';
 
 import { useGetCallLogsQuery } from '@/features/callog/calllogApi';
@@ -25,6 +30,7 @@ export default function CampaignProgressSection() {
     useGetBookingsQuery({ userId: userId ?? '' }, { skip: !userId });
 
   const isService = tab === 'service';
+  const isSmallScreen = useMediaQuery('(max-width:430px)');
 
   const chartData: SimpleAggregatedLog[] = useMemo(() => {
     return isService
@@ -54,7 +60,7 @@ export default function CampaignProgressSection() {
         padding: '20px 20px 20px 24px',
         width: '100%',
         minHeight: '370px',
-        maxHeight: '420px',
+        maxHeight: '440px',
       }}
     >
       <Box
@@ -63,6 +69,7 @@ export default function CampaignProgressSection() {
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
+          marginBottom: '16px',
           gap: 2,
         }}
       >
@@ -88,8 +95,12 @@ export default function CampaignProgressSection() {
             },
           }}
         >
-          <ToggleButton value="phone">Numbers of phone calls</ToggleButton>
-          <ToggleButton value="service">Numbers of services</ToggleButton>
+          <ToggleButton value="phone">
+            {isSmallScreen ? 'Phone Calls' : 'Number of Phone Calls'}
+          </ToggleButton>
+          <ToggleButton value="service">
+            {isSmallScreen ? 'Bookings' : 'Number of Bookings'}
+          </ToggleButton>
         </ToggleButtonGroup>
 
         <ToggleButtonGroup

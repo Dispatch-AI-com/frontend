@@ -64,7 +64,10 @@ export default function PricingSection() {
       spacing: 0,
     },
     breakpoints: {
-      '(min-width: 960px)': {
+      '(min-width: 900px)': {
+        slides: { perView: 2, spacing: 0 },
+      },
+      '(min-width: 1200px)': {
         slides: { perView: 3, spacing: 0 },
       },
     },
@@ -84,7 +87,10 @@ export default function PricingSection() {
     <Box
       component="section"
       sx={{
-        padding: '0 0 68px 0',
+        padding: {
+          xs: '0 0 40px 0',
+          sm: '0 0 68px 0',
+        },
         backgroundColor: theme.palette.background.default,
       }}
     >
@@ -93,7 +99,10 @@ export default function PricingSection() {
         sx={{
           ...theme.typography.h1,
           textAlign: 'center',
-          margin: '120px 0 80px 0',
+          margin: {
+            xs: '48px 0 32px 0',
+            sm: '120px 0 100px 0',
+          },
         }}
       >
         Choose the Right Plan for You
@@ -104,9 +113,9 @@ export default function PricingSection() {
         className="keen-slider"
         sx={{
           maxWidth: {
-            xs: 330,
-            sm: 600,
-            md: 750,
+            xs: 380,
+            sm: 900,
+            md: 1050,
             lg: 1500,
           },
           overflow: 'hidden',

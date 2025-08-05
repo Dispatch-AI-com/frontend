@@ -1,4 +1,14 @@
-import { endOfWeek, format, parseISO, startOfWeek } from 'date-fns';
+import {
+  addDays,
+  eachDayOfInterval,
+  eachWeekOfInterval,
+  endOfWeek,
+  format,
+  parseISO,
+  startOfDay,
+  startOfWeek,
+  subDays,
+} from 'date-fns';
 
 import type { ServiceBooking } from '@/features/service/serviceBookingApi';
 import type { ICallLog } from '@/types/calllog.d';
@@ -11,38 +21,72 @@ function formatLabel(
   date: Date,
   period: 'daily' | 'weekly' | 'monthly',
 ): string {
-  if (period === 'daily') return format(date, 'do MMM');
+  if (period === 'daily') return format(date, 'do MMM'); // 5 Aug
   if (period === 'weekly') {
     const start = format(startOfWeek(date), 'do MMM');
     const end = format(endOfWeek(date), 'do MMM');
     return `${start} - ${end}`;
   }
-  return format(date, 'MMM');
+  return format(date, 'MMM'); // Jan, Feb, ...
 }
 
+function generateLabels(
+  period: 'daily' | 'weekly' | 'monthly',
+  isService: boolean,
+): string[] {
+  const now = startOfDay(new Date());
+
+  if (period === 'daily') {
+    const days = eachDayOfInterval({
+      start: isService ? now : subDays(now, 14),
+      end: isService ? addDays(now, 14) : now,
+    });
+    return days.map(date => formatLabel(date, period));
+  }
+
+  if (period === 'weekly') {
+    const weeks = eachWeekOfInterval({
+      start: isService ? now : subDays(now, 7 * 4),
+      end: isService ? addDays(now, 7 * 4) : now,
+    });
+    return weeks.map(date => formatLabel(date, period));
+  }
+
+  return Array.from({ length: 12 }, (_, i) =>
+    format(new Date(now.getFullYear(), i, 1), 'MMM'),
+  );
+}
+
+// ===== Call Logs =====
 export function CallogsData(
   logs: ICallLog[],
   period: 'daily' | 'weekly' | 'monthly',
 ): SimpleAggregatedLog[] {
+  const labels = generateLabels(period, false);
   const map = new Map<string, number>();
+
   logs.forEach(log => {
     const date =
       typeof log.startAt === 'string' ? parseISO(log.startAt) : log.startAt;
-    const key = formatLabel(date, period);
-    map.set(key, (map.get(key) ?? 0) + 1);
+    const label = formatLabel(date, period);
+    if (labels.includes(label)) {
+      map.set(label, (map.get(label) ?? 0) + 1);
+    }
   });
 
-  return Array.from(map.entries()).map(([name, count]) => ({
+  return labels.map(label => ({
     type: 'call',
-    name,
-    count,
+    name: label,
+    count: map.get(label) ?? 0,
   }));
 }
 
+// ===== Service Logs =====
 export function ServiceLogsData(
   logs: ServiceBooking[],
   period: 'daily' | 'weekly' | 'monthly',
 ): SimpleAggregatedLog[] {
+  const labels = generateLabels(period, true);
   const map = new Map<string, { completed: number; followUp: number }>();
 
   logs.forEach(log => {
@@ -50,18 +94,22 @@ export function ServiceLogsData(
       typeof log.bookingTime === 'string'
         ? parseISO(log.bookingTime)
         : log.bookingTime;
-    const key = formatLabel(date, period);
+    const label = formatLabel(date, period);
+    if (!labels.includes(label)) return;
 
-    const prev = map.get(key) ?? { completed: 0, followUp: 0 };
+    const prev = map.get(label) ?? { completed: 0, followUp: 0 };
     if (log.status === 'Confirmed') prev.followUp += 1;
     if (log.status === 'Done') prev.completed += 1;
-    map.set(key, prev);
+    map.set(label, prev);
   });
 
-  return Array.from(map.entries()).map(([name, { completed, followUp }]) => ({
-    type: 'service',
-    name,
-    completed,
-    followUp,
-  }));
+  return labels.map(label => {
+    const { completed = 0, followUp = 0 } = map.get(label) ?? {};
+    return {
+      type: 'service',
+      name: label,
+      completed,
+      followUp,
+    };
+  });
 }

@@ -16,16 +16,21 @@ interface PricingCardProps {
   buttons: PlanButton[];
 }
 
-const CardContainer = styled('div')(() => ({
+const CardContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  maxWidth: '448px',
+  width: '448px',
   height: '464px',
   flexShrink: 0,
   padding: '30px',
   borderRadius: '24px',
   border: '1px solid #d5d5d5',
   backgroundColor: '#fff',
+
+  [theme.breakpoints.down('sm')]: {
+    width: '330px',
+    height: '440px',
+  },
 }));
 
 const tierColors = {
@@ -185,10 +190,10 @@ export default function PricingCard({
             sx={{
               width:
                 buttons.length === 1
-                  ? '388px'
+                  ? '100%'
                   : btn.variant === 'primary'
-                    ? '216px'
-                    : '160px',
+                    ? '60%'
+                    : '40%',
               height: '40px',
             }}
           >
