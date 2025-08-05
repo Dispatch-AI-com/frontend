@@ -29,7 +29,8 @@ const BannerSection = styled('section')(({ theme }) => ({
     paddingBottom: theme.spacing(0),
   },
   [theme.breakpoints.down('md')]: {
-    minHeight: 900,
+    minHeight: 'auto',
+    paddingBottom: theme.spacing(4),
   },
 }));
 
@@ -58,10 +59,12 @@ const FeatureCard = styled(Paper)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     width: '100%',
     maxWidth: 380,
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   [theme.breakpoints.down('sm')]: {
+    width: '100%',
     maxWidth: '100%',
+    alignItems: 'flex-start',
   },
 }));
 
@@ -75,13 +78,19 @@ const FeatureIconBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   marginBottom: theme.spacing(0.5),
+  [theme.breakpoints.down('md')]: {
+    alignSelf: 'flex-start',
+  },
 }));
 
-const FeatureTitle = styled(Typography)(() => ({
+const FeatureTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   fontSize: 18,
   color: '#060606',
   paddingBottom: 2,
+  [theme.breakpoints.down('md')]: {
+    textAlign: 'left',
+  },
 }));
 
 const FeatureDesc = styled(Typography)(({ theme }) => ({
@@ -91,7 +100,7 @@ const FeatureDesc = styled(Typography)(({ theme }) => ({
   lineHeight: 1.5,
   paddingBottom: theme.spacing(1),
   [theme.breakpoints.down('md')]: {
-    textAlign: 'center',
+    textAlign: 'left',
   },
 }));
 
@@ -111,8 +120,9 @@ const FloatingCardsWrapper = styled(Box)(({ theme }) => ({
     minHeight: '320px',
   },
   [theme.breakpoints.down('md')]: {
-    bottom: theme.spacing(4),
-    minHeight: '500px',
+    position: 'static', // Change to static positioning for 899px and narrower
+    marginTop: theme.spacing(2),
+    minHeight: 'auto',
   },
 }));
 
@@ -149,6 +159,11 @@ const CardsGrid = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     maxWidth: '400px',
   },
+  [theme.breakpoints.down('sm')]: {
+    maxWidth: '100%',
+    padding: theme.spacing(0, 1),
+    gap: theme.spacing(2),
+  },
 }));
 
 export default function FeaturesBanner() {
@@ -156,8 +171,66 @@ export default function FeaturesBanner() {
     <>
       <BannerSection>
         <Container maxWidth="xl">
-          <BannerTitle>Your 24/7 Phone Assistant -</BannerTitle>
-          <BannerTitle>Let Us Answer While You Get the Job Done</BannerTitle>
+          <BannerTitle
+            sx={{
+              display: { xs: 'none', sm: 'none', md: 'block' },
+            }}
+          >
+            Your 24/7 Phone Assistant -
+          </BannerTitle>
+          <BannerTitle
+            sx={{
+              display: { xs: 'none', sm: 'none', md: 'block' },
+            }}
+          >
+            Let Us Answer While You Get the Job Done
+          </BannerTitle>
+
+          {/* 4-line title for devices 375px and narrower */}
+          <BannerTitle
+            sx={{
+              display: { xs: 'block', sm: 'block', md: 'none' },
+              fontSize: '1.6rem',
+              lineHeight: 1.1,
+              mb: 0.5,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Your 24/7 Phone Assistant
+          </BannerTitle>
+          <BannerTitle
+            sx={{
+              display: { xs: 'block', sm: 'block', md: 'none' },
+              fontSize: '1.6rem',
+              lineHeight: 1.1,
+              mb: 0.5,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            -
+          </BannerTitle>
+          <BannerTitle
+            sx={{
+              display: { xs: 'block', sm: 'block', md: 'none' },
+              fontSize: '1.6rem',
+              lineHeight: 1.1,
+              mb: 0.5,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Let Us Answer While You
+          </BannerTitle>
+          <BannerTitle
+            sx={{
+              display: { xs: 'block', sm: 'block', md: 'none' },
+              fontSize: '1.6rem',
+              lineHeight: 1.1,
+              mb: 0.5,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Get the Job Done
+          </BannerTitle>
         </Container>
         <FloatingCardsWrapper>
           <CardsGrid>
