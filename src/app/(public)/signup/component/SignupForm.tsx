@@ -18,6 +18,32 @@ import ControllerCheckbox from '../ui/controller/ControllerCheckbox';
 import ControllerInput from '../ui/controller/ControllerInput';
 import FormField from './FormField';
 
+const WelcomeText = styled.h1`
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 32px;
+
+  @media (max-width: 600px) {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+`;
+
+const InstructionText = styled.p`
+  text-align: center;
+  font-size: 18px;
+  color: #6d6d6d;
+  margin-bottom: 24px;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+`;
+
 const StyledForm = styled.form`
   width: 100%;
 `;
@@ -27,8 +53,8 @@ const FormRow = styled.div`
   gap: 16px;
   justify-content: space-between;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
+  @media (max-width: 600px) {
+    flex-direction: row;
     gap: 8px;
   }
 `;
@@ -36,7 +62,7 @@ const FormRow = styled.div`
 const CheckboxContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 32px 0 40px 0;
+  margin: 22px 0 30px 0;
 `;
 
 const LoginContainer = styled.div`
@@ -96,10 +122,14 @@ export default function SignupForm() {
 
   return (
     <StyledForm onSubmit={e => void handleSubmit(onSubmit)(e)} noValidate>
+      <WelcomeText>Get Started With Smart Agent!</WelcomeText>
+      <InstructionText>
+        Enter your credentials to access your account
+      </InstructionText>
       <GoogleOAuthButton text="Sign up with Google" disabled={isLoading} />
       {error && <ErrorMessage>{parseRTKError(error)}</ErrorMessage>}
       <FormRow>
-        <FormField label="First Name">
+        <FormField label="First Name" mb={0}>
           <ControllerInput
             name="firstName"
             control={control}
@@ -108,7 +138,7 @@ export default function SignupForm() {
           />
         </FormField>
 
-        <FormField label="Last Name">
+        <FormField label="Last Name" mb={0}>
           <ControllerInput
             name="lastName"
             control={control}
@@ -117,7 +147,7 @@ export default function SignupForm() {
           />
         </FormField>
       </FormRow>
-      <FormField label="Work Email Address">
+      <FormField label="Work Email Address" mb={0}>
         <ControllerInput
           name="workEmail"
           control={control}
@@ -127,7 +157,7 @@ export default function SignupForm() {
         />
       </FormField>
 
-      <FormField label="Password">
+      <FormField label="Password" mb={0}>
         <ControllerInput
           name="password"
           control={control}
@@ -140,7 +170,29 @@ export default function SignupForm() {
         <ControllerCheckbox
           name="agreeToPolicy"
           control={control}
-          label="I agree to the Terms of Service and Privacy Policy."
+          label={
+            <>
+              I agree to the{' '}
+              <a
+                href="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'underline', color: '#060606' }}
+              >
+                Terms of Service
+              </a>{' '}
+              and{' '}
+              <a
+                href="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'underline', color: '#060606' }}
+              >
+                Privacy Policy
+              </a>
+              .
+            </>
+          }
           disabled={isLoading}
         />
       </CheckboxContainer>
@@ -156,7 +208,10 @@ export default function SignupForm() {
         {isLoading ? 'Creating Account…' : 'Sign Up'}
       </Button>
       <LoginContainer>
-        Already have an account? <LoginLink href="/login">Login</LoginLink>
+        Already have an account?{' '}
+        <LoginLink href="/login" style={{ fontWeight: 'bold' }}>
+          Login
+        </LoginLink>
       </LoginContainer>
     </StyledForm>
   );

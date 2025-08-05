@@ -20,6 +20,7 @@ export default function Button({
         bgcolor: '#060606',
         fontSize: '14px',
         fontWeight: 'bold',
+        marginTop: '16px',
         color: '#fff',
         '&:hover': {
           bgcolor: '#060606',

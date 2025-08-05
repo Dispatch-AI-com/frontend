@@ -113,7 +113,7 @@ export default function LoginForm() {
 
       <SsoLinkWrapper>
         <a href="/sso" target="_blank" rel="noopener noreferrer">
-          Use Single Sign-On
+          <strong>Use Single Sign-On</strong>
         </a>
       </SsoLinkWrapper>
       <PolicyLinks>

@@ -18,7 +18,7 @@ const StyledButton = styled.button.withConfig({
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
   border-radius: 16px;
   background-color: #060606;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   color: #fff;
   border: none;
