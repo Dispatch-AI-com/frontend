@@ -305,6 +305,20 @@ const EditBookingModal: React.FC<Props> = ({
     address: service.client?.address ?? '',
   });
 
+  // Get current date and time in local format for min attribute
+  const getCurrentDateTimeLocal = () => {
+    const now = new Date();
+    return now.toISOString().slice(0, 16);
+  };
+
+  // Validate if selected datetime is in the past
+  const isDateTimeInPast = (dateTimeString: string) => {
+    if (!dateTimeString) return false;
+    const selectedDate = new Date(dateTimeString);
+    const now = new Date();
+    return selectedDate < now;
+  };
+
   // Get service-management services list
   const user = useAppSelector(state => state.auth.user);
   const userId = user?._id;
@@ -317,11 +331,18 @@ const EditBookingModal: React.FC<Props> = ({
     name &&
     status &&
     dateTime &&
+    !isDateTimeInPast(dateTime) &&
     client.name &&
     client.phoneNumber &&
     client.address;
 
   const handleSave = () => {
+    // Validate that the selected date is not in the past
+    if (isDateTimeInPast(dateTime)) {
+      alert('You cannot save a booking for a past date and time.');
+      return;
+    }
+
     // Convert to ISO string when saving
     let isoDateTime = dateTime;
     if (isoDateTime && isoDateTime.length === 16) isoDateTime += ':00';
@@ -394,7 +415,7 @@ const EditBookingModal: React.FC<Props> = ({
             </FormControl>
           </FormField>
 
-          {/* 新增 client 信息输入框 */}
+          {/* New client information input fields */}
           <FormField>
             <FieldLabel>Client Name</FieldLabel>
             <StyledTextField
@@ -435,7 +456,25 @@ const EditBookingModal: React.FC<Props> = ({
           <FormField>
             <FieldLabel>Created By</FieldLabel>
             <CreatedByContainer>
-              <UserAvatar>JC</UserAvatar>
+              <UserAvatar>
+                {(() => {
+                  const createdBy =
+                    typeof service.createdBy === 'object' &&
+                    service.createdBy !== null
+                      ? service.createdBy.name
+                      : service.createdBy;
+
+                  if (typeof createdBy === 'string') {
+                    return createdBy
+                      .split(' ')
+                      .map((n: string) => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2);
+                  }
+                  return 'U';
+                })()}
+              </UserAvatar>
               <UserName>
                 {typeof service.createdBy === 'object' &&
                 service.createdBy !== null
@@ -472,6 +511,13 @@ const EditBookingModal: React.FC<Props> = ({
                 setDateTime(e.target.value)
               }
               InputLabelProps={{ shrink: true }}
+              inputProps={{ min: getCurrentDateTimeLocal() }}
+              error={isDateTimeInPast(dateTime)}
+              helperText={
+                isDateTimeInPast(dateTime)
+                  ? 'Date and time cannot be in the past'
+                  : ''
+              }
             />
           </FormField>
 
