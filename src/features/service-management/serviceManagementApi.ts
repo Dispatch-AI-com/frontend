@@ -58,6 +58,18 @@ export const serviceManagementApi = createApi({
       providesTags: ['ServiceManagement'],
     }),
 
+    getServicesIncludingDeleted: builder.query<
+      ServiceManagement[],
+      { userId: string }
+    >({
+      query: ({ userId }) => ({
+        url: '/service/all-including-deleted',
+        method: 'GET',
+        params: { userId },
+      }),
+      providesTags: ['ServiceManagement'],
+    }),
+
     getServiceById: builder.query<ServiceManagement, string>({
       query: id => ({
         url: `/service/${id}`,
@@ -102,6 +114,7 @@ export const serviceManagementApi = createApi({
 
 export const {
   useGetServicesQuery,
+  useGetServicesIncludingDeletedQuery,
   useGetServiceByIdQuery,
   useCreateServiceMutation,
   useUpdateServiceMutation,

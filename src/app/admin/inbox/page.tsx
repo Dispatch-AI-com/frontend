@@ -363,13 +363,24 @@ export default function InboxPage() {
     (item: ICallLog) => item._id === selectedId,
   );
 
+  // Helper function to get display values for search
+  const getSearchableName = (name?: string) => {
+    const trimmed = name?.trim();
+    return trimmed && trimmed.length > 0 ? trimmed : 'Unknown Caller';
+  };
+
+  const getSearchableNumber = (number?: string) => {
+    const trimmed = number?.trim();
+    return trimmed && trimmed.length > 0 ? trimmed : 'Unknown number';
+  };
+
   // Filter call logs based on search term and filters
   const filteredCallLogs = allCallLogs.filter((item: ICallLog) => {
     // Search filter
     if (search) {
       const searchLower = search.toLowerCase();
-      const callerName = (item.callerName ?? '').toLowerCase();
-      const callerNumber = (item.callerNumber ?? '').toLowerCase();
+      const callerName = getSearchableName(item.callerName).toLowerCase();
+      const callerNumber = getSearchableNumber(item.callerNumber).toLowerCase();
 
       if (
         !callerName.includes(searchLower) &&
@@ -613,6 +624,7 @@ export default function InboxPage() {
                 <InboxList
                   selectedId={selectedId}
                   onSelect={handleSelect}
+                  searchTerm={search}
                   sort={sort}
                   allItems={filteredCallLogs}
                   hasNextPage={hasNextPage}
@@ -653,6 +665,7 @@ export default function InboxPage() {
               <InboxList
                 selectedId={selectedId}
                 onSelect={handleSelect}
+                searchTerm={search}
                 sort={sort}
                 allItems={filteredCallLogs}
                 hasNextPage={hasNextPage}

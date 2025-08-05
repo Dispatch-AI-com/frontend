@@ -241,7 +241,7 @@ const BookingModal: React.FC<Props> = ({
   const theme = useTheme();
   useMediaQuery(theme.breakpoints.down('sm'));
   const [name, setName] = useState('');
-  const [selectedServiceId, setSelectedServiceId] = useState(''); // 新增：保存选中的 service _id
+  const [selectedServiceId, setSelectedServiceId] = useState(''); // New: Save selected service _id
   const [status, setStatus] = useState('');
   const [datetime, setDatetime] = useState(() => {
     const now = new Date();
@@ -255,6 +255,21 @@ const BookingModal: React.FC<Props> = ({
   });
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
+
+  // Get current date and time in local format for min attribute
+  const getCurrentDateTimeLocal = () => {
+    const now = new Date();
+    return now.toISOString().slice(0, 16);
+  };
+
+  // Validate if selected datetime is in the past
+  const isDateTimeInPast = (dateTimeString: string) => {
+    if (!dateTimeString) return false;
+    const selectedDate = new Date(dateTimeString);
+    const now = new Date();
+    return selectedDate < now;
+  };
+
   const userName =
     user?.name ??
     (user && (user.firstName ?? user.lastName)
@@ -264,7 +279,7 @@ const BookingModal: React.FC<Props> = ({
     ? user.name
       ? user.name
           .split(' ')
-          .map(n => n[0])
+          .map((n: string) => n[0])
           .join('')
           .toUpperCase()
           .slice(0, 2)
@@ -276,17 +291,18 @@ const BookingModal: React.FC<Props> = ({
 
   const isValid =
     name &&
-    selectedServiceId && // 修改：检查 selectedServiceId
+    selectedServiceId && // Modified: Check selectedServiceId
     status &&
     datetime &&
+    !isDateTimeInPast(datetime) &&
     client.name &&
     client.phoneNumber &&
     client.address;
-  // 新增：根据选中的 service name 找到对应的 service _id
+  // New: Find corresponding service _id based on selected service name
   const handleServiceNameChange = (serviceName: string) => {
     setName(serviceName);
     const selectedService = serviceManagementServices.find(
-      s => s.name === serviceName && s.isAvailable,
+      s => s.name === serviceName,
     );
     setSelectedServiceId(selectedService?._id ?? '');
   };
@@ -307,7 +323,7 @@ const BookingModal: React.FC<Props> = ({
     }
   };
 
-  // 工具函数：将 datetime-local 补全为后端需要的 UTC 字符串（标准 ISO/UTC，不手动加 Z）
+  // Utility function: Convert datetime-local to UTC string format required by backend (standard ISO/UTC, no manual Z addition)
   function toBackendDateString(datetime: string) {
     if (!datetime) return '';
     try {
@@ -341,8 +357,12 @@ const BookingModal: React.FC<Props> = ({
         alert('Please select a valid date and time');
         return;
       }
+      if (isDateTimeInPast(datetime)) {
+        alert('You cannot book a service for a past date and time.');
+        return;
+      }
       await createServiceBooking({
-        serviceId: selectedServiceId, // 修改：使用选中的 service _id
+        serviceId: selectedServiceId, // Modified: Use selected service _id
         client: {
           name: client.name,
           phoneNumber: client.phoneNumber,
@@ -396,7 +416,7 @@ const BookingModal: React.FC<Props> = ({
                 value={name}
                 onChange={
                   (e: SelectChangeEvent<unknown>) =>
-                    handleServiceNameChange(e.target.value as string) // 修改：使用新的处理函数
+                    handleServiceNameChange(e.target.value as string) // Modified: Use new handler function
                 }
                 displayEmpty
                 renderValue={selected => {
@@ -408,26 +428,22 @@ const BookingModal: React.FC<Props> = ({
                     : JSON.stringify(selected);
                 }}
               >
-                {serviceManagementServices.filter(
-                  service => service.isAvailable,
-                ).length === 0 ? (
+                {serviceManagementServices.length === 0 ? (
                   <MenuItem disabled value="">
                     No services available for booking
                   </MenuItem>
                 ) : (
-                  serviceManagementServices
-                    .filter(service => service.isAvailable)
-                    .map(service => (
-                      <MenuItem key={service._id} value={service.name}>
-                        {service.name}
-                      </MenuItem>
-                    ))
+                  serviceManagementServices.map(service => (
+                    <MenuItem key={service._id} value={service.name}>
+                      {service.name}
+                    </MenuItem>
+                  ))
                 )}
               </StatusSelect>
             </FormControl>
           </FormField>
 
-          {/* 新增 client 信息输入框 */}
+          {/* New client information input fields */}
           <FormField>
             <FieldLabel>Client Name</FieldLabel>
             <StyledTextField
@@ -510,6 +526,13 @@ const BookingModal: React.FC<Props> = ({
                 setDatetime(e.target.value)
               }
               InputLabelProps={{ shrink: true }}
+              inputProps={{ min: getCurrentDateTimeLocal() }}
+              error={isDateTimeInPast(datetime)}
+              helperText={
+                isDateTimeInPast(datetime)
+                  ? 'Date and time cannot be in the past'
+                  : ''
+              }
             />
           </FormField>
 

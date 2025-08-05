@@ -21,6 +21,9 @@ const testimonials = [
 const Wrapper = styled.section`
   padding: 120px 16px 80px;
   background-color: white;
+  @media (max-width: 600px) {
+    padding: 56px 0 8px;
+  }
 `;
 
 const Title = styled.h2`
@@ -32,6 +35,10 @@ const Title = styled.h2`
   color: #060606;
   margin: 0 auto 64px;
   max-width: 864px;
+  @media (max-width: 600px) {
+    font-size: 20px;
+    margin-bottom: 24px;
+  }
 `;
 
 const CardContainer = styled.div`
@@ -53,6 +60,10 @@ const CardContainer = styled.div`
     padding: 0 16px;
     flex-wrap: wrap;
     align-items: center;
+  }
+  @media (max-width: 600px) {
+    gap: 16px;
+    padding: 0;
   }
 `;
 
