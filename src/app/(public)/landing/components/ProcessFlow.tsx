@@ -53,6 +53,11 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     whiteSpace: 'nowrap',
   },
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '20px',
+    letterSpacing: '-0.8px',
+    marginBottom: theme.spacing(3),
+  },
   textAlign: 'center',
   marginBottom: theme.spacing(8),
   width: '100%',
@@ -80,6 +85,8 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     padding: '12px',
+    width: '100%',
+    height: '327px',
   },
   '@media (max-width:400px)': {
     padding: '8px',
@@ -97,6 +104,10 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  [theme.breakpoints.down('sm')]: {
+    height: '184px',
+    aspectRatio: 'auto',
+  },
 }));
 
 const StepsGrid = styled(Box)(({ theme }) => ({
@@ -108,6 +119,16 @@ const StepsGrid = styled(Box)(({ theme }) => ({
   },
   [theme.breakpoints.up('sm')]: {
     gridTemplateColumns: 'repeat(4, 1fr)',
+  },
+  '@media (max-width:600px)': {
+    display: 'flex',
+    gap: 0,
+    overflowX: 'auto',
+    scrollbarWidth: 'none',
+    marginTop: '-5px',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
   },
 }));
 
@@ -131,14 +152,10 @@ const StepPaper = styled(Paper, {
   cursor: 'pointer',
   transition: 'background-color 0.3s',
 
-  '@media (min-width:295px) and (max-width:350px)': {
-    height: '250px',
-  },
-  '@media (min-width:351px) and (max-width:500px)': {
-    height: '200px',
-  },
-  '@media (min-width:501px) and (max-width:600px)': {
-    height: '150px',
+  '@media (max-width:600px)': {
+    width: '246px',
+    height: '104px',
+    flexShrink: 0,
   },
 }));
 
