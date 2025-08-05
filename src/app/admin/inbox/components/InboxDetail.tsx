@@ -337,8 +337,13 @@ export default function InboxDetail({
     }
   }
 
+  const getDisplayName = (name?: string) => {
+    const trimmed = name?.trim();
+    return trimmed && trimmed.length > 0 ? trimmed : 'Unknown Caller';
+  };
+
   function formatPhoneNumber(phone?: string) {
-    if (!phone) return '';
+    if (!phone?.trim()) return 'Unknown number';
     if (phone.startsWith('+61')) {
       return '+61 ' + phone.slice(3);
     }
@@ -452,7 +457,7 @@ export default function InboxDetail({
           />
         </AvatarImg>
         <UserInfo>
-          <UserName>{item.callerName}</UserName>
+          <UserName>{getDisplayName(item.callerName)}</UserName>
           <UserPhone>{formatPhoneNumber(item.callerNumber)}</UserPhone>
         </UserInfo>
         <DeleteButton onClick={handleDeleteCallLog} title="Delete call log">

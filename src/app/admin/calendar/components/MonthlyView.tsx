@@ -1,10 +1,12 @@
 'use client';
+
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
+import { GlobalStyles } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { enGB } from 'date-fns/locale';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Calendar,
   dateFnsLocalizer,
@@ -53,7 +55,7 @@ const StyledCalendarWrapper = styled('div')(({ theme }) => ({
   marginLeft: 0,
   background: '#fff',
   borderRadius: 12,
-  overflowX: 'hidden',
+  overflow: 'visible',
   boxSizing: 'border-box',
   border: '1px solid #eee',
   [theme.breakpoints.down('lg')]: {
@@ -159,7 +161,6 @@ const StyledCalendarWrapper = styled('div')(({ theme }) => ({
   },
   '.rbc-month-view .rbc-day-bg.rbc-off-range, .rbc-month-view .rbc-day-bg.rbc-off-range-bg':
     {
-      backgroundColor: '#fafafa',
       background: '#fafafa',
     },
   '.rbc-month-view .rbc-date-cell.rbc-off-range span, .rbc-month-view .rbc-date-cell.rbc-off-range a':
@@ -192,7 +193,8 @@ const MonthlyView: React.FC<MonthlyViewProps> = ({
 
   const { data: services = [] } =
     useGetServicesQuery({ userId: userId ?? '' }, { skip: !userId }) ?? {};
-  const serviceMap = React.useMemo(() => {
+
+  const serviceMap = useMemo(() => {
     const map = new Map<string, ServiceManagement>();
     if (Array.isArray(services)) {
       services.forEach(s => {
@@ -204,104 +206,196 @@ const MonthlyView: React.FC<MonthlyViewProps> = ({
     return map;
   }, [services]);
 
-  const filteredBookings = bookings.filter(item => {
-    if (!item) return false;
+  const filteredBookings = useMemo(() => {
+    return bookings.filter(item => {
+      if (!item) return false;
 
-    const clientName = (item.client?.name ?? '').toLowerCase();
-    const serviceName = (
-      serviceMap.get(item.serviceId)?.name ?? ''
-    ).toLowerCase();
-    const searchLower = search.toLowerCase();
+      const clientName = (item.client?.name ?? '').toLowerCase();
+      const serviceName = (
+        serviceMap.get(item.serviceId)?.name ?? ''
+      ).toLowerCase();
+      const searchLower = search.toLowerCase();
 
-    return (
-      clientName.includes(searchLower) || serviceName.includes(searchLower)
-    );
-  });
+      return (
+        clientName.includes(searchLower) || serviceName.includes(searchLower)
+      );
+    });
+  }, [bookings, serviceMap, search]);
 
-  const allEvents = filteredBookings.map((item: Booking) => {
-    const service = serviceMap.get(item.serviceId);
-    const serviceName = service?.name ?? 'Unknown Service';
-    const clientName = item.client?.name ?? 'Unknown Client';
+  const events = useMemo(() => {
+    return filteredBookings
+      .map((item: Booking) => {
+        const service = serviceMap.get(item.serviceId);
+        const serviceName = service?.name ?? 'Unknown Service';
+        const clientName = item.client?.name ?? 'Unknown Client';
 
-    return {
-      ...item,
-      id: item._id,
-      title: `${serviceName} - ${clientName}`,
-      start: new Date(item.bookingTime),
-      end: new Date(item.bookingTime),
-    };
-  });
+        return {
+          ...item,
+          id: item._id,
+          title: `${serviceName} - ${clientName}`,
+          start: new Date(item.bookingTime),
+          end: new Date(item.bookingTime),
+        };
+      })
+      .filter(event => selectedFilters.includes(event.status));
+  }, [filteredBookings, serviceMap, selectedFilters]);
 
-  const events = allEvents.filter(event => {
-    const isIncluded = selectedFilters.includes(event.status);
-    return isIncluded;
-  });
+  const handleEventClick = (event: Booking) => {
+    setSelectedTask(event);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   return (
-    <StyledCalendarWrapper>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        views={['month', 'week']}
-        defaultView="month"
-        date={value}
-        onNavigate={onChange}
-        culture="en-GB"
-        formats={{
-          weekdayFormat: (
-            date: Date,
-            culture: string | undefined,
-            localizer: DateLocalizer | undefined,
-          ) => localizer?.format(date, 'EEEE', culture) ?? '',
-          dateFormat: 'd',
-        }}
-        style={{
-          background: '#fff',
-          borderRadius: 12,
-        }}
-        popup
-        toolbar={false}
-        components={{
-          event: ({ event }: { event: Booking }) => {
-            return (
-              <TaskCard
-                taskName={`${serviceMap.get(event.serviceId)?.name ?? ''} - ${event.client?.name ?? ''}`}
-                status={event.status as 'Confirmed' | 'Done' | 'Cancelled'}
-                onClick={() => {
-                  setSelectedTask(event);
-                  setModalOpen(true);
-                }}
-              />
-            );
+    <>
+      <GlobalStyles
+        styles={{
+          '.rbc-month-view .rbc-event, .rbc-month-view .rbc-row-segment': {
+            height: 28,
+            lineHeight: '28px',
+            background: 'transparent',
+            border: 'none',
+            boxShadow: 'none',
+            padding: 0,
+            margin: 0,
+          },
+          '.rbc-overlay': {
+            zIndex: 1300,
+            borderRadius: '12px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.08)',
+            animation: 'popupFadeIn 0.2s ease-out',
+            overflow: 'hidden',
+          },
+          '@keyframes popupFadeIn': {
+            '0%': {
+              opacity: 0,
+              transform: 'scale(0.95) translateY(-10px)',
+            },
+            '100%': {
+              opacity: 1,
+              transform: 'scale(1) translateY(0)',
+            },
+          },
+          '.rbc-overlay-header': {
+            height: '48px',
+            padding: '12px 16px',
+            fontSize: '14px',
+            fontWeight: 600,
+            color: '#333',
+            borderBottom: '1px solid #e0e0e0',
+            backgroundColor: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          },
+          '.rbc-overlay .rbc-event': {
+            background: 'transparent',
+            border: 'none',
+            boxShadow: 'none',
+            padding: '4px 8px',
+            margin: '2px 0',
+            borderRadius: '6px',
+            fontSize: '12px',
+            fontWeight: 500,
+            color: '#333',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+            '&:hover': {
+              backgroundColor: '#f5f5f5',
+            },
+          },
+          '.rbc-overlay .rbc-event.rbc-selected': {
+            backgroundColor: '#e3f2fd',
+          },
+          '.rbc-month-view .rbc-show-more': {
+            display: 'inline-block',
+            position: 'relative',
+            bottom: -10,
+            left: 10,
+            fontSize: '0.7rem',
+            fontWeight: 500,
+            color: '#4a4a4a',
+            cursor: 'pointer',
+            padding: '2px 8px',
+            borderRadius: '9999px',
+            backgroundColor: '#ffffff',
+            border: 'none',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+            transition:
+              'background-color 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease',
+            '&:hover': {
+              backgroundColor: '#f5f5f5',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+              transform: 'translateY(-1px)',
+            },
           },
         }}
       />
-      {modalOpen && selectedTask && (
-        <TaskDetailModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          task={
-            selectedTask
-              ? {
-                  ...selectedTask,
-                  serviceId:
-                    selectedTask.serviceId &&
-                    serviceMap.get(selectedTask.serviceId)
-                      ? {
-                          ...serviceMap.get(selectedTask.serviceId),
-                        }
-                      : undefined,
-                }
-              : undefined
-          }
-          service={
-            selectedTask ? serviceMap.get(selectedTask.serviceId) : undefined
-          }
+      <StyledCalendarWrapper>
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          views={['month', 'week']}
+          defaultView="month"
+          date={value}
+          onNavigate={onChange}
+          culture="en-GB"
+          formats={{
+            weekdayFormat: (
+              date: Date,
+              culture: string | undefined,
+              localizer: DateLocalizer | undefined,
+            ) => localizer?.format(date, 'EEEE', culture) ?? '',
+            dateFormat: 'd',
+          }}
+          style={{
+            background: '#fff',
+            borderRadius: 12,
+          }}
+          popup
+          popupOffset={{ x: 30, y: 20 }}
+          toolbar={false}
+          components={{
+            event: ({ event }: { event: Booking }) => (
+              <TaskCard
+                taskName={`${serviceMap.get(event.serviceId)?.name ?? ''} - ${event.client?.name ?? ''}`}
+                status={event.status as 'Confirmed' | 'Done' | 'Cancelled'}
+                onClick={() => handleEventClick(event)}
+              />
+            ),
+          }}
         />
-      )}
-    </StyledCalendarWrapper>
+        {modalOpen && selectedTask && (
+          <TaskDetailModal
+            open={modalOpen}
+            onClose={handleModalClose}
+            task={
+              selectedTask
+                ? {
+                    ...selectedTask,
+                    serviceId:
+                      selectedTask.serviceId &&
+                      serviceMap.get(selectedTask.serviceId)
+                        ? {
+                            ...serviceMap.get(selectedTask.serviceId),
+                          }
+                        : undefined,
+                  }
+                : undefined
+            }
+            service={
+              selectedTask ? serviceMap.get(selectedTask.serviceId) : undefined
+            }
+          />
+        )}
+      </StyledCalendarWrapper>
+    </>
   );
 };
 

@@ -134,7 +134,7 @@ export default function DeleteConfirmModal({
       fullScreen={isExtraSmallScreen}
     >
       <DialogTitleStyled>
-        {/* 直接用 span 保留样式，避免嵌套 heading */}
+        {/* Use span directly to preserve styles, avoid nested heading */}
         <span
           style={{
             fontWeight: 'bold',

@@ -123,11 +123,13 @@ export default function ServiceManagementContent({
         />
       </GridContainer>
 
-      <ServicePagination
-        page={page}
-        onPageChange={setPage}
-        totalPages={totalPages}
-      />
+      {totalPages > 1 && (
+        <ServicePagination
+          page={page}
+          onPageChange={setPage}
+          totalPages={totalPages}
+        />
+      )}
 
       <EditServiceModal
         open={editOpen}

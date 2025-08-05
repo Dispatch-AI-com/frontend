@@ -13,12 +13,11 @@ const StyledContainer = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: ${({ theme }) => theme.spacing(12)};
-  padding-bottom: ${({ theme }) => theme.spacing(12)};
+  padding-top: ${({ theme }) => theme.spacing(7.5)};
+  padding-bottom: ${({ theme }) => theme.spacing(5)};
 
-  @media (min-width: ${({ theme }) => theme.breakpoints.values.xs}px) {
+  @media (min-width: ${({ theme }) => theme.breakpoints.values.md}px) {
     padding-top: ${({ theme }) => theme.spacing(10)};
-    padding-bottom: ${({ theme }) => theme.spacing(5)};
   }
 `;
 
@@ -28,6 +27,12 @@ const StyledStack = styled('div')`
   align-items: center;
   gap: ${({ theme }) => theme.spacing(1)};
   width: 70%;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.values.sm - 1}px) {
+    width: 100%;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.spacing(1)};
+  }
 
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
     width: 100%;
@@ -44,12 +49,28 @@ const StyledHeader = styled(Typography)`
   white-space: normal;
   max-width: 100%;
   line-height: 1.2;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.values.sm - 1}px) {
+    text-align: left;
+    justify-content: flex-start;
+    font-size: 28px;
+    letter-spacing: -1.5px;
+  }
 `;
 
 const StyledTypographyBody = styled(Typography)`
   text-align: center;
   margin: 32px 0;
   word-break: break-word;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.values.sm - 1}px) {
+    text-align: left;
+    margin: 16px 0;
+
+    .sm-only-br {
+      display: none;
+    }
+  }
 `;
 
 const ButtonStack = styled('div')`
@@ -58,6 +79,12 @@ const ButtonStack = styled('div')`
   justify-content: center;
   align-items: center;
   gap: ${({ theme }) => theme.spacing(7)};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.values.sm - 1}px) {
+    width: 100%;
+    align-items: stretch;
+    gap: ${({ theme }) => theme.spacing(2)};
+  }
 
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
     flex-direction: row;
@@ -83,6 +110,18 @@ const StyledDemoBox = styled(Box)`
     border-radius: 16px;
   }
 
+  @media (max-width: ${({ theme }) => theme.breakpoints.values.sm - 1}px) {
+    width: 100%;
+    height: 215px;
+    padding: 0;
+
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
     width: 90%;
     height: auto;
@@ -100,7 +139,12 @@ export default function HeroSection() {
     <StyledContainer>
       <StyledStack>
         <StyledHeader
-          sx={{ marginTop: theme.spacing(10) }}
+          sx={{
+            marginTop: 0,
+            [theme.breakpoints.up('md')]: {
+              marginTop: theme.spacing(10),
+            },
+          }}
           variant="h1"
           color="text.primary"
         >
@@ -112,7 +156,9 @@ export default function HeroSection() {
         <StyledTypographyBody variant="body1" color="text.primary">
           SmartAgent is your 24/7 virtual phone assistant for rental managers,
           plumbers, contractors, and small businesses.
-          <br />
+          <span className="sm-only-br">
+            <br />
+          </span>
           Answer calls, schedule follow-ups, and automate
           workflows&nbsp;—&nbsp;no human effort needed.
         </StyledTypographyBody>
@@ -120,14 +166,21 @@ export default function HeroSection() {
           <CommonButton
             buttonVariant="black"
             endIcon={<ArrowForwardIcon />}
-            sx={{ height: '48px' }}
+            sx={{
+              height: '48px',
+              width: { xs: '100%', sm: 'auto' },
+            }}
           >
             Start Your Free Trial
           </CommonButton>
           <CommonButton
             buttonVariant="green"
             endIcon={<ArrowForwardIcon />}
-            sx={{ height: '48px', marginBottom: { xs: '50px', sm: '0' } }}
+            sx={{
+              height: '48px',
+              width: { xs: '100%', sm: 'auto' },
+              marginBottom: { xs: '16px', sm: '0' },
+            }}
           >
             Request a Demo
           </CommonButton>
