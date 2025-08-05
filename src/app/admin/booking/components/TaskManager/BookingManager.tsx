@@ -18,7 +18,7 @@ import {
   useGetBookingsQuery,
   useUpdateServiceBookingMutation,
 } from '@/features/service/serviceBookingApi';
-import { useGetServicesQuery } from '@/features/service-management/serviceManagementApi';
+import { useGetServicesIncludingDeletedQuery } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 
 import BookingList from './BookingList';
@@ -88,32 +88,43 @@ export function Content({
     { skip: !userId },
   );
 
-  const { data: serviceManagementServices = [] } = useGetServicesQuery(
-    { userId: userId ?? '' },
-    { skip: !userId },
+  const { data: serviceManagementServices = [] } =
+    useGetServicesIncludingDeletedQuery(
+      { userId: userId ?? '' },
+      { skip: !userId },
+    );
+
+  // Filter out deleted services for the booking modal
+  const availableServicesForBooking = serviceManagementServices.filter(
+    service => service.isAvailable && !service.isDeleted,
   );
 
   const [updateServiceBooking] = useUpdateServiceBookingMutation();
 
   // Convert bookings to display format
   const bookingsAsServices: Service[] = bookings.map(booking => {
-    // Find the corresponding service name from serviceManagementServices
+    // Find the corresponding service name from serviceManagementServices (including deleted ones)
     const correspondingService = serviceManagementServices.find(
       service => service._id === booking.serviceId,
     );
 
+    // Use the original service name if found, otherwise show "Deleted Service"
+    const serviceName = correspondingService?.name ?? 'Deleted Service';
+    const servicePrice = correspondingService?.price ?? 0;
+    const isServiceDeleted = correspondingService?.isDeleted ?? false;
+
     return {
       _id: booking._id ?? '',
       companyId: '',
-      name: correspondingService?.name ?? 'Unknown Booking',
+      name: serviceName,
       description: booking.note ?? '',
-      price: correspondingService?.price ?? 0,
+      price: servicePrice,
       notifications: {
         preferNotificationType: 'email',
         phoneNumber: booking.client?.phoneNumber ?? '',
         email: '',
       },
-      isAvailable: true,
+      isAvailable: !!(correspondingService?.isAvailable && !isServiceDeleted), // Mark as unavailable if service is deleted
       status: booking.status ?? 'Confirmed',
       dateTime: booking.bookingTime,
       userId: '',
@@ -162,8 +173,12 @@ export function Content({
       const booking = bookings.find(b => b._id === updatedBooking._id);
       if (booking) {
         // Find the corresponding service ID by service name
+        // Only allow selection of available (non-deleted) services
         const selectedService = serviceManagementServices.find(
-          service => service.name === updatedBooking.name,
+          service =>
+            service.name === updatedBooking.name &&
+            service.isAvailable &&
+            !service.isDeleted,
         );
 
         // Prepare the update data
@@ -368,7 +383,7 @@ export function Content({
         <BookingModal
           onClose={onCloseCreateBookingModal}
           onCreate={onCreateBooking}
-          serviceManagementServices={serviceManagementServices}
+          serviceManagementServices={availableServicesForBooking}
         />
       )}
 
