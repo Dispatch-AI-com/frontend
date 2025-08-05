@@ -456,7 +456,25 @@ const EditBookingModal: React.FC<Props> = ({
           <FormField>
             <FieldLabel>Created By</FieldLabel>
             <CreatedByContainer>
-              <UserAvatar>JC</UserAvatar>
+              <UserAvatar>
+                {(() => {
+                  const createdBy =
+                    typeof service.createdBy === 'object' &&
+                    service.createdBy !== null
+                      ? service.createdBy.name
+                      : service.createdBy;
+
+                  if (typeof createdBy === 'string') {
+                    return createdBy
+                      .split(' ')
+                      .map((n: string) => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2);
+                  }
+                  return 'U';
+                })()}
+              </UserAvatar>
               <UserName>
                 {typeof service.createdBy === 'object' &&
                 service.createdBy !== null
