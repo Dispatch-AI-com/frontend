@@ -29,12 +29,20 @@ const StyledCard = styled.div`
     min-height: auto;
     padding: 40px 24px;
   }
+  @media (max-width: 600px) {
+    width: 100%;
+    max-width: none;
+  }
 `;
 
 const QuoteRow = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 12px;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 40px;
+  }
 `;
 
 const QuoteIconBox = styled.div`
