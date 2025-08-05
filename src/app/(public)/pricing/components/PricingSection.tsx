@@ -107,7 +107,7 @@ export default function PricingSection() {
             xs: 330,
             sm: 600,
             md: 750,
-            lg: 1400,
+            lg: 1500,
           },
           overflow: 'hidden',
         }}
