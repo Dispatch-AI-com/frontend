@@ -93,7 +93,6 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
               flexDirection: 'row',
             }}
           >
-            {/* 博客图片 - 左侧 */}
             <Box
               sx={{
                 position: 'relative',
@@ -137,7 +136,6 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
               </Box>
             </Box>
 
-            {/* 中间卡片的内容区域 - 右侧 */}
             <Box
               sx={{
                 flex: 1,
@@ -147,12 +145,11 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                 flexDirection: 'column',
                 backgroundColor: 'background.paper',
                 position: 'relative',
-                minWidth: 0, // 防止内容撑大布局
+                minWidth: 0,
                 justifyContent: 'space-between',
               }}
             >
               <Box>
-                {/* 标题 */}
                 <Typography
                   sx={{
                     fontSize: '18px',
@@ -165,7 +162,6 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                   {blog.title}
                 </Typography>
 
-                {/* 摘要 */}
                 <Typography
                   sx={{
                     fontSize: '14px',
@@ -183,7 +179,6 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                 </Typography>
               </Box>
 
-              {/* Read More 按钮 */}
               <Button
                 variant="text"
                 endIcon={<ArrowForwardIcon sx={{ fontSize: 16 }} />}

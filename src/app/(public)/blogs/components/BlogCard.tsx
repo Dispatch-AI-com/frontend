@@ -64,7 +64,7 @@ const Summary = styled(Typography)(() => ({
   marginRight: 5,
   marginBottom: 12,
   lineHeight: 1.5,
-  maxHeight: '3em', // 最多 3 行
+  maxHeight: '3em',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
 }));
