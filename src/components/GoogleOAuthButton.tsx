@@ -29,10 +29,16 @@ const GoogleButton = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  @media (max-width: 600px) {
+    height: 40px;
+    border-radius: 12px;
+    border: solid 1px #d5d5d5;
+    background-color: #fff;
+  }
 `;
 
 const GoogleIcon = styled.div`
-  margin-right: 12px;
   width: 20px;
   height: 20px;
   display: flex;
@@ -60,6 +66,20 @@ const Divider = styled.div`
   }
 `;
 
+const GoogleButtonText = styled.span`
+  height: 20px;
+  margin-left: 12px;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #060606;
+  display: inline-block;
+`;
+
 interface GoogleOAuthButtonProps {
   disabled?: boolean;
   text?: string;
@@ -67,7 +87,7 @@ interface GoogleOAuthButtonProps {
 
 export default function GoogleOAuthButton({
   disabled = false,
-  text = 'Continue with Google',
+  text = 'Sign in with Google',
 }: GoogleOAuthButtonProps) {
   const handleGoogleLogin = useCallback(() => {
     const backendUrl =
@@ -85,10 +105,10 @@ export default function GoogleOAuthButton({
         <GoogleIcon>
           <Image src="/google.svg" alt="Google" width={20} height={20} />
         </GoogleIcon>
-        {text}
+        <GoogleButtonText>{text}</GoogleButtonText>
       </GoogleButton>
       <Divider>
-        <span>or</span>
+        <span>OR</span>
       </Divider>
     </>
   );

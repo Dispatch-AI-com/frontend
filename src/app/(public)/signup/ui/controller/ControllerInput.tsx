@@ -17,7 +17,7 @@ const InputContainer = styled.div`
 const StyledInput = styled.input<{ $hasError: boolean }>`
   width: 100%;
   padding: 16px;
-  border: 2px solid ${({ $hasError }) => ($hasError ? '#f44336' : '#d5d5d5')};
+  border: 1px solid ${({ $hasError }) => ($hasError ? '#f44336' : '#d5d5d5')};
   border-radius: 12px;
   font-size: 16px;
   font-family: inherit;
@@ -38,6 +38,15 @@ const StyledInput = styled.input<{ $hasError: boolean }>`
 
   &::placeholder {
     color: #999999;
+  }
+
+  @media (max-width: 600px) {
+    height: 40px;
+    border: solid 1px #d5d5d5;
+
+    &::placeholder {
+      font-size: 14px;
+    }
   }
 `;
 

@@ -7,7 +7,7 @@ interface ControllerCheckboxProps<T extends FieldValues>
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> {
   name: Path<T>;
   control: Control<T>;
-  label?: string;
+  label?: React.ReactNode;
 }
 
 const CheckboxContainer = styled.div`

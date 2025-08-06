@@ -1,32 +1,45 @@
-import type { ReactNode } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 interface FormFieldProps {
   label?: string;
-  children: ReactNode;
+  children: React.ReactNode;
   size?: 'small' | 'normal' | 'large';
   mb?: number;
 }
 
 const sizeMap = {
-  small: '10px',
+  small: '30px',
   normal: '110px',
   large: '150px',
 };
 
 const FieldContainer = styled.div<{
-  $size: 'small' | 'normal' | 'large';
-  $mb: number;
+  $minHeight: string;
+  $marginBottom: number;
 }>`
   width: 100%;
-  min-height: ${props => sizeMap[props.$size]};
-  margin-bottom: ${props => props.$mb * 8}px;
+  min-height: ${({ $minHeight }) => $minHeight};
+  margin-bottom: ${({ $marginBottom }) => $marginBottom}px;
+
+  @media (max-width: 600px) {
+    min-height: ${({ $minHeight }) =>
+      $minHeight === '110px' ? '90px' : $minHeight};
+  }
 `;
 
 const Label = styled.div`
+  display: block;
   font-size: 16px;
   margin-left: 4px;
-  margin-bottom: 6.4px;
+  margin-bottom: 6px;
+  color: #060606;
+  font-weight: 500;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    font-weight: bold;
+  }
 `;
 
 export default function FormField({
@@ -36,7 +49,7 @@ export default function FormField({
   mb = 0,
 }: FormFieldProps) {
   return (
-    <FieldContainer $size={size} $mb={mb}>
+    <FieldContainer $minHeight={sizeMap[size]} $marginBottom={mb}>
       {label && <Label>{label}</Label>}
       {children}
     </FieldContainer>
