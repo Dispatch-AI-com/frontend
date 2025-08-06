@@ -9,6 +9,7 @@ import {
   styled,
   Typography,
 } from '@mui/material';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const BlogCardWrapper = styled(Card)(({ theme }) => ({
@@ -39,9 +40,10 @@ const BlogCardWrapper = styled(Card)(({ theme }) => ({
 const ImageBox = styled(Box)(() => ({
   width: '100%',
   aspectRatio: '424 / 238',
-  background: '#e5e5e5',
   borderRadius: 18,
   marginBottom: 20,
+  position: 'relative',
+  overflow: 'hidden',
 }));
 
 const Title = styled(Typography)(() => ({
@@ -112,6 +114,7 @@ export interface BlogCardProps {
   date: string;
   tag: string | string[];
   views?: number;
+  imageUrl?: string;
 }
 
 export default function BlogCard({
@@ -121,6 +124,7 @@ export default function BlogCard({
   date,
   tag,
   views = 98,
+  imageUrl,
 }: BlogCardProps) {
   //change tag into an array
   const tags = Array.isArray(tag)
@@ -136,7 +140,34 @@ export default function BlogCard({
 
   return (
     <BlogCardWrapper onClick={handleClick}>
-      <ImageBox />
+      <ImageBox>
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            style={{
+              objectFit: 'cover',
+              objectPosition: 'center',
+            }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              background: '#e5e5e5',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#6d6d6d',
+            }}
+          >
+            No image available
+          </Box>
+        )}
+      </ImageBox>
       <CardContent sx={{ p: 0 }}>
         <Title>{title}</Title>
         <Summary>{summary}</Summary>

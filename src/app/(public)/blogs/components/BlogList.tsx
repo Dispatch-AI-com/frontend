@@ -74,6 +74,7 @@ export default function BlogList() {
               fetched.push({
                 ...base,
                 _id: `${String(base._id)}-dup${String(fetched.length)}`,
+                imageUrl: base.imageUrl,
               });
             }
           }
@@ -130,7 +131,7 @@ export default function BlogList() {
         >
           {blogs.map(blog => (
             <Grid item xs={12} sm={6} md={4} key={blog._id}>
-              <BlogCard {...blog} />
+              <BlogCard {...blog} imageUrl={blog.imageUrl} />
             </Grid>
           ))}
         </Grid>
