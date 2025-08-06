@@ -97,10 +97,10 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
             <Box
               sx={{
                 position: 'relative',
-                width: isCenter ? '50%' : '100%',
+                width: '50%',
                 height: '100%',
-                minWidth: isCenter ? '50%' : '100%',
-                p: isCenter ? 2 : 0,
+                minWidth: '50%',
+                p: 2,
               }}
             >
               <Box
@@ -119,7 +119,7 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                       position: 'relative',
                       width: '100%',
                       height: '100%',
-                      padding: isCenter ? 2 : 0,
+                      padding: 2,
                     }}
                   >
                     <Image
@@ -138,76 +138,74 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
             </Box>
 
             {/* 中间卡片的内容区域 - 右侧 */}
-            {isCenter && (
-              <Box
-                sx={{
-                  flex: 1,
-                  py: 4,
-                  px: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  backgroundColor: 'background.paper',
-                  position: 'relative',
-                  minWidth: 0, // 防止内容撑大布局
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box>
-                  {/* 标题 */}
-                  <Typography
-                    sx={{
-                      fontSize: '18px',
-                      fontWeight: 700,
-                      color: 'text.primary',
-                      lineHeight: 1.3,
-                      mb: 1,
-                    }}
-                  >
-                    {blog.title}
-                  </Typography>
-
-                  {/* 摘要 */}
-                  <Typography
-                    sx={{
-                      fontSize: '14px',
-                      color: 'text.secondary',
-                      lineHeight: 1.5,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      mb: 3,
-                    }}
-                  >
-                    {blog.summary}
-                  </Typography>
-                </Box>
-
-                {/* Read More 按钮 */}
-                <Button
-                  variant="text"
-                  endIcon={<ArrowForwardIcon sx={{ fontSize: 16 }} />}
+            <Box
+              sx={{
+                flex: 1,
+                py: 4,
+                px: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: 'background.paper',
+                position: 'relative',
+                minWidth: 0, // 防止内容撑大布局
+                justifyContent: 'space-between',
+              }}
+            >
+              <Box>
+                {/* 标题 */}
+                <Typography
                   sx={{
-                    fontWeight: 600,
-                    padding: 0,
-                    color: '#000',
-                    textTransform: 'none',
-                    alignSelf: 'flex-start',
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      textDecoration: 'underline',
-                    },
-                  }}
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleBlogClick(blog._id);
+                    fontSize: '18px',
+                    fontWeight: 700,
+                    color: 'text.primary',
+                    lineHeight: 1.3,
+                    mb: 1,
                   }}
                 >
-                  Read More
-                </Button>
+                  {blog.title}
+                </Typography>
+
+                {/* 摘要 */}
+                <Typography
+                  sx={{
+                    fontSize: '14px',
+                    color: 'text.secondary',
+                    lineHeight: 1.5,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    mb: 3,
+                  }}
+                >
+                  {blog.summary}
+                </Typography>
               </Box>
-            )}
+
+              {/* Read More 按钮 */}
+              <Button
+                variant="text"
+                endIcon={<ArrowForwardIcon sx={{ fontSize: 16 }} />}
+                sx={{
+                  fontWeight: 600,
+                  padding: 0,
+                  color: '#000',
+                  textTransform: 'none',
+                  alignSelf: 'flex-start',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    textDecoration: 'underline',
+                  },
+                }}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleBlogClick(blog._id);
+                }}
+              >
+                Read More
+              </Button>
+            </Box>
           </Card>
         );
       })}
