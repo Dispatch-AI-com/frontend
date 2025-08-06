@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -31,6 +32,22 @@ const FormContainer = styled.div`
   }
 `;
 
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 2;
+  display: none;
+
+  @media (max-width: 600px) {
+    display: block;
+  }
+`;
+
+const RelativeContainer = styled.div`
+  position: relative;
+`;
+
 const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -41,8 +58,26 @@ const LogoContainer = styled.div`
   }
 `;
 
+const LogoImageWrapper = styled.div`
+  width: 200px;
+  height: 100px;
+
+  @media (max-width: 600px) {
+    margin-top: 32px;
+    width: 105px;
+    height: 25px;
+  }
+
+  img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+  }
+`;
+
 export default function SigninPage() {
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -67,9 +102,42 @@ export default function SigninPage() {
 
   return (
     <PageContainer>
-      <FormContainer>
+      <FormContainer as={RelativeContainer}>
+        <IconWrapper>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            aria-label="Go back"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g fill="none" fillRule="evenodd">
+                <path d="M0 0h20v20H0z" />
+                <path
+                  d="M12.47 3.47a.75.75 0 0 1 1.06 1.06L8.061 10l5.47 5.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-1.06 0l-6-6a.75.75 0 0 1 0-1.06l6-6z"
+                  fill="#060606"
+                  fillRule="nonzero"
+                />
+              </g>
+            </svg>
+          </button>
+        </IconWrapper>
         <LogoContainer>
-          <Image src="/logo.svg" alt="Logo" width={200} height={100} />
+          <LogoImageWrapper>
+            <Image src="/logo.svg" alt="Logo" width={200} height={100} />
+          </LogoImageWrapper>
         </LogoContainer>
         <LoginForm />
       </FormContainer>

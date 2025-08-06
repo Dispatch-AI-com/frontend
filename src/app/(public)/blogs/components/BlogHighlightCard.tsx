@@ -1,64 +1,40 @@
 'use client';
 
-import { Box, Card } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Button, Card, Typography } from '@mui/material';
 import { useMediaQuery, useTheme } from '@mui/material';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const items = [
-  {
-    title: 'Automated Call Handling',
-    content: (
-      <Image
-        src="/blog/call_handling.png"
-        alt="call_handling"
-        fill
-        style={{ objectFit: 'fill', borderRadius: '24px' }}
-      />
-    ),
-  },
-  {
-    title: 'Follow-Up Actions',
-    content: (
-      <Image
-        src="/blog/follow_up.png"
-        alt="follow_up"
-        fill
-        style={{ objectFit: 'fill', borderRadius: '24px' }}
-      />
-    ),
-  },
-  {
-    title: 'Trusted by Small Businesses',
-    content: (
-      <Image
-        src="/blog/testimonial.png"
-        alt="testimonial"
-        fill
-        style={{ objectFit: 'fill', borderRadius: '24px' }}
-      />
-    ),
-  },
-];
+import type { Blog } from '@/types/blog';
 
-export default function BlogHighlightCard() {
+interface BlogHighlightCardProps {
+  blogs: Blog[];
+}
+
+export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
   const [centerIndex, setCenterIndex] = useState(0);
-
+  const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
+  const displayBlogs = blogs.slice(0, 3);
+
   useEffect(() => {
+    if (displayBlogs.length <= 1) return;
+
     const interval = setInterval(() => {
-      setCenterIndex(prev => {
-        return (prev + 1) % items.length;
-      });
+      setCenterIndex(prev => (prev + 1) % displayBlogs.length);
     }, 4000);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+    return () => clearInterval(interval);
+  }, [displayBlogs.length]);
+
+  const handleBlogClick = (id: string) => {
+    router.push(`/blogs/${id}`);
+  };
 
   return (
     <Box
@@ -73,11 +49,12 @@ export default function BlogHighlightCard() {
         overflow: 'visible',
       }}
     >
-      {items.map((item, index) => {
+      {displayBlogs.map((blog, index) => {
         const isCenter = index === centerIndex;
         const isLeft =
-          index === (centerIndex - 1 + items.length) % items.length;
-        const isRight = index === (centerIndex + 1) % items.length;
+          index ===
+          (centerIndex - 1 + displayBlogs.length) % displayBlogs.length;
+        const isRight = index === (centerIndex + 1) % displayBlogs.length;
 
         const cardWidth = isMobile ? 280 : isTablet ? 380 : 741.6;
         const cardHeight = isMobile ? 140 : isTablet ? 180 : 238.5;
@@ -85,31 +62,150 @@ export default function BlogHighlightCard() {
         const sideCardScale = isMobile ? 0.9 : 0.75;
 
         const offsetString = isLeft
-          ? `- ${offset.toFixed(0)}px`
+          ? `- ${offset}px`
           : isRight
-            ? `+ ${offset.toFixed(0)}px`
+            ? `+ ${offset}px`
             : '';
 
         return (
           <Card
-            key={index}
+            key={blog._id}
+            onClick={() => handleBlogClick(blog._id)}
             sx={{
               width: cardWidth,
               height: cardHeight,
               borderRadius: 3,
               boxShadow: 3,
               position: 'absolute',
-              left: `calc(50% - ${(cardWidth / 2).toFixed(1)}px ${offsetString})`,
-              top: `calc(50% - ${(cardHeight / 2).toFixed(1)}px)`,
-              transform: isCenter
-                ? 'scale(1)'
-                : `scale(${sideCardScale.toFixed(2)})`,
+              left: `calc(50% - ${cardWidth / 2}px ${offsetString})`,
+              top: `calc(50% - ${cardHeight / 2}px)`,
+              transform: isCenter ? 'scale(1)' : `scale(${sideCardScale})`,
               zIndex: isCenter ? 3 : 1,
               opacity: isCenter ? 1 : 0.7,
               transition: 'all 0.6s ease',
+              cursor: 'pointer',
+              overflow: 'hidden',
+              '&:hover': {
+                opacity: 1,
+                zIndex: 4,
+              },
+              display: 'flex',
+              flexDirection: 'row',
             }}
           >
-            {item.content}
+            {/* 博客图片 - 左侧 */}
+            <Box
+              sx={{
+                position: 'relative',
+                width: '50%',
+                height: '100%',
+                minWidth: '50%',
+                p: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: 2,
+                  overflow: 'hidden',
+                  backgroundColor: 'rgba(0,0,0,0.03)',
+                }}
+              >
+                {blog.imageUrl && (
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '100%',
+                      padding: 2,
+                    }}
+                  >
+                    <Image
+                      src={blog.imageUrl}
+                      alt={blog.title}
+                      fill
+                      style={{
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        borderRadius: 2,
+                      }}
+                    />
+                  </Box>
+                )}
+              </Box>
+            </Box>
+
+            {/* 中间卡片的内容区域 - 右侧 */}
+            <Box
+              sx={{
+                flex: 1,
+                py: 4,
+                px: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: 'background.paper',
+                position: 'relative',
+                minWidth: 0, // 防止内容撑大布局
+                justifyContent: 'space-between',
+              }}
+            >
+              <Box>
+                {/* 标题 */}
+                <Typography
+                  sx={{
+                    fontSize: '18px',
+                    fontWeight: 700,
+                    color: 'text.primary',
+                    lineHeight: 1.3,
+                    mb: 1,
+                  }}
+                >
+                  {blog.title}
+                </Typography>
+
+                {/* 摘要 */}
+                <Typography
+                  sx={{
+                    fontSize: '14px',
+                    color: 'text.secondary',
+                    lineHeight: 1.5,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    mb: 3,
+                  }}
+                >
+                  {blog.summary}
+                </Typography>
+              </Box>
+
+              {/* Read More 按钮 */}
+              <Button
+                variant="text"
+                endIcon={<ArrowForwardIcon sx={{ fontSize: 16 }} />}
+                sx={{
+                  fontWeight: 600,
+                  padding: 0,
+                  color: '#000',
+                  textTransform: 'none',
+                  alignSelf: 'flex-start',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    textDecoration: 'underline',
+                  },
+                }}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleBlogClick(blog._id);
+                }}
+              >
+                Read More
+              </Button>
+            </Box>
           </Card>
         );
       })}

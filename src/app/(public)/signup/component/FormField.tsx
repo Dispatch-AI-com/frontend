@@ -9,7 +9,7 @@ interface FormFieldProps {
 }
 
 const sizeMap = {
-  small: '10px',
+  small: '30px',
   normal: '110px',
   large: '150px',
 };
@@ -18,15 +18,25 @@ const Container = styled.div<{ $minHeight: string; $marginBottom: number }>`
   width: 100%;
   min-height: ${({ $minHeight }) => $minHeight};
   margin-bottom: ${({ $marginBottom }) => $marginBottom}px;
+
+  @media (max-width: 600px) {
+    min-height: ${({ $minHeight }) =>
+      $minHeight === '110px' ? '90px' : $minHeight};
+  }
 `;
 
-const Label = styled.label`
+const Label = styled.div`
   display: block;
   font-size: 16px;
   margin-left: 4px;
   margin-bottom: 6px;
   color: #060606;
   font-weight: 500;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    font-weight: bold;
+  }
 `;
 
 export default function FormField({

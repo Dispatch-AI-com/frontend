@@ -4,7 +4,7 @@ export interface Step {
   field:
     | '' // Demo-call
     | `user.${'fullPhoneNumber' | 'position'}`
-    | `company.${'businessName' | 'abn' | 'number' | 'email' | 'address.full'}`;
+    | `company.${'businessName' | 'abn' | 'address.full'}`;
 
   question: string;
   inputType: 'text' | 'button';
@@ -55,23 +55,34 @@ export const steps: Step[] = [
     field: 'company.abn',
     question: "What's your Australian Business Number (ABN)?",
     inputType: 'text',
-    validate: input => /^\d{11}$/.test(input.replace(/\s/g, '')),
+    validate: input => {
+      if (!/^\d{11}$/.test(input)) {
+        return false;
+      }
+
+      if (input.length !== 11) {
+        return false;
+      }
+
+      const weights = [10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
+      let sum = 0;
+
+      const firstDigit = parseInt(input[0], 10) - 1;
+      sum += firstDigit * weights[0];
+
+      for (let i = 1; i < 11; i++) {
+        sum += parseInt(input[i], 10) * weights[i];
+      }
+
+      return sum % 89 === 0;
+    },
     onValidResponse: () => 'Thanks, ABN stored.',
-    retryMessage: 'ABN should be 11 digits. Could you double-check it?',
+    retryMessage:
+      'Hmm, that doesn’t seem like a real ABN. Could you double-check it?',
   },
 
   {
     id: 5,
-    field: 'company.number',
-    question: "What's the best phone number for your business line?",
-    inputType: 'text',
-    validate: input => /^\+?[0-9\s\-()]{7,20}$/.test(input.trim()),
-    onValidResponse: () => 'Number noted ',
-    retryMessage: "That doesn't look like a valid phone number. Try again?",
-  },
-
-  {
-    id: 6,
     field: 'company.address.full',
     inputType: 'text',
     question:
@@ -85,20 +96,10 @@ export const steps: Step[] = [
   },
 
   {
-    id: 7,
-    field: 'company.email',
-    question: "And lastly, what's the best work email to stay in touch?",
-    inputType: 'text',
-    validate: input => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.trim()),
-    onValidResponse: email => `Perfect, I'll reach you at ${email}.`,
-    retryMessage: 'Hmm, that doesn’t look like a valid email. Double-check it?',
-  },
-
-  {
-    id: 8,
+    id: 6,
     field: '',
     question:
-      'Would you like to hear a sample of how Dispatch AI will answer your calls?',
+      'And lastly, would you like to hear a sample of how Dispatch AI will answer your calls?',
     inputType: 'button',
     options: ['Yes, Demo Call', 'Skip'],
     validate: v => ['Yes, Demo Call', 'Skip'].includes(v),

@@ -88,16 +88,56 @@ export default function OnboardingChat() {
 
   const currentStep = steps[currentStepIndex];
 
-  const addAIMessage = (content: string, options?: string[]) => {
+  const addAIMessage = (content: string, options?: string[], force = false) => {
     setIsTyping(true);
     setTimeout(() => {
       setMessages(prev => {
         const last = [...prev].reverse().find(m => m.role === 'ai');
-        if (last?.content === content) return prev;
+        if (!force && last?.content === content) return prev; // ➋
         return [...prev, { role: 'ai', content, options }];
       });
       setIsTyping(false);
-    }, 1000);
+    }, 600);
+  };
+
+  const handleError = (err: unknown) => {
+    let errorMessage = 'Server error, please try again later.';
+
+    if (typeof err === 'object' && err !== null) {
+      const e = err as {
+        status?: number;
+        data?: unknown;
+        message?: string;
+      };
+
+      if (typeof e.data === 'object' && e.data !== null) {
+        const dataObj = e.data as { message?: string | string[] };
+
+        if (dataObj.message) {
+          const msg = dataObj.message;
+          if (Array.isArray(msg)) {
+            errorMessage = msg[0];
+          } else if (typeof msg === 'string') {
+            errorMessage = msg;
+          }
+        }
+      }
+
+      if (errorMessage === 'Server error, please try again later.') {
+        if (typeof e.data === 'string') {
+          errorMessage = e.data;
+        }
+      }
+
+      if (
+        errorMessage === 'Server error, please try again later.' &&
+        e.message
+      ) {
+        errorMessage = e.message;
+      }
+    }
+
+    addAIMessage(errorMessage, undefined, true);
   };
 
   /* validate, store and response to user input */
@@ -105,7 +145,7 @@ export default function OnboardingChat() {
     setMessages(prev => [...prev, { role: 'user', content: input }]);
 
     if (!currentStep.validate(input)) {
-      addAIMessage(currentStep.retryMessage);
+      addAIMessage(currentStep.retryMessage, undefined, true);
       setUserInput('');
       return;
     }
@@ -122,15 +162,15 @@ export default function OnboardingChat() {
       if (resp.currentStep <= steps.length) {
         setCurrentStepIndex(resp.currentStep - 1);
       } else {
-        await completeFlow(userId!);
+        await completeFlow(userId!).unwrap();
         setIsCompleted(true);
         addAIMessage('Onboarding Complete! ');
         setTimeout(() => {
           router.push('/admin/overview');
         }, 2000);
       }
-    } catch {
-      addAIMessage('Server error, please try again later.');
+    } catch (err) {
+      handleError(err);
     } finally {
       setUserInput('');
     }

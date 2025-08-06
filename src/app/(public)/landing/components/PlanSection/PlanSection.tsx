@@ -46,14 +46,30 @@ const settings = {
         slidesToScroll: 1,
       },
     },
+    {
+      breakpoint: 600,
+      settings: 'unslick' as const,
+    },
   ],
 };
 
-const StyledSlider = styled(Slider)(() => ({
+const StyledSlider = styled(Slider)(({ theme }) => ({
   '.slick-slide > div': {
     padding: '0 16px 0 0',
     display: 'flex',
     justifyContent: 'center',
+  },
+
+  [`@media (max-width: ${theme.breakpoints.values.sm - 1}px)`]: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+
+    '.slick-slide > div': {
+      padding: '0',
+      display: 'flex',
+      justifyContent: 'center',
+    },
   },
 }));
 
@@ -85,12 +101,22 @@ const SectionContainer = styled('section')(({ theme }) => ({
   padding: '80px 0 0 0',
   textAlign: 'center',
   backgroundColor: theme.palette.background.default,
+
+  [`@media (max-width: ${theme.breakpoints.values.md - 1}px)`]: {
+    padding: '16px 0 0 0',
+  },
 }));
 
 const SectionTitle = styled('h2')(({ theme }) => ({
   ...theme.typography.h2,
   textAlign: 'center',
   margin: '0 0 64px',
+
+  [`@media (max-width: ${theme.breakpoints.values.sm - 1}px)`]: {
+    fontSize: '20px',
+    letterSpacing: '-0.5px',
+    margin: '0 0 24px',
+  },
 }));
 
 export default function PlanSection() {

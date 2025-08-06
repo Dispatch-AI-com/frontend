@@ -19,6 +19,15 @@ import type {
   ServiceManagement,
   UpdateServiceManagementDto,
 } from '@/features/service-management/serviceManagementApi';
+
+import CustomFormModal from './CustomFormModal';
+
+interface FormField {
+  id: string;
+  type: string;
+  label: string;
+  required: boolean;
+}
 import {
   useCreateServiceMutation,
   useUpdateServiceMutation,
@@ -203,6 +212,7 @@ export default function EditServiceModal({
     userId: '',
   });
   const [priceInput, setPriceInput] = useState('0');
+  const [isCustomFormModalOpen, setIsCustomFormModalOpen] = useState(false);
 
   useMediaQuery(theme.breakpoints.down('sm'));
   useMediaQuery(theme.breakpoints.down('xs'));
@@ -275,121 +285,151 @@ export default function EditServiceModal({
     }
   };
 
+  const handleCustomFormSetup = () => {
+    setIsCustomFormModalOpen(true);
+  };
+
+  const handleCloseCustomFormModal = () => {
+    setIsCustomFormModalOpen(false);
+  };
+
+  const handleSaveCustomForm = (_fields: FormField[]) => {
+    // Handle saving custom form fields
+    // Here you can save the form fields to your backend
+  };
+
   const isLoading = isCreating || isUpdating;
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <ModalContainer>
-        <ModalHeader>
-          <ModalTitle>{service ? 'Edit Service' : 'Create Service'}</ModalTitle>
-          <CloseButton onClick={onClose}>
-            <CloseIcon fontSize="small" />
-          </CloseButton>
-        </ModalHeader>
+    <>
+      <Modal open={open} onClose={onClose}>
+        <ModalContainer>
+          <ModalHeader>
+            <ModalTitle>
+              {service ? 'Edit Service' : 'Create Service'}
+            </ModalTitle>
+            <CloseButton onClick={onClose}>
+              <CloseIcon fontSize="small" />
+            </CloseButton>
+          </ModalHeader>
 
-        <ModalContent>
-          <FormField>
-            <FieldLabel>Service Name</FieldLabel>
-            <StyledTextField
-              value={formData.name}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleInputChange('name', e.target.value)
-              }
-              placeholder="Enter service name"
-              required
-            />
-          </FormField>
-
-          <FormField>
-            <FieldLabel>Description</FieldLabel>
-            <StyledTextField
-              value={formData.description}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                handleInputChange('description', e.target.value)
-              }
-              multiline
-              rows={3}
-              placeholder="Enter service description"
-            />
-          </FormField>
-
-          <FormField>
-            <FieldLabel>Price</FieldLabel>
-            <StyledTextField
-              value={priceInput}
-              onChange={e => {
-                const value = e.target.value;
-                setPriceInput(value);
-                if (value === '') {
-                  handleInputChange('price', 0);
-                } else {
-                  const numValue = parseFloat(value);
-                  if (!isNaN(numValue)) {
-                    handleInputChange('price', numValue);
-                  }
+          <ModalContent>
+            <FormField>
+              <FieldLabel>Service Name</FieldLabel>
+              <StyledTextField
+                value={formData.name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleInputChange('name', e.target.value)
                 }
-              }}
-              type="number"
-              inputProps={{ min: 0, step: 10 }}
-              placeholder="Enter price"
-              required
-            />
-          </FormField>
+                placeholder="Enter service name"
+                required
+              />
+            </FormField>
 
-          <FormField>
-            <FieldLabel>Status</FieldLabel>
-            <FormControl fullWidth>
-              <StatusSelect
-                value={formData.isAvailable ? 'active' : 'inactive'}
-                onChange={e =>
-                  handleInputChange('isAvailable', e.target.value === 'active')
+            <FormField>
+              <FieldLabel>Description</FieldLabel>
+              <StyledTextField
+                value={formData.description}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  handleInputChange('description', e.target.value)
                 }
-                displayEmpty
-                renderValue={selected => {
-                  if (!selected) {
-                    return <span style={{ color: '#999' }}>Please Select</span>;
+                multiline
+                rows={3}
+                placeholder="Enter service description"
+              />
+            </FormField>
+
+            <FormField>
+              <FieldLabel>Price</FieldLabel>
+              <StyledTextField
+                value={priceInput}
+                onChange={e => {
+                  const value = e.target.value;
+                  setPriceInput(value);
+                  if (value === '') {
+                    handleInputChange('price', 0);
+                  } else {
+                    const numValue = parseFloat(value);
+                    if (!isNaN(numValue)) {
+                      handleInputChange('price', numValue);
+                    }
                   }
-                  return selected === 'active' ? 'Active' : 'Inactive';
+                }}
+                type="number"
+                inputProps={{ min: 0, step: 10 }}
+                placeholder="Enter price"
+                required
+              />
+            </FormField>
+
+            <FormField>
+              <FieldLabel>Status</FieldLabel>
+              <FormControl fullWidth>
+                <StatusSelect
+                  value={formData.isAvailable ? 'active' : 'inactive'}
+                  onChange={e =>
+                    handleInputChange(
+                      'isAvailable',
+                      e.target.value === 'active',
+                    )
+                  }
+                  displayEmpty
+                  renderValue={selected => {
+                    if (!selected) {
+                      return (
+                        <span style={{ color: '#999' }}>Please Select</span>
+                      );
+                    }
+                    return selected === 'active' ? 'Active' : 'Inactive';
+                  }}
+                >
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="inactive">Inactive</MenuItem>
+                </StatusSelect>
+              </FormControl>
+            </FormField>
+
+            <FormField>
+              <FieldLabel>Custom Form</FieldLabel>
+              <Button
+                variant="outlined"
+                onClick={handleCustomFormSetup}
+                sx={{
+                  borderColor: '#000',
+                  color: '#000',
+                  textTransform: 'none',
+                  '&:hover': {
+                    borderColor: '#333',
+                    backgroundColor: 'rgba(0,0,0,0.04)',
+                  },
                 }}
               >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="inactive">Inactive</MenuItem>
-              </StatusSelect>
-            </FormControl>
-          </FormField>
+                Set it up
+              </Button>
+            </FormField>
+          </ModalContent>
 
-          <FormField>
-            <FieldLabel>Custom Form</FieldLabel>
-            <Button
-              variant="outlined"
-              sx={{
-                borderColor: '#000',
-                color: '#000',
-                '&:hover': {
-                  borderColor: '#333',
-                  backgroundColor: 'rgba(0,0,0,0.04)',
-                },
+          <ModalFooter>
+            <CancelButton onClick={onClose} disabled={isLoading}>
+              Cancel
+            </CancelButton>
+            <SaveButton
+              onClick={() => {
+                void handleSubmit();
               }}
+              disabled={isLoading}
             >
-              Set it up
-            </Button>
-          </FormField>
-        </ModalContent>
+              {isLoading ? 'Saving...' : service ? 'Update' : 'Create'}
+            </SaveButton>
+          </ModalFooter>
+        </ModalContainer>
+      </Modal>
 
-        <ModalFooter>
-          <CancelButton onClick={onClose} disabled={isLoading}>
-            Cancel
-          </CancelButton>
-          <SaveButton
-            onClick={() => {
-              void handleSubmit();
-            }}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Saving...' : service ? 'Update' : 'Create'}
-          </SaveButton>
-        </ModalFooter>
-      </ModalContainer>
-    </Modal>
+      <CustomFormModal
+        open={isCustomFormModalOpen}
+        onClose={handleCloseCustomFormModal}
+        onSave={handleSaveCustomForm}
+      />
+    </>
   );
 }
