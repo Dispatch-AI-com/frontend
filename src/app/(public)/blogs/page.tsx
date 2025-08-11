@@ -34,6 +34,7 @@ export default function BlogsPage() {
         setHighlightBlogs(res.data);
       } catch (error) {
         if (!axios.isCancel(error)) {
+          // eslint-disable-next-line no-console
           console.error('Failed to fetch highlight blogs:', error);
         }
       }
