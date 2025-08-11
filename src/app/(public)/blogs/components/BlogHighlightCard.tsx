@@ -56,8 +56,8 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
           (centerIndex - 1 + displayBlogs.length) % displayBlogs.length;
         const isRight = index === (centerIndex + 1) % displayBlogs.length;
 
-        const cardWidth = isMobile ? 280 : isTablet ? 380 : 741.6;
-        const cardHeight = isMobile ? 300 : isTablet ? 180 : 238.5;
+        const cardWidth = isMobile ? 280 : isTablet ? 420 : 741.6;
+        const cardHeight = isMobile ? 300 : isTablet ? 200 : 238.5;
         const offset = isMobile ? 80 : isTablet ? 130 : 280;
         const sideCardScale = isMobile ? 0.9 : 0.75;
 
