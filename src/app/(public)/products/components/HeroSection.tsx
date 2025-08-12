@@ -2,7 +2,15 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import type { Theme } from '@mui/material';
-import { Button, Stack, styled, Typography } from '@mui/material';
+import {
+  Button,
+  Stack,
+  styled,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
+
+import theme from '@/theme';
 
 /* -------------------------- styled components -------------------------- */
 
@@ -13,6 +21,10 @@ const Wrapper = styled('section')(({ theme }: { theme: Theme }) => ({
   textAlign: 'center',
   [theme.breakpoints.up('md')]: {
     paddingTop: theme.spacing(17),
+  },
+  [theme.breakpoints.down('sm')]: {
+    paddingTop: theme.spacing(10),
+    marginBottom: theme.spacing(4),
   },
   backgroundImage: `
     linear-gradient(
@@ -73,13 +85,25 @@ const CtaButton = styled(Button)(({ theme }) => ({
 /* -------------------------------- component --------------------------- */
 
 export default function HeroSection() {
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Wrapper>
       <Stack alignItems="center">
-        <Typography sx={{ fontSize: 38, fontWeight: 700 }}>
+        <Typography
+          sx={{
+            fontSize: isMobile ? 24 : 38,
+            fontWeight: 900,
+          }}
+        >
           Your 24/7 Phone Assistant
         </Typography>
-        <Typography sx={{ fontSize: 38, fontWeight: 700 }} color="text.primary">
+        <Typography
+          sx={{
+            fontSize: isMobile ? 24 : 38,
+            fontWeight: 900,
+          }}
+        >
           Let AI handle your business calls while you focus on growth
         </Typography>
 
@@ -100,7 +124,11 @@ export default function HeroSection() {
         </BulletsRow>
 
         {/* CTA */}
-        <CtaButton endIcon={<ArrowForwardRoundedIcon />} size="large">
+        <CtaButton
+          endIcon={<ArrowForwardRoundedIcon />}
+          size="large"
+          fullWidth={isMobile}
+        >
           Try for Free
         </CtaButton>
       </Stack>
