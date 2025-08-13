@@ -9,19 +9,22 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 export default function ReduxTestPage() {
   const dispatch = useAppDispatch();
 
-  const token = useAppSelector(state => state.auth.token);
+  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
   const user = useAppSelector(state => state.auth.user);
+  const csrfToken = useAppSelector(state => state.auth.csrfToken);
 
   useEffect(() => {
     // eslint-disable-next-line no-console
     console.groupCollapsed('🔑 Auth State');
     // eslint-disable-next-line no-console
-    console.log('Token:', token);
+    console.log('Authenticated:', isAuthenticated);
     // eslint-disable-next-line no-console
     console.log('User:', user);
     // eslint-disable-next-line no-console
+    console.log('CSRF Token:', csrfToken);
+    // eslint-disable-next-line no-console
     console.groupEnd();
-  }, [token, user]);
+  }, [isAuthenticated, user, csrfToken]);
 
   const [triggerUnauthorized, { isFetching, error }] =
     useLazyGetUnauthorizedQuery();

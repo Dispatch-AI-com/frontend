@@ -36,10 +36,11 @@ export default function AuthCallbackContent() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const token = searchParams.get('token');
+    // Now we expect csrfToken and user (JWT token is in httpOnly cookie)
+    const csrfToken = searchParams.get('csrfToken');
     const userString = searchParams.get('user');
 
-    if (token && userString) {
+    if (csrfToken && userString) {
       try {
         const parsedUser = JSON.parse(
           decodeURIComponent(userString),
@@ -47,7 +48,7 @@ export default function AuthCallbackContent() {
 
         dispatch(
           setCredentials({
-            token,
+            csrfToken,
             user: {
               _id: parsedUser._id,
               email: parsedUser.email,

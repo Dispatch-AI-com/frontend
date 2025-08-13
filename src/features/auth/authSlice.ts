@@ -5,14 +5,20 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { UserInfo } from '@/types/user.d';
 
 interface AuthState {
-  token: string | null;
   user: UserInfo | null;
+  isAuthenticated: boolean;
+  csrfToken: string | null;
 }
-const initialState: AuthState = { token: null, user: null };
+
+const initialState: AuthState = {
+  user: null,
+  isAuthenticated: false,
+  csrfToken: null,
+};
 
 interface Credentials {
-  token: string;
   user: UserInfo;
+  csrfToken: string;
 }
 
 const authSlice = createSlice({
@@ -20,12 +26,16 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action: PayloadAction<Credentials>) => {
-      state.token = action.payload.token;
       state.user = action.payload.user;
+      state.isAuthenticated = true;
+      state.csrfToken = action.payload.csrfToken;
+    },
+    updateCSRFToken: (state, action: PayloadAction<string>) => {
+      state.csrfToken = action.payload;
     },
     logout: () => ({ ...initialState }),
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, updateCSRFToken, logout } = authSlice.actions;
 export default authSlice.reducer;

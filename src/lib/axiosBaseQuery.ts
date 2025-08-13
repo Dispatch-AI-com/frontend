@@ -16,16 +16,17 @@ export const axiosBaseQuery = (): BaseQueryFn<
     method?: AxiosRequestConfig['method'];
     data?: unknown;
     params?: Record<string, unknown>;
+    headers?: Record<string, string>;
   },
   unknown,
   { status?: number; data?: string }
 > => {
   return async (
-    { url, method = 'GET', data, params },
+    { url, method = 'GET', data, params, headers },
     { dispatch, getState },
   ) => {
     try {
-      const token = (getState() as RootState).auth.token;
+      const { csrfToken } = (getState() as RootState).auth;
 
       const result = await axios({
         baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -33,7 +34,19 @@ export const axiosBaseQuery = (): BaseQueryFn<
         method,
         data,
         params,
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        headers: {
+          'Content-Type': 'application/json',
+          // Add CSRF token for state-changing requests
+          ...(csrfToken &&
+            ['POST', 'PUT', 'DELETE', 'PATCH'].includes(
+              method?.toUpperCase() || 'GET',
+            ) && {
+              'X-CSRF-Token': csrfToken,
+            }),
+          ...headers,
+        },
+        // Enable credentials to send httpOnly cookies
+        withCredentials: true,
       });
 
       return { data: result.data };
