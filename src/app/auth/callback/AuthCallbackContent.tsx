@@ -55,15 +55,20 @@ export default function AuthCallbackContent() {
               firstName: parsedUser.firstName,
               lastName: parsedUser.lastName,
               role: parsedUser.role,
+              status: parsedUser.status,
             },
           }),
         );
 
         router.replace('/admin/overview');
-      } catch {
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Auth callback - parsing error:', error);
         router.replace('/login?error=oauth_error');
       }
     } else {
+      // eslint-disable-next-line no-console
+      console.error('Auth callback - missing csrfToken or userString');
       router.replace('/login?error=oauth_error');
     }
   }, [searchParams, dispatch, router]);
