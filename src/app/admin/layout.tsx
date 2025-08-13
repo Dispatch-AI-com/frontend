@@ -32,7 +32,9 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     // Wait for hydration and auth check, then check auth status
     const timer = setTimeout(() => {
       // Don't proceed if still checking authentication
-      if (isCheckingAuth) return;
+      if (isCheckingAuth) {
+        return;
+      }
 
       // check if logged in
       if (!isAuthenticated || !user) {
@@ -41,7 +43,15 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       }
 
       // check if onboarding finished
-      if (isFetching || !progress) return;
+      if (isFetching) {
+        return;
+      }
+
+      // If no progress data, assume onboarding is not required or completed
+      if (!progress) {
+        setReady(true);
+        return;
+      }
 
       if (progress.status !== 'completed' && pathname !== '/onboarding') {
         router.replace('/onboarding');
@@ -69,7 +79,6 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         justifyContent="center"
         alignItems="center"
         height="100vh"
-        sx={{ visibility: 'hidden' }}
       >
         <Box textAlign="center">
           <Box mb={2}>Initializing Admin Panel...</Box>
