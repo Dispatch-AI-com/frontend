@@ -41,7 +41,7 @@ export const axiosBaseQuery = (): BaseQueryFn<
             ['POST', 'PUT', 'DELETE', 'PATCH'].includes(
               method?.toUpperCase() || 'GET',
             ) && {
-              'X-CSRF-Token': csrfToken,
+              'x-csrf-token': csrfToken,
             }),
           ...headers,
         },
