@@ -13,12 +13,19 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
+import theme from '@/theme';
+
 const FilterBarWrapper = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   gap: 24,
   marginTop: '32px',
   justifyContent: 'flex-start',
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: 16,
+  },
 }));
 
 const SearchBox = styled(Box)(() => ({
@@ -30,6 +37,9 @@ const SearchBox = styled(Box)(() => ({
   borderRadius: 12,
   height: '36px',
   width: '360px',
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
 }));
 
 const StyledInput = styled(TextField)(() => ({
@@ -69,6 +79,9 @@ const TopicBox = styled(Box)(() => ({
   borderRadius: 12,
   height: '36px',
   width: '360px',
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
 }));
 
 const TopicLabel = styled(Typography)(() => ({

@@ -12,7 +12,11 @@ import {
   ListItemButton,
   ListItemText,
   styled,
+  Tab,
+  Tabs,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -22,6 +26,9 @@ import { CATEGORIES } from './FAQData';
 /* ----------------------------- styled parts ----------------------------- */
 const Section = styled(Box)(({ theme }) => ({
   padding: theme.spacing(12, 2),
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(6, 2),
+  },
   backgroundColor: theme.palette.background.default,
 }));
 
@@ -92,6 +99,13 @@ export default function QASection({
   const [catIndex, setCatIndex] = useState(0);
   const [openIndex, setOpenIndex] = useState(0);
   const active = data[catIndex];
+  const handleChangeCat = (idx: number) => {
+    setCatIndex(idx);
+    setOpenIndex(0);
+  };
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Section>
@@ -109,10 +123,42 @@ export default function QASection({
           textAlign="center"
           maxWidth={560}
           mx="auto"
-          mb={8}
+          mb={isMobile ? 4 : 8}
         >
           We've gathered the most frequently asked questions from our users.
         </Typography>
+
+        <Box sx={{ display: { xs: 'block', md: 'none' }, mb: 2 }}>
+          <Tabs
+            value={catIndex}
+            onChange={(_, v) => handleChangeCat(Number(v))}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="FAQ categories"
+            textColor="inherit"
+            sx={{
+              px: 1,
+              '& .MuiTabs-indicator': {
+                backgroundColor: 'white',
+                height: 3,
+                borderRadius: 2,
+              },
+              '& .MuiTab-root': {
+                textTransform: 'none',
+                minHeight: 0,
+                fontWeight: 700,
+                fontSize: 15,
+                mr: 2,
+                py: 1,
+              },
+              '& .Mui-selected': { color: '#58c112' },
+            }}
+          >
+            {data.map(cat => (
+              <Tab key={cat.key} label={cat.title} />
+            ))}
+          </Tabs>
+        </Box>
 
         <Grid
           container
@@ -121,7 +167,14 @@ export default function QASection({
           alignItems="stretch"
         >
           {/* Table of contents */}
-          <Grid item xs={12} md={4} lg={3}>
+
+          <Grid
+            item
+            xs={12}
+            md={4}
+            lg={3}
+            sx={{ display: { xs: 'none', md: 'block' } }}
+          >
             <TocTitle fontSize={18} gutterBottom>
               Table of Contents
             </TocTitle>

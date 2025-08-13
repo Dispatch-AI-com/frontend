@@ -4,6 +4,7 @@ import { Box, Container } from '@mui/material';
 import axios from 'axios';
 import { Suspense, useEffect, useState } from 'react';
 
+import theme from '@/theme';
 import type { Blog } from '@/types/blog';
 
 import Banner from './components/Banner';
@@ -16,7 +17,6 @@ export default function BlogsPage() {
   const [highlightBlogs, setHighlightBlogs] = useState<Blog[]>([]);
 
   useEffect(() => {
-    // 使用 AbortController 来取消未完成的请求
     const abortController = new AbortController();
 
     const fetchHighlightBlogs = async () => {
@@ -24,13 +24,11 @@ export default function BlogsPage() {
         const baseUrl =
           process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
 
-        // 修复 1: 使用正确的参数传递方式
         const res = await axios.get<Blog[]>(`${baseUrl}/blogs/highlights`, {
-          params: { limit: 3 }, // 正确传递参数
+          params: { limit: 3 },
           signal: abortController.signal,
         });
 
-        // 修复 2: 添加类型断言确保类型安全
         setHighlightBlogs(res.data);
       } catch (error) {
         if (!axios.isCancel(error)) {
@@ -42,7 +40,6 @@ export default function BlogsPage() {
 
     void fetchHighlightBlogs();
 
-    // 清理函数，取消未完成的请求
     return () => abortController.abort();
   }, []);
   return (
@@ -52,6 +49,9 @@ export default function BlogsPage() {
         <Container
           sx={{
             width: '80%',
+            [theme.breakpoints.down('sm')]: {
+              width: '95%',
+            },
           }}
         >
           <BlogHighlightCard blogs={highlightBlogs} />

@@ -56,9 +56,9 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
           (centerIndex - 1 + displayBlogs.length) % displayBlogs.length;
         const isRight = index === (centerIndex + 1) % displayBlogs.length;
 
-        const cardWidth = isMobile ? 280 : isTablet ? 380 : 741.6;
-        const cardHeight = isMobile ? 140 : isTablet ? 180 : 238.5;
-        const offset = isMobile ? 100 : isTablet ? 130 : 280;
+        const cardWidth = isMobile ? 280 : isTablet ? 420 : 741.6;
+        const cardHeight = isMobile ? 300 : isTablet ? 200 : 238.5;
+        const offset = isMobile ? 80 : isTablet ? 130 : 280;
         const sideCardScale = isMobile ? 0.9 : 0.75;
 
         const offsetString = isLeft
@@ -74,7 +74,7 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
             sx={{
               width: cardWidth,
               height: cardHeight,
-              borderRadius: 3,
+              borderRadius: isMobile ? 1.5 : 3,
               boxShadow: 3,
               position: 'absolute',
               left: `calc(50% - ${cardWidth / 2}px ${offsetString})`,
@@ -90,16 +90,16 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                 zIndex: 4,
               },
               display: 'flex',
-              flexDirection: 'row',
+              flexDirection: isMobile ? 'column' : 'row',
             }}
           >
             <Box
               sx={{
                 position: 'relative',
-                width: '50%',
+                width: isMobile ? '100%' : '50%',
                 height: '100%',
                 minWidth: '50%',
-                p: 2,
+                p: isMobile ? 1 : 2,
               }}
             >
               <Box
@@ -107,7 +107,7 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                   position: 'relative',
                   width: '100%',
                   height: '100%',
-                  borderRadius: 2,
+                  borderRadius: isMobile ? 1 : 2,
                   overflow: 'hidden',
                   backgroundColor: 'rgba(0,0,0,0.03)',
                 }}
@@ -117,8 +117,8 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      height: '100%',
-                      padding: 2,
+                      height: isMobile ? 140 : '100%',
+                      padding: isMobile ? 1 : 2,
                     }}
                   >
                     <Image
@@ -128,7 +128,7 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                       style={{
                         objectFit: 'cover',
                         objectPosition: 'center',
-                        borderRadius: 2,
+                        borderRadius: isMobile ? 1 : 2,
                       }}
                     />
                   </Box>
@@ -139,8 +139,8 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
             <Box
               sx={{
                 flex: 1,
-                py: 4,
-                px: 1,
+                py: isMobile ? 1 : 4,
+                px: isMobile ? 2 : 1,
                 display: 'flex',
                 flexDirection: 'column',
                 backgroundColor: 'background.paper',
@@ -152,11 +152,16 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
               <Box>
                 <Typography
                   sx={{
-                    fontSize: '18px',
+                    fontSize: isMobile ? '16px' : '18px',
                     fontWeight: 700,
                     color: 'text.primary',
                     lineHeight: 1.3,
                     mb: 1,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
                   }}
                 >
                   {blog.title}
@@ -172,7 +177,7 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical',
-                    mb: 3,
+                    mb: isMobile ? 1 : 3,
                   }}
                 >
                   {blog.summary}
@@ -181,7 +186,11 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
 
               <Button
                 variant="text"
-                endIcon={<ArrowForwardIcon sx={{ fontSize: 16 }} />}
+                endIcon={
+                  <ArrowForwardIcon
+                    sx={{ fontSize: isMobile ? '14px' : '16px' }}
+                  />
+                }
                 sx={{
                   fontWeight: 600,
                   padding: 0,

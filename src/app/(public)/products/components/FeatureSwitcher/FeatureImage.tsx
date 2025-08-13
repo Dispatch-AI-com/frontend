@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, styled } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import Image from 'next/image';
 
 import type { FeatureItem } from './FeatureList';
@@ -16,28 +16,63 @@ const Wrapper = styled(Box)(({ theme }) => ({
   aspectRatio: '4 / 3',
   borderRadius: theme.shape.borderRadius * 2,
   overflow: 'hidden',
+  [theme.breakpoints.down('sm')]: {
+    aspectRatio: '4 / 5',
+  },
 }));
 
 const Backdrop = styled(Box)({
   position: 'absolute',
   inset: 0,
   borderRadius: 'inherit',
+  zIndex: 0,
 });
 
 const Inner = styled(Box)(({ theme }) => ({
   position: 'absolute',
   inset: theme.spacing(3),
+  zIndex: 1,
+  [theme.breakpoints.down('sm')]: {
+    left: theme.spacing(1.5),
+    right: theme.spacing(1.5),
+    bottom: theme.spacing(1.5),
+    top: theme.spacing(12),
+  },
+}));
+
+const Header = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  left: theme.spacing(2),
+  right: theme.spacing(2),
+  top: theme.spacing(2),
+  zIndex: 2,
+  display: 'none',
+  [theme.breakpoints.down('sm')]: {
+    display: 'block',
+  },
 }));
 
 export default function FeatureImage({
   items,
   activeIndex,
 }: FeatureImageProps) {
-  const { image, title, bg } = items[activeIndex];
+  const { image, title, bg, description } = items[activeIndex];
 
   return (
     <Wrapper>
       <Backdrop sx={{ background: bg ?? '#f6f6f6' }} />
+
+      <Header>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 700, lineHeight: 1.2, mb: 0.5 }}
+        >
+          {title}
+        </Typography>
+        <Typography variant="body2" sx={{ opacity: 0.8 }}>
+          {description}
+        </Typography>
+      </Header>
 
       <Inner>
         <Image
