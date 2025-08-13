@@ -23,11 +23,9 @@ const StyledListItem = styled(ListItemButton)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   display: 'flex',
   justifyContent: 'space-between',
-  /*  ✅ 选中行的自定义样式 */
   '&.Mui-selected': {
     backgroundColor: theme.palette.grey[100],
   },
-  /*  ✅ 选中行在 hover 时保持同色，不要再变深 */
   '&.Mui-selected:hover': {
     backgroundColor: theme.palette.grey[100],
   },
