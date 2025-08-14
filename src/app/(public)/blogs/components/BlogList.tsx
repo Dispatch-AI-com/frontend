@@ -19,6 +19,8 @@ const NextButton = styled(Button)(() => ({
   height: 48,
   marginTop: 40,
   marginBottom: 72,
+  marginLeft: 10,
+  marginRight: 10,
   textTransform: 'none',
   '&:hover': { background: '#222', boxShadow: 'none' },
 }));
@@ -56,22 +58,6 @@ export default function BlogList() {
           limit: number;
         }>(url);
         const fetched = [...res.data.data];
-
-        if (
-          !keyword &&
-          !topic &&
-          fetched.length > 0 &&
-          fetched.length < limit
-        ) {
-          const base = fetched[0];
-          while (fetched.length < limit) {
-            fetched.push({
-              ...base,
-              _id: `${String(base._id)}-dup${String(fetched.length)}`,
-              imageUrl: base.imageUrl,
-            });
-          }
-        }
 
         setBlogs(fetched);
         setTotal(res.data.total);
@@ -179,7 +165,7 @@ export default function BlogList() {
         )}
       </Box>
 
-      {blogs.length >= limit && (
+      {blogs.length && (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           {page > 1 && <NextButton onClick={handlePrevPage}>Back ←</NextButton>}
           <NextButton
