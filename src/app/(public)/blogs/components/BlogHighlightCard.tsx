@@ -38,6 +38,7 @@ export default function BlogHighlightCard({ blogs }: BlogHighlightCardProps) {
 
   return (
     <Box
+      id="anchor"
       sx={{
         display: 'flex',
         justifyContent: 'center',

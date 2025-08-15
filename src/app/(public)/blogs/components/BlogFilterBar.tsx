@@ -112,7 +112,7 @@ export default function BlogFilterBar() {
   useEffect(handleSearch, [debouncedKeyword, debouncedTopic, router]);
 
   return (
-    <FilterBarWrapper>
+    <FilterBarWrapper id="search">
       <SearchBox>
         <SearchIcon
           sx={{
