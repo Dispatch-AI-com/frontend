@@ -245,7 +245,11 @@ const BookingModal: React.FC<Props> = ({
   const [status, setStatus] = useState('');
   const [datetime, setDatetime] = useState(() => {
     const now = new Date();
-    return now.toISOString().slice(0, 16);
+    const offset = now.getTimezoneOffset() * 60000; // Offset in milliseconds
+    const localISOTime = new Date(now.getTime() - offset)
+      .toISOString()
+      .slice(0, 16);
+    return localISOTime;
   });
   const [description, setDescription] = useState('');
   const [client, setClient] = useState({
@@ -263,10 +267,15 @@ const BookingModal: React.FC<Props> = ({
   };
 
   // Validate if selected datetime is in the past
-  const isDateTimeInPast = (dateTimeString: string) => {
-    if (!dateTimeString) return false;
+  const isDateTimeInPast = (dateTimeString: string, status: string) => {
+    if (!dateTimeString || status !== 'Confirmed') return false;
     const selectedDate = new Date(dateTimeString);
     const now = new Date();
+
+    // Set seconds and milliseconds to zero for both dates
+    selectedDate.setSeconds(0, 0);
+    now.setSeconds(0, 0);
+
     return selectedDate < now;
   };
 
@@ -289,12 +298,13 @@ const BookingModal: React.FC<Props> = ({
         (user.email?.[0]?.toUpperCase() ?? 'U')
     : 'U';
 
+  // Update the isValid logic to pass the status
   const isValid =
     name &&
-    selectedServiceId && // Modified: Check selectedServiceId
+    selectedServiceId &&
     status &&
     datetime &&
-    !isDateTimeInPast(datetime) &&
+    !isDateTimeInPast(datetime, status) &&
     client.name &&
     client.phoneNumber &&
     client.address;
@@ -357,7 +367,7 @@ const BookingModal: React.FC<Props> = ({
         alert('Please select a valid date and time');
         return;
       }
-      if (isDateTimeInPast(datetime)) {
+      if (isDateTimeInPast(datetime, status)) {
         alert('You cannot book a service for a past date and time.');
         return;
       }
@@ -527,9 +537,9 @@ const BookingModal: React.FC<Props> = ({
               }
               InputLabelProps={{ shrink: true }}
               inputProps={{ min: getCurrentDateTimeLocal() }}
-              error={isDateTimeInPast(datetime)}
+              error={isDateTimeInPast(datetime, status)}
               helperText={
-                isDateTimeInPast(datetime)
+                isDateTimeInPast(datetime, status)
                   ? 'Date and time cannot be in the past'
                   : ''
               }
