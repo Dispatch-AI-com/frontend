@@ -5,6 +5,7 @@ import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import theme from '@/theme';
 import type { Blog } from '@/types/blog';
 
 import BlogCard from './BlogCard';
@@ -17,12 +18,12 @@ const NextButton = styled(Button)(() => ({
   boxShadow: 'none',
   width: 114,
   height: 48,
-  marginTop: 40,
-  marginBottom: 72,
-  marginLeft: 10,
-  marginRight: 10,
+  margin: '10px 10px 120px',
   textTransform: 'none',
   '&:hover': { background: '#222', boxShadow: 'none' },
+  [theme.breakpoints.down('md')]: {
+    margin: '20px 10px 50px',
+  },
 }));
 
 export default function BlogList() {
@@ -151,10 +152,10 @@ export default function BlogList() {
         ) : (
           <Grid
             container
-            spacing={4}
+            spacing={{ xs: 2, sm: 4 }}
             justifyContent="flex-start"
             alignItems="stretch"
-            sx={{ mb: 6, mt: 1 }}
+            sx={{ mb: { sm: 2, md: 6 }, mt: 1 }}
           >
             {blogs.map(blog => (
               <Grid item xs={12} sm={6} md={4} key={blog._id}>

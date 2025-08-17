@@ -20,6 +20,7 @@ const FilterBarWrapper = styled(Box)(() => ({
   alignItems: 'center',
   gap: 24,
   marginTop: '32px',
+  marginBottom: 30,
   justifyContent: 'flex-start',
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
@@ -42,11 +43,21 @@ const SearchBox = styled(Box)(() => ({
   },
 }));
 
+const StyledSearchIcon = styled(SearchIcon)(({ theme }) => ({
+  color: '#BDBDBD',
+  marginRight: theme.spacing(1),
+  display: 'inline-flex',
+  [theme.breakpoints.down('sm')]: {
+    display: 'none',
+  },
+}));
+
 const StyledInput = styled(TextField)(() => ({
   '& .MuiOutlinedInput-root': {
     border: 'none',
     paddingRight: 0,
     background: 'transparent',
+    fontSize: 16,
   },
   '& fieldset': {
     border: 'none',
@@ -114,13 +125,7 @@ export default function BlogFilterBar() {
   return (
     <FilterBarWrapper id="search">
       <SearchBox>
-        <SearchIcon
-          sx={{
-            color: '#BDBDBD',
-            mr: 1,
-            display: { xs: 'none', sm: 'inline-flex' },
-          }}
-        />
+        <StyledSearchIcon />
         <StyledInput
           variant="outlined"
           placeholder="Keywords"
@@ -128,9 +133,6 @@ export default function BlogFilterBar() {
           value={keyword}
           onChange={e => {
             setKeyword(e.target.value);
-          }}
-          InputProps={{
-            sx: { fontSize: 16, background: 'transparent' },
           }}
         />
         <SearchButton disableElevation onClick={handleSearch}>
