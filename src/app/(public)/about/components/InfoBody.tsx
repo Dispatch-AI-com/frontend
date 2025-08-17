@@ -7,8 +7,8 @@ export const SectionText = styled('p')(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize,
   fontFamily: theme.typography.fontFamily,
   lineHeight: theme.spacing(3),
-  maxWidth: '60%',
-  marginBottom: theme.spacing(8),
+  maxWidth: '100%',
+  marginBottom: theme.spacing(6),
   [theme.breakpoints.up('sm')]: {
     fontSize: theme.typography.body2.fontSize,
   },
