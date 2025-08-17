@@ -155,7 +155,7 @@ export default function DeleteConfirmModal({
       <DialogContentStyled>
         <MessageText variant={isSmallScreen ? 'body2' : 'body1'}>
           Are you sure you want to delete "{service?.name}"? This action cannot
-          be undone.
+          be undone. Created bookings will not be affected.
         </MessageText>
       </DialogContentStyled>
 

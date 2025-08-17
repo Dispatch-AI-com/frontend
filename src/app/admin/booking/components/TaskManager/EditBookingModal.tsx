@@ -319,6 +319,13 @@ const EditBookingModal: React.FC<Props> = ({
     return selectedDate < now;
   };
 
+  const isFutureDate = (dateTimeString: string) => {
+    if (!dateTimeString) return false;
+    const selectedDate = new Date(dateTimeString);
+    const now = new Date();
+    return selectedDate > now;
+  };
+
   // Get service-management services list
   const user = useAppSelector(state => state.auth.user);
   const userId = user?._id;
@@ -334,12 +341,16 @@ const EditBookingModal: React.FC<Props> = ({
     !isDateTimeInPast(dateTime) &&
     client.name &&
     client.phoneNumber &&
-    client.address;
+    client.address &&
+    !(status === 'Done' && isFutureDate(dateTime));
 
   const handleSave = () => {
     // Validate that the selected date is not in the past
-    if (isDateTimeInPast(dateTime)) {
-      alert('You cannot save a booking for a past date and time.');
+    if (
+      isDateTimeInPast(dateTime) ||
+      (status === 'Done' && isFutureDate(dateTime))
+    ) {
+      alert('You cannot set the status to Done for a future booking.');
       return;
     }
 

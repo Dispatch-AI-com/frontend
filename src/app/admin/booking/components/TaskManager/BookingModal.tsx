@@ -268,7 +268,7 @@ const BookingModal: React.FC<Props> = ({
 
   // Validate if selected datetime is in the past
   const isDateTimeInPast = (dateTimeString: string, status: string) => {
-    if (!dateTimeString || status !== 'Confirmed') return false;
+    if (!dateTimeString || status === 'Done') return false;
     const selectedDate = new Date(dateTimeString);
     const now = new Date();
 
