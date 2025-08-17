@@ -165,9 +165,9 @@ export default function BlogList() {
         )}
       </Box>
 
-      {blogs.length && (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          {page > 1 && <NextButton onClick={handlePrevPage}>Back ←</NextButton>}
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        {page > 1 && <NextButton onClick={handlePrevPage}>Back ←</NextButton>}
+        {blogs.length === limit && (
           <NextButton
             onClick={() => {
               void handleNextPage();
@@ -175,8 +175,8 @@ export default function BlogList() {
           >
             Next →
           </NextButton>
-        </Box>
-      )}
+        )}
+      </Box>
 
       <Snackbar
         open={open}
