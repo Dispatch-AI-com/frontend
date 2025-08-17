@@ -7,10 +7,11 @@ export const SectionText = styled('p')(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize,
   fontFamily: theme.typography.fontFamily,
   lineHeight: theme.spacing(3),
-  maxWidth: '100%',
+  maxWidth: '60%',
   marginBottom: theme.spacing(6),
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.down('sm')]: {
     fontSize: theme.typography.body2.fontSize,
+    maxWidth: '100%',
   },
 }));
 
