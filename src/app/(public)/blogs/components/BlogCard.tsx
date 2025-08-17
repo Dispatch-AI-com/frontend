@@ -12,6 +12,8 @@ import {
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import theme from '@/theme';
+
 const BlogCardWrapper = styled(Card)(({ theme }) => ({
   width: '100%',
   minHeight: '448px',
@@ -34,6 +36,7 @@ const BlogCardWrapper = styled(Card)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     minHeight: '380px',
     maxHeight: '450px',
+    borderRadius: 16,
   },
 }));
 
@@ -44,12 +47,15 @@ const ImageBox = styled(Box)(() => ({
   marginBottom: 20,
   position: 'relative',
   overflow: 'hidden',
+  [theme.breakpoints.down('md')]: {
+    borderRadius: 12,
+  },
 }));
 
 const Title = styled(Typography)(() => ({
   color: '#060606',
   fontWeight: 700,
-  fontSize: 'clamp(12px, 1.5vw, 18px)',
+  fontSize: 'clamp(14px, 1.5vw, 18px)',
   lineHeight: 'clamp(18px, 2vw, 22px)',
   marginLeft: 5,
   marginRight: 5,
@@ -59,7 +65,7 @@ const Title = styled(Typography)(() => ({
 
 const Summary = styled(Typography)(() => ({
   color: '#6d6d6d',
-  fontSize: 'clamp(8px, 1vw, 14px)',
+  fontSize: 'clamp(10px, 1vw, 14px)',
   marginLeft: 5,
   marginRight: 5,
   marginBottom: 12,
@@ -84,7 +90,7 @@ const StyledTag = styled(Chip)(() => ({
   background: '#a8f574',
   color: '#060606',
   fontWeight: 600,
-  fontSize: 'clamp(8px, 1vw, 10px)',
+  fontSize: 10,
   borderRadius: 'clamp(16px, 2vw, 20px)',
   height: 'clamp(15px, 20px, 24px)',
   padding: '0 clamp(4px, 6px, 8px)',
@@ -182,7 +188,7 @@ export default function BlogCard({
           sx={{
             fontWeight: 700,
             color: '#060606',
-            fontSize: 'clamp(10px, 1vw, 12px)',
+            fontSize: 12,
           }}
         >
           Read More&nbsp;→

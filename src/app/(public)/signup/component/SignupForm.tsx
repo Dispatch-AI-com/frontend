@@ -24,12 +24,10 @@ const WelcomeText = styled.h1`
   font-size: 24px;
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 32px;
 
   @media (max-width: 600px) {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 24px;
   }
 `;
 
@@ -37,11 +35,11 @@ const InstructionText = styled.p`
   text-align: center;
   font-size: 18px;
   color: #6d6d6d;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
+  margin-top: 8px;
 
   @media (max-width: 600px) {
     font-size: 14px;
-    margin-bottom: 12px;
   }
 `;
 
