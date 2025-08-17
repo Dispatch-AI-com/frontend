@@ -95,6 +95,7 @@ export default function HeroSection() {
           sx={{
             fontSize: isMobile ? 28 : 38,
             fontWeight: 900,
+            WebkitTextStroke: { xs: '0.8px black', sm: '0px' },
           }}
         >
           Your 24/7 Phone Assistant
@@ -103,6 +104,7 @@ export default function HeroSection() {
           sx={{
             fontSize: isMobile ? 28 : 38,
             fontWeight: 900,
+            WebkitTextStroke: { xs: '0.8px black', sm: '0px' },
             mx: 6,
           }}
         >
