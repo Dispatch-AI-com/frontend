@@ -4,15 +4,18 @@ import { Box, styled, Typography } from '@mui/material';
 const BannerWrapper = styled(Box)(({ theme }) => ({
   width: '100%',
   height: 400,
-  margin: '0 auto 80px auto',
+  margin: '0 auto',
+  marginBottom: theme.spacing(10),
   backgroundColor: '#060606',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
   boxSizing: 'border-box',
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(0),
+    paddingTop: 50,
+  },
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
@@ -25,10 +28,13 @@ const Title = styled(Typography)(({ theme }) => ({
 const Subtitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.body1,
   color: '#ffffff',
-  maxWidth: 650,
+  maxWidth: 750,
   textAlign: 'center',
   lineHeight: 1.7,
-  opacity: 0.8,
+  [theme.breakpoints.down('sm')]: {
+    fontSize: 14,
+    margin: '0 15px',
+  },
 }));
 
 export default function Banner() {
