@@ -20,12 +20,12 @@ const FilterBarWrapper = styled(Box)(() => ({
   alignItems: 'center',
   gap: 24,
   marginTop: '32px',
+  marginBottom: 30,
   justifyContent: 'flex-start',
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: 16,
-    marginBottom: 20,
   },
 }));
 
