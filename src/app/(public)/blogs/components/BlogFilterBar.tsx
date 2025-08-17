@@ -25,6 +25,7 @@ const FilterBarWrapper = styled(Box)(() => ({
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: 16,
+    marginBottom: 20,
   },
 }));
 

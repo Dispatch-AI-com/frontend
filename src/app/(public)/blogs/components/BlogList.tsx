@@ -151,7 +151,7 @@ export default function BlogList() {
         ) : (
           <Grid
             container
-            spacing={4}
+            spacing={{ xs: 2, sm: 4 }}
             justifyContent="flex-start"
             alignItems="stretch"
             sx={{ mb: 6, mt: 1 }}
