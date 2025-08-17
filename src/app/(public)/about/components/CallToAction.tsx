@@ -10,7 +10,7 @@ export const CallToActionText = styled('h3')(({ theme }) => ({
   fontSize: theme.typography.h3.fontSize,
   fontFamily: theme.typography.h3.fontFamily,
   fontWeight: theme.typography.h3.fontWeight,
-  margin: theme.spacing(1, 0, 5),
+  margin: 0,
 }));
 
 export const CallToActionTitle = styled('h2')(({ theme }) => ({
@@ -30,7 +30,7 @@ export const CallToActionWrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.dark,
   padding: theme.spacing(10, 4),
   color: theme.palette.text.primary,
-  gap: theme.spacing(5),
+  gap: theme.spacing(3),
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(4, 1),
   },

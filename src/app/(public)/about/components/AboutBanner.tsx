@@ -9,9 +9,9 @@ export const AboutHeader = styled(Box)(({ theme }) => ({
   padding: theme.spacing(10, 50),
   marginTop: theme.spacing(8),
   color: theme.palette.text.primary,
-  gap: theme.spacing(10),
   [theme.breakpoints.down('xl')]: {
     padding: theme.spacing(8, 20),
+    marginTop: theme.spacing(4),
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(5, 5),
@@ -29,7 +29,7 @@ export const HeaderContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  gap: theme.spacing(10),
+  gap: theme.spacing(4),
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1, 1),
     flexDirection: 'column-reverse',
