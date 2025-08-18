@@ -1,6 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { logout, setCredentials } from '@/features/auth/authSlice';
+import {
+  logout,
+  setCredentials,
+  updateCSRFToken,
+} from '@/features/auth/authSlice';
 import { axiosBaseQuery } from '@/lib/axiosBaseQuery';
 import type { UserInfo } from '@/types/user.d';
 
@@ -24,10 +28,14 @@ interface AuthStatusResponse {
   user: UserInfo;
 }
 
+interface CSRFTokenResponse {
+  csrfToken: string;
+}
+
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: axiosBaseQuery(),
-  tagTypes: ['User'],
+  tagTypes: ['User', 'CSRFToken'],
   endpoints: builder => ({
     loginUser: builder.mutation<AuthResponse, LoginDTO>({
       query: body => ({
@@ -87,19 +95,32 @@ export const authApi = createApi({
       },
       providesTags: ['User'],
     }),
-    // CSRF token management - refresh only
+    // New endpoints for CSRF token management
     refreshCSRFToken: builder.mutation<{ message: string }, void>({
       query: () => ({ url: '/auth/refresh-csrf', method: 'POST' }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          // After refresh, the new token is automatically set in httpOnly cookie
-          // No need to manually get it via API
+          // After refresh, get the new token
+          dispatch(authApi.util.invalidateTags(['CSRFToken']));
         } catch {
           // If refresh fails, logout user
           dispatch(logout());
         }
       },
+    }),
+    getCSRFToken: builder.query<CSRFTokenResponse, void>({
+      query: () => ({ url: '/auth/csrf-token', method: 'GET' }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(updateCSRFToken(data.csrfToken));
+        } catch {
+          // If getting token fails, user might not be authenticated
+          dispatch(logout());
+        }
+      },
+      providesTags: ['CSRFToken'],
     }),
   }),
 });
@@ -111,4 +132,6 @@ export const {
   useCheckAuthStatusQuery,
   useLazyCheckAuthStatusQuery,
   useRefreshCSRFTokenMutation,
+  useGetCSRFTokenQuery,
+  useLazyGetCSRFTokenQuery,
 } = authApi;

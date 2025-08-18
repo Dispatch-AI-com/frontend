@@ -3,7 +3,7 @@ import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 
-import { logout } from '@/features/auth/authSlice';
+import { logout, updateCSRFToken } from '@/features/auth/authSlice';
 import type { RootState } from '@/redux/store';
 
 interface ErrorResponse {
@@ -67,23 +67,34 @@ export const axiosBaseQuery = (): BaseQueryFn<
             withCredentials: true,
           });
 
-          // After refresh, the new CSRF token is automatically set in httpOnly cookie
-          // We can retry the original request - the browser will send the new token
-          const retryResult = await axios({
-            baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-            url,
-            method,
-            data,
-            params,
-            headers: {
-              'Content-Type': 'application/json',
-              // Don't set x-csrf-token header - let the browser send it from cookie
-              ...headers,
-            },
-            withCredentials: true,
-          });
+          // After refresh, get the new token from cookie and update Redux
+          // The new token is now available in the cookie
+          const newCsrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrfToken='))
+            ?.split('=')[1];
 
-          return { data: retryResult.data };
+          if (newCsrfToken) {
+            // Update Redux state with new CSRF token
+            dispatch(updateCSRFToken(newCsrfToken));
+
+            // Retry the original request with new CSRF token
+            const retryResult = await axios({
+              baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+              url,
+              method,
+              data,
+              params,
+              headers: {
+                'Content-Type': 'application/json',
+                'x-csrf-token': newCsrfToken,
+                ...headers,
+              },
+              withCredentials: true,
+            });
+
+            return { data: retryResult.data };
+          }
         } catch (refreshError) {
           // If refresh fails, logout user
           // eslint-disable-next-line no-console
