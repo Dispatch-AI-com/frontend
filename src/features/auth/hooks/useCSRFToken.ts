@@ -1,23 +1,17 @@
 import { useCallback, useEffect } from 'react';
 
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useAppSelector } from '@/redux/hooks';
 
-import {
-  useLazyGetCSRFTokenQuery,
-  useRefreshCSRFTokenMutation,
-} from '../authApi';
-import { updateCSRFToken } from '../authSlice';
+import { useRefreshCSRFTokenMutation } from '../authApi';
 
 /**
  * Hook for managing CSRF token lifecycle
  * Handles token refresh, validation, and automatic renewal
  */
 export const useCSRFToken = () => {
-  const dispatch = useAppDispatch();
   const { csrfToken, isAuthenticated } = useAppSelector(state => state.auth);
 
   const [refreshCSRF] = useRefreshCSRFTokenMutation();
-  const [getCSRFToken] = useLazyGetCSRFTokenQuery();
 
   /**
    * Refresh CSRF token manually
@@ -31,35 +25,28 @@ export const useCSRFToken = () => {
 
     try {
       await refreshCSRF().unwrap();
-      // After refresh, get the new token
-      const result = await getCSRFToken().unwrap();
-      dispatch(updateCSRFToken(result.csrfToken));
+      // After refresh, the new token is automatically set in httpOnly cookie
+      // We don't need to manually get it via API
       return true;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to refresh CSRF token:', error);
       return false;
     }
-  }, [isAuthenticated, refreshCSRF, getCSRFToken, dispatch]);
+  }, [isAuthenticated, refreshCSRF]);
 
   /**
-   * Get current CSRF token, refresh if needed
+   * Get current CSRF token from Redux state
+   * Note: This is only available if set during login/signup
    */
-  const getToken = useCallback(async () => {
+  const getToken = useCallback(() => {
     if (!isAuthenticated) {
       return null;
     }
 
-    try {
-      const result = await getCSRFToken().unwrap();
-      dispatch(updateCSRFToken(result.csrfToken));
-      return result.csrfToken;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to get CSRF token:', error);
-      return null;
-    }
-  }, [isAuthenticated, getCSRFToken, dispatch]);
+    // Return the token from Redux state (set during login/signup)
+    return csrfToken;
+  }, [isAuthenticated, csrfToken]);
 
   /**
    * Validate if current CSRF token is still valid

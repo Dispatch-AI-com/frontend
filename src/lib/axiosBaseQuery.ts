@@ -3,7 +3,7 @@ import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 
-import { logout, updateCSRFToken } from '@/features/auth/authSlice';
+import { logout } from '@/features/auth/authSlice';
 import type { RootState } from '@/redux/store';
 
 interface ErrorResponse {
@@ -67,35 +67,23 @@ export const axiosBaseQuery = (): BaseQueryFn<
             withCredentials: true,
           });
 
-          // Get new CSRF token from cookie
-          const newCsrfTokenResponse = await axios<{ csrfToken: string }>({
+          // After refresh, the new CSRF token is automatically set in httpOnly cookie
+          // We can retry the original request - the browser will send the new token
+          const retryResult = await axios({
             baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-            url: '/auth/csrf-token',
-            method: 'GET',
+            url,
+            method,
+            data,
+            params,
+            headers: {
+              'Content-Type': 'application/json',
+              // Don't set x-csrf-token header - let the browser send it from cookie
+              ...headers,
+            },
             withCredentials: true,
           });
 
-          if (newCsrfTokenResponse.data?.csrfToken) {
-            // Update Redux state with new CSRF token
-            dispatch(updateCSRFToken(newCsrfTokenResponse.data.csrfToken));
-
-            // Retry the original request with new CSRF token
-            const retryResult = await axios({
-              baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-              url,
-              method,
-              data,
-              params,
-              headers: {
-                'Content-Type': 'application/json',
-                'x-csrf-token': newCsrfTokenResponse.data.csrfToken,
-                ...headers,
-              },
-              withCredentials: true,
-            });
-
-            return { data: retryResult.data };
-          }
+          return { data: retryResult.data };
         } catch (refreshError) {
           // If refresh fails, logout user
           // eslint-disable-next-line no-console
