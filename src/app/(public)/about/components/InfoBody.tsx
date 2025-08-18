@@ -8,9 +8,10 @@ export const SectionText = styled('p')(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   lineHeight: theme.spacing(3),
   maxWidth: '60%',
-  marginBottom: theme.spacing(8),
-  [theme.breakpoints.up('sm')]: {
+  marginBottom: theme.spacing(6),
+  [theme.breakpoints.down('sm')]: {
     fontSize: theme.typography.body2.fontSize,
+    maxWidth: '100%',
   },
 }));
 
@@ -22,7 +23,6 @@ export const SectionTitle = styled('h2')(({ theme }) => ({
   fontSize: theme.typography.h2.fontSize,
   fontFamily: theme.typography.h2.fontFamily,
   fontWeight: theme.typography.h2.fontWeight,
-  margin: theme.spacing(4, 0, 2),
 }));
 
 export const SectionWrapper = styled(Box)(({ theme }) => ({
@@ -30,7 +30,6 @@ export const SectionWrapper = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   flexDirection: 'column',
   backgroundColor: theme.palette.background.default,
-  paddingTop: theme.spacing(10),
-  paddingBottom: theme.spacing(7),
+  paddingTop: theme.spacing(6),
   color: theme.palette.text.primary,
 }));

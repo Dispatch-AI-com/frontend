@@ -1,10 +1,15 @@
 'use client';
 import { Box, Grid, styled, TextField, Typography } from '@mui/material';
 
+import theme from '@/theme';
+
 const SubscriptionWrapper = styled(Box)(() => ({
   background: '#111',
   textAlign: 'center',
   padding: '100px 16px',
+  [theme.breakpoints.down('md')]: {
+    padding: '60px 16px',
+  },
 }));
 
 const FormWrapper = styled(Box)(() => ({
@@ -20,12 +25,26 @@ const Label = styled(Typography)(() => ({
   marginBottom: 4,
 }));
 
+export const StyledInput = styled(TextField)({
+  '& .MuiInputBase-root': {
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: '#fff',
+  },
+  '& .MuiInputBase-input': {
+    padding: '6px 16px', // 控制输入框内边距
+  },
+  '& .MuiOutlinedInput-notchedOutline': {
+    border: '1px solid #d5d5d5', // 默认边框
+  },
+});
+
 export default function SubscriptionSection() {
   return (
     <SubscriptionWrapper>
       <Typography
         fontWeight={900}
-        fontSize="32px"
+        fontSize={{ sm: 32, xs: 24 }}
         lineHeight="40px"
         textAlign="center"
         color="#ffffff"
@@ -47,25 +66,11 @@ export default function SubscriptionSection() {
         {/* Email Field */}
         <Box sx={{ marginBottom: 4 }}>
           <Label>Email address</Label>
-          <TextField
+          <StyledInput
             name="email"
             size="small"
             placeholder="Email address"
             fullWidth
-            sx={{
-              height: '40px',
-              bgcolor: '#fff',
-              borderRadius: '12px',
-              '& .MuiInputBase-root': {
-                height: '40px',
-                padding: '12px 16px',
-                borderRadius: '12px',
-                backgroundColor: '#fff',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                border: 'none',
-              },
-            }}
           />
         </Box>
 
@@ -73,49 +78,21 @@ export default function SubscriptionSection() {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Label>First Name</Label>
-            <TextField
+            <StyledInput
               name="firstName"
               size="small"
               placeholder="First Name"
               fullWidth
-              sx={{
-                height: '40px',
-                bgcolor: '#fff',
-                borderRadius: '12px',
-                '& .MuiInputBase-root': {
-                  height: '40px',
-                  padding: '12px 16px',
-                  borderRadius: '12px',
-                  backgroundColor: '#fff',
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  border: '1px solid #d5d5d5',
-                },
-              }}
             />
           </Grid>
 
           <Grid item xs={6}>
             <Label>Last Name</Label>
-            <TextField
+            <StyledInput
               name="lastName"
               size="small"
               placeholder="Last Name"
               fullWidth
-              sx={{
-                height: '40px',
-                bgcolor: '#fff',
-                borderRadius: '12px',
-                '& .MuiInputBase-root': {
-                  height: '40px',
-                  padding: '12px 16px',
-                  borderRadius: '12px',
-                  backgroundColor: '#fff',
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  border: '1px solid #d5d5d5',
-                },
-              }}
             />
           </Grid>
         </Grid>
