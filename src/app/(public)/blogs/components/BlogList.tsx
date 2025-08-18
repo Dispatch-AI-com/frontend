@@ -3,7 +3,7 @@ import { Box, Button, Grid, Snackbar, styled, Typography } from '@mui/material';
 import axios from 'axios';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import theme from '@/theme';
 import type { Blog } from '@/types/blog';
@@ -63,6 +63,7 @@ export default function BlogList() {
         setBlogs(fetched);
         setTotal(res.data.total);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Failed to fetch blogs:', err);
       }
     };
@@ -93,6 +94,7 @@ export default function BlogList() {
         scroll: true,
       });
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('check next page failed', e);
     }
   };
