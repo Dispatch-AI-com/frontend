@@ -1,5 +1,6 @@
 import { Box, Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { minWidth } from '@mui/system';
 
 export const AboutHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -48,20 +49,26 @@ export const HeaderImage = styled('img')(({ theme }) => ({
   maxWidth: '576px',
   height: 'auto',
   objectFit: 'cover',
+  [theme.breakpoints.down('sm')]: {
+    minWidth: '343px',
+  },
 }));
 
 export const HeaderTitle = styled('h1')(({ theme }) => ({
   color: 'white',
-  fontSize: theme.typography.h1.fontSize,
+  fontSize: '28px',
   fontFamily: theme.typography.h1.fontFamily,
   fontWeight: theme.typography.h1.fontWeight,
   margin: 0,
-  lineHeight: 1.2,
+  lineHeight: 1.14,
+  [theme.breakpoints.down('sm')]: {
+    minWidth: '343px',
+  },
 }));
 
 export const HeaderText = styled('p')(({ theme }) => ({
   color: 'white',
-  marginTop: theme.spacing(1),
+  marginTop: theme.spacing(2),
   marginBottom: 0,
   fontSize: theme.typography.body1.fontSize,
   fontFamily: theme.typography.fontFamily,
