@@ -47,6 +47,7 @@ const BulletIcon = () => (
       height: 16,
       borderRadius: '50%',
       backgroundColor: '#060606',
+      mr: { xs: 1, sm: 0 },
     }}
   >
     <CheckRoundedIcon sx={{ fontSize: 14, color: '#a8f574' }} />
@@ -92,23 +93,29 @@ export default function HeroSection() {
       <Stack alignItems="center">
         <Typography
           sx={{
-            fontSize: isMobile ? 24 : 38,
+            fontSize: isMobile ? 28 : 38,
             fontWeight: 900,
+            WebkitTextStroke: { xs: '0.8px black', sm: '0px' },
           }}
         >
           Your 24/7 Phone Assistant
         </Typography>
         <Typography
           sx={{
-            fontSize: isMobile ? 24 : 38,
+            fontSize: isMobile ? 28 : 38,
             fontWeight: 900,
+            WebkitTextStroke: { xs: '0.8px black', sm: '0px' },
+            mx: 6,
           }}
         >
           Let AI handle your business calls while you focus on growth
         </Typography>
 
         {/* bullets */}
-        <BulletsRow direction="row" spacing={4}>
+        <BulletsRow
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={{ xs: 1, sm: 4 }}
+        >
           {[
             'Never Miss a Call',
             'Auto‑Handle Paperwork',
@@ -116,9 +123,7 @@ export default function HeroSection() {
           ].map(label => (
             <BulletItem key={label}>
               <BulletIcon />
-              <Typography variant="subtitle1" fontWeight={700}>
-                {label}
-              </Typography>
+              <Typography variant="subtitle1">{label}</Typography>
             </BulletItem>
           ))}
         </BulletsRow>

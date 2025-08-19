@@ -46,7 +46,8 @@ export const TeamMemberImage = styled('div')<{ backgroundImage: string }>(
     backgroundImage: `url(${backgroundImage})`,
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      height: '200px',
+      aspectRatio: '1 / 1',
+      height: 'auto',
     },
   }),
 );
