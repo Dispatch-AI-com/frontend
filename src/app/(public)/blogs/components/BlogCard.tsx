@@ -1,6 +1,6 @@
 'use client';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import {
   Box,
   Card,
@@ -18,7 +18,7 @@ const BlogCardWrapper = styled(Card)(({ theme }) => ({
   width: '100%',
   minHeight: '448px',
   maxHeight: '528px',
-  padding: '12px 12px 30px',
+  padding: '8px 8px 32px 8px',
   borderRadius: 24,
   border: '1px solid #d5d5d5',
   backgroundColor: '#fff',
@@ -34,9 +34,10 @@ const BlogCardWrapper = styled(Card)(({ theme }) => ({
   },
 
   [theme.breakpoints.down('md')]: {
-    minHeight: '380px',
+    minHeight: '300px',
     maxHeight: '450px',
     borderRadius: 16,
+    padding: '8px 8px 16px',
   },
 }));
 
@@ -50,6 +51,16 @@ const ImageBox = styled(Box)(() => ({
   [theme.breakpoints.down('md')]: {
     borderRadius: 12,
   },
+}));
+
+const PlaceholderBox = styled(Box)(() => ({
+  width: '100%',
+  height: '100%',
+  background: '#e5e5e5',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: '#6d6d6d',
 }));
 
 const Title = styled(Typography)(() => ({
@@ -89,19 +100,27 @@ const TagRow = styled(Box)(() => ({
 const StyledTag = styled(Chip)(() => ({
   background: '#a8f574',
   color: '#060606',
-  fontWeight: 600,
-  fontSize: 10,
   borderRadius: 'clamp(16px, 2vw, 20px)',
   height: 'clamp(15px, 20px, 24px)',
   padding: '0 clamp(4px, 6px, 8px)',
+  '& .MuiChip-label': {
+    padding: '0 6px',
+    fontSize: 12,
+    fontWeight: 500,
+  },
+  [theme.breakpoints.down('md')]: {
+    '& .MuiChip-label': {
+      padding: '4 4px',
+    },
+  },
 }));
 
 const FooterRow = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  marginTop: 'auto',
   width: '100%',
+  margin: 'auto 8px',
 }));
 
 const MetaInfo = styled(Box)(() => ({
@@ -111,6 +130,13 @@ const MetaInfo = styled(Box)(() => ({
   marginRight: 10,
   color: '#7a7a7a',
   fontSize: 'clamp(9px, 1vw, 11px)',
+}));
+
+const MetaItem = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+  fontSize: 13,
 }));
 
 export interface BlogCardProps {
@@ -159,22 +185,10 @@ export default function BlogCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              background: '#e5e5e5',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#6d6d6d',
-            }}
-          >
-            No image available
-          </Box>
+          <PlaceholderBox>No image available</PlaceholderBox>
         )}
       </ImageBox>
-      <CardContent sx={{ p: 0 }}>
+      <CardContent sx={{ p: 0, flexGrow: 1 }}>
         <Title>{title}</Title>
         <Summary>{summary}</Summary>
         <TagRow>
@@ -188,26 +202,20 @@ export default function BlogCard({
           sx={{
             fontWeight: 700,
             color: '#060606',
-            fontSize: 12,
+            fontSize: 14,
           }}
         >
           Read More&nbsp;→
         </Typography>
         <MetaInfo>
-          <Box
-            component="span"
-            sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-          >
-            <AccessTimeIcon fontSize="small" />
-            {new Date(date).toLocaleDateString('en-CA')}
-          </Box>
-          <Box
-            component="span"
-            sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-          >
-            <VisibilityIcon fontSize="small" />
+          <MetaItem>
+            <AccessTimeIcon sx={{ fontSize: 16 }} />
+            {new Date(date).toLocaleDateString('ja-JP')}
+          </MetaItem>
+          <MetaItem>
+            <VisibilityOutlinedIcon sx={{ fontSize: 18 }} />
             {views}
-          </Box>
+          </MetaItem>
         </MetaInfo>
       </FooterRow>
     </BlogCardWrapper>
