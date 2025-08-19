@@ -173,6 +173,7 @@ export default function ProcessFlow() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const stepsContainerRef = useRef<HTMLDivElement>(null);
   const current = steps.find(s => s.id === activeStep);
 
   const minSwipeDistance = 50;
@@ -182,13 +183,9 @@ export default function ProcessFlow() {
       setActiveStep(stepId);
 
       const stepElement = document.getElementById(`step-${String(stepId)}`);
-      if (stepElement && containerRef.current) {
-        const container = containerRef.current;
-        const scrollLeft =
-          stepElement.offsetLeft -
-          container.offsetLeft -
-          container.offsetWidth / 2 +
-          stepElement.offsetWidth / 2;
+      if (stepElement && stepsContainerRef.current) {
+        const container = stepsContainerRef.current;
+        const scrollLeft = stepElement.offsetLeft - container.offsetLeft;
 
         container.scrollTo({
           left: scrollLeft,
@@ -258,7 +255,7 @@ export default function ProcessFlow() {
             )}
           </ImageContainer>
 
-          <StepsGrid>
+          <StepsGrid ref={stepsContainerRef}>
             {steps.map(step => {
               const isActive = step.id === activeStep;
               return (

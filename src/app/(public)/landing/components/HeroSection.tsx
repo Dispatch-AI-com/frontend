@@ -31,7 +31,7 @@ const StyledStack = styled('div')`
   @media (max-width: ${({ theme }) => theme.breakpoints.values.sm - 1}px) {
     width: 100%;
     align-items: flex-start;
-    gap: ${({ theme }) => theme.spacing(1)};
+    gap: ${({ theme }) => theme.spacing(0)};
   }
 
   @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
