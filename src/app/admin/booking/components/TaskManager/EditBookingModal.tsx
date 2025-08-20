@@ -265,22 +265,51 @@ interface Props {
   onDelete: (bookingId: string) => void;
 }
 
-// Utility function: Convert ISO string to datetime-local format (local time)
-function formatForDateTimeLocal(isoString: string): string {
-  if (!isoString) return '';
+// Format ISO string for datetime-local input
+const formatForDateTimeLocal = (isoString: string) => {
+  if (!isoString) {
+    // If no time, use current device time
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
   try {
+    // Create Date object, this automatically converts ISO string to local time
     const date = new Date(isoString);
-    if (isNaN(date.getTime())) return '';
+    if (isNaN(date.getTime())) {
+      // If parsing fails, also use current device time
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    // Get local time components
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
-  } catch {
-    return '';
+  } catch (error) {
+    // If exception occurs, also use current device time
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
-}
+};
 
 const EditBookingModal: React.FC<Props> = ({
   service,
@@ -305,18 +334,38 @@ const EditBookingModal: React.FC<Props> = ({
     address: service.client?.address ?? '',
   });
 
-  // Get current date and time in local format for min attribute
+  // Get current date and time in local format
   const getCurrentDateTimeLocal = () => {
     const now = new Date();
-    return now.toISOString().slice(0, 16);
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
   // Validate if selected datetime is in the past
   const isDateTimeInPast = (dateTimeString: string) => {
     if (!dateTimeString) return false;
-    const selectedDate = new Date(dateTimeString);
-    const now = new Date();
-    return selectedDate < now;
+    try {
+      const selectedDate = new Date(dateTimeString);
+      const now = new Date();
+      if (isNaN(selectedDate.getTime())) return false;
+
+      // Check if date is valid
+      if (selectedDate > now) return false;
+
+      // Use more lenient comparison: compare to minute level, ignore seconds and milliseconds
+      const selectedMinutes = selectedDate.getTime() / (1000 * 60);
+      const nowMinutes = now.getTime() / (1000 * 60);
+
+      // Reduce tolerance to 1 minute
+      return selectedMinutes < nowMinutes - 1;
+    } catch {
+      console.error('Error in isDateTimeInPast');
+      return false;
+    }
   };
 
   // Get service-management services list
@@ -331,17 +380,21 @@ const EditBookingModal: React.FC<Props> = ({
     name &&
     status &&
     dateTime &&
-    !isDateTimeInPast(dateTime) &&
+    // If status is Done, time must be past; if status is not Done, do not allow past time
+    (status !== 'Done' || isDateTimeInPast(dateTime)) &&
     client.name &&
     client.phoneNumber &&
     client.address;
 
   const handleSave = () => {
-    // Validate that the selected date is not in the past
-    if (isDateTimeInPast(dateTime)) {
-      alert('You cannot save a booking for a past date and time.');
+    // Validate that the selected date is not in the past (unless status is Done)
+    if (isDateTimeInPast(dateTime) && status !== 'Done') {
+      alert(
+        'You cannot save a booking for a past date and time unless the status is Done.',
+      );
       return;
     }
+    // Remove popup alerts, use form validation to control button state instead
 
     // Convert to ISO string when saving
     let isoDateTime = dateTime;
@@ -494,7 +547,12 @@ const EditBookingModal: React.FC<Props> = ({
                 }
                 displayEmpty
               >
-                <MenuItem value="Done">Done</MenuItem>
+                <MenuItem
+                  value="Done"
+                  title="Set status to Done to allow past time selection"
+                >
+                  Done
+                </MenuItem>
                 <MenuItem value="Cancelled">Cancelled</MenuItem>
                 <MenuItem value="Confirmed">Confirmed</MenuItem>
               </StatusSelect>
@@ -511,12 +569,16 @@ const EditBookingModal: React.FC<Props> = ({
                 setDateTime(e.target.value)
               }
               InputLabelProps={{ shrink: true }}
-              inputProps={{ min: getCurrentDateTimeLocal() }}
-              error={isDateTimeInPast(dateTime)}
+              inputProps={{
+                min: status === 'Done' ? undefined : getCurrentDateTimeLocal(),
+              }}
+              error={isDateTimeInPast(dateTime) && status !== 'Done'}
               helperText={
-                isDateTimeInPast(dateTime)
-                  ? 'Date and time cannot be in the past'
-                  : ''
+                isDateTimeInPast(dateTime) && status !== 'Done'
+                  ? 'Cannot save booking for past time'
+                  : status === 'Done' && isDateTimeInPast(dateTime)
+                    ? 'Recording completion time (past time allowed)'
+                    : ''
               }
             />
           </FormField>
