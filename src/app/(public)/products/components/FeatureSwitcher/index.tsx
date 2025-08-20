@@ -61,10 +61,11 @@ export default function FeatureSwitcher({
   return (
     <Wrapper>
       <Typography
-        fontSize={isMobile ? 18 : 24}
+        fontSize={isMobile ? 20 : 24}
         textAlign="center"
         fontWeight={isMobile ? 900 : 700}
         mb={isMobile ? 6 : 12}
+        mx={3}
       >
         {title}
       </Typography>
