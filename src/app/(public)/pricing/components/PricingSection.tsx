@@ -88,8 +88,8 @@ export default function PricingSection() {
       component="section"
       sx={{
         padding: {
-          xs: '0 0 40px 0',
-          sm: '0 0 68px 0',
+          xs: '0 0 8px 0',
+          sm: '0 0 88px 0',
         },
         backgroundColor: theme.palette.background.default,
       }}
@@ -141,34 +141,6 @@ export default function PricingSection() {
               buttons={getButtons(plan.tier)}
             />
           </Box>
-        ))}
-      </Box>
-
-      {/* Dots */}
-      <Box
-        sx={{
-          display: { xs: 'flex', md: 'none' },
-          justifyContent: 'center',
-          mt: 3,
-          gap: 1.5,
-        }}
-      >
-        {sortedPlans.map((_, idx) => (
-          <Box
-            key={idx}
-            onClick={() => {
-              slider.current?.moveToIdx(idx);
-            }}
-            sx={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              backgroundColor:
-                currentSlide === idx ? 'primary.main' : 'grey.400',
-              cursor: 'pointer',
-              transition: 'background-color 0.3s',
-            }}
-          />
         ))}
       </Box>
     </Box>
