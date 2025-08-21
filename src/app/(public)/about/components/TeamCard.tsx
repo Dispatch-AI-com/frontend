@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 export const TeamCardContainer = styled(Box)(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: theme.spacing(4),
+  gap: theme.spacing(3),
   marginBottom: theme.spacing(10),
   maxWidth: `calc(3 * 324px + 2 * ${theme.spacing(4)})`,
   marginLeft: 'auto',
@@ -24,9 +24,9 @@ export const TeamMemberCard = styled(Card)(({ theme }) => ({
   maxWidth: '324px',
   height: '464px',
   padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
   textAlign: 'center',
+  backgroundColor: 'transparent',
+  boxShadow: 'none',
   [theme.breakpoints.down('sm')]: {
     maxWidth: '100%',
     height: 'auto',
@@ -38,9 +38,7 @@ export const TeamMemberImage = styled('div')<{ backgroundImage: string }>(
   ({ theme, backgroundImage }) => ({
     width: '300px',
     height: '300px',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.grey[300],
-    marginBottom: theme.spacing(1),
+    borderRadius: theme.spacing(2),
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundImage: `url(${backgroundImage})`,
