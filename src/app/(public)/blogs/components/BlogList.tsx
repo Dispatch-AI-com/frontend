@@ -1,10 +1,10 @@
 'use client';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Box, Button, Grid, Snackbar, styled, Typography } from '@mui/material';
-import { borderRadius, fontSize } from '@mui/system';
 import axios from 'axios';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import theme from '@/theme';
 import type { Blog } from '@/types/blog';
@@ -177,7 +177,10 @@ export default function BlogList() {
               void handleNextPage();
             }}
           >
-            Next →
+            Next
+            <ArrowForwardIcon
+              sx={{ width: '20px', height: '18px', marginLeft: '6px' }}
+            />
           </NextButton>
         )}
       </Box>
