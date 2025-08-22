@@ -186,6 +186,7 @@ export default function BookingPage() {
         search={search}
         filterAnchor={filterAnchor}
         onFilterClose={handleFilterClose}
+        onClearSearch={handleClearSearch}
         isCreateBookingModalOpen={isCreateBookingModalOpen}
         onCloseCreateBookingModal={handleCloseCreateBookingModal}
       />

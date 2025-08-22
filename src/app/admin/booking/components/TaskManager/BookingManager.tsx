@@ -56,6 +56,7 @@ export function Content({
   search,
   filterAnchor,
   onFilterClose,
+  onClearSearch,
   onCreateBooking,
   isCreateBookingModalOpen,
   onCloseCreateBookingModal,
@@ -63,6 +64,7 @@ export function Content({
   search: string;
   filterAnchor: HTMLElement | null;
   onFilterClose: () => void;
+  onClearSearch: () => void;
   onCreateBooking: () => void;
   isCreateBookingModalOpen: boolean;
   onCloseCreateBookingModal: () => void;
@@ -230,6 +232,7 @@ export function Content({
   const handleSearch = (filters?: Record<string, unknown> | string) => {
     if (typeof filters === 'string') {
       // Handle search clear
+      onClearSearch();
       return;
     }
 
@@ -314,11 +317,24 @@ export function Content({
     return matchesSearch && matchesStatus && matchesCreator && matchesDateRange;
   });
 
+  // Sort services by creation time (newest first)
+  const sortedServices = [...filteredServices].sort((a, b) => {
+    // Sort by dateTime (booking time) - newest first
+    if (a.dateTime && b.dateTime) {
+      return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
+    }
+    // If no dateTime, sort by _id (newest first, assuming _id contains timestamp)
+    if (a._id && b._id) {
+      return b._id.localeCompare(a._id);
+    }
+    return 0;
+  });
+
   // Pagination
-  const totalPages = Math.ceil(filteredServices.length / TASKS_PER_PAGE);
+  const totalPages = Math.ceil(sortedServices.length / TASKS_PER_PAGE);
   const startIndex = (currentPage - 1) * TASKS_PER_PAGE;
   const endIndex = startIndex + TASKS_PER_PAGE;
-  const paginatedServices = filteredServices.slice(startIndex, endIndex);
+  const paginatedServices = sortedServices.slice(startIndex, endIndex);
 
   return (
     <Container>
@@ -432,6 +448,9 @@ export default function BookingManager({
   onFilterClose = () => {
     // Default empty function
   },
+  onClearSearch = () => {
+    // Default empty function
+  },
   isCreateBookingModalOpen = false,
   onCloseCreateBookingModal = () => {
     // Default empty function
@@ -440,6 +459,7 @@ export default function BookingManager({
   search?: string;
   filterAnchor?: HTMLElement | null;
   onFilterClose?: () => void;
+  onClearSearch?: () => void;
   isCreateBookingModalOpen?: boolean;
   onCloseCreateBookingModal?: () => void;
 }) {
@@ -453,6 +473,7 @@ export default function BookingManager({
         search={search}
         filterAnchor={filterAnchor}
         onFilterClose={handleFilterClose}
+        onClearSearch={onClearSearch}
         onCreateBooking={() => {
           // This will be handled by the Content component
         }}

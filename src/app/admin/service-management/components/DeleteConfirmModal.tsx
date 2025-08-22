@@ -157,6 +157,17 @@ export default function DeleteConfirmModal({
           Are you sure you want to delete "{service?.name}"? This action cannot
           be undone.
         </MessageText>
+        <MessageText
+          variant={isSmallScreen ? 'body2' : 'body1'}
+          sx={{
+            marginTop: 1,
+            fontSize: isSmallScreen ? '0.8rem' : '0.875rem',
+            color: '#888',
+            fontStyle: 'italic',
+          }}
+        >
+          Note: Created bookings will not be affected.
+        </MessageText>
       </DialogContentStyled>
 
       <DialogActionsStyled>

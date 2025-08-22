@@ -1,8 +1,8 @@
 'use client';
-import { Avatar, Box, Typography } from '@mui/material';
-import { styled } from '@mui/system';
-import { isToday, parseISO } from 'date-fns';
-import { format } from 'date-fns';
+
+import { Avatar, Box, Typography, useMediaQuery } from '@mui/material';
+import { styled, width } from '@mui/system';
+import { format, isToday, parseISO } from 'date-fns';
 import Image from 'next/image';
 
 import HalfCircleProgress from '@/components/ui/HalfCircleProgress';
@@ -24,19 +24,10 @@ function formatSubscriptionPeriod(
   }
 }
 
-const SectionContainer = styled(Box)`
-  display: flex;
-  gap: 24px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 8px;
-
-  & > * {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-  }
+const ResponsiveFrame = styled(Box)`
+  width: 100%;
+  // margin-inline: auto;
+  padding-inline: 0;
 
   @media (max-width: 600px) {
     max-width: 340px;
@@ -55,6 +46,29 @@ const SectionContainer = styled(Box)`
   }
 `;
 
+/** default container */
+const SectionContainer = styled(Box)`
+  display: flex;
+  gap: 24px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  &::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
+
+  & > * {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+`;
+
 const Title = styled(Typography)({
   fontSize: 16,
   fontWeight: 'bold',
@@ -70,14 +84,20 @@ const CardContainer = styled(Box)({
 
 const StatCard = styled(Box)({
   width: 180,
+  maxWidth: '100%',
   height: 152,
-  padding: '20px 20px 24px',
+  padding: '20px 20px 24px 20px',
   borderRadius: 16,
   border: '1px solid #eaeaea',
   backgroundColor: '#fff',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
+
+  '@media (max-width: 480px)': {
+    width: '160px',
+    padding: '10px 10px 10px 10px',
+  },
 });
 
 const TypeColors = {
@@ -119,23 +139,29 @@ const Value = styled(Typography)({
 
 const InfoCard = styled(Box)(({ bgcolor }: { bgcolor: string }) => ({
   width: '256px',
-  height: '188px',
+  maxWidth: '100%',
+  height: 188,
   padding: '20px 20px 0 20px',
-  borderRadius: '16px',
+  borderRadius: 16,
   backgroundColor: bgcolor,
+
+  '@media (max-width:600px)': {
+    justifyContent: 'center',
+    width: '340px',
+  },
 }));
 
 const PlanTitle = styled(Typography)({
   fontFamily: 'Roboto, sans-serif',
-  fontSize: '20px',
+  fontSize: 20,
   fontWeight: 'bold',
   color: '#060606',
 });
 
 const SubTitle = styled(Typography)({
-  fontSize: '14px',
+  fontSize: 14,
   color: '#6d6d6d',
-  marginBottom: '16px',
+  marginBottom: 16,
 });
 
 const UserName = styled(Typography)({
@@ -145,6 +171,33 @@ const UserName = styled(Typography)({
   lineHeight: 1.25,
   color: '#fff',
 });
+
+/** tablet container */
+const Pager = styled(Box)`
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  display: flex;
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const Page = styled(Box)`
+  min-width: 100%;
+  max-width: 100%;
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: flex-start;
+  padding: 0;
+  box-sizing: border-box;
+`;
 
 export default function ActivitySection() {
   const user = useAppSelector(state => state.auth.user);
@@ -169,69 +222,88 @@ export default function ActivitySection() {
 
   const { data: { twilioPhoneNumber } = {} } = useGetTwilioPhoneNumberQuery(
     userId ?? '',
-    {
-      skip: !userId,
-    },
+    { skip: !userId },
   );
 
-  return (
-    <SectionContainer>
-      <Box>
-        <Title>Today's Activity</Title>
-        <CardContainer>
-          <StatCard>
-            <Box display="flex">
-              <IconWrapper type="phone">
-                <Image
-                  src="/overview/phone.svg"
-                  alt="phone"
-                  width={16}
-                  height={16}
-                />
-              </IconWrapper>
-              <Label>Number of Phone Calls Received</Label>
-            </Box>
-            <Value>{data?.totalCalls ?? 0}</Value>
-          </StatCard>
+  const isMd = useMediaQuery('(min-width:600px) and (max-width:1439px)');
+  const isMobile = useMediaQuery('(max-width:600px)');
 
-          <StatCard>
-            <Box display="flex">
-              <IconWrapper type="book">
-                <Image
-                  src="/overview/book.svg"
-                  alt="booked"
-                  width={16}
-                  height={16}
-                />
-              </IconWrapper>
-              <Label>Number of Bookings Done</Label>
-            </Box>
-            <Value>{doneToday}</Value>
-          </StatCard>
+  const ActivityBlock = (
+    <Box>
+      <Title>Today's Activity</Title>
+      <CardContainer>
+        <StatCard>
+          <Box display="flex">
+            <IconWrapper type="phone">
+              <Image
+                src="/overview/phone.svg"
+                alt="phone"
+                width={16}
+                height={16}
+              />
+            </IconWrapper>
+            <Label>
+              {isMobile
+                ? 'Phone Calls Received'
+                : 'Number of Phone Calls Received'}
+            </Label>
+          </Box>
+          <Value>{data?.totalCalls ?? 0}</Value>
+        </StatCard>
 
-          <StatCard>
-            <Box display="flex">
-              <IconWrapper type="follow">
-                <Image
-                  src="/overview/follow.svg"
-                  alt="follow up"
-                  width={16}
-                  height={16}
-                />
-              </IconWrapper>
-              <Label>Number of Bookings Confirmed</Label>
-            </Box>
-            <Value>{confirmedToday}</Value>
-          </StatCard>
-        </CardContainer>
-      </Box>
+        <StatCard>
+          <Box display="flex">
+            <IconWrapper type="book">
+              <Image
+                src="/overview/book.svg"
+                alt="booked"
+                width={16}
+                height={16}
+              />
+            </IconWrapper>
+            <Label>
+              {' '}
+              {isMobile ? 'Bookings Done' : 'Number of Bookings Done'}
+            </Label>
+          </Box>
+          <Value>{doneToday}</Value>
+        </StatCard>
 
+        <StatCard>
+          <Box display="flex">
+            <IconWrapper type="follow">
+              <Image
+                src="/overview/follow.svg"
+                alt="follow up"
+                width={16}
+                height={16}
+              />
+            </IconWrapper>
+            <Label>
+              {isMobile ? 'Bookings Confirmed' : 'Number of Bookings Confirmed'}
+            </Label>
+          </Box>
+          <Value>{confirmedToday}</Value>
+        </StatCard>
+      </CardContainer>
+    </Box>
+  );
+
+  const InfoBlock = (
+    <>
       <InfoCard bgcolor="#a8f574">
         <PlanTitle>{subscription?.planId.name ?? 'Free Plan'}</PlanTitle>
         <SubTitle>
           {formatSubscriptionPeriod(subscription?.startAt, subscription?.endAt)}
         </SubTitle>
-        <Box sx={{ marginLeft: '16px' }}>
+        <Box
+          sx={{
+            marginLeft: '16px',
+            '@media (max-width:600px)': {
+              marginLeft: '60px',
+            },
+          }}
+        >
           <HalfCircleProgress
             value={523}
             maxValue={1000}
@@ -243,7 +315,10 @@ export default function ActivitySection() {
       <InfoCard
         bgcolor="#060606"
         sx={{
-          padding: '0',
+          padding: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
         }}
       >
         <Box
@@ -251,7 +326,10 @@ export default function ActivitySection() {
             display: 'flex',
             gap: '16px',
             alignItems: 'center',
-            margin: '20px 0 16px 20px',
+            margin: '20px 0 0 20px',
+            '@media (max-width:600px)': {
+              margin: '0 0 0 16px',
+            },
           }}
         >
           <Avatar
@@ -280,6 +358,10 @@ export default function ActivitySection() {
             padding: '16px 16px 0 16px',
             backgroundColor: '#fff',
             borderRadius: '12px',
+            '@media (max-width:600px)': {
+              width: '310px',
+              height: '100px',
+            },
           }}
         >
           <Image
@@ -329,10 +411,7 @@ export default function ActivitySection() {
                   fontFamily: 'Roboto',
                   fontSize: '13px',
                   fontWeight: 'normal',
-                  fontStretch: 'normal',
-                  fontStyle: 'normal',
                   lineHeight: 1.23,
-                  letterSpacing: 'normal',
                   color: '#060606',
                 }}
               >
@@ -342,6 +421,53 @@ export default function ActivitySection() {
           </Box>
         </Box>
       </InfoCard>
-    </SectionContainer>
+    </>
+  );
+
+  if (isMd) {
+    return (
+      <ResponsiveFrame>
+        <Pager aria-label="Activity pager">
+          <Page>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '12px',
+                flexWrap: 'nowrap',
+                justifyContent: 'flex-start',
+                maxWidth: '100%',
+                minWidth: 0,
+              }}
+            >
+              {ActivityBlock}
+            </Box>
+          </Page>
+
+          <Page>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '24px',
+                justifyContent: 'flex-start',
+                alignItems: 'stretch',
+                maxWidth: '100%',
+                minWidth: 0,
+              }}
+            >
+              {InfoBlock}
+            </Box>
+          </Page>
+        </Pager>
+      </ResponsiveFrame>
+    );
+  }
+
+  return (
+    <ResponsiveFrame>
+      <SectionContainer>
+        {ActivityBlock}
+        {InfoBlock}
+      </SectionContainer>
+    </ResponsiveFrame>
   );
 }

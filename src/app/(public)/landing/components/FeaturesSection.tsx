@@ -106,7 +106,7 @@ const FeatureDescription = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(2.5),
   color: theme.palette.text.secondary,
   [theme.breakpoints.down('sm')]: {
-    marginTop: theme.spacing(1.5),
+    marginTop: 0,
   },
 }));
 
