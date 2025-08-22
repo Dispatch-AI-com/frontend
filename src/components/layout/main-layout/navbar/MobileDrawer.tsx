@@ -22,6 +22,9 @@ const MobileDrawerContainer = styled(Box)(({ theme }) => ({
   height: '100%',
   padding: theme.spacing(0, 0, 0, 1),
   alignItems: 'flex-start',
+  [theme.breakpoints.between('sm', 'md')]: {
+    paddingLeft: theme.spacing(2),
+  },
 }));
 
 const MobileNavContainer = styled(Stack)(({ theme }) => ({

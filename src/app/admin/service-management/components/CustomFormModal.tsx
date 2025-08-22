@@ -22,7 +22,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import theme from '@/theme';
 
@@ -158,6 +158,13 @@ const ActionButton = styled(IconButton)(() => ({
   '&:hover': {
     backgroundColor: '#f5f5f5',
   },
+  '&.Mui-disabled': {
+    color: '#ccc',
+    cursor: 'not-allowed',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
 }));
 
 const RequiredToggle = styled(Box)(() => ({
@@ -211,6 +218,7 @@ interface CustomFormModalProps {
   open: boolean;
   onClose: () => void;
   onSave?: (fields: FormField[]) => void;
+  initialFields?: FormField[];
 }
 
 const fieldTypes = [
@@ -239,18 +247,36 @@ export default function CustomFormModal({
   open,
   onClose,
   onSave,
+  initialFields,
 }: CustomFormModalProps) {
-  const [fields, setFields] = useState<FormField[]>([
-    {
-      id: '1',
-      type: 'short-answer',
-      label: '',
-      required: false,
-      options: [],
-    },
-  ]);
+  const [fields, setFields] = useState<FormField[]>([]);
 
   useMediaQuery(theme.breakpoints.down('sm'));
+
+  // 当modal打开或initialFields变化时，更新fields
+  useEffect(() => {
+    if (open) {
+      if (initialFields && initialFields.length > 0) {
+        // 深拷贝初始字段，避免引用问题
+        const clonedFields = initialFields.map(field => ({
+          ...field,
+          options: field.options ? [...field.options] : [],
+        }));
+        setFields(clonedFields);
+      } else {
+        // 如果没有初始字段，设置默认字段
+        setFields([
+          {
+            id: '1',
+            type: 'short-answer',
+            label: '',
+            required: false,
+            options: [],
+          },
+        ]);
+      }
+    }
+  }, [open, initialFields]);
 
   const handleFieldTypeChange = (fieldId: string, type: string) => {
     setFields(prev =>
@@ -280,6 +306,7 @@ export default function CustomFormModal({
         type: fieldToDuplicate.type,
         label: fieldToDuplicate.label,
         required: fieldToDuplicate.required,
+        options: fieldToDuplicate.options ? [...fieldToDuplicate.options] : [],
       };
       setFields(prev => [...prev, newField]);
     }
@@ -287,7 +314,33 @@ export default function CustomFormModal({
 
   const handleDeleteField = (fieldId: string) => {
     if (fields.length > 1) {
+      // 多个字段时，直接删除
       setFields(prev => prev.filter(field => field.id !== fieldId));
+    } else {
+      // 只有一个字段时，检查 label 是否为空
+      const currentField = fields.find(field => field.id === fieldId);
+      if (currentField && currentField.label.trim() === '') {
+        // label 为空时，不允许删除
+        console.log(
+          'Cannot delete field with empty label. Please fill in the label first.',
+        );
+        return;
+      } else {
+        // label 不为空时，清空内容但保留字段
+        setFields(prev =>
+          prev.map(field =>
+            field.id === fieldId
+              ? {
+                  ...field,
+                  label: '',
+                  required: false,
+                  options: [],
+                  type: 'short-answer', // 重置为默认类型
+                }
+              : field,
+          ),
+        );
+      }
     }
   };
 
@@ -344,21 +397,42 @@ export default function CustomFormModal({
 
   const handleCreate = () => {
     if (onSave) {
-      onSave(fields);
+      // 过滤掉空的字段（label为空的字段）
+      const validFields = fields.filter(field => field.label.trim() !== '');
+
+      // 如果所有字段都是空的，至少保留一个默认字段
+      if (validFields.length === 0) {
+        validFields.push({
+          id: Date.now().toString(),
+          type: 'short-answer',
+          label: '',
+          required: false,
+          options: [],
+        });
+      }
+
+      onSave(validFields);
     }
     onClose();
   };
 
   const handleClose = () => {
-    setFields([
-      {
-        id: '1',
-        type: 'short-answer',
-        label: '',
-        required: false,
-        options: [],
-      },
-    ]);
+    // 如果没有任何字段或者所有字段都是空的，则重置为默认字段
+    if (
+      fields.length === 0 ||
+      fields.every(field => field.label.trim() === '')
+    ) {
+      setFields([
+        {
+          id: '1',
+          type: 'short-answer',
+          label: '',
+          required: false,
+          options: [],
+        },
+      ]);
+    }
+    // 否则保持当前字段状态，让用户下次打开时看到之前的内容
     onClose();
   };
 
@@ -569,11 +643,32 @@ export default function CustomFormModal({
                   </ActionButton>
                   <ActionButton
                     onClick={() => handleDeleteField(field.id)}
-                    title="Delete field"
-                    disabled={fields.length === 1}
+                    title={
+                      fields.length === 1 && field.label.trim() === ''
+                        ? 'Cannot delete empty field. Please fill in the label first.'
+                        : fields.length === 1
+                          ? 'Clear field content'
+                          : 'Delete field'
+                    }
+                    disabled={fields.length === 1 && field.label.trim() === ''}
                   >
                     <DeleteIcon fontSize="small" />
                   </ActionButton>
+                  {fields.length === 1 && (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontSize: '11px',
+                        color: '#999',
+                        marginLeft: '4px',
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      {field.label.trim() === ''
+                        ? 'Fill label to clear'
+                        : 'Click to clear'}
+                    </Typography>
+                  )}
                 </ActionButtons>
 
                 <RequiredToggle>

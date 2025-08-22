@@ -240,12 +240,23 @@ const BookingModal: React.FC<Props> = ({
 }) => {
   const theme = useTheme();
   useMediaQuery(theme.breakpoints.down('sm'));
+
+  // Get current date and time in local format
+  const getCurrentDateTimeLocal = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   const [name, setName] = useState('');
   const [selectedServiceId, setSelectedServiceId] = useState(''); // New: Save selected service _id
   const [status, setStatus] = useState('');
   const [datetime, setDatetime] = useState(() => {
-    const now = new Date();
-    return now.toISOString().slice(0, 16);
+    return getCurrentDateTimeLocal();
   });
   const [description, setDescription] = useState('');
   const [client, setClient] = useState({
@@ -256,18 +267,51 @@ const BookingModal: React.FC<Props> = ({
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
 
-  // Get current date and time in local format for min attribute
-  const getCurrentDateTimeLocal = () => {
-    const now = new Date();
-    return now.toISOString().slice(0, 16);
-  };
-
   // Validate if selected datetime is in the past
   const isDateTimeInPast = (dateTimeString: string) => {
     if (!dateTimeString) return false;
-    const selectedDate = new Date(dateTimeString);
-    const now = new Date();
-    return selectedDate < now;
+    try {
+      const selectedDate = new Date(dateTimeString);
+      const now = new Date();
+      if (isNaN(selectedDate.getTime())) return false;
+
+      // Check if date is valid
+      if (selectedDate > now) return false;
+
+      // Use more lenient comparison: compare to minute level, ignore seconds and milliseconds
+      const selectedYear = selectedDate.getFullYear();
+      const selectedMonth = selectedDate.getMonth();
+      const selectedDay = selectedDate.getDate();
+      const selectedHour = selectedDate.getHours();
+      const selectedMinute = selectedDate.getMinutes();
+
+      const nowYear = now.getFullYear();
+      const nowMonth = now.getMonth();
+      const nowDay = now.getDate();
+      const nowHour = now.getHours();
+      const nowMinute = now.getMinutes();
+
+      // If year, month, day, hour, minute are all the same, it's considered current time
+      if (
+        selectedYear === nowYear &&
+        selectedMonth === nowMonth &&
+        selectedDay === nowDay &&
+        selectedHour === nowHour &&
+        selectedMinute === nowMinute
+      ) {
+        return false; // Current time, not past time
+      }
+
+      // Compare timestamps (to minute level)
+      const selectedMinutes = selectedDate.getTime() / (1000 * 60);
+      const nowMinutes = now.getTime() / (1000 * 60);
+
+      // Reduce tolerance to 1 minute
+      return selectedMinutes < nowMinutes - 1;
+    } catch (error) {
+      console.error('Error in isDateTimeInPast:', error);
+      return false;
+    }
   };
 
   const userName =
@@ -291,10 +335,10 @@ const BookingModal: React.FC<Props> = ({
 
   const isValid =
     name &&
-    selectedServiceId && // Modified: Check selectedServiceId
     status &&
     datetime &&
-    !isDateTimeInPast(datetime) &&
+    // If status is Done, time must be past; if status is not Done, do not allow past time
+    (status !== 'Done' || isDateTimeInPast(datetime)) &&
     client.name &&
     client.phoneNumber &&
     client.address;
@@ -346,23 +390,34 @@ const BookingModal: React.FC<Props> = ({
     }
   }
 
-  const handleCreate = async () => {
+  const handleCreate = async (): Promise<void> => {
     try {
       if (!user) {
         throw new Error('User is missing, please login again.');
       }
+
+      if (!selectedServiceId) {
+        alert('Please select a service');
+        return;
+      }
+
       const bookingStatus = mapStatusToBookingStatus(status);
       const bookingTime = toBackendDateString(datetime);
       if (!bookingTime) {
         alert('Please select a valid date and time');
         return;
       }
-      if (isDateTimeInPast(datetime)) {
-        alert('You cannot book a service for a past date and time.');
+
+      if (isDateTimeInPast(datetime) && status !== 'Done') {
+        alert(
+          'You cannot book a service for a past date and time unless the status is Done.',
+        );
         return;
       }
+      // Remove popup alerts, use form validation to control button state instead
+
       await createServiceBooking({
-        serviceId: selectedServiceId, // Modified: Use selected service _id
+        serviceId: selectedServiceId,
         client: {
           name: client.name,
           phoneNumber: client.phoneNumber,
@@ -374,11 +429,13 @@ const BookingModal: React.FC<Props> = ({
         note: description,
         userId: user?._id,
       }).unwrap();
+
       const statusMap: Record<string, TaskStatus> = {
         Done: 'Done',
         Cancelled: 'Cancelled',
         Confirmed: 'Confirmed',
       };
+
       onCreate({
         name,
         price: 0,
@@ -392,9 +449,10 @@ const BookingModal: React.FC<Props> = ({
         status: statusMap[bookingStatus],
         description,
       });
+
       onClose();
-    } catch {
-      // Error handling removed for lint compliance
+    } catch (error) {
+      console.error('Failed to create booking:', error);
     }
   };
 
@@ -508,7 +566,15 @@ const BookingModal: React.FC<Props> = ({
                 }}
               >
                 {['Done', 'Cancelled', 'Confirmed'].map(option => (
-                  <MenuItem key={option} value={option}>
+                  <MenuItem
+                    key={option}
+                    value={option}
+                    title={
+                      option === 'Done'
+                        ? 'Set status to Done to allow past time selection'
+                        : ''
+                    }
+                  >
                     {option}
                   </MenuItem>
                 ))}
@@ -526,12 +592,16 @@ const BookingModal: React.FC<Props> = ({
                 setDatetime(e.target.value)
               }
               InputLabelProps={{ shrink: true }}
-              inputProps={{ min: getCurrentDateTimeLocal() }}
-              error={isDateTimeInPast(datetime)}
+              inputProps={{
+                min: status === 'Done' ? undefined : getCurrentDateTimeLocal(),
+              }}
+              error={isDateTimeInPast(datetime) && status !== 'Done'}
               helperText={
-                isDateTimeInPast(datetime)
-                  ? 'Date and time cannot be in the past'
-                  : ''
+                isDateTimeInPast(datetime) && status !== 'Done'
+                  ? 'Cannot create booking for past time'
+                  : status === 'Done' && isDateTimeInPast(datetime)
+                    ? 'Recording completion time (past time allowed)'
+                    : ''
               }
             />
           </FormField>
