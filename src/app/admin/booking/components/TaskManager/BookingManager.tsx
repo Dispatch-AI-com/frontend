@@ -148,6 +148,10 @@ export function Content({
         phoneNumber: booking.client?.phoneNumber ?? '',
         address: booking.client?.address ?? '',
       },
+      // Add serviceFormValues to pass to ViewFormModal
+      serviceFormValues: booking.serviceFormValues || [],
+      // Add serviceId to help ViewFormModal find the correct service
+      serviceId: booking.serviceId,
     };
   });
 
