@@ -1,5 +1,6 @@
 'use client';
 import { Box, Button, Grid, Snackbar, styled, Typography } from '@mui/material';
+import { borderRadius, fontSize } from '@mui/system';
 import axios from 'axios';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -23,6 +24,8 @@ const NextButton = styled(Button)(() => ({
   '&:hover': { background: '#222', boxShadow: 'none' },
   [theme.breakpoints.down('md')]: {
     margin: '20px 10px 50px',
+    borderRadius: 16,
+    fontSize: '16px',
   },
 }));
 
