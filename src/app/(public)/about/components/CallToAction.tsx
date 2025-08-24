@@ -7,10 +7,11 @@ export const CallToActionText = styled('h3')(({ theme }) => ({
   flexDirection: 'column',
   textAlign: 'center',
   color: 'white',
+  margin: 0,
+  marginBottom: '16px',
   fontSize: theme.typography.h3.fontSize,
   fontFamily: theme.typography.h3.fontFamily,
   fontWeight: theme.typography.h3.fontWeight,
-  margin: 0,
 }));
 
 export const CallToActionTitle = styled('h2')(({ theme }) => ({
@@ -18,9 +19,32 @@ export const CallToActionTitle = styled('h2')(({ theme }) => ({
   flexDirection: 'column',
   textAlign: 'center',
   color: 'white',
+  margin: 0,
   fontSize: theme.typography.h2.fontSize,
   fontFamily: theme.typography.h2.fontFamily,
   fontWeight: theme.typography.h2.fontWeight,
+}));
+
+export const ContactText = styled('p')(({ theme }) => ({
+  color: 'white',
+  marginTop: '12px',
+  marginBottom: '16px',
+  fontSize: theme.typography.body1.fontSize,
+  fontFamily: theme.typography.fontFamily,
+  whiteSpace: 'nowrap',
+  [theme.breakpoints.down('lg')]: {
+    fontSize: theme.typography.body2.fontSize,
+    whiteSpace: 'normal',
+  },
+  [theme.breakpoints.down('md')]: {
+    fontSize: theme.typography.body2.fontSize,
+    whiteSpace: 'normal',
+  },
+  [theme.breakpoints.down('sm')]: {
+    fontSize: theme.typography.body2.fontSize,
+    textAlign: 'center',
+    whiteSpace: 'normal',
+  },
 }));
 
 export const CallToActionWrapper = styled(Box)(({ theme }) => ({
@@ -30,9 +54,9 @@ export const CallToActionWrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.dark,
   padding: theme.spacing(10, 4),
   color: theme.palette.text.primary,
-  gap: theme.spacing(3),
+  gap: theme.spacing(2),
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(4, 1),
+    padding: theme.spacing(6, 2),
   },
 }));
 

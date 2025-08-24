@@ -276,7 +276,7 @@ const BookingModal: React.FC<Props> = ({
     { serviceId: selectedServiceId },
     { skip: !selectedServiceId },
   );
-
+  
   // Validate if selected datetime is in the past
   const isDateTimeInPast = (dateTimeString: string) => {
     if (!dateTimeString) return false;
