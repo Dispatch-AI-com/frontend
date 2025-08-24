@@ -113,7 +113,8 @@ export default function BlogFilterBar() {
     const params = new URLSearchParams();
 
     if (debouncedKeyword.trim()) params.set('keyword', debouncedKeyword.trim());
-    if (debouncedTopic) params.set('topic', debouncedTopic);
+    if (debouncedTopic && debouncedTopic !== 'all')
+      params.set('topic', debouncedTopic);
 
     router.replace(`/blogs?${params.toString()}`, { scroll: false });
   };
@@ -155,7 +156,7 @@ export default function BlogFilterBar() {
           }}
           sx={{ flex: 1, fontSize: 13 }}
         >
-          <MenuItem value="">Please Select</MenuItem>
+          <MenuItem value="all">All</MenuItem>
           <MenuItem value="Small And Medium Businesses">
             Small And Medium Businesses
           </MenuItem>
