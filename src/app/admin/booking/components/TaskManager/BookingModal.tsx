@@ -276,7 +276,7 @@ const BookingModal: React.FC<Props> = ({
     { serviceId: selectedServiceId },
     { skip: !selectedServiceId },
   );
-  
+
   // Validate if selected datetime is in the past
   const isDateTimeInPast = (dateTimeString: string) => {
     if (!dateTimeString) return false;
@@ -639,10 +639,16 @@ const BookingModal: React.FC<Props> = ({
                             type="checkbox"
                             id={`${field._id}_${option}`}
                             value={option}
-                            checked={
-                              customFormValues[field._id!]?.includes(option) ||
-                              false
-                            }
+                            checked={(() => {
+                              const currentValues =
+                                customFormValues[field._id!] || '';
+                              if (!currentValues) return false;
+                              const values = currentValues
+                                .split(',')
+                                .map(v => v.trim())
+                                .filter(v => v);
+                              return values.includes(option);
+                            })()}
                             onChange={e => {
                               const currentValues =
                                 customFormValues[field._id!] || '';
