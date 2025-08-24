@@ -2,9 +2,9 @@
 
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import XIcon from '@mui/icons-material/X';
 import { Box, IconButton, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Image from 'next/image';
 import React from 'react';
 
 // Styled components
@@ -16,9 +16,9 @@ const SocialContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end', // 移动端靠右对齐
-    gap: theme.spacing(0.5), // 缩小间距
-    width: '100%', // 占满宽度以便靠右
+    justifyContent: 'flex-end',
+    gap: theme.spacing(0.5),
+    width: '100%',
   },
 }));
 
@@ -28,7 +28,7 @@ const StyledLabelWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     marginLeft: 0,
     paddingBottom: 0,
-    display: 'none', // 移动端隐藏文字
+    display: 'none',
   },
 }));
 
@@ -36,27 +36,24 @@ const StyledIconRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(1),
   [theme.breakpoints.down('md')]: {
-    gap: theme.spacing(0.5), // 缩小图标间距
-    justifyContent: 'flex-end', // 图标靠右
+    gap: theme.spacing(0.5),
+    justifyContent: 'flex-end',
   },
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.common.black,
+  padding: theme.spacing(1),
   '&:hover': {
     backgroundColor: 'rgba(0, 0, 0, 0.04)',
   },
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(0.75), // 增加内边距
-    width: 44, // 增大宽度
-    height: 44, // 增大高度
+    padding: theme.spacing(0.5),
     '& .MuiSvgIcon-root': {
-      fontSize: 22, // 增大图标大小
-      width: 22,
-      height: 22,
+      fontSize: 22,
     },
     '& img': {
-      width: 22, // 增大图片大小
+      width: 22,
       height: 22,
     },
   },
@@ -69,15 +66,6 @@ const SocialLabel = styled(Typography)(({ theme }) => ({
     fontWeight: 500,
   },
 }));
-
-// 自定义X图标组件，确保与其他图标大小一致
-const XIcon = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: 22,
-  height: 22,
-});
 
 const SocialMedia = () => {
   const handleShare = (platform: string) => {
@@ -131,9 +119,7 @@ const SocialMedia = () => {
             handleShare('twitter');
           }}
         >
-          <XIcon>
-            <Image src="/icons/xlogo.svg" alt="X" width={22} height={22} />
-          </XIcon>
+          <XIcon />
         </StyledIconButton>
       </StyledIconRow>
     </SocialContainer>

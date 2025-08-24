@@ -25,6 +25,15 @@ const MobileDrawerContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.between('sm', 'md')]: {
     paddingLeft: theme.spacing(2),
   },
+
+  [`@media (max-width:${theme.breakpoints.values.md}px) and (hover: hover) and (pointer: fine)`]:
+    {
+      paddingLeft: theme.spacing(3.5),
+    },
+  [`@media (max-width:${theme.breakpoints.values.sm}px) and (hover: hover) and (pointer: fine)`]:
+    {
+      paddingLeft: theme.spacing(2.5),
+    },
 }));
 
 const MobileNavContainer = styled(Stack)(({ theme }) => ({
