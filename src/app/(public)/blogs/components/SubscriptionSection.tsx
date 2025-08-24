@@ -32,10 +32,10 @@ export const StyledInput = styled(TextField)({
     backgroundColor: '#fff',
   },
   '& .MuiInputBase-input': {
-    padding: '6px 16px', // 控制输入框内边距
+    padding: '6px 16px',
   },
   '& .MuiOutlinedInput-notchedOutline': {
-    border: '1px solid #d5d5d5', // 默认边框
+    border: '1px solid #d5d5d5',
   },
 });
 
