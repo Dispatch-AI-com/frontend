@@ -12,28 +12,24 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import type {
   CreateServiceManagementDto,
+  FormField,
   ServiceManagement,
   UpdateServiceManagementDto,
 } from '@/features/service-management/serviceManagementApi';
-
-import CustomFormModal from './CustomFormModal';
-
-interface FormField {
-  id: string;
-  type: string;
-  label: string;
-  required: boolean;
-}
 import {
   useCreateServiceMutation,
+  useGetServiceFormFieldsQuery,
+  useSaveServiceFormFieldsMutation,
   useUpdateServiceMutation,
 } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
+
+import CustomFormModal from './CustomFormModal';
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -213,6 +209,7 @@ export default function EditServiceModal({
   });
   const [priceInput, setPriceInput] = useState('0');
   const [isCustomFormModalOpen, setIsCustomFormModalOpen] = useState(false);
+  const [customFormFields, setCustomFormFields] = useState<FormField[]>([]);
 
   useMediaQuery(theme.breakpoints.down('sm'));
   useMediaQuery(theme.breakpoints.down('xs'));
@@ -220,6 +217,36 @@ export default function EditServiceModal({
 
   const [createService, { isLoading: isCreating }] = useCreateServiceMutation();
   const [updateService, { isLoading: isUpdating }] = useUpdateServiceMutation();
+  const [saveServiceFormFields] = useSaveServiceFormFieldsMutation();
+
+  // 获取现有的表单字段
+  const { data: existingFormFields = [] } = useGetServiceFormFieldsQuery(
+    { serviceId: service?._id ?? '' },
+    { skip: !service?._id },
+  );
+
+  // 转换后端字段格式到前端格式
+  const convertedFields = useMemo(() => {
+    if (!existingFormFields || existingFormFields.length === 0) {
+      return [];
+    }
+    return existingFormFields.map(field => ({
+      id: field._id ?? field.serviceId + '_' + Date.now(),
+      type: field.fieldType,
+      label: field.fieldName,
+      required: field.isRequired,
+      options: field.options ?? [],
+    }));
+  }, [existingFormFields]);
+
+  // 当现有字段变化时，更新本地状态
+  useEffect(() => {
+    const currentFieldsString = JSON.stringify(customFormFields);
+    const newFieldsString = JSON.stringify(convertedFields);
+    if (currentFieldsString !== newFieldsString) {
+      setCustomFormFields(convertedFields);
+    }
+  }, [convertedFields, customFormFields]);
 
   useEffect(() => {
     if (service) {
@@ -266,6 +293,8 @@ export default function EditServiceModal({
 
   const handleSubmit = async (): Promise<void> => {
     try {
+      let currentServiceId = service?._id;
+
       if (service) {
         // Update service
         const updateData: UpdateServiceManagementDto = {
@@ -275,12 +304,43 @@ export default function EditServiceModal({
           isAvailable: formData.isAvailable,
         };
         await updateService({ id: service._id, data: updateData }).unwrap();
+        currentServiceId = service._id;
       } else {
         // Create new service
-        await createService(formData).unwrap();
+        const newService = await createService(formData).unwrap();
+        currentServiceId = newService._id;
       }
+
+      // 保存表单字段
+      if (currentServiceId && customFormFields.length > 0) {
+        // 过滤掉空的字段（label为空的字段）
+        const validFields = customFormFields.filter(
+          field => field.label.trim() !== '',
+        );
+
+        if (validFields.length > 0) {
+          const backendFields = validFields.map(field => ({
+            serviceId: currentServiceId,
+            fieldName: field.label,
+            fieldType: field.type,
+            isRequired: field.required,
+            options: field.options ?? [],
+          }));
+
+          await saveServiceFormFields({
+            serviceId: currentServiceId,
+            fields: backendFields,
+          }).unwrap();
+        }
+      }
+
       onClose();
-    } catch {
+    } catch (error) {
+      console.error('Failed to save service:', error);
+      // 提供更详细的错误信息
+      if (error && typeof error === 'object' && 'data' in error) {
+        console.error('Error details:', error.data);
+      }
       // Error handling can be added here
     }
   };
@@ -293,9 +353,43 @@ export default function EditServiceModal({
     setIsCustomFormModalOpen(false);
   };
 
-  const handleSaveCustomForm = (_fields: FormField[]) => {
-    // Handle saving custom form fields
-    // Here you can save the form fields to your backend
+  const handleSaveCustomForm = async (fields: FormField[]): Promise<void> => {
+    try {
+      setCustomFormFields(fields);
+
+      // 如果服务已存在，立即保存到后端
+      if (service?._id) {
+        // 过滤掉空的字段（label为空的字段）
+        const validFields = fields.filter(field => field.label.trim() !== '');
+
+        if (validFields.length > 0) {
+          const backendFields = validFields.map(field => ({
+            serviceId: service._id,
+            fieldName: field.label,
+            fieldType: field.type,
+            isRequired: field.required,
+            options: field.options ?? [],
+          }));
+
+          await saveServiceFormFields({
+            serviceId: service._id,
+            fields: backendFields,
+          }).unwrap();
+        }
+      } else {
+        console.log(
+          'No service ID, form fields will be saved when service is created',
+        );
+      }
+
+      setIsCustomFormModalOpen(false);
+    } catch (error) {
+      console.error('Failed to save custom form fields:', error);
+      // 提供更详细的错误信息
+      if (error && typeof error === 'object' && 'data' in error) {
+        console.error('Error details:', error.data);
+      }
+    }
   };
 
   const isLoading = isCreating || isUpdating;
@@ -428,7 +522,10 @@ export default function EditServiceModal({
       <CustomFormModal
         open={isCustomFormModalOpen}
         onClose={handleCloseCustomFormModal}
-        onSave={handleSaveCustomForm}
+        onSave={(fields: FormField[]) => {
+          void handleSaveCustomForm(fields);
+        }}
+        initialFields={customFormFields}
       />
     </>
   );
