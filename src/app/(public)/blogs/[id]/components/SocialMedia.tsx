@@ -3,7 +3,6 @@
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import XIcon from '@mui/icons-material/X';
-import XIcon from '@mui/icons-material/X';
 import { Box, IconButton, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
@@ -20,9 +19,6 @@ const SocialContainer = styled(Box)(({ theme }) => ({
     justifyContent: 'flex-end',
     gap: theme.spacing(0.5),
     width: '100%',
-    justifyContent: 'flex-end',
-    gap: theme.spacing(0.5),
-    width: '100%',
   },
 }));
 
@@ -32,7 +28,6 @@ const StyledLabelWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     marginLeft: 0,
     paddingBottom: 0,
-    display: 'none',
     display: 'none',
   },
 }));
@@ -84,7 +79,6 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
       },
     },
     '& img': {
-      width: 22,
       width: 22,
       height: 22,
     },
