@@ -146,7 +146,6 @@ const SocialMedia = () => {
           }}
         >
           <XIcon />
-          <XIcon />
         </StyledIconButton>
       </StyledIconRow>
     </SocialContainer>
