@@ -95,6 +95,12 @@ const navItems = [
 
 const dropdownOptions = [
   {
+    label: 'Home',
+    iconSrc: '/dashboard/sidebar/home.svg',
+    iconAlt: 'Home',
+    action: 'home',
+  },
+  {
     label: 'Switch Account',
     iconSrc: '/dashboard/sidebar/account-switch.svg',
     iconAlt: 'Switch Account',
