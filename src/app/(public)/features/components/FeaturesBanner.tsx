@@ -15,7 +15,7 @@ const SleepIcon = () => (
 );
 
 const BannerSection = styled('section')(({ theme }) => ({
-  background: '#060606',
+  background: 'transparent',
   position: 'relative',
   paddingTop: theme.spacing(10),
   paddingBottom: theme.spacing(16),
@@ -30,7 +30,7 @@ const BannerSection = styled('section')(({ theme }) => ({
   },
   [theme.breakpoints.down('md')]: {
     minHeight: 'auto',
-    paddingBottom: theme.spacing(4),
+    paddingBottom: 0,
   },
 }));
 
@@ -121,7 +121,7 @@ const FloatingCardsWrapper = styled(Box)(({ theme }) => ({
   },
   [theme.breakpoints.down('md')]: {
     position: 'static', // Change to static positioning for 899px and narrower
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(6),
     minHeight: 'auto',
   },
 }));
