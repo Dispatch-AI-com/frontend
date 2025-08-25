@@ -2,6 +2,7 @@
 
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { ro } from 'date-fns/locale';
 import React from 'react';
 
 const steps = [
@@ -31,6 +32,10 @@ const MainTitle = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
   marginBottom: theme.spacing(1),
   marginTop: theme.spacing(12),
+  [theme.breakpoints.down('md')]: {
+    marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(0.75),
+  },
 }));
 
 const SubTitle = styled(Typography)(({ theme }) => ({
@@ -38,6 +43,10 @@ const SubTitle = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
   marginBottom: theme.spacing(12),
   marginTop: theme.spacing(1),
+  [theme.breakpoints.down('md')]: {
+    marginTop: theme.spacing(0.75),
+    marginBottom: theme.spacing(5.25),
+  },
 }));
 
 const StepContainer = styled(Box)(({ theme }) => ({
@@ -52,12 +61,16 @@ const StepContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     columnGap: theme.spacing(1),
     marginTop: theme.spacing(4),
+    rowGap: theme.spacing(1),
   },
   // Styles for 529px and below
   [theme.breakpoints.down(530)]: {
     flexDirection: 'column',
     alignItems: 'center',
-    gap: theme.spacing(3),
+    '& > *': {
+      marginBottom: theme.spacing(1),
+      marginTop: theme.spacing(1),
+    },
     maxWidth: '400px',
     margin: '0 auto',
     marginTop: theme.spacing(4),
