@@ -44,12 +44,10 @@ const SearchBox = styled(Box)(() => ({
 }));
 
 const StyledSearchIcon = styled(SearchIcon)(({ theme }) => ({
-  color: '#BDBDBD',
+  color: 'black',
   marginRight: theme.spacing(1),
+  marginLeft: theme.spacing(1),
   display: 'inline-flex',
-  [theme.breakpoints.down('sm')]: {
-    display: 'none',
-  },
 }));
 
 const StyledInput = styled(TextField)(() => ({
@@ -115,7 +113,8 @@ export default function BlogFilterBar() {
     const params = new URLSearchParams();
 
     if (debouncedKeyword.trim()) params.set('keyword', debouncedKeyword.trim());
-    if (debouncedTopic) params.set('topic', debouncedTopic);
+    if (debouncedTopic && debouncedTopic !== 'all')
+      params.set('topic', debouncedTopic);
 
     router.replace(`/blogs?${params.toString()}`, { scroll: false });
   };
@@ -149,9 +148,15 @@ export default function BlogFilterBar() {
           }}
           disableUnderline
           displayEmpty
+          renderValue={selected => {
+            if (!selected) {
+              return <span style={{ color: '#BDBDBD' }}>Please Select</span>;
+            }
+            return selected;
+          }}
           sx={{ flex: 1, fontSize: 13 }}
         >
-          <MenuItem value="">All</MenuItem>
+          <MenuItem value="all">All</MenuItem>
           <MenuItem value="Small And Medium Businesses">
             Small And Medium Businesses
           </MenuItem>

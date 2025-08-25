@@ -15,6 +15,8 @@ import {
 import React from 'react';
 
 import type { Service } from '@/features/service/serviceApi';
+import type { ServiceFormField } from '@/features/service-management/serviceManagementApi';
+import { useGetServiceFormFieldsQuery } from '@/features/service-management/serviceManagementApi';
 
 interface Props {
   service: Service;
@@ -175,6 +177,12 @@ const ViewFormModal: React.FC<Props> = ({ service, onClose }) => {
   const theme = useTheme();
   useMediaQuery(theme.breakpoints.down('sm'));
 
+  // Get custom form fields for the service
+  const { data: customFormFields = [] } = useGetServiceFormFieldsQuery(
+    { serviceId: service.serviceId ?? service._id ?? '' },
+    { skip: !(service.serviceId ?? service._id) },
+  );
+
   const formatDateTime = (datetime?: string) => {
     if (!datetime) return 'No data';
     const date = new Date(datetime);
@@ -290,6 +298,51 @@ const ViewFormModal: React.FC<Props> = ({ service, onClose }) => {
               <FormField>
                 <FieldLabel>Client Address:</FieldLabel>
                 <FieldValue>{service.client.address}</FieldValue>
+              </FormField>
+            </>
+          )}
+
+          {/* Custom Form Fields with Values */}
+          {customFormFields.length > 0 && (
+            <>
+              <FormField>
+                <FieldLabel>Custom Form Fields:</FieldLabel>
+                {customFormFields.map(field => {
+                  // Find the corresponding form value from the service
+                  const formValue = service.serviceFormValues?.find(
+                    value => value.serviceFieldId === field._id,
+                  );
+
+                  return (
+                    <FormField key={field._id} style={{ marginBottom: '16px' }}>
+                      <FieldLabel
+                        style={{
+                          fontSize: '13px',
+                          color: '#666',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        {field.fieldName}
+                        {field.isRequired && (
+                          <span style={{ color: '#d32f2f' }}> *</span>
+                        )}
+                      </FieldLabel>
+                      <FieldValue
+                        style={{ fontSize: '14px', color: '#1a1a1a' }}
+                      >
+                        {formValue ? (
+                          <span style={{ fontWeight: 500 }}>
+                            {formValue.answer}
+                          </span>
+                        ) : (
+                          <span style={{ color: '#999', fontStyle: 'italic' }}>
+                            Not filled
+                          </span>
+                        )}
+                      </FieldValue>
+                    </FormField>
+                  );
+                })}
               </FormField>
             </>
           )}

@@ -1,9 +1,10 @@
 'use client';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Box, Button, Grid, Snackbar, styled, Typography } from '@mui/material';
 import axios from 'axios';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import theme from '@/theme';
 import type { Blog } from '@/types/blog';
@@ -23,6 +24,8 @@ const NextButton = styled(Button)(() => ({
   '&:hover': { background: '#222', boxShadow: 'none' },
   [theme.breakpoints.down('md')]: {
     margin: '20px 10px 50px',
+    borderRadius: 16,
+    fontSize: '16px',
   },
 }));
 
@@ -174,7 +177,10 @@ export default function BlogList() {
               void handleNextPage();
             }}
           >
-            Next →
+            Next
+            <ArrowForwardIcon
+              sx={{ width: '20px', height: '18px', marginLeft: '6px' }}
+            />
           </NextButton>
         )}
       </Box>

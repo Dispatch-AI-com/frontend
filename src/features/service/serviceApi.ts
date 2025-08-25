@@ -40,6 +40,10 @@ export interface Service {
     phoneNumber: string;
     address: string;
   };
+  // Add: service form values for custom form fields
+  serviceFormValues?: { serviceFieldId: string; answer: string }[];
+  // Add: service ID for finding the correct service
+  serviceId?: string;
 }
 
 // Pagination response wrapper

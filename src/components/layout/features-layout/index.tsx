@@ -31,7 +31,16 @@ export default function MainLayout({
   return (
     <>
       <Navbar variant="dark" />
-      <Box id="features-banner" sx={{ background: '#060606', width: '100%' }}>
+      <Box
+        id="features-banner"
+        sx={{
+          background: {
+            xs: 'linear-gradient(to bottom, #060606 0%, #060606 40%, #fafafa 40%, #fafafa 100%)',
+            md: '#060606',
+          },
+          width: '100%',
+        }}
+      >
         <Container maxWidth="xl">
           <FeaturesBanner />
         </Container>

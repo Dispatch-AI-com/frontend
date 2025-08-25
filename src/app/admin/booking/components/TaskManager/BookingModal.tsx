@@ -26,6 +26,7 @@ import type { TaskStatus } from '@/features/service/serviceApi';
 import { type Service } from '@/features/service/serviceApi';
 import { useCreateServiceBookingMutation } from '@/features/service/serviceBookingApi';
 import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
+import { useGetServiceFormFieldsQuery } from '@/features/service-management/serviceManagementApi';
 import { useAppSelector } from '@/redux/hooks';
 interface Props {
   onClose: () => void;
@@ -264,8 +265,17 @@ const BookingModal: React.FC<Props> = ({
     phoneNumber: '',
     address: '',
   });
+  const [customFormValues, setCustomFormValues] = useState<
+    Record<string, string>
+  >({});
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
+
+  // Get custom form fields for the selected service
+  const { data: customFormFields = [] } = useGetServiceFormFieldsQuery(
+    { serviceId: selectedServiceId },
+    { skip: !selectedServiceId },
+  );
 
   // Validate if selected datetime is in the past
   const isDateTimeInPast = (dateTimeString: string) => {
@@ -337,11 +347,20 @@ const BookingModal: React.FC<Props> = ({
     name &&
     status &&
     datetime &&
-    // If status is Done, time must be past; if status is not Done, do not allow past time
-    (status !== 'Done' || isDateTimeInPast(datetime)) &&
+    // If status is Done or Cancelled, time must be past; if status is not Done/Cancelled, do not allow past time
+    (status === 'Done' ||
+      status === 'Cancelled' ||
+      !isDateTimeInPast(datetime)) &&
     client.name &&
     client.phoneNumber &&
-    client.address;
+    client.address &&
+    // Check if all required custom form fields are filled
+    customFormFields.every(
+      field =>
+        !field.isRequired ||
+        (customFormValues[field._id!] &&
+          customFormValues[field._id!].trim() !== ''),
+    );
   // New: Find corresponding service _id based on selected service name
   const handleServiceNameChange = (serviceName: string) => {
     setName(serviceName);
@@ -349,6 +368,16 @@ const BookingModal: React.FC<Props> = ({
       s => s.name === serviceName,
     );
     setSelectedServiceId(selectedService?._id ?? '');
+    // Reset custom form values when service changes
+    setCustomFormValues({});
+  };
+
+  // Handle custom form field value changes
+  const handleCustomFormFieldChange = (fieldId: string, value: string) => {
+    setCustomFormValues(prev => ({
+      ...prev,
+      [fieldId]: value,
+    }));
   };
 
   // Utility function: Map frontend status to backend booking status
@@ -408,13 +437,32 @@ const BookingModal: React.FC<Props> = ({
         return;
       }
 
-      if (isDateTimeInPast(datetime) && status !== 'Done') {
+      if (
+        isDateTimeInPast(datetime) &&
+        status !== 'Done' &&
+        status !== 'Cancelled'
+      ) {
         alert(
-          'You cannot book a service for a past date and time unless the status is Done.',
+          'You cannot book a service for a past date and time unless the status is Done or Cancelled.',
         );
         return;
       }
-      // Remove popup alerts, use form validation to control button state instead
+
+      // Build serviceFormValues with custom form fields
+      const formValues = [
+        // Include the service name as a basic field
+        { serviceFieldId: 'service_name', answer: name },
+      ];
+
+      // Add custom form field values
+      customFormFields.forEach(field => {
+        if (customFormValues[field._id!]) {
+          formValues.push({
+            serviceFieldId: field._id!,
+            answer: customFormValues[field._id!],
+          });
+        }
+      });
 
       await createServiceBooking({
         serviceId: selectedServiceId,
@@ -423,7 +471,7 @@ const BookingModal: React.FC<Props> = ({
           phoneNumber: client.phoneNumber,
           address: client.address,
         },
-        serviceFormValues: [{ serviceFieldId: 'dummy', answer: name }],
+        serviceFormValues: formValues,
         bookingTime,
         status: bookingStatus,
         note: description,
@@ -472,9 +520,8 @@ const BookingModal: React.FC<Props> = ({
             <FormControl fullWidth>
               <StatusSelect
                 value={name}
-                onChange={
-                  (e: SelectChangeEvent<unknown>) =>
-                    handleServiceNameChange(e.target.value as string) // Modified: Use new handler function
+                onChange={(e: SelectChangeEvent<unknown>) =>
+                  handleServiceNameChange(e.target.value as string)
                 }
                 displayEmpty
                 renderValue={selected => {
@@ -500,6 +547,164 @@ const BookingModal: React.FC<Props> = ({
               </StatusSelect>
             </FormControl>
           </FormField>
+
+          {/* Custom Form Fields */}
+          {customFormFields.length > 0 && (
+            <>
+              {customFormFields.map(field => (
+                <FormField key={field._id} style={{ marginBottom: '16px' }}>
+                  <FieldLabel style={{ fontSize: '13px', color: '#666' }}>
+                    {field.fieldName}
+                    {field.isRequired && (
+                      <span style={{ color: '#d32f2f' }}> *</span>
+                    )}
+                  </FieldLabel>
+                  {field.fieldType === 'short-answer' && (
+                    <StyledTextField
+                      fullWidth
+                      placeholder={`Enter ${field.fieldName.toLowerCase()}`}
+                      value={customFormValues[field._id!] || ''}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleCustomFormFieldChange(field._id!, e.target.value)
+                      }
+                      variant="outlined"
+                      required={field.isRequired}
+                    />
+                  )}
+                  {field.fieldType === 'paragraph' && (
+                    <DescriptionTextarea
+                      placeholder={`Enter ${field.fieldName.toLowerCase()}`}
+                      value={customFormValues[field._id!] || ''}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                        handleCustomFormFieldChange(field._id!, e.target.value)
+                      }
+                      required={field.isRequired}
+                    />
+                  )}
+                  {field.fieldType === 'dropdown-list' && field.options && (
+                    <StatusSelect
+                      value={customFormValues[field._id!] || ''}
+                      onChange={(e: SelectChangeEvent<unknown>) =>
+                        handleCustomFormFieldChange(
+                          field._id!,
+                          e.target.value as string,
+                        )
+                      }
+                      displayEmpty
+                      required={field.isRequired}
+                    >
+                      <MenuItem value="">
+                        <span style={{ color: '#999' }}>Please Select</span>
+                      </MenuItem>
+                      {field.options.map(option => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </StatusSelect>
+                  )}
+                  {field.fieldType === 'single-choice' && field.options && (
+                    <FormControl fullWidth>
+                      {field.options.map(option => (
+                        <Box key={option} style={{ marginBottom: '8px' }}>
+                          <input
+                            type="radio"
+                            id={`${field._id}_${option}`}
+                            name={field._id}
+                            value={option}
+                            checked={customFormValues[field._id!] === option}
+                            onChange={e =>
+                              handleCustomFormFieldChange(
+                                field._id!,
+                                e.target.value,
+                              )
+                            }
+                            required={field.isRequired}
+                          />
+                          <label
+                            htmlFor={`${field._id}_${option}`}
+                            style={{ marginLeft: '8px' }}
+                          >
+                            {option}
+                          </label>
+                        </Box>
+                      ))}
+                    </FormControl>
+                  )}
+                  {field.fieldType === 'multiple-choice' && field.options && (
+                    <FormControl fullWidth>
+                      {field.options.map(option => (
+                        <Box key={option} style={{ marginBottom: '8px' }}>
+                          <input
+                            type="checkbox"
+                            id={`${field._id}_${option}`}
+                            value={option}
+                            checked={(() => {
+                              const currentValues =
+                                customFormValues[field._id!] || '';
+                              if (!currentValues) return false;
+                              const values = currentValues
+                                .split(',')
+                                .map(v => v.trim())
+                                .filter(v => v);
+                              return values.includes(option);
+                            })()}
+                            onChange={e => {
+                              const currentValues =
+                                customFormValues[field._id!] || '';
+                              const values = currentValues
+                                ? currentValues.split(',').filter(v => v.trim())
+                                : [];
+                              if (e.target.checked) {
+                                values.push(option);
+                              } else {
+                                const index = values.indexOf(option);
+                                if (index > -1) values.splice(index, 1);
+                              }
+                              handleCustomFormFieldChange(
+                                field._id!,
+                                values.join(', '),
+                              );
+                            }}
+                          />
+                          <label
+                            htmlFor={`${field._id}_${option}`}
+                            style={{ marginLeft: '8px' }}
+                          >
+                            {option}
+                          </label>
+                        </Box>
+                      ))}
+                    </FormControl>
+                  )}
+                  {field.fieldType === 'date' && (
+                    <DateTimeInput
+                      fullWidth
+                      type="date"
+                      value={customFormValues[field._id!] || ''}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleCustomFormFieldChange(field._id!, e.target.value)
+                      }
+                      InputLabelProps={{ shrink: true }}
+                      required={field.isRequired}
+                    />
+                  )}
+                  {field.fieldType === 'time' && (
+                    <DateTimeInput
+                      fullWidth
+                      type="time"
+                      value={customFormValues[field._id!] || ''}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleCustomFormFieldChange(field._id!, e.target.value)
+                      }
+                      InputLabelProps={{ shrink: true }}
+                      required={field.isRequired}
+                    />
+                  )}
+                </FormField>
+              ))}
+            </>
+          )}
 
           {/* New client information input fields */}
           <FormField>
@@ -593,14 +798,24 @@ const BookingModal: React.FC<Props> = ({
               }
               InputLabelProps={{ shrink: true }}
               inputProps={{
-                min: status === 'Done' ? undefined : getCurrentDateTimeLocal(),
+                min:
+                  status === 'Done' || status === 'Cancelled'
+                    ? undefined
+                    : getCurrentDateTimeLocal(),
               }}
-              error={isDateTimeInPast(datetime) && status !== 'Done'}
+              error={
+                isDateTimeInPast(datetime) &&
+                status !== 'Done' &&
+                status !== 'Cancelled'
+              }
               helperText={
-                isDateTimeInPast(datetime) && status !== 'Done'
+                isDateTimeInPast(datetime) &&
+                status !== 'Done' &&
+                status !== 'Cancelled'
                   ? 'Cannot create booking for past time'
-                  : status === 'Done' && isDateTimeInPast(datetime)
-                    ? 'Recording completion time (past time allowed)'
+                  : (status === 'Done' || status === 'Cancelled') &&
+                      isDateTimeInPast(datetime)
+                    ? 'Recording completion time or cancelled time (past time allowed)'
                     : ''
               }
             />

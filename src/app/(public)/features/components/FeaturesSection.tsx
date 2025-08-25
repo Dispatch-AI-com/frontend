@@ -14,6 +14,10 @@ const SectionRoot = styled('section')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     paddingTop: theme.spacing(8),
   },
+  [theme.breakpoints.down('md')]: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
 }));
 
 const SectionContainer = styled(Container)({
@@ -27,6 +31,10 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(8),
   [theme.breakpoints.up('md')]: {
     marginBottom: theme.spacing(12),
+  },
+  [theme.breakpoints.down('md')]: {
+    marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(3),
   },
 }));
 
@@ -59,7 +67,7 @@ const BaseCard = styled(Box)(({ theme }) => ({
     maxWidth: 350,
     margin: '0 auto',
     padding: theme.spacing(3, 10),
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(2),
     minHeight: 400,
   },
 }));
@@ -276,8 +284,14 @@ const GridContainer = styled('div')(({ theme }) => ({
       marginBottom: theme.spacing(0),
     },
   },
+  '&:last-of-type': {
+    [theme.breakpoints.down('md')]: {
+      paddingBottom: theme.spacing(4),
+    },
+  },
   [theme.breakpoints.down('md')]: {
-    paddingBottom: 32,
+    paddingBottom: 16,
+    rowGap: 0,
   },
 }));
 
@@ -303,7 +317,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   zIndex: 1,
   [theme.breakpoints.down('md')]: {
     justifyContent: 'center',
-    marginTop: theme.spacing(4),
+    marginTop: 0,
   },
 }));
 
