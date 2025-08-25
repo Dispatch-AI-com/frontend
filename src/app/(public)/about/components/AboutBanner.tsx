@@ -1,6 +1,5 @@
 import { Box, Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { minWidth } from '@mui/system';
 
 export const AboutHeader = styled(Box)(({ theme }) => ({
   display: 'flex',

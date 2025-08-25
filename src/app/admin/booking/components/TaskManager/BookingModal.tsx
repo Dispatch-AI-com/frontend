@@ -309,6 +309,7 @@ const BookingModal: React.FC<Props> = ({
       // Reduce tolerance to 1 minute
       return selectedMinutes < nowMinutes - 1;
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error in isDateTimeInPast:', error);
       return false;
     }
@@ -452,6 +453,7 @@ const BookingModal: React.FC<Props> = ({
 
       onClose();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to create booking:', error);
     }
   };

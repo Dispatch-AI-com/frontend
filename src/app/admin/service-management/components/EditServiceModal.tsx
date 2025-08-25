@@ -371,9 +371,11 @@ export default function EditServiceModal({
 
       onClose();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to save service:', error);
       // 提供更详细的错误信息
       if (error && typeof error === 'object' && 'data' in error) {
+        // eslint-disable-next-line no-console
         console.error('Error details:', error.data);
       }
       // Error handling can be added here
@@ -412,6 +414,7 @@ export default function EditServiceModal({
           }).unwrap();
         }
       } else {
+        // eslint-disable-next-line no-console
         console.log(
           'No service ID, form fields will be saved when service is created',
         );
@@ -419,9 +422,11 @@ export default function EditServiceModal({
 
       setIsCustomFormModalOpen(false);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to save custom form fields:', error);
       // 提供更详细的错误信息
       if (error && typeof error === 'object' && 'data' in error) {
+        // eslint-disable-next-line no-console
         console.error('Error details:', error.data);
       }
     }

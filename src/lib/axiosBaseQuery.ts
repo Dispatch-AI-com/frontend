@@ -26,7 +26,34 @@ export const axiosBaseQuery = (): BaseQueryFn<
     { dispatch, getState },
   ) => {
     try {
-      const { csrfToken } = (getState() as RootState).auth;
+      let { csrfToken } = (getState() as RootState).auth;
+      const { isAuthenticated } = (getState() as RootState).auth;
+
+      // If authenticated but no CSRF token, try to get it
+      if (
+        isAuthenticated &&
+        !csrfToken &&
+        ['POST', 'PUT', 'DELETE', 'PATCH'].includes(
+          method?.toUpperCase() || 'GET',
+        )
+      ) {
+        try {
+          const csrfResponse = await axios({
+            baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+            url: '/auth/csrf-token',
+            method: 'GET',
+            withCredentials: true,
+          });
+
+          csrfToken = (csrfResponse.data as { csrfToken: string }).csrfToken;
+          if (csrfToken) {
+            dispatch({ type: 'auth/updateCSRFToken', payload: csrfToken });
+          }
+        } catch (csrfError) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to fetch CSRF token:', csrfError);
+        }
+      }
 
       const result = await axios({
         baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -59,20 +86,23 @@ export const axiosBaseQuery = (): BaseQueryFn<
         err.response?.data?.message?.includes('CSRF')
       ) {
         try {
-          // Try to refresh CSRF token
-          await axios({
+          // Try to refresh CSRF token using current token
+          const { csrfToken: currentToken } = (getState() as RootState).auth;
+
+          const refreshResponse = await axios({
             baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
             url: '/auth/refresh-csrf',
             method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(currentToken && { 'x-csrf-token': currentToken }),
+            },
             withCredentials: true,
           });
 
-          // After refresh, get the new token from cookie and update Redux
-          // The new token is now available in the cookie
-          const newCsrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('csrfToken='))
-            ?.split('=')[1];
+          // Get the new token from refresh response
+          const newCsrfToken = (refreshResponse.data as { csrfToken: string })
+            .csrfToken;
 
           if (newCsrfToken) {
             // Update Redux state with new CSRF token
