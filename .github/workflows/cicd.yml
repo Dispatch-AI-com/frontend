@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 env:
-  IMAGE_TAG: uat-${{ github.workflow }}-${{ github.run_id }}
+  IMAGE_TAG: uat-${{ github.run_number }}
 
 jobs:
   install_build:
