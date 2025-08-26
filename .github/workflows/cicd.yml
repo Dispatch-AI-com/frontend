@@ -35,11 +35,11 @@ jobs:
           corepack prepare pnpm@9 --activate
           pnpm --version
           
-      # - name: Setup pnpm
-      #   run: npm install -g pnpm
+      - name: Setup pnpm
+        run: npm install -g pnpm
 
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
+      # - name: pnpm install
+      #   run: pnpm install --frozen-lockfile
 
       # - name: Type check
       #   run: pnpm run type-check
