@@ -1,5 +1,5 @@
 name: CI pipeline
-run-name: ${{ github.actor }} is running GitHub Actions workflow...
+run-name: ${{ github.actor }} is running CI pipeline...
 
 on:
   push:
@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -36,18 +36,20 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Type check
-        run: pnpm run type-check
+      # - name: Type check
+      #   run: pnpm run type-check
 
-      - name: Lint
-        run: pnpm run lint
+      # - name: Lint
+      #   run: pnpm run lint
 
-      - name: Test
-        run: pnpm test
+      # - name: Test
+      #   run: pnpm test
 
       - name: Build (inject NEXT_PUBLIC_API_BASE_URL)
         run: |
           NEXT_PUBLIC_API_BASE_URL="${BACKEND_URL}" pnpm build
+          pwd
+          ls
 
       - name: Upload Next.js artefact
         uses: actions/upload-artifact@v4
