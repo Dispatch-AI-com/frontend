@@ -19,7 +19,7 @@ env:
   ENVIRONMENT: uat
   AWS_REGION: ap-southeast-2
   ECR_REPO: dispatchai-frontend
-  IMAGE_NAME: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPO }}
+  IMAGE_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPO }}
   IMAGE_TAG: ${{ env.ENVIRONMENT }}-${{ github.workflow }}-${{ github.run_id }}
 
 jobs:
