@@ -73,7 +73,7 @@ jobs:
           
   build_deploy:
     # if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-    # needs: install_build
+    needs: install_build
     runs-on: ubuntu-latest
     permissions:
       id-token: write
