@@ -52,7 +52,7 @@ jobs:
         run: |
           echo "PWD:"
           pwd
-          echo "List including hidden dirs:"
+          echo "List:"
           ls -la
 
       - name: Upload Next.js artefact
@@ -87,6 +87,26 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: check repo
+        run: |
+          echo "PWD:"
+          pwd
+          echo "List:"
+          ls -la
+
+      - name: Download Next.js artefact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: .
+
+      - name: check artefact
+        run: |
+          echo "PWD:"
+          pwd
+          echo "List:"
+          ls -la
 
       - name: Build & push
         uses: docker/build-push-action@v6
