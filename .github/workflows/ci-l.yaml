@@ -34,14 +34,14 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
-      # - name: Type check
-      #   run: pnpm run type-check
+      - name: Type check
+        run: pnpm run type-check
 
-      # - name: Lint
-      #   run: pnpm run lint
+      - name: Lint
+        run: pnpm run lint
 
-      # - name: Test
-      #   run: pnpm test
+      - name: Test
+        run: pnpm test
 
       - name: Build (inject NEXT_PUBLIC_API_BASE_URL)
         run: |
@@ -61,5 +61,6 @@ jobs:
           path: |
             .next/**
             public/**
+          include-hidden-files: true
           retention-days: 1
           
