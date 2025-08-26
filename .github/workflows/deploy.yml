@@ -26,7 +26,7 @@ jobs:
 
       - name: 🏗️ Build project
         run: |
-          NEXT_PUBLIC_API_BASE_URL=https://uat.dispatchai.click/api pnpm build
+          NEXT_PUBLIC_API_BASE_URL=https://uat.getdispatchai.ai/api pnpm build
 
       - name: 📤 Upload build to EC2
         uses: appleboy/scp-action@master
