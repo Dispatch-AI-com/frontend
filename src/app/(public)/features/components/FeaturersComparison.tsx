@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Typography, useMediaQuery } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Image from 'next/image';
 import React from 'react';
 
@@ -43,7 +43,7 @@ const TableContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     maxWidth: '100%',
     marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(16),
+    marginBottom: theme.spacing(6),
   },
   '&.mb6': {
     marginBottom: theme.spacing(6),
@@ -57,16 +57,10 @@ const TableRow = styled(Box)(({ theme }) => ({
   minHeight: 72,
   gridTemplateColumns: 'repeat(2, 400px)',
   background: '#ffffff',
-  [theme.breakpoints.down(800)]: {
-    gridTemplateColumns: '1fr',
-  },
   '&.header': {
     background: '#ffffff',
     borderBottom: '1px solid #a8f574',
     gridTemplateColumns: 'repeat(2, 400px)',
-    [theme.breakpoints.down(800)]: {
-      gridTemplateColumns: '1fr',
-    },
   },
   '&.diy, &.ai': {
     background: '#ffffff',
@@ -118,11 +112,23 @@ const IconText = styled(Box)({
 });
 
 export default function FeaturersComparison() {
+  const theme = useTheme();
   const isSmall = useMediaQuery('(max-width:800px)');
 
   return (
     <OuterBox>
-      <Typography variant="h2" sx={{ textAlign: 'center', mb: 4, mt: 24 }}>
+      <Typography
+        variant="h2"
+        sx={{
+          textAlign: 'center',
+          mb: 4,
+          mt: 24,
+          [theme.breakpoints.down('md')]: {
+            mb: 3,
+            mt: 6,
+          },
+        }}
+      >
         DIY vs AI Assistant
       </Typography>
       {isSmall ? (
@@ -138,10 +144,26 @@ export default function FeaturersComparison() {
               px: 3,
             }}
           >
-            <Box sx={{ textAlign: 'center' }}>
+            <Box
+              sx={{
+                textAlign: 'center',
+                height: '56px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <Typography variant="h3">DIY</Typography>
             </Box>
-            <Box sx={{ textAlign: 'center' }}>
+            <Box
+              sx={{
+                textAlign: 'center',
+                height: '56px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <Typography variant="h3">AI Assistant</Typography>
             </Box>
           </Box>
