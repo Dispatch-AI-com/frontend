@@ -108,14 +108,14 @@ export default function LoginForm() {
 
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const [showPassword, setShowPassword] = useState(false);
-  const token = useAppSelector(s => s.auth.token);
+  const isAuthenticated = useAppSelector(s => s.auth.isAuthenticated);
   const router = useRouter();
 
   useEffect(() => {
-    if (token) {
+    if (isAuthenticated) {
       router.replace('/admin/overview');
     }
-  }, [token, router]);
+  }, [isAuthenticated, router]);
 
   const onSubmit = async (data: LoginFormData) => {
     await loginUser({ email: data.workEmail, password: data.password });

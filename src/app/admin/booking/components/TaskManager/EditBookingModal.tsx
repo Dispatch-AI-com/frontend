@@ -299,7 +299,7 @@ const formatForDateTimeLocal = (isoString: string) => {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
-  } catch (error) {
+  } catch {
     // If exception occurs, also use current device time
     const now = new Date();
     const year = now.getFullYear();
@@ -363,6 +363,7 @@ const EditBookingModal: React.FC<Props> = ({
       // Reduce tolerance to 1 minute
       return selectedMinutes < nowMinutes - 1;
     } catch {
+      // eslint-disable-next-line no-console
       console.error('Error in isDateTimeInPast');
       return false;
     }

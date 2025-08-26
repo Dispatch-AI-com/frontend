@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar, Box, Typography, useMediaQuery } from '@mui/material';
-import { styled, width } from '@mui/system';
+import { styled } from '@mui/system';
 import { format, isToday, parseISO } from 'date-fns';
 import Image from 'next/image';
 

@@ -7,6 +7,7 @@ export interface UserInfo {
   firstName?: string;
   lastName?: string;
   role: Role;
+  status?: string;
   googleId?: string;
   avatar?: string;
   provider?: string;

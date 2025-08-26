@@ -57,7 +57,7 @@ export default function PricingSection() {
     (a, b) => tierOrder[a.tier] - tierOrder[b.tier],
   );
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [, setCurrentSlide] = useState(0);
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
     slides: {
       perView: 1,

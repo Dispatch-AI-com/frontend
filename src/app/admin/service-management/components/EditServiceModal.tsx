@@ -12,8 +12,10 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
+import { useCheckAuthStatusQuery } from '@/features/auth/authApi';
 import type {
   CreateServiceManagementDto,
   FormField,
@@ -200,6 +202,7 @@ export default function EditServiceModal({
   service: ServiceManagement | null;
   onClose: () => void;
 }) {
+  const router = useRouter();
   const [formData, setFormData] = useState<CreateServiceManagementDto>({
     name: '',
     description: '',
@@ -214,6 +217,14 @@ export default function EditServiceModal({
   useMediaQuery(theme.breakpoints.down('sm'));
   useMediaQuery(theme.breakpoints.down('xs'));
   const user = useAppSelector(state => state.auth.user);
+
+  // Fallback: try to get user from auth check if Redux state is empty
+  const { data: authCheckData } = useCheckAuthStatusQuery(undefined, {
+    skip: !!user, // Only run if we don't have user in Redux
+  });
+
+  // Get user from either Redux or auth check
+  const currentUser = user ?? authCheckData?.user;
 
   const [createService, { isLoading: isCreating }] = useCreateServiceMutation();
   const [updateService, { isLoading: isUpdating }] = useUpdateServiceMutation();
@@ -259,30 +270,32 @@ export default function EditServiceModal({
       });
       setPriceInput(service.price?.toString() ?? '0');
     } else {
-      setFormData({
+      const newFormData = {
         name: '',
         description: '',
         price: 0,
         isAvailable: true,
-        userId: user?._id ?? '',
-      });
+        userId: currentUser?._id ?? '',
+      };
+      setFormData(newFormData);
       setPriceInput('0');
     }
-  }, [service, user?._id]);
+  }, [service, currentUser?._id]);
 
   // Reset form when modal opens for create mode
   useEffect(() => {
     if (open && !service) {
-      setFormData({
+      const resetFormData = {
         name: '',
         description: '',
         price: 0,
         isAvailable: true,
-        userId: user?._id ?? '',
-      });
+        userId: currentUser?._id ?? '',
+      };
+      setFormData(resetFormData);
       setPriceInput('0');
     }
-  }, [open, service, user?._id]);
+  }, [open, service, currentUser?._id]);
 
   const handleInputChange = (
     field: string,
@@ -293,6 +306,28 @@ export default function EditServiceModal({
 
   const handleSubmit = async (): Promise<void> => {
     try {
+      // Validation before submission
+      if (!formData.name.trim()) {
+        alert('Please enter a service name');
+        return;
+      }
+
+      // If formData.userId is missing but we have currentUser._id, update it
+      if (!formData.userId && currentUser?._id) {
+        setFormData(prev => ({ ...prev, userId: currentUser._id }));
+        // Re-submit with updated data
+        setTimeout(() => {
+          void handleSubmit();
+        }, 100);
+        return;
+      }
+
+      if (!formData.userId) {
+        alert('Authentication required. Redirecting to login...');
+        router.push('/login');
+        return;
+      }
+
       let currentServiceId = service?._id;
 
       if (service) {
@@ -336,9 +371,11 @@ export default function EditServiceModal({
 
       onClose();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to save service:', error);
       // 提供更详细的错误信息
       if (error && typeof error === 'object' && 'data' in error) {
+        // eslint-disable-next-line no-console
         console.error('Error details:', error.data);
       }
       // Error handling can be added here
@@ -377,6 +414,7 @@ export default function EditServiceModal({
           }).unwrap();
         }
       } else {
+        // eslint-disable-next-line no-console
         console.log(
           'No service ID, form fields will be saved when service is created',
         );
@@ -384,9 +422,11 @@ export default function EditServiceModal({
 
       setIsCustomFormModalOpen(false);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to save custom form fields:', error);
       // 提供更详细的错误信息
       if (error && typeof error === 'object' && 'data' in error) {
+        // eslint-disable-next-line no-console
         console.error('Error details:', error.data);
       }
     }
@@ -507,6 +547,17 @@ export default function EditServiceModal({
             <CancelButton onClick={onClose} disabled={isLoading}>
               Cancel
             </CancelButton>
+            {!currentUser && (
+              <Button
+                onClick={() => {
+                  router.push('/login');
+                }}
+                variant="outlined"
+                sx={{ mr: 1 }}
+              >
+                Login Required
+              </Button>
+            )}
             <SaveButton
               onClick={() => {
                 void handleSubmit();
