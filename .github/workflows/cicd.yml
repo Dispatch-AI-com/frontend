@@ -28,12 +28,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: Setup pnpm
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
+
+
 
       - name: Type check
         run: pnpm run type-check
@@ -119,8 +123,6 @@ jobs:
             ${{ secrets.FRONTEND_ECR }}:${{ env.IMAGE_TAG }}
           platforms: linux/amd64
           provenance: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   deploy:
     needs: build_image
