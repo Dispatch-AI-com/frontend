@@ -1,5 +1,5 @@
 name: CI pipeline
-run-name: ${{ github.actor }} is running CI pipeline...
+run-name: CI pipeline is run by ${{ github.actor }}.
 
 on:
   push:
@@ -48,8 +48,13 @@ jobs:
       - name: Build (inject NEXT_PUBLIC_API_BASE_URL)
         run: |
           NEXT_PUBLIC_API_BASE_URL="${BACKEND_URL}" pnpm build
+
+      - name: Verify build output
+        run: |
+          echo "PWD:"
           pwd
-          ls
+          echo "List including hidden dirs:"
+          ls -la
 
       - name: Upload Next.js artefact
         uses: actions/upload-artifact@v4
@@ -58,5 +63,5 @@ jobs:
           path: |
             .next/**
             public/**
-          retention-days: 3
+          retention-days: 1
           
