@@ -123,5 +123,6 @@ jobs:
           tags: |
             ${{ secrets.FRONTEND_ECR }}:${{ env.IMAGE_TAG }}
           platforms: linux/amd64
+          provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
