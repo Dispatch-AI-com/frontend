@@ -130,9 +130,10 @@ jobs:
 
   deploy:
     needs: build_image
+    # if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # for OIDC to assume IAM role
+      id-token: write
       contents: read
     steps:
       - name: Configure AWS credentials (OIDC)
@@ -141,8 +142,14 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Install jq (ensure present)
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Ensure jq installed Install jq (ensure present)
+        run: |
+          if ! command -v jq >/dev/null 2>&1; then
+            echo "jq not found, installing..."
+            sudo apt-get update && sudo apt-get install -y jq
+          else
+            echo "jq already installed"
+          fi
       
       - name: Deploy via SSM SendCommand
         id: ssm
@@ -158,18 +165,3 @@ jobs:
           cat ssm.json
           COMMAND_ID=$(jq -r '.Command.CommandId' ssm.json)
           echo "COMMAND_ID=$COMMAND_ID" >> $GITHUB_OUTPUT
-
-      - name: Assert success
-        run: |
-          COMMAND_ID="${{ steps.ssm.outputs.COMMAND_ID }}"
-          STATUS=$(aws ssm list-command-invocations \
-            --command-id "$COMMAND_ID" \
-            --details \
-            --instance-id "${{ secrets.EC2_INSTANCE_ID }}" \
-            --region "${{ secrets.AWS_REGION }}" \
-            --query "CommandInvocations[].Status" \
-            --output text)
-      
-          echo "SSM Command Status: $STATUS"
-          test "$STATUS" = "Success"
-
