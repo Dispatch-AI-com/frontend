@@ -64,6 +64,10 @@ export default function OnboardingChat() {
     const answeredMsgs = steps.flatMap<ChatMsg>(step => {
       if (step.id >= progress.currentStep) return [];
 
+      if (!step.field) {
+        return [{ role: 'ai', content: step.question, options: step.options }];
+      }
+
       const raw = step.field ? get(progress.answers, step.field, '') : '';
 
       if (typeof raw !== 'string' || !raw.trim()) return [];
@@ -137,6 +141,10 @@ export default function OnboardingChat() {
       }
     }
 
+    if (currentStepIndex === steps.length - 1) {
+      errorMessage = 'Onboarding failed, please contact us.';
+    }
+
     addAIMessage(errorMessage, undefined, true);
   };
 
@@ -177,6 +185,7 @@ export default function OnboardingChat() {
   };
 
   const handleButtonClick = async (option: string) => {
+    // Handle regular step options
     await handleSubmit(option);
   };
   return (
