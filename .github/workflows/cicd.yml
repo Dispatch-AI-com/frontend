@@ -1,0 +1,100 @@
+name: CI/CD pipeline
+run-name: Pipeline is run by ${{ github.actor }}.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  IMAGE_TAG: uat-${{ github.workflow }}-${{ github.run_id }}
+
+jobs:
+  install_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        run: npm install -g pnpm
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      # - name: Type check
+      #   run: pnpm run type-check
+
+      # - name: Lint
+      #   run: pnpm run lint
+
+      # - name: Test
+      #   run: pnpm test
+
+      - name: Build (inject NEXT_PUBLIC_API_BASE_URL)
+        run: |
+          NEXT_PUBLIC_API_BASE_URL="${BACKEND_URL}" pnpm build
+
+      - name: Verify build output
+        run: |
+          echo "PWD:"
+          pwd
+          echo "List including hidden dirs:"
+          ls -la
+
+      - name: Upload Next.js artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: |
+            .next/**
+            public/**
+          include-hidden-files: true
+          retention-days: 1
+          
+  build_deploy:
+    # if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    needs: install_build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build & push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: .
+          file: ./dockerfile
+          tags: |
+            ${{ secrets.FRONTEND_ECR }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
