@@ -54,6 +54,7 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
     alignItems: 'flex-start',
     gap: theme.spacing(1),
     marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -83,8 +84,8 @@ const AvatarContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   [theme.breakpoints.down('md')]: {
-    width: '60px',
-    height: '60px',
+    width: '40px',
+    height: '40px',
     borderRadius: '50%',
     backgroundColor: '#f5f5f5',
     overflow: 'hidden',
