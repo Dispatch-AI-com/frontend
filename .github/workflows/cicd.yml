@@ -129,7 +129,8 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    runs-on: ubuntu-latest
+    needs: install_build_app
+    runs-on: build_image
     permissions:
       id-token: write   # for OIDC to assume IAM role
       contents: read
