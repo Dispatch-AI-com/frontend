@@ -326,16 +326,12 @@ const BookingModal: React.FC<Props> = ({
   };
 
   const userName =
-    user?.name ??
-    (user && (user.firstName ?? user.lastName)
+    user && (user.firstName ?? user.lastName)
       ? `${user.firstName ?? ''}${user.lastName ? ' ' + user.lastName : ''}`.trim()
-      : (user?.email ?? 'User'));
+      : (user?.email ?? 'User');
   const userInitials = user
-    ? user.name
-      ? user.name
-          .split(' ')
-          .map((n: string) => n[0])
-          .join('')
+    ? user.firstName || user.lastName
+      ? `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`
           .toUpperCase()
           .slice(0, 2)
       : (
