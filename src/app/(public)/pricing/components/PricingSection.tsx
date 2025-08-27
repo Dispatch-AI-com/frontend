@@ -59,11 +59,10 @@ export default function PricingSection() {
 
   const [, setCurrentSlide] = useState(0);
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
-    slides: {
-      perView: 1,
-      spacing: 0,
-    },
+    slides: { perView: 'auto', spacing: 0 },
+    rubberband: false,
     breakpoints: {
+      '(min-width: 600px)': { slides: { perView: 1, spacing: 0 } },
       '(min-width: 900px)': {
         slides: { perView: 2, spacing: 0 },
       },
@@ -99,6 +98,7 @@ export default function PricingSection() {
         sx={{
           ...theme.typography.h1,
           textAlign: 'center',
+          fontSize: '28px',
           margin: {
             xs: '48px 0 32px 0',
             sm: '120px 0 100px 0',
@@ -119,6 +119,9 @@ export default function PricingSection() {
             lg: 1500,
           },
           overflow: 'hidden',
+          '& .keen-slider__slide': {
+            boxSizing: 'border-box',
+          },
         }}
       >
         {isLoading && <p>Loading...</p>}
@@ -128,10 +131,10 @@ export default function PricingSection() {
             key={plan._id}
             className="keen-slider__slide"
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              px: 1,
               boxSizing: 'border-box',
+              px: { xs: 1, sm: 1 },
+              display: 'block',
+              minWidth: { xs: 'calc(100% - 19px)', sm: 'auto' },
             }}
           >
             <PricingCard

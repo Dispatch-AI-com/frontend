@@ -28,8 +28,9 @@ const CardContainer = styled('div')(({ theme }) => ({
   backgroundColor: '#fff',
 
   [theme.breakpoints.down('sm')]: {
-    width: '330px',
+    width: '100%',
     height: '440px',
+    padding: '20px 16px',
   },
 }));
 
