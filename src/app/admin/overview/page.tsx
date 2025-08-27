@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
+import { padding } from '@mui/system';
 import React from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
@@ -15,7 +16,10 @@ const styles = {
     padding: '24px 24px 0 24px',
     borderRadius: '20px',
     overflowX: 'visible',
-    maxWidth: '1180px',
+    width: '100%',
+    '@media (max-width: 450px)': {
+      padding: '12px 12px 0 12px',
+    },
   },
 
   sectionTitle: {

@@ -26,8 +26,8 @@ export default function HalfCircleProgress({
   return (
     <Box
       sx={{
-        width: 180,
-        height: 90,
+        maxWidth: 180,
+        maxHeight: 90,
         overflow: 'hidden',
         position: 'relative',
       }}
