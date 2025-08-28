@@ -43,7 +43,7 @@ export const HeaderContainer = styled(Container)(({ theme }) => ({
 }));
 
 export const HeaderImage = styled('img')(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: theme.shape.borderRadius * 2,
   width: '100%',
   maxWidth: '576px',
   height: 'auto',
