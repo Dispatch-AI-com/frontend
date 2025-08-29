@@ -321,6 +321,7 @@ export default function CustomFormModal({
       const currentField = fields.find(field => field.id === fieldId);
       if (currentField && currentField.label.trim() === '') {
         // label 为空时，不允许删除
+        // eslint-disable-next-line no-console
         console.log(
           'Cannot delete field with empty label. Please fill in the label first.',
         );

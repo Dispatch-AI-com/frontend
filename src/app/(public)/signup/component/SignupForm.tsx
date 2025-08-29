@@ -130,7 +130,7 @@ const ErrorMessage = styled.div`
 
 export default function SignupForm() {
   const router = useRouter();
-  const token = useAppSelector(s => s.auth.token);
+  const isAuthenticated = useAppSelector(s => s.auth.isAuthenticated);
 
   const [signupUser, { isLoading, error }] = useSignupUserMutation();
   const [showPassword, setShowPassword] = useState(false);
@@ -141,10 +141,10 @@ export default function SignupForm() {
   });
 
   useEffect(() => {
-    if (token) {
+    if (isAuthenticated) {
       router.replace('/admin/overview');
     }
-  }, [token, router]);
+  }, [isAuthenticated, router]);
 
   const onSubmit = async (vals: SignupFormData) => {
     const payload = {

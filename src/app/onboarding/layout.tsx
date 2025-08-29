@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
 
 import OnboardingLayout from '@/components/layout/onboarding-layout';
+import { useCheckAuthStatusQuery } from '@/features/auth/authApi';
 import { useAppSelector } from '@/redux/hooks';
 
 export default function OnboardingProtectedLayout({
@@ -11,7 +12,10 @@ export default function OnboardingProtectedLayout({
 }: {
   children: ReactNode;
 }) {
-  const token = useAppSelector(s => s.auth.token);
+  const isAuthenticated = useAppSelector(s => s.auth.isAuthenticated);
+
+  // Check authentication status using cookies
+  const { isLoading: isCheckingAuth } = useCheckAuthStatusQuery();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -22,12 +26,12 @@ export default function OnboardingProtectedLayout({
   }, []);
 
   useEffect(() => {
-    if (ready && !token) {
+    if (ready && !isCheckingAuth && !isAuthenticated) {
       router.replace('/login');
     }
-  }, [ready, token, pathname, router]);
+  }, [ready, isAuthenticated, pathname, router, isCheckingAuth]);
 
-  if (!ready || !token) return null;
+  if (!ready || isCheckingAuth || !isAuthenticated) return null;
 
   return <OnboardingLayout>{children}</OnboardingLayout>;
 }

@@ -92,6 +92,10 @@ export function UserProfileDropdown({
     window.location.href = '/';
   };
 
+  const getDisplayName = (user: UserInfo): string => {
+    return user.firstName ?? user.email?.split('@')[0] ?? 'User';
+  };
+
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -115,10 +119,10 @@ export function UserProfileDropdown({
           gap: isMobile ? '0px' : 'auto',
         }}
       >
-        <UserAvatar>{getInitials(user.firstName ?? 'User')}</UserAvatar>
+        <UserAvatar>{getInitials(getDisplayName(user))}</UserAvatar>
         {!isMobile && (
           <>
-            <UserName>{user.firstName ?? 'User'}</UserName>
+            <UserName>{getDisplayName(user)}</UserName>
             <DropdownArrow />
           </>
         )}

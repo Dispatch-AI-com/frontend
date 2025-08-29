@@ -54,6 +54,8 @@ export default function UserProfileMenu({
     if (option.action === 'logout') {
       dispatch(logout());
       router.push('/login');
+    } else if (option.action === 'home') {
+      router.push('/');
     }
     handleMenuClose();
   };

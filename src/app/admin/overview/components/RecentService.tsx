@@ -133,7 +133,7 @@ export default function RecentService() {
         </Box>
         <Box sx={{ ...styles.cell, flex: 1 }}>
           <Image
-            src={user?.avatar ?? '/avatars/user-avatar.jpg'}
+            src="/avatars/user-avatar.jpg"
             alt={fullName}
             width={28}
             height={28}
@@ -163,7 +163,7 @@ export default function RecentService() {
             <Typography sx={styles.cardLabel}>Created By:</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
               <Image
-                src={user?.avatar ?? '/avatars/user-avatar.jpg'}
+                src="/avatars/user-avatar.jpg"
                 alt={fullName}
                 width={20}
                 height={20}
