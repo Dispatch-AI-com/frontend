@@ -62,7 +62,7 @@ export default function PricingSection() {
     slides: { perView: 'auto', spacing: 0, origin: 'center' },
     rubberband: false,
     breakpoints: {
-      '(min-width: 500px)': { slides: { perView: 1, spacing: 0 } },
+      '(min-width: 599px)': { slides: { perView: 1, spacing: 0 } },
       '(min-width: 960px)': {
         slides: { perView: 2, spacing: 0 },
       },
@@ -112,11 +112,8 @@ export default function PricingSection() {
         ref={sliderRef}
         className="keen-slider"
         sx={{
-          '@media (min-width:501px) and (max-width:599px)': {
-            marginLeft: '60px',
-          },
           maxWidth: {
-            xs: 380,
+            xs: '100%',
             sm: 900,
             md: 1050,
             lg: 1500,
