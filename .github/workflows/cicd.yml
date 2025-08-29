@@ -1,8 +1,9 @@
 name: CI/CD pipeline
 run-name: >
-  ${{ github.event_name == 'pull_request' && format('CI Pipeline is triggered by PR (by {0})', github.actor) ||
+  ${{ github.event_name == 'workflow_dispatch' && format('Manual {0} pipeline (by {1})', inputs.mode, github.actor) ||
+      github.event_name == 'pull_request' && format('CI Pipeline is triggered by PR (by {0})', github.actor) ||
       github.event_name == 'push' && format('CI&CD Pipeline is triggered by PUSH (by {0})', github.actor) ||
-      github.event_name == 'workflow_dispatch' && 'Pipeline is trigger manually.' }}
+      'CI/CD pipeline' }}
 
 on:
   push:
@@ -10,6 +11,15 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Choose pipeline mode"
+        type: choice
+        options:
+          - ci
+          - cicd
+        default: cicd
+        required: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -24,6 +34,7 @@ env:
 jobs:
   ci_frontend:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.mode == 'ci' || inputs.mode == 'cicd' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -60,7 +71,7 @@ jobs:
           ls -la
 
       - name: Upload Next.js artefact
-        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
@@ -71,7 +82,7 @@ jobs:
           retention-days: 1
           
   build_image:
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
     needs: ci_frontend
     runs-on: ubuntu-latest
     permissions:
@@ -118,7 +129,7 @@ jobs:
           provenance: false
 
   deploy:
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
     needs: build_image
     runs-on: ubuntu-latest
     permissions:
