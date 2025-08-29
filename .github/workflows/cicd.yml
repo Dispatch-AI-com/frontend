@@ -71,7 +71,7 @@ jobs:
           retention-days: 1
           
   build_image:
-    # if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     needs: ci_frontend
     runs-on: ubuntu-latest
     permissions:
@@ -118,7 +118,7 @@ jobs:
           provenance: false
 
   deploy:
-    # if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     needs: build_image
     runs-on: ubuntu-latest
     permissions:
