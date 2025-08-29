@@ -44,11 +44,14 @@ const ModalContainer = styled(Box)(({ theme }) => ({
   padding: 0,
   outline: 'none',
   boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.1)',
+  [theme.breakpoints.down('md')]: {
+    width: '90vw',
+    maxWidth: 450,
+  },
   [theme.breakpoints.down('sm')]: {
     width: '95vw',
-    height: '90vh',
+    maxHeight: '90vh',
     borderRadius: 12,
-    margin: '5vh 2.5vw',
   },
 }));
 

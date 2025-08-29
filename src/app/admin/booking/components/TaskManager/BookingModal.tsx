@@ -45,11 +45,14 @@ const ModalContainer = styled(Box)(({ theme }) => ({
   padding: 0,
   outline: 'none',
   boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.1)',
+  [theme.breakpoints.down('md')]: {
+    width: '90vw',
+    maxWidth: 450,
+  },
   [theme.breakpoints.down('sm')]: {
     width: '95vw',
-    height: '90vh',
+    maxHeight: '90vh',
     borderRadius: 12,
-    margin: '5vh 2.5vw',
   },
 }));
 
@@ -92,7 +95,7 @@ const FieldLabel = styled(Typography)({
   marginBottom: '8px',
 });
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)(({ theme }) => ({
   width: '420px',
   '& .MuiOutlinedInput-root': {
     height: '40px',
@@ -114,7 +117,13 @@ const StyledTextField = styled(TextField)({
     fontFamily: 'Roboto',
     height: '16px',
   },
-});
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
+}));
 
 const CreatedByContainer = styled(Box)({
   width: '123px',
@@ -141,7 +150,7 @@ const UserName = styled(Typography)({
   color: '#060606',
 });
 
-const StatusSelect = styled(Select)({
+const StatusSelect = styled(Select)(({ theme }) => ({
   width: '420px',
   height: '40px',
   borderRadius: '12px',
@@ -164,9 +173,15 @@ const StatusSelect = styled(Select)({
       color: '#999',
     },
   },
-});
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
+}));
 
-const DateTimeInput = styled(TextField)({
+const DateTimeInput = styled(TextField)(({ theme }) => ({
   width: '420px',
   '& .MuiOutlinedInput-root': {
     height: '40px',
@@ -186,9 +201,15 @@ const DateTimeInput = styled(TextField)({
     padding: '12px 16px',
     fontSize: '14px',
   },
-});
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
+}));
 
-const DescriptionTextarea = styled(TextareaAutosize)({
+const DescriptionTextarea = styled(TextareaAutosize)(({ theme }) => ({
   width: '420px',
   minHeight: '80px',
   padding: '12px 16px',
@@ -198,7 +219,13 @@ const DescriptionTextarea = styled(TextareaAutosize)({
   fontSize: '14px',
   resize: 'none',
   outline: 'none',
-});
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
+}));
 
 const ModalFooter = styled(Box)({
   display: 'flex',
