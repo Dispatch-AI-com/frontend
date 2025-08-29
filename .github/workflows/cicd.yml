@@ -1,11 +1,15 @@
 name: CI/CD pipeline
-run-name: Pipeline is run by ${{ github.actor }}.
+run-name: >
+  ${{ github.event_name == 'pull_request' && format('CI Pipeline is triggered by PR (by {0})', github.actor) ||
+      github.event_name == 'push' && format('CI&CD Pipeline is triggered by PUSH (by {0})', github.actor) ||
+      github.event_name == 'workflow_dispatch' && 'Pipeline is trigger manually.' }}
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -18,7 +22,7 @@ env:
   IMAGE_TAG: uat-${{ github.run_number }}
 
 jobs:
-  install_build_app:
+  ci_frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -68,7 +72,7 @@ jobs:
           
   build_image:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-    needs: install_build_app
+    needs: ci_frontend
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -88,13 +92,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: check repo
-        run: |
-          echo "PWD:"
-          pwd
-          echo "List:"
-          ls -la
 
       - name: Download Next.js artefact
         uses: actions/download-artifact@v4
@@ -121,8 +118,8 @@ jobs:
           provenance: false
 
   deploy:
-    needs: build_image
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    needs: build_image
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -148,12 +145,8 @@ jobs:
         run: |
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
-            --comment "GitHub Actions deploy ${{ secrets.FRONTEND_ECR }}:${{ env.IMAGE_TAG }}." \
+            --comment "GitHub Actions deploy frontend Image:${{ env.IMAGE_TAG }}." \
             --parameters "commands=['sudo bash /home/ubuntu/devops/deploy-frontend.sh ${{ env.IMAGE_TAG }}']" \
             --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
             --region "${{ secrets.AWS_REGION }}" \
             --output json > ssm.json
-
-          cat ssm.json
-          COMMAND_ID=$(jq -r '.Command.CommandId' ssm.json)
-          echo "COMMAND_ID=$COMMAND_ID" >> $GITHUB_OUTPUT
