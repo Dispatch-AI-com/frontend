@@ -146,7 +146,7 @@ jobs:
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --comment "GitHub Actions deploy frontend Image:${{ env.IMAGE_TAG }}." \
-            --parameters "commands=['sudo bash /home/ubuntu/devops/deploy-frontend.sh ${{ env.IMAGE_TAG }}']" \
+            --parameters "commands=['sudo bash /home/ubuntu/devops/deploy/deploy-frontend.sh ${{ env.IMAGE_TAG }}']" \
             --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
             --region "${{ secrets.AWS_REGION }}" \
             --output json > ssm.json
