@@ -114,21 +114,20 @@ const StepCard = styled(Box)(({ theme, bgcolor }) => ({
 const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   background: bgcolor === 'green' ? '#060606' : '#a8f574',
   color: bgcolor === 'green' ? '#a8f574' : '#060606',
-  borderRadius: '20px',
-  width: 36,
-  height: 36,
-  padding: '8px 8px 8px 9px',
+  borderRadius: '50%',
+  width: 32,
+  height: 32,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   position: 'absolute',
-  top: -22,
+  top: -20,
   left: 20,
   boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)',
   [theme.breakpoints.down('md')]: {
-    top: -20,
+    top: -18,
   },
-  // Styles for 529px and below - center display
+  // Styles for 529px and below - center display with optimized sizing
   [theme.breakpoints.down(530)]: {
     position: 'absolute',
     top: '-18px !important',
@@ -136,6 +135,7 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
     transform: 'translateX(-50%) !important',
     width: '36px !important',
     height: '36px !important',
+    borderRadius: '20px !important',
     padding: '8px 8px 8px 9px !important',
   },
 }));
@@ -163,26 +163,20 @@ const StepLabel = styled(Typography)(({ color, theme }) => ({
 const Arrow = styled(Box)(({ theme }) => ({
   color: '#a8f574',
   fontWeight: 900,
-  fontSize: Math.round((14 * 4) / 5), // 11.2 -> 11px
+  fontSize: 12,
   alignSelf: 'center',
-  width: Math.round((14 * 4) / 5), // 11.2 -> 11px
-  height: Math.round((14 * 4) / 5), // 11.2 -> 11px
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  lineHeight: 1,
-  transform: 'scaleY(2.2)',
   [theme.breakpoints.down('md')]: {
-    fontSize: Math.round((12 * 4) / 5), // 9.6 -> 10px
-    width: Math.round((12 * 4) / 5), // 9.6 -> 10px
-    height: Math.round((12 * 4) / 5), // 9.6 -> 10px
-    transform: 'scaleY(2.0)',
+    fontSize: 8,
   },
-  // Show downward arrow for 529px and below
+  // Show downward arrow for 529px and below with all optimizations
   [theme.breakpoints.down(530)]: {
     fontSize: Math.round((14 * 4) / 5), // 11.2 -> 11px
     width: Math.round((14 * 4) / 5), // 11.2 -> 11px
     height: Math.round((14 * 4) / 5), // 11.2 -> 11px
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    lineHeight: 1,
     transform: 'rotate(90deg) scaleY(2.2)',
     margin: theme.spacing(1, 0),
   },
