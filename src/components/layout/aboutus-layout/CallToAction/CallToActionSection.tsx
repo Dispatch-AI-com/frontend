@@ -50,16 +50,14 @@ const CallToActionSection = () => {
         <ContactText style={{ marginTop: '16px', marginBottom: 0 }}>
           Find us on social media
         </ContactText>
-        <Stack direction="row" spacing={0}>
-          <a
-            href="https://www.linkedin.com/company/get-dispatch-ai"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <SocialMediaButton color="inherit">
-              <LinkedInIcon />
-            </SocialMediaButton>
-          </a>
+        <Stack
+          direction="row"
+          spacing={'24px'}
+          style={{ margin: 0, padding: 0, marginTop: '16px' }}
+        >
+          <SocialMediaButton color="inherit">
+            <LinkedInIcon />
+          </SocialMediaButton>
           <SocialMediaButton color="inherit">
             <FacebookIcon />
           </SocialMediaButton>
