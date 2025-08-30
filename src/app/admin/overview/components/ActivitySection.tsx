@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Box, Container, Typography } from '@mui/material';
+import { Avatar, Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { format, isToday, parseISO } from 'date-fns';
 import Image from 'next/image';
@@ -24,7 +24,7 @@ function formatSubscriptionPeriod(
   }
 }
 
-const PageGrid = styled(Box)(({ theme }) => ({
+const PageGrid = styled(Box)(() => ({
   display: 'grid',
   width: '100%',
   gap: 24,

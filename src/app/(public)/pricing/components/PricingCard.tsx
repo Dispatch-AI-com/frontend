@@ -19,7 +19,8 @@ interface PricingCardProps {
 const CardContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  width: '448px',
+  maxWidth: '448px',
+  width: '100%',
   height: '464px',
   flexShrink: 0,
   padding: '30px',
@@ -28,7 +29,6 @@ const CardContainer = styled('div')(({ theme }) => ({
   backgroundColor: '#fff',
 
   [theme.breakpoints.down('sm')]: {
-    width: '100%',
     height: '440px',
     padding: '20px 16px',
   },
