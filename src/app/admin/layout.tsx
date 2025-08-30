@@ -53,10 +53,15 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         return;
       }
 
-      if (progress.status !== 'completed' && pathname !== '/onboarding') {
-        router.replace('/onboarding');
-        return;
-      }
+      // Temporarily skip onboarding - TODO: Remove this bypass
+      // console.log('🚧 Onboarding bypass active - skipping onboarding check');
+      setReady(true);
+      return;
+
+      // if (progress.status !== 'completed' && pathname !== '/onboarding') {
+      //   router.replace('/onboarding');
+      //   return;
+      // }
 
       setReady(true);
     }, 0);

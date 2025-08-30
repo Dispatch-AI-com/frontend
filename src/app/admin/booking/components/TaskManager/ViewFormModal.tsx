@@ -15,7 +15,7 @@ import {
 import React from 'react';
 
 import type { Service } from '@/features/service/serviceApi';
-import type { ServiceFormField } from '@/features/service-management/serviceManagementApi';
+// import type { ServiceFormField } from '@/features/service-management/serviceManagementApi'; // Unused for now
 import { useGetServiceFormFieldsQuery } from '@/features/service-management/serviceManagementApi';
 
 interface Props {

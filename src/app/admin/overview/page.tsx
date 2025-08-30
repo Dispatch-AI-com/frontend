@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
-import { padding } from '@mui/system';
+// import { padding } from '@mui/system'; // Unused for now
 import React from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';

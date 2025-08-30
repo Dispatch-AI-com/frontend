@@ -133,13 +133,12 @@ export function Content({
       createdBy: {
         name:
           booking.userId === user?._id
-            ? (user?.name ??
-              (user?.firstName && user?.lastName
-                ? `${user.firstName} ${user.lastName}`.trim()
-                : (user?.firstName ??
-                  user?.lastName ??
-                  user?.email ??
-                  'Current User')))
+            ? user?.firstName && user?.lastName
+              ? `${user.firstName} ${user.lastName}`.trim()
+              : (user?.firstName ??
+                user?.lastName ??
+                user?.email ??
+                'Current User')
             : 'Unknown User',
         avatar: '',
       },
