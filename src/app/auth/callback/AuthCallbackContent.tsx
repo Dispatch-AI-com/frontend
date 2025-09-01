@@ -46,6 +46,11 @@ export default function AuthCallbackContent() {
           decodeURIComponent(userString),
         ) as UserInfo;
 
+        // Clear any persisted auth state to prevent old user ID from being used
+        localStorage.removeItem('persist:root');
+
+        console.log('[AuthCallback] Setting user with ID:', parsedUser._id);
+
         dispatch(
           setCredentials({
             csrfToken,
