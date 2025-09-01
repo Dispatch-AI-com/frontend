@@ -68,12 +68,12 @@ const EyeOffIcon = () => (
     viewBox="0 0 16 16"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g fill="none" fill-rule="evenodd">
+    <g fill="none" fillRule="evenodd">
       <path d="M0 0h16v16H0z" />
       <path
         d="M8 2.056c3.804 0 7.5 3.165 7.5 5.944s-3.696 5.944-7.5 5.944S.5 10.777.5 8 4.196 2.056 8 2.056zm0 1C4.717 3.056 1.5 5.812 1.5 8s3.217 4.944 6.5 4.944S14.5 10.19 14.5 8c0-2.19-3.217-4.944-6.5-4.944zm0 2.11a2.833 2.833 0 1 1 0 5.667 2.833 2.833 0 0 1 0-5.666zm0 1a1.833 1.833 0 1 0 0 3.667 1.833 1.833 0 0 0 0-3.666z"
         fill="#BBB"
-        fill-rule="nonzero"
+        fillRule="nonzero"
       />
     </g>
   </svg>
