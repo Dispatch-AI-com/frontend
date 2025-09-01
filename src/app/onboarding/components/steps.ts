@@ -101,12 +101,9 @@ export const steps: Step[] = [
     question:
       'And lastly, would you like to hear a sample of how Dispatch AI will answer your calls?',
     inputType: 'button',
-    options: ['Yes, Demo Call', 'Skip'],
-    validate: v => ['Yes, Demo Call', 'Skip'].includes(v),
-    onValidResponse: v =>
-      v === 'Yes, Demo Call'
-        ? 'Sweet! Let me show you what I can do. 📞'
-        : 'No worries, we can skip the demo for now.',
+    options: ['Yes, Demo Call'],
+    validate: v => ['Yes, Demo Call'].includes(v),
+    onValidResponse: () => 'Sweet! Let me show you what I can do. 📞',
     retryMessage: 'Pick one of the options so we can move forward!',
   },
 ];
