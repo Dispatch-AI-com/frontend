@@ -68,18 +68,18 @@ export const SocialMediaButton = styled(IconButton)(({ theme }) => ({
   minWidth: theme.spacing(4),
   minHeight: theme.spacing(4),
   [theme.breakpoints.down('sm')]: {
-    width: '28px',
-    height: '28px',
-    minWidth: '28px',
-    minHeight: '28px',
+    width: '28px !important',
+    height: '28px !important',
+    minWidth: '28px !important',
+    minHeight: '28px !important',
   },
   '& svg': {
     color: 'white',
     width: theme.spacing(4),
     height: theme.spacing(4),
     [theme.breakpoints.down('sm')]: {
-      width: '28px',
-      height: '28px',
+      width: '28px !important',
+      height: '28px !important',
     },
   },
 }));
