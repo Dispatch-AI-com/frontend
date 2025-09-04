@@ -127,14 +127,16 @@ const StepNumber = styled(Box)(({ theme, bgcolor }) => ({
   [theme.breakpoints.down('md')]: {
     top: -18,
   },
-  // Styles for 529px and below - center display
+  // Styles for 529px and below - center display with optimized sizing
   [theme.breakpoints.down(530)]: {
     position: 'absolute',
-    top: '-16px !important',
+    top: '-18px !important',
     left: '50% !important',
     transform: 'translateX(-50%) !important',
-    width: '28px !important',
-    height: '28px !important',
+    width: '36px !important',
+    height: '36px !important',
+    borderRadius: '20px !important',
+    padding: '8px 8px 8px 9px !important',
   },
 }));
 
@@ -166,10 +168,16 @@ const Arrow = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     fontSize: 8,
   },
-  // Show downward arrow for 529px and below
+  // Show downward arrow for 529px and below with all optimizations
   [theme.breakpoints.down(530)]: {
-    fontSize: 16,
-    transform: 'rotate(90deg)',
+    fontSize: Math.round((14 * 4) / 5), // 11.2 -> 11px
+    width: Math.round((14 * 4) / 5), // 11.2 -> 11px
+    height: Math.round((14 * 4) / 5), // 11.2 -> 11px
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    lineHeight: 1,
+    transform: 'rotate(90deg) scaleY(2.2)',
     margin: theme.spacing(1, 0),
   },
 }));
