@@ -2,7 +2,7 @@
 
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ro } from 'date-fns/locale';
+// import { ro } from 'date-fns/locale'; // Unused for now
 import React from 'react';
 
 const steps = [

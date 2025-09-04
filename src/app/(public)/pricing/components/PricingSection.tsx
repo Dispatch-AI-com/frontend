@@ -57,17 +57,16 @@ export default function PricingSection() {
     (a, b) => tierOrder[a.tier] - tierOrder[b.tier],
   );
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [, setCurrentSlide] = useState(0);
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
-    slides: {
-      perView: 1,
-      spacing: 0,
-    },
+    slides: { perView: 'auto', spacing: 0, origin: 'center' },
+    rubberband: false,
     breakpoints: {
-      '(min-width: 900px)': {
+      '(min-width: 599px)': { slides: { perView: 1, spacing: 0 } },
+      '(min-width: 960px)': {
         slides: { perView: 2, spacing: 0 },
       },
-      '(min-width: 1200px)': {
+      '(min-width: 1420px)': {
         slides: { perView: 3, spacing: 0 },
       },
     },
@@ -99,6 +98,7 @@ export default function PricingSection() {
         sx={{
           ...theme.typography.h1,
           textAlign: 'center',
+          fontSize: '28px',
           margin: {
             xs: '48px 0 32px 0',
             sm: '120px 0 100px 0',
@@ -113,12 +113,15 @@ export default function PricingSection() {
         className="keen-slider"
         sx={{
           maxWidth: {
-            xs: 380,
+            xs: '100%',
             sm: 900,
             md: 1050,
             lg: 1500,
           },
           overflow: 'hidden',
+          '& .keen-slider__slide': {
+            boxSizing: 'border-box',
+          },
         }}
       >
         {isLoading && <p>Loading...</p>}
@@ -128,10 +131,11 @@ export default function PricingSection() {
             key={plan._id}
             className="keen-slider__slide"
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              px: 1,
+              justifyItems: 'center',
               boxSizing: 'border-box',
+              px: { xs: 1, sm: 1 },
+              display: 'block',
+              minWidth: { xs: 'calc(100% - 30px)', sm: 'auto' },
             }}
           >
             <PricingCard

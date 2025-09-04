@@ -2,6 +2,8 @@ import { Box, Drawer, styled } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useAppSelector } from '@/redux/hooks';
+
 import DesktopSidebarNav from './DesktopSidebarNav';
 import UserProfileMenu from './UserProfileMenu';
 
@@ -56,6 +58,8 @@ export default function MobileSidebarDrawer({
   handleMenuClose,
   ICON_SIZE,
 }: MobileSidebarDrawerProps) {
+  const user = useAppSelector(state => state.auth.user);
+
   return (
     <Drawer
       variant="temporary"
@@ -83,9 +87,11 @@ export default function MobileSidebarDrawer({
         </Box>
         {/* Profile at the bottom */}
         <UserProfileMenu
-          name="Jeon"
+          name={user?.firstName ?? user?.email?.split('@')[0] ?? 'User'}
           plan="Free Plan"
-          avatarLetter="J"
+          avatarLetter={
+            (user?.firstName ?? user?.email)?.charAt(0)?.toUpperCase() ?? 'U'
+          }
           dropdownOptions={dropdownOptions}
           anchorEl={anchorEl}
           open={openMenu}

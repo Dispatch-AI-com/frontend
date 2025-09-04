@@ -35,22 +35,48 @@ const StyledLabelWrapper = styled(Box)(({ theme }) => ({
 const StyledIconRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(1),
+
+  '& > :nth-of-type(-n+2)': {
+    borderRadius: 8,
+    padding: theme.spacing(0.5, 1),
+    overflow: 'hidden',
+  },
+  '& > :nth-of-type(-n+2) .MuiTouchRipple-root': {
+    borderRadius: 8,
+  },
+
+  '& > :nth-of-type(-n+2) .MuiSvgIcon-root': {
+    borderRadius: 6,
+    overflow: 'hidden',
+  },
+
   [theme.breakpoints.down('md')]: {
     gap: theme.spacing(0.5),
     justifyContent: 'flex-end',
+    '& > :nth-of-type(-n+2)': {
+      borderRadius: 8,
+      padding: theme.spacing(0.8),
+    },
+    '& > :nth-of-type(-n+2) .MuiTouchRipple-root': {
+      borderRadius: 8,
+    },
   },
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.common.black,
-  padding: theme.spacing(1),
+  padding: theme.spacing(0.5, 1),
   '&:hover': {
     backgroundColor: 'rgba(0, 0, 0, 0.04)',
   },
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(0.5),
+    padding: theme.spacing(0.8),
     '& .MuiSvgIcon-root': {
-      fontSize: 22,
+      fontSize: 24,
+      '& path': {
+        transform: 'scale(1.3)',
+        transformOrigin: 'center',
+      },
     },
     '& img': {
       width: 22,

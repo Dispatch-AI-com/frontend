@@ -66,6 +66,7 @@ export default function BlogList() {
         setBlogs(fetched);
         setTotal(res.data.total);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Failed to fetch blogs:', err);
       }
     };
@@ -96,6 +97,7 @@ export default function BlogList() {
         scroll: true,
       });
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('check next page failed', e);
     }
   };

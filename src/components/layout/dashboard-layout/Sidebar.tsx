@@ -95,6 +95,12 @@ const navItems = [
 
 const dropdownOptions = [
   {
+    label: 'Home',
+    iconSrc: '/dashboard/sidebar/home.svg',
+    iconAlt: 'Home',
+    action: 'home',
+  },
+  {
     label: 'Switch Account',
     iconSrc: '/dashboard/sidebar/account-switch.svg',
     iconAlt: 'Switch Account',
@@ -168,9 +174,11 @@ export default function Sidebar() {
           </LogoBox>
           <DesktopSidebarNav navItems={navItems} isCollapsed={isMediumScreen} />
           <UserProfileMenu
-            name={user?.firstName ?? 'User'}
+            name={user?.firstName ?? user?.email?.split('@')[0] ?? 'User'}
             plan="Free Plan"
-            avatarLetter={user?.firstName?.charAt(0)?.toUpperCase() ?? 'U'}
+            avatarLetter={
+              (user?.firstName ?? user?.email)?.charAt(0)?.toUpperCase() ?? 'U'
+            }
             dropdownOptions={dropdownOptions}
             anchorEl={anchorEl}
             open={open}

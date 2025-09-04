@@ -61,10 +61,25 @@ export const CallToActionWrapper = styled(Box)(({ theme }) => ({
 }));
 
 export const SocialMediaButton = styled(IconButton)(({ theme }) => ({
-  padding: theme.spacing(1),
+  margin: 0,
+  padding: 0,
+  width: theme.spacing(4),
+  height: theme.spacing(4),
+  minWidth: theme.spacing(4),
+  minHeight: theme.spacing(4),
+  [theme.breakpoints.down('sm')]: {
+    width: '28px',
+    height: '28px',
+    minWidth: '28px',
+    minHeight: '28px',
+  },
   '& svg': {
-    width: '30px',
-    height: '30px',
     color: 'white',
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+      width: '28px',
+      height: '28px',
+    },
   },
 }));

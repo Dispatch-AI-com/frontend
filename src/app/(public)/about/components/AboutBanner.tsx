@@ -1,6 +1,5 @@
 import { Box, Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { minWidth } from '@mui/system';
 
 export const AboutHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -44,7 +43,7 @@ export const HeaderContainer = styled(Container)(({ theme }) => ({
 }));
 
 export const HeaderImage = styled('img')(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: theme.shape.borderRadius * 2,
   width: '100%',
   maxWidth: '576px',
   height: 'auto',
