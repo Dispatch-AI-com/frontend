@@ -104,7 +104,7 @@ const PriceRow = styled('div')(() => ({
   display: 'flex',
   alignItems: 'flex-start',
   gap: '10px',
-  margin: '40px 0 40px 0',
+  margin: '30px 0 30px 0',
 }));
 
 const PriceText = styled('span')(() => ({
@@ -142,8 +142,9 @@ const CheckWrapper = styled('div')({
   width: '16px',
   height: '16px',
   display: 'flex',
-  alignItems: 'center',
+  alignSelf: 'flex-start',
   justifyContent: 'center',
+  marginTop: '4px',
 });
 
 const FeatureLabel = styled('span')({
@@ -151,6 +152,7 @@ const FeatureLabel = styled('span')({
   fontSize: '14px',
   color: '#6d6d6d',
   margin: '2px 8px 2px 12px',
+  alignSelf: 'flex-start',
 });
 
 const FeatureValue = styled('span')({
@@ -158,6 +160,8 @@ const FeatureValue = styled('span')({
   fontSize: '14px',
   color: '#060606',
   margin: '2px 0 2px 0px',
+  width: '120px',
+  alignSelf: 'flex-start',
 });
 
 export default function PricingCard({

@@ -11,6 +11,7 @@ import { useGetTwilioPhoneNumberQuery } from '@/features/overview/overviewApi';
 import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
 import { useSubscription } from '@/features/subscription/useSubscription';
 import { useAppSelector } from '@/redux/hooks';
+import { getPlanTier, isFreeOrBasicPlan } from '@/utils/planUtils';
 
 function formatSubscriptionPeriod(
   start?: string | Date,
@@ -45,7 +46,7 @@ const Title = styled(Typography)({
 const ActivityGrid = styled(Box)({
   display: 'grid',
   gap: 12,
-  justifyItems: 'center',
+  justifyItems: 'start',
   gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
 });
 
@@ -150,6 +151,10 @@ export default function ActivitySection() {
   const { data } = useGetTodayMetricsQuery(userId ?? '', { skip: !userId });
   const { subscription } = useSubscription();
 
+  // Check if user has FREE or BASIC plan
+  const planTier = getPlanTier(subscription);
+  const shouldHideBookingFeatures = isFreeOrBasicPlan(planTier);
+
   const { data: bookings } = useGetBookingsQuery({ userId }, { skip: !userId });
 
   const todayBookings = (bookings ?? []).filter(booking => {
@@ -190,35 +195,39 @@ export default function ActivitySection() {
             <Value>{data?.totalCalls ?? 0}</Value>
           </StatCard>
 
-          <StatCard>
-            <Box display="flex">
-              <IconWrapper variant="book">
-                <Image
-                  src="/overview/book.svg"
-                  alt="booked"
-                  width={16}
-                  height={16}
-                />
-              </IconWrapper>
-              <Label>Number of Bookings Done</Label>
-            </Box>
-            <Value>{doneToday}</Value>
-          </StatCard>
+          {!shouldHideBookingFeatures && (
+            <StatCard>
+              <Box display="flex">
+                <IconWrapper variant="book">
+                  <Image
+                    src="/overview/book.svg"
+                    alt="booked"
+                    width={16}
+                    height={16}
+                  />
+                </IconWrapper>
+                <Label>Number of Bookings Done</Label>
+              </Box>
+              <Value>{doneToday}</Value>
+            </StatCard>
+          )}
 
-          <StatCard>
-            <Box display="flex">
-              <IconWrapper variant="follow">
-                <Image
-                  src="/overview/follow.svg"
-                  alt="follow up"
-                  width={16}
-                  height={16}
-                />
-              </IconWrapper>
-              <Label>Number of Bookings Confirmed</Label>
-            </Box>
-            <Value>{confirmedToday}</Value>
-          </StatCard>
+          {!shouldHideBookingFeatures && (
+            <StatCard>
+              <Box display="flex">
+                <IconWrapper variant="follow">
+                  <Image
+                    src="/overview/follow.svg"
+                    alt="follow up"
+                    width={16}
+                    height={16}
+                  />
+                </IconWrapper>
+                <Label>Number of Bookings Confirmed</Label>
+              </Box>
+              <Value>{confirmedToday}</Value>
+            </StatCard>
+          )}
         </ActivityGrid>
       </Box>
 
