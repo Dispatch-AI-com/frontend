@@ -5,10 +5,12 @@ import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
+import { useAppSelector } from '@/redux/hooks';
 
 import ActivitySection from './components/ActivitySection';
 import CampaignProgressSection from './components/CompaignProgressSection';
 import RecentService from './components/RecentService';
+import VerificationReminder from './components/VerificationReminder';
 
 const styles = {
   contentContainer: {
@@ -33,8 +35,13 @@ const styles = {
 };
 
 export default function OverviewPage() {
+  const user = useAppSelector(state => state.auth.user);
+
   return (
     <AdminPageLayout title="Overview" padding="normal" background="solid">
+      {/* Verification Reminder */}
+      {user?._id && <VerificationReminder userId={user._id} />}
+
       <Box sx={styles.contentContainer}>
         <ActivitySection />
       </Box>

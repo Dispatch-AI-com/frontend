@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import { useState } from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
+import VerificationGuard from '@/components/VerificationGuard';
 
 import ServiceManagementContent from './components/ServiceManagementContent';
 
@@ -54,10 +55,12 @@ export default function ServiceManagementPage() {
       padding="normal"
       background="solid"
     >
-      <ServiceManagementContent
-        isCreateModalOpen={isCreateModalOpen}
-        onCloseCreateModal={handleCloseCreateModal}
-      />
+      <VerificationGuard>
+        <ServiceManagementContent
+          isCreateModalOpen={isCreateModalOpen}
+          onCloseCreateModal={handleCloseCreateModal}
+        />
+      </VerificationGuard>
     </AdminPageLayout>
   );
 }

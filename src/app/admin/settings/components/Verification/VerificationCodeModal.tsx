@@ -18,7 +18,7 @@ interface VerificationCodeModalProps {
   type: 'mobile' | 'email';
   contact: string; // mobile number or email
   onClose: () => void;
-  //   onVerify: (code: string) => Promise<void>;
+  onVerify: (code: string) => Promise<void>;
 }
 
 const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
@@ -26,7 +26,7 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
   type,
   contact,
   onClose,
-  //   onVerify,
+  onVerify,
 }) => {
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +38,7 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
     onClose();
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     if (!code.trim()) {
       setError('Please enter verification code');
       return;
@@ -48,7 +48,7 @@ const VerificationCodeModal: React.FC<VerificationCodeModalProps> = ({
     setError(null);
 
     try {
-      //   await onVerify(code);
+      await onVerify(code);
       handleClose();
     } catch {
       setError('Invalid verification code. Please try again.');

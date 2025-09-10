@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
+import VerificationGuard from '@/components/VerificationGuard';
 
 import AndroidInstantSetup from './components/Android/InstantSetup';
 import AndroidManualSetup from './components/Android/ManualSetup';
@@ -153,16 +154,18 @@ export default function AISetupPage() {
 
   return (
     <AdminPageLayout title="AI Setup" padding="normal" background="solid">
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          height: '100%',
-        }}
-      >
-        {stepComponents[step]}
-      </Box>
+      <VerificationGuard>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          {stepComponents[step]}
+        </Box>
+      </VerificationGuard>
     </AdminPageLayout>
   );
 }

@@ -12,9 +12,11 @@ import VerificationForm from '@/app/admin/settings/components/Verification/Verif
 import {
   useGetUserProfileQuery,
   useGetVerificationQuery,
+  useSendEmailVerificationMutation,
+  useSendSmsVerificationMutation,
   useUpdateVerificationMutation,
   useVerifyEmailMutation,
-  useVerifyMobileMutation,
+  useVerifySmsMutation,
 } from '@/features/settings/settingsApi';
 import { useAppSelector } from '@/redux/hooks';
 import { validateVerificationForm } from '@/utils/validationSettings';
@@ -31,8 +33,10 @@ export default function VerificationSection() {
     skip: !user?._id,
   });
   const [updateVerification] = useUpdateVerificationMutation();
-  const [verifyMobile] = useVerifyMobileMutation();
+  const [sendEmailVerification] = useSendEmailVerificationMutation();
   const [verifyEmail] = useVerifyEmailMutation();
+  const [sendSmsVerification] = useSendSmsVerificationMutation();
+  const [verifySms] = useVerifySmsMutation();
   const [open, setOpen] = useState(false);
   const [verificationModal, setVerificationModal] = useState<{
     open: boolean;
@@ -112,6 +116,20 @@ export default function VerificationSection() {
         return;
       }
 
+      // Check if country code is selected for mobile verification
+      if (
+        (formValues.type === 'SMS' || formValues.type === 'Both') &&
+        formValues.mobile
+      ) {
+        const match = /^(\+\d+)?\s*(.*)$/.exec(formValues.mobile);
+        const countryCode = match?.[1];
+
+        if (!countryCode || countryCode === '') {
+          setError('Please select a country code for mobile number');
+          return;
+        }
+      }
+
       // Check if mobile or email has changed
       const mobileChanged = formValues.mobile !== values.mobile;
       const emailChanged = formValues.email !== values.email;
@@ -139,7 +157,18 @@ export default function VerificationSection() {
         throw new Error('Mobile number not available');
       }
 
-      await verifyMobile({
+      // Check if country code is selected
+      const match = /^(\+\d+)?\s*(.*)$/.exec(values.mobile);
+      const countryCode = match?.[1];
+
+      if (!countryCode || countryCode === '') {
+        setError(
+          'Please select a country code before sending SMS verification',
+        );
+        return;
+      }
+
+      await sendSmsVerification({
         userId: user._id,
         mobile: values.mobile,
       }).unwrap();
@@ -150,7 +179,7 @@ export default function VerificationSection() {
         contact: values.mobile,
       });
     } catch {
-      setError('Failed to verify mobile number');
+      setError('Failed to send SMS verification');
     }
   };
 
@@ -160,7 +189,7 @@ export default function VerificationSection() {
         throw new Error('Email not available');
       }
 
-      await verifyEmail({
+      await sendEmailVerification({
         userId: user._id,
         email: values.email,
       }).unwrap();
@@ -171,7 +200,7 @@ export default function VerificationSection() {
         contact: values.email,
       });
     } catch {
-      setError('Failed to verify email address');
+      setError('Failed to send verification email');
     }
   };
 
@@ -181,6 +210,26 @@ export default function VerificationSection() {
       type: 'mobile',
       contact: '',
     });
+  };
+
+  const handleVerifyCode = async (code: string) => {
+    if (!user?._id || !verificationModal.contact) {
+      throw new Error('User or contact not available');
+    }
+
+    if (verificationModal.type === 'email') {
+      await verifyEmail({
+        userId: user._id,
+        email: verificationModal.contact,
+        code,
+      }).unwrap();
+    } else if (verificationModal.type === 'mobile') {
+      await verifySms({
+        userId: user._id,
+        mobile: verificationModal.contact,
+        code,
+      }).unwrap();
+    }
   };
 
   const handleMarketingPromotionsChange = async (checked: boolean) => {
@@ -327,6 +376,7 @@ export default function VerificationSection() {
         type={verificationModal.type}
         contact={verificationModal.contact}
         onClose={handleCloseVerificationModal}
+        onVerify={handleVerifyCode}
       />
     </>
   );

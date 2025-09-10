@@ -22,6 +22,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   const [countryOptions, setCountryOptions] = useState<
     { label: string; value: string }[]
   >([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     fetch('https://restcountries.com/v3.1/all?fields=name,idd')
@@ -63,11 +64,25 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
           a.label.localeCompare(b.label),
         );
         setCountryOptions(options);
+        setIsInitialized(true);
       })
       .catch(() => {
         setCountryOptions([]);
+        setIsInitialized(true);
       });
   }, []);
+
+  // Set default country code to Australia if no value is provided
+  useEffect(() => {
+    if (isInitialized && !value && countryOptions.length > 0) {
+      const australiaOption = countryOptions.find(
+        option => option.label === 'Australia' || option.value === '+61',
+      );
+      if (australiaOption) {
+        onChange(australiaOption.value);
+      }
+    }
+  }, [isInitialized, value, countryOptions, onChange]);
 
   const match = /^(\+\d+)?\s*(.*)$/.exec(value);
   const prefix = match?.[1] ?? '';

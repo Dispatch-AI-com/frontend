@@ -156,14 +156,47 @@ export const settingsApi = createApi({
       }),
       invalidatesTags: ['Verification'],
     }),
-    verifyEmail: builder.mutation<
+    sendSmsVerification: builder.mutation<
+      { success: boolean; message?: string },
+      { userId: string; mobile: string }
+    >({
+      query: ({ userId, mobile }) => ({
+        url: `/api/settings/user/${userId}/verification/mobile/send`,
+        method: 'POST',
+        data: { mobile },
+      }),
+      invalidatesTags: ['Verification'],
+    }),
+    verifySms: builder.mutation<
       { success: boolean; message: string },
+      { userId: string; mobile: string; code: string }
+    >({
+      query: ({ userId, mobile, code }) => ({
+        url: `/api/settings/user/${userId}/verification/mobile/verify`,
+        method: 'POST',
+        data: { mobile, code },
+      }),
+      invalidatesTags: ['Verification'],
+    }),
+    sendEmailVerification: builder.mutation<
+      { success: boolean; message?: string },
       { userId: string; email: string }
     >({
       query: ({ userId, email }) => ({
-        url: `/api/settings/user/${userId}/verification/email`,
+        url: `/api/settings/user/${userId}/verification/email/send`,
         method: 'POST',
         data: { email },
+      }),
+      invalidatesTags: ['Verification'],
+    }),
+    verifyEmail: builder.mutation<
+      { success: boolean; message: string },
+      { userId: string; email: string; code: string }
+    >({
+      query: ({ userId, email, code }) => ({
+        url: `/api/settings/user/${userId}/verification/email/verify`,
+        method: 'POST',
+        data: { email, code },
       }),
       invalidatesTags: ['Verification'],
     }),
@@ -193,5 +226,8 @@ export const {
   useGetVerificationQuery,
   useUpdateVerificationMutation,
   useVerifyMobileMutation,
+  useSendSmsVerificationMutation,
+  useVerifySmsMutation,
+  useSendEmailVerificationMutation,
   useVerifyEmailMutation,
 } = settingsApi;
