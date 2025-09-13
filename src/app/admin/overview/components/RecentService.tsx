@@ -124,9 +124,15 @@ export default function RecentService() {
     error,
   } = useGetBookingsQuery({ userId: user?._id }, { skip: !user?._id });
 
+  const upcomingBookings = (bookings ?? [])
+    .filter(b => dayjs(b.bookingTime).isAfter(dayjs()))
+    .sort(
+      (a, b) => dayjs(a.bookingTime).valueOf() - dayjs(b.bookingTime).valueOf(),
+    );
+
   const renderDesktopRows = () => {
-    if (!bookings || bookings.length === 0) return null;
-    return bookings.slice(0, 3).map(booking => (
+    if (!upcomingBookings || upcomingBookings.length === 0) return null;
+    return upcomingBookings.slice(0, 3).map(booking => (
       <Box key={booking._id} sx={styles.row}>
         <Box sx={{ ...styles.cell, flex: 1.2 }}>
           <ServiceName serviceId={booking.serviceId} />
@@ -150,8 +156,8 @@ export default function RecentService() {
   };
 
   const renderMobileCards = () => {
-    if (!bookings || bookings.length === 0) return null;
-    return bookings.slice(0, 3).map(booking => (
+    if (!upcomingBookings || upcomingBookings.length === 0) return null;
+    return upcomingBookings.slice(0, 3).map(booking => (
       <Box key={booking._id} sx={styles.card}>
         <Box sx={styles.cardHeader}>
           <Typography sx={styles.cardTitle}>
@@ -216,7 +222,7 @@ export default function RecentService() {
           <Typography sx={{ color: 'red', textAlign: 'center' }}>
             Failed to load
           </Typography>
-        ) : bookings && bookings.length > 0 ? (
+        ) : upcomingBookings && upcomingBookings.length > 0 ? (
           isMobile ? (
             renderMobileCards()
           ) : (
