@@ -56,19 +56,31 @@ const CallToActionSection = () => {
           style={{ margin: 0, padding: 0, marginTop: '16px' }}
         >
           <SocialMediaButton color="inherit">
-            <LinkedInIcon />
+            <LinkedInIcon
+              fontSize="inherit"
+              sx={{ transform: 'scale(1.3333)' }}
+            />
           </SocialMediaButton>
           <SocialMediaButton color="inherit">
-            <FacebookIcon />
+            <FacebookIcon
+              fontSize="inherit"
+              sx={{ transform: 'scale(1.3333)' }}
+            />
           </SocialMediaButton>
           <SocialMediaButton color="inherit">
-            <InstagramIcon />
+            <InstagramIcon
+              fontSize="inherit"
+              sx={{ transform: 'scale(1.3333)' }}
+            />
           </SocialMediaButton>
           <SocialMediaButton color="inherit">
-            <XIcon />
+            <XIcon fontSize="inherit" sx={{ transform: 'scale(1.1119999)' }} />
           </SocialMediaButton>
           <SocialMediaButton color="inherit">
-            <YouTubeIcon />
+            <YouTubeIcon
+              fontSize="inherit"
+              sx={{ transform: 'scale(1.3333)' }}
+            />
           </SocialMediaButton>
         </Stack>
       </Box>
