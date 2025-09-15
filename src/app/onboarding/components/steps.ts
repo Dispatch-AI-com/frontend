@@ -7,7 +7,7 @@ export interface Step {
     | `company.${'businessName' | 'abn' | 'address.full'}`;
 
   question: string;
-  inputType: 'text' | 'button';
+  inputType: 'text' | 'button' | 'address';
   validate: (input: string) => boolean;
   onValidResponse: (input: string) => string;
   retryMessage: string;
@@ -84,15 +84,14 @@ export const steps: Step[] = [
   {
     id: 5,
     field: 'company.address.full',
-    inputType: 'text',
+    inputType: 'address',
     question:
-      'Please enter your office address in the format: Street, Suburb, STATE Postcode. (eg. 123 Collins St, Melbourne, VIC 3000)',
-    // Accepts: any chars + comma + Suburb + comma + STATE + space + 4-digit postcode
-    validate: input =>
-      /^[^,]+,\s*[^,]+,\s*[A-Z]{2,3}\s+\d{4}$/.test(input.trim()),
+      'Please enter your office address. Start typing and select from the suggestions to ensure accuracy.',
+    // Validate that the address is not empty and has reasonable length
+    validate: input => input.trim().length >= 10 && input.trim().length <= 200,
     onValidResponse: addr => `Great, I have your address as "${addr}".`,
     retryMessage:
-      'That address does not look right. Example: 123 Collins St, Melbourne, VIC 3000',
+      'Please enter a valid address. Start typing and select from the suggestions.',
   },
 
   {
