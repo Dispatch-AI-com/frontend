@@ -42,6 +42,14 @@ export interface VerificationSettings {
   marketingPromotions?: boolean;
 }
 
+export interface AddressSettings {
+  unitAptPOBox?: string;
+  streetAddress: string;
+  suburb: string;
+  state: string;
+  postcode: string;
+}
+
 export const settingsApi = createApi({
   reducerPath: 'settingsApi',
   baseQuery: axiosBaseQuery(),
@@ -51,6 +59,7 @@ export const settingsApi = createApi({
     'BillingAddress',
     'Greeting',
     'Verification',
+    'Address',
   ],
   endpoints: builder => ({
     getUserProfile: builder.query<UserProfileSettings, string>({
@@ -111,7 +120,7 @@ export const settingsApi = createApi({
     }),
     getGreeting: builder.query<GreetingSettings, string>({
       query: userId => ({
-        url: `/companies/user/${userId}/greeting`,
+        url: `/users/${userId}/greeting`,
         method: 'GET',
       }),
       providesTags: ['Greeting'],
@@ -121,7 +130,7 @@ export const settingsApi = createApi({
       { userId: string } & GreetingSettings
     >({
       query: ({ userId, ...greetingData }) => ({
-        url: `/companies/user/${userId}/greeting`,
+        url: `/users/${userId}/greeting`,
         method: 'PATCH',
         data: greetingData,
       }),
@@ -177,6 +186,24 @@ export const settingsApi = createApi({
         data: { abn, userId },
       }),
     }),
+    getAddress: builder.query<AddressSettings, string>({
+      query: userId => ({
+        url: `/users/${userId}/address`,
+        method: 'GET',
+      }),
+      providesTags: ['Address'],
+    }),
+    updateAddress: builder.mutation<
+      AddressSettings,
+      { userId: string; address: AddressSettings }
+    >({
+      query: ({ userId, address }) => ({
+        url: `/users/${userId}/address`,
+        method: 'PATCH',
+        body: address,
+      }),
+      invalidatesTags: ['Address'],
+    }),
   }),
 });
 
@@ -194,4 +221,6 @@ export const {
   useUpdateVerificationMutation,
   useVerifyMobileMutation,
   useVerifyEmailMutation,
+  useGetAddressQuery,
+  useUpdateAddressMutation,
 } = settingsApi;

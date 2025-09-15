@@ -4,8 +4,9 @@ import React from 'react';
 import EditableSection from '@/app/admin/settings/components/EditableSection';
 import SelectField from '@/app/admin/settings/components/SelectField';
 import {
-  useGetBillingAddressQuery,
-  useUpdateBillingAddressMutation,
+  type AddressSettings,
+  useGetAddressQuery,
+  useUpdateAddressMutation,
 } from '@/features/settings/settingsApi';
 import { useAppSelector } from '@/redux/hooks';
 import type { ValidationResult } from '@/utils/validationSettings';
@@ -140,32 +141,34 @@ const validateState = (state: string): ValidationResult => {
 export default function BillingAddressSection() {
   const user = useAppSelector(state => state.auth.user);
 
-  const { data: billingData, isLoading } = useGetBillingAddressQuery(
-    user?._id ?? '',
-    {
-      skip: !user?._id,
-    },
-  );
+  const { data: billingData, isLoading } = useGetAddressQuery(user?._id ?? '', {
+    skip: !user?._id,
+  });
 
-  const [updateBillingAddress] = useUpdateBillingAddressMutation();
+  const [updateAddress] = useUpdateAddressMutation();
   const handleSave = async (values: Record<string, string>) => {
     if (!user?._id) {
       throw new Error('User not logged in');
     }
 
-    await updateBillingAddress({
-      userId: user._id,
-      unit: values.unit || undefined,
+    // Convert Record<string, string> to AddressSettings
+    const addressSettings: AddressSettings = {
+      unitAptPOBox: values.unit,
       streetAddress: values.streetAddress,
       suburb: values.suburb,
       state: values.state,
       postcode: values.postcode,
-    }).unwrap();
+    };
+
+    await updateAddress({
+      userId: user._id,
+      address: addressSettings,
+    });
   };
 
   const convertedData = billingData
     ? {
-        unit: billingData.unit ?? '',
+        unit: billingData.unitAptPOBox ?? '',
         streetAddress: billingData.streetAddress,
         suburb: billingData.suburb,
         state: billingData.state,
