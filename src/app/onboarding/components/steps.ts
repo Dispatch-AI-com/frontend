@@ -3,8 +3,7 @@ export interface Step {
 
   field:
     | '' // Demo-call
-    | `user.${'fullPhoneNumber' | 'position'}`
-    | `company.${'businessName' | 'abn' | 'address.full'}`;
+    | `user.${'contact' | 'position' | 'address.full' | 'greeting.message'}`;
 
   question: string;
   inputType: 'text' | 'button' | 'address';
@@ -17,7 +16,7 @@ export interface Step {
 export const steps: Step[] = [
   {
     id: 1,
-    field: 'user.fullPhoneNumber',
+    field: 'user.contact',
     question:
       'Hey there! 👋 Before we dive in, could you share your phone number with me?',
     inputType: 'text',
@@ -41,61 +40,31 @@ export const steps: Step[] = [
 
   {
     id: 3,
-    field: 'company.businessName',
-    question: "What's the name of your company or business?",
-    inputType: 'text',
-    validate: input => input.trim().length >= 2,
-    onValidResponse: name => `Great – "${name}" sounds solid!`,
-    retryMessage:
-      "Oops, didn't catch that. Could you type the business name again?",
-  },
-
-  {
-    id: 4,
-    field: 'company.abn',
-    question: "What's your Australian Business Number (ABN)?",
-    inputType: 'text',
-    validate: input => {
-      if (!/^\d{11}$/.test(input)) {
-        return false;
-      }
-
-      if (input.length !== 11) {
-        return false;
-      }
-
-      const weights = [10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
-      let sum = 0;
-
-      const firstDigit = parseInt(input[0], 10) - 1;
-      sum += firstDigit * weights[0];
-
-      for (let i = 1; i < 11; i++) {
-        sum += parseInt(input[i], 10) * weights[i];
-      }
-
-      return sum % 89 === 0;
-    },
-    onValidResponse: () => 'Thanks, ABN stored.',
-    retryMessage:
-      'Hmm, that doesn’t seem like a real ABN. Could you double-check it?',
-  },
-
-  {
-    id: 5,
-    field: 'company.address.full',
-    inputType: 'address',
+    field: 'user.address.full',
     question:
-      'Please enter your office address. Start typing and select from the suggestions to ensure accuracy.',
-    // Validate that the address is not empty and has reasonable length
-    validate: input => input.trim().length >= 10 && input.trim().length <= 200,
-    onValidResponse: addr => `Great, I have your address as "${addr}".`,
+      'Please enter your billing address. Start typing and select from the suggestions.',
+    inputType: 'address',
+    validate: input => input.trim().length >= 5,
+    onValidResponse: addr => `Great, I have your billing address as "${addr}".`,
     retryMessage:
       'Please enter a valid address. Start typing and select from the suggestions.',
   },
 
   {
-    id: 6,
+    id: 4,
+    field: 'user.greeting.message',
+    question:
+      'How would you like Dispatch AI to greet your callers? You can use our default greeting or customize your own.',
+    inputType: 'text',
+    validate: input => input.trim().length >= 10 && input.trim().length <= 500,
+    onValidResponse: greeting =>
+      `Perfect! Your greeting is set: "${greeting.slice(0, 50)}${greeting.length > 50 ? '...' : ''}".`,
+    retryMessage:
+      'Please enter a greeting message between 10 and 500 characters.',
+  },
+
+  {
+    id: 5,
     field: '',
     question:
       'And lastly, would you like to hear a sample of how Dispatch AI will answer your calls?',
