@@ -28,6 +28,7 @@ import { useCreateServiceBookingMutation } from '@/features/service/serviceBooki
 import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
 import { useGetServiceFormFieldsQuery } from '@/features/service-management/serviceManagementApi';
 import { useVerificationCheck } from '@/features/settings/hooks/useVerificationCheck';
+import { useAppSelector } from '@/redux/hooks';
 import type { RootState } from '@/redux/store';
 interface Props {
   onClose: () => void;

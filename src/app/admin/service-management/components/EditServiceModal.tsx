@@ -29,6 +29,7 @@ import {
   useUpdateServiceMutation,
 } from '@/features/service-management/serviceManagementApi';
 import { useVerificationCheck } from '@/features/settings/hooks/useVerificationCheck';
+import { useAppSelector } from '@/redux/hooks';
 import type { RootState } from '@/redux/store';
 import theme from '@/theme';
 
