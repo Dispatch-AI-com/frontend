@@ -1,11 +1,12 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
-// import { padding } from '@mui/system'; // Unused for now
 import React from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
 import { useAppSelector } from '@/redux/hooks';
+import { useSubscription } from '@/features/subscription/useSubscription';
+import { getPlanTier, isFreeOrBasicPlan } from '@/utils/planUtils';
 
 import ActivitySection from './components/ActivitySection';
 import CampaignProgressSection from './components/CompaignProgressSection';
@@ -35,7 +36,14 @@ const styles = {
 };
 
 export default function OverviewPage() {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const user = useAppSelector(state => state.auth.user);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+  const { subscription } = useSubscription();
+
+  // Check if user has FREE or BASIC plan
+  const planTier = getPlanTier(subscription);
+  const shouldHideBookingFeatures = isFreeOrBasicPlan(planTier);
 
   return (
     <AdminPageLayout title="Overview" padding="normal" background="solid">
@@ -51,10 +59,14 @@ export default function OverviewPage() {
         <CampaignProgressSection />
       </Box>
 
-      <Typography sx={styles.sectionTitle}>Recent Bookings</Typography>
-      <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
-        <RecentService />
-      </Box>
+      {!shouldHideBookingFeatures && (
+        <>
+          <Typography sx={styles.sectionTitle}>Recent Bookings</Typography>
+          <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
+            <RecentService />
+          </Box>
+        </>
+      )}
     </AdminPageLayout>
   );
 }
