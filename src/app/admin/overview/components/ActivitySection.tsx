@@ -11,6 +11,7 @@ import { useGetTwilioPhoneNumberQuery } from '@/features/overview/overviewApi';
 import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
 import { useSubscription } from '@/features/subscription/useSubscription';
 import { useAppSelector } from '@/redux/hooks';
+import { getPlanTier, isFreeOrBasicPlan } from '@/utils/planUtils';
 
 function formatSubscriptionPeriod(
   start?: string | Date,
@@ -24,7 +25,9 @@ function formatSubscriptionPeriod(
   }
 }
 
-const PageGrid = styled(Box)(() => ({
+const PageGrid = styled(Box, {
+  shouldForwardProp: prop => prop !== 'equal',
+})<{ equal: boolean }>(({ equal }) => ({
   display: 'grid',
   width: '100%',
   gap: 24,
@@ -32,7 +35,7 @@ const PageGrid = styled(Box)(() => ({
     gap: 12,
   },
 
-  gridTemplateColumns: '6fr 5fr',
+  gridTemplateColumns: equal ? '1fr 2fr' : '6fr 5fr',
 }));
 
 const Title = styled(Typography)({
@@ -45,7 +48,7 @@ const Title = styled(Typography)({
 const ActivityGrid = styled(Box)({
   display: 'grid',
   gap: 12,
-  justifyItems: 'center',
+  justifyItems: 'start',
   gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
 });
 
@@ -67,7 +70,8 @@ const StatCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  maxWidth: 196,
+  width: '100%',
+  height: '152px',
   [theme.breakpoints.down('sm')]: { padding: '12px' },
 }));
 
@@ -115,8 +119,8 @@ const InfoCard = styled(Box, {
   padding: 20,
   borderRadius: 16,
   backgroundColor: bgcolor,
-  maxWidth: 240,
-  minHeight: 200,
+  maxWidth: '100%',
+  height: '188px',
   '@media (max-width: 450px)': {
     padding: 12,
   },
@@ -150,6 +154,10 @@ export default function ActivitySection() {
   const { data } = useGetTodayMetricsQuery(userId ?? '', { skip: !userId });
   const { subscription } = useSubscription();
 
+  // Check if user has FREE or BASIC plan
+  const planTier = getPlanTier(subscription);
+  const shouldHideBookingFeatures = isFreeOrBasicPlan(planTier);
+
   const { data: bookings } = useGetBookingsQuery({ userId }, { skip: !userId });
 
   const todayBookings = (bookings ?? []).filter(booking => {
@@ -171,7 +179,7 @@ export default function ActivitySection() {
   );
 
   return (
-    <PageGrid>
+    <PageGrid equal={shouldHideBookingFeatures}>
       <Box>
         <Title>Today's Activity</Title>
         <ActivityGrid>
@@ -190,35 +198,39 @@ export default function ActivitySection() {
             <Value>{data?.totalCalls ?? 0}</Value>
           </StatCard>
 
-          <StatCard>
-            <Box display="flex">
-              <IconWrapper variant="book">
-                <Image
-                  src="/overview/book.svg"
-                  alt="booked"
-                  width={16}
-                  height={16}
-                />
-              </IconWrapper>
-              <Label>Number of Bookings Done</Label>
-            </Box>
-            <Value>{doneToday}</Value>
-          </StatCard>
+          {!shouldHideBookingFeatures && (
+            <StatCard>
+              <Box display="flex">
+                <IconWrapper variant="book">
+                  <Image
+                    src="/overview/book.svg"
+                    alt="booked"
+                    width={16}
+                    height={16}
+                  />
+                </IconWrapper>
+                <Label>Number of Bookings Done</Label>
+              </Box>
+              <Value>{doneToday}</Value>
+            </StatCard>
+          )}
 
-          <StatCard>
-            <Box display="flex">
-              <IconWrapper variant="follow">
-                <Image
-                  src="/overview/follow.svg"
-                  alt="follow up"
-                  width={16}
-                  height={16}
-                />
-              </IconWrapper>
-              <Label>Number of Bookings Confirmed</Label>
-            </Box>
-            <Value>{confirmedToday}</Value>
-          </StatCard>
+          {!shouldHideBookingFeatures && (
+            <StatCard>
+              <Box display="flex">
+                <IconWrapper variant="follow">
+                  <Image
+                    src="/overview/follow.svg"
+                    alt="follow up"
+                    width={16}
+                    height={16}
+                  />
+                </IconWrapper>
+                <Label>Number of Bookings Confirmed</Label>
+              </Box>
+              <Value>{confirmedToday}</Value>
+            </StatCard>
+          )}
         </ActivityGrid>
       </Box>
 
@@ -243,6 +255,7 @@ export default function ActivitySection() {
         <InfoCard
           bgcolor="#060606"
           sx={{
+            paddingBottom: '12px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start',

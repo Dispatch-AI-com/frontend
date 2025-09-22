@@ -10,7 +10,9 @@ import React, { useMemo, useState } from 'react';
 
 import { useGetCallLogsQuery } from '@/features/callog/calllogApi';
 import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
+import { useSubscription } from '@/features/subscription/useSubscription';
 import { useAppSelector } from '@/redux/hooks';
+import { getPlanTier, isFreeOrBasicPlan } from '@/utils/planUtils';
 
 import CampaignBarChart from './CompaignBarChart';
 import type { SimpleAggregatedLog } from './utils/ChartData';
@@ -18,8 +20,13 @@ import { CallogsData, ServiceLogsData } from './utils/ChartData';
 
 export default function CampaignProgressSection() {
   const userId = useAppSelector(state => state.auth.user?._id);
+  const { subscription } = useSubscription();
   const [tab, setTab] = useState<'phone' | 'service'>('phone');
   const [period, setPeriod] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+
+  // Check if user has FREE or BASIC plan
+  const planTier = getPlanTier(subscription);
+  const shouldHideBookingFeatures = isFreeOrBasicPlan(planTier);
 
   const { data: callLogsData, isLoading: isCallLoading } = useGetCallLogsQuery(
     { userId: userId ?? '', options: { pageSize: 1000 } },
@@ -29,7 +36,7 @@ export default function CampaignProgressSection() {
   const { data: bookingsData, isLoading: isServiceLoading } =
     useGetBookingsQuery({ userId: userId ?? '' }, { skip: !userId });
 
-  const isService = tab === 'service';
+  const isService = tab === 'service' && !shouldHideBookingFeatures;
   const isSmallScreen = useMediaQuery('(max-width:430px)');
 
   const chartData: SimpleAggregatedLog[] = useMemo(() => {
@@ -98,9 +105,11 @@ export default function CampaignProgressSection() {
           <ToggleButton value="phone">
             {isSmallScreen ? 'Phone Calls' : 'Number of Phone Calls'}
           </ToggleButton>
-          <ToggleButton value="service">
-            {isSmallScreen ? 'Bookings' : 'Number of Bookings'}
-          </ToggleButton>
+          {!shouldHideBookingFeatures && (
+            <ToggleButton value="service">
+              {isSmallScreen ? 'Bookings' : 'Number of Bookings'}
+            </ToggleButton>
+          )}
         </ToggleButtonGroup>
 
         <ToggleButtonGroup

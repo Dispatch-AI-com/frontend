@@ -67,7 +67,7 @@ export default function PricingSection() {
         slides: { perView: 2, spacing: 0 },
       },
       '(min-width: 1420px)': {
-        slides: { perView: 3, spacing: 0 },
+        slides: { perView: 2, spacing: 0 },
       },
     },
     slideChanged(s) {
@@ -112,11 +112,12 @@ export default function PricingSection() {
         ref={sliderRef}
         className="keen-slider"
         sx={{
+          margin: '0 auto',
           maxWidth: {
             xs: '100%',
             sm: 900,
             md: 1050,
-            lg: 1500,
+            lg: 1000,
           },
           overflow: 'hidden',
           '& .keen-slider__slide': {
