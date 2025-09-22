@@ -98,8 +98,9 @@ const BillingHistorySection = () => {
               xs: 330,
               sm: 600,
               md: 750,
-              lg: 1050,
+              lg: 1150,
             },
+            marginLeft: '22px',
             overflowX: 'auto',
           }}
         >

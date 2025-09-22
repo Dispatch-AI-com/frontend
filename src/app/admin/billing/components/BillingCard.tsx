@@ -1,9 +1,11 @@
 'use client';
 
 import { styled } from '@mui/material/styles';
+import { padding } from '@mui/system';
 import Image from 'next/image';
 
 import CommonButton from '@/components/ui/CommonButton';
+import theme from '@/theme';
 import type { PlanButton } from '@/types/plan.types';
 
 interface PricingCardProps {
@@ -23,14 +25,16 @@ const CardContainer = styled('div')<{ isCurrent: boolean }>(
     display: 'flex',
     flexDirection: 'column',
     height: '408px',
-    maxWidth: '330px',
-    minWidth: '325px',
-    flexShrink: 0,
+    width: '100%',
+    maxWidth: '570px',
     padding: '30px',
     borderRadius: '24px',
     border: '1px solid #d5d5d5',
     backgroundColor: isCurrent ? '#f9fff6' : '#fff',
     position: 'relative',
+    [theme.breakpoints.down('sm')]: {
+      padding: '15px',
+    },
   }),
 );
 
