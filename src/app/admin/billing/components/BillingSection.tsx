@@ -72,7 +72,7 @@ export default function BillingSection() {
   const { downgrade } = useDowngradeToFree();
   const { subscription, isSubscribed, isCancelled, currentPlanId } =
     useSubscription();
-  const { checkVerificationAndRedirect } = useVerificationCheck();
+  const { blockOperationWithAlert } = useVerificationCheck();
 
   const tierOrder = { FREE: 0, BASIC: 1, PRO: 2 };
   const sortedPlans = [...plans].sort(
@@ -115,8 +115,8 @@ export default function BillingSection() {
     tier: 'FREE' | 'BASIC' | 'PRO',
     planId: string,
   ): Promise<void> => {
-    // Check verification before any plan operations
-    if (!checkVerificationAndRedirect()) {
+    // Check verification before any plan operations with detailed message
+    if (!blockOperationWithAlert('switch plans')) {
       return;
     }
 

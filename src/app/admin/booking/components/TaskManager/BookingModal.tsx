@@ -27,7 +27,8 @@ import { type Service } from '@/features/service/serviceApi';
 import { useCreateServiceBookingMutation } from '@/features/service/serviceBookingApi';
 import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
 import { useGetServiceFormFieldsQuery } from '@/features/service-management/serviceManagementApi';
-import { useAppSelector } from '@/redux/hooks';
+import { useVerificationCheck } from '@/features/settings/hooks/useVerificationCheck';
+import type { RootState } from '@/redux/store';
 interface Props {
   onClose: () => void;
   onCreate: (service: Service) => void;
@@ -296,7 +297,9 @@ const BookingModal: React.FC<Props> = ({
     Record<string, string>
   >({});
   const [createServiceBooking] = useCreateServiceBookingMutation();
-  const user = useAppSelector(state => state.auth.user);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  const user = useAppSelector(state => state.auth.user) as RootState['auth']['user'];
+  const { blockOperationWithAlert } = useVerificationCheck();
 
   // Get custom form fields for the selected service
   const { data: customFormFields = [] } = useGetServiceFormFieldsQuery(
@@ -445,6 +448,11 @@ const BookingModal: React.FC<Props> = ({
 
   const handleCreate = async (): Promise<void> => {
     try {
+      // Check verification before creating booking
+      if (!blockOperationWithAlert('create bookings')) {
+        return;
+      }
+
       if (!user) {
         throw new Error('User is missing, please login again.');
       }

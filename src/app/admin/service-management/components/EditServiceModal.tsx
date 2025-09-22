@@ -28,7 +28,8 @@ import {
   useSaveServiceFormFieldsMutation,
   useUpdateServiceMutation,
 } from '@/features/service-management/serviceManagementApi';
-import { useAppSelector } from '@/redux/hooks';
+import { useVerificationCheck } from '@/features/settings/hooks/useVerificationCheck';
+import type { RootState } from '@/redux/store';
 import theme from '@/theme';
 
 import CustomFormModal from './CustomFormModal';
@@ -219,7 +220,8 @@ export default function EditServiceModal({
 
   useMediaQuery(theme.breakpoints.down('sm'));
   useMediaQuery(theme.breakpoints.down('xs'));
-  const user = useAppSelector(state => state.auth.user);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  const user = useAppSelector(state => state.auth.user) as RootState['auth']['user'];
 
   // Fallback: try to get user from auth check if Redux state is empty
   const { data: authCheckData } = useCheckAuthStatusQuery(undefined, {
@@ -232,6 +234,7 @@ export default function EditServiceModal({
   const [createService, { isLoading: isCreating }] = useCreateServiceMutation();
   const [updateService, { isLoading: isUpdating }] = useUpdateServiceMutation();
   const [saveServiceFormFields] = useSaveServiceFormFieldsMutation();
+  const { blockOperationWithAlert } = useVerificationCheck();
 
   // 获取现有的表单字段
   const { data: existingFormFields = [] } = useGetServiceFormFieldsQuery(
@@ -309,6 +312,11 @@ export default function EditServiceModal({
 
   const handleSubmit = async (): Promise<void> => {
     try {
+      // Check verification before creating/updating service
+      if (!blockOperationWithAlert('manage services')) {
+        return;
+      }
+
       // Validation before submission
       if (!formData.name.trim()) {
         alert('Please enter a service name');

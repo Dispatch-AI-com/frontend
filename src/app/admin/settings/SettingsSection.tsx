@@ -36,9 +36,9 @@ const SettingsContainer = styled(Box)({
 export default function SettingsSection() {
   return (
     <SettingsContainer>
+      <VerificationSection />
       <GreetingSection />
       <UserProfileSection />
-      <VerificationSection />
       <IntegrationsSection />
       <CompanyInfoSection />
       <BillingAddressSection />
