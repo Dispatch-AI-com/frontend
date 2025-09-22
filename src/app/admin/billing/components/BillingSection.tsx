@@ -82,17 +82,12 @@ export default function BillingSection() {
   }
   const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
-    slides: {
-      perView: 1,
-      spacing: 0,
-    },
+    slides: { perView: 'auto', spacing: 0, origin: 'center' },
+    rubberband: false,
     breakpoints: {
-      '(min-width: 900px)': {
-        slides: { perView: 2, spacing: 0 },
-      },
-      '(min-width: 1200px)': {
-        slides: { perView: 3, spacing: 0 },
-      },
+      '(min-width: 599px)': { slides: { perView: 1, spacing: 0 } },
+      '(min-width: 1000px)': { slides: { perView: 2, spacing: 0 } },
+      '(min-width: 1420px)': { slides: { perView: 2, spacing: 0 } },
     },
     slideChanged(sliderInstance) {
       setCurrentSlide(sliderInstance.track.details.rel);
@@ -142,7 +137,11 @@ export default function BillingSection() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box
+      sx={{
+        width: '100%',
+      }}
+    >
       {isLoading && <p>Loading...</p>}
       {isError && <p>Failed to load plans.</p>}
 
@@ -150,13 +149,18 @@ export default function BillingSection() {
         ref={sliderRef}
         className="keen-slider"
         sx={{
-          maxWidth: {
-            xs: 330,
-            sm: 600,
-            md: 700,
-            lg: 1050,
-          },
+          maxWidth: '100%',
+          '@media (min-width: 300px)': { maxWidth: 330 },
+          '@media (min-width: 400px)': { maxWidth: 370 },
+          '@media (min-width: 600px)': { maxWidth: 550 },
+          '@media (min-width: 800px)': { maxWidth: 600 },
+          '@media (min-width: 1000px)': { maxWidth: 850 },
+          '@media (min-width: 1200px)': { maxWidth: 950 },
+          '@media (min-width: 1400px)': { maxWidth: 1200 },
           overflow: 'hidden',
+          '& .keen-slider__slide': {
+            boxSizing: 'border-box',
+          },
         }}
       >
         {sortedPlans.map(plan => (
@@ -164,9 +168,11 @@ export default function BillingSection() {
             key={plan._id}
             className="keen-slider__slide"
             sx={{
-              display: 'flex',
+              justifyItems: 'center',
               boxSizing: 'border-box',
-              justifyContent: 'center',
+              px: { xs: 1, sm: 1 },
+              display: 'block',
+              minWidth: { xs: 'calc(100% - 30px)', sm: 'auto' },
             }}
           >
             <PricingCard
@@ -191,45 +197,6 @@ export default function BillingSection() {
             />
           </Box>
         ))}
-      </Box>
-
-      {/* Dots Pagination */}
-      <Box
-        sx={{
-          height: '32px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Box
-          sx={{
-            display: {
-              xs: 'flex',
-              lg: 'none',
-            },
-            justifyContent: 'center',
-            gap: 1.5,
-          }}
-        >
-          {sortedPlans.map((_, idx) => (
-            <Box
-              key={idx}
-              onClick={() => {
-                slider.current?.moveToIdx(idx);
-              }}
-              sx={{
-                width: 10,
-                height: 10,
-                borderRadius: '50%',
-                backgroundColor:
-                  currentSlide === idx ? 'primary.main' : 'grey.400',
-                cursor: 'pointer',
-                transition: 'background-color 0.3s',
-              }}
-            />
-          ))}
-        </Box>
       </Box>
 
       <CancelConfirmModal

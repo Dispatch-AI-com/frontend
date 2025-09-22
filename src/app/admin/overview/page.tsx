@@ -1,10 +1,11 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
-// import { padding } from '@mui/system'; // Unused for now
 import React from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
+import { useSubscription } from '@/features/subscription/useSubscription';
+import { getPlanTier, isFreeOrBasicPlan } from '@/utils/planUtils';
 
 import ActivitySection from './components/ActivitySection';
 import CampaignProgressSection from './components/CompaignProgressSection';
@@ -33,6 +34,12 @@ const styles = {
 };
 
 export default function OverviewPage() {
+  const { subscription } = useSubscription();
+
+  // Check if user has FREE or BASIC plan
+  const planTier = getPlanTier(subscription);
+  const shouldHideBookingFeatures = isFreeOrBasicPlan(planTier);
+
   return (
     <AdminPageLayout title="Overview" padding="normal" background="solid">
       <Box sx={styles.contentContainer}>
@@ -44,10 +51,14 @@ export default function OverviewPage() {
         <CampaignProgressSection />
       </Box>
 
-      <Typography sx={styles.sectionTitle}>Recent Bookings</Typography>
-      <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
-        <RecentService />
-      </Box>
+      {!shouldHideBookingFeatures && (
+        <>
+          <Typography sx={styles.sectionTitle}>Recent Bookings</Typography>
+          <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
+            <RecentService />
+          </Box>
+        </>
+      )}
     </AdminPageLayout>
   );
 }
