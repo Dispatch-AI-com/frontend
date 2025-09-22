@@ -19,9 +19,17 @@ interface AuthResponse {
 }
 
 interface SignupDTO {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  address: {
+    unitAptPOBox?: string;
+    streetAddress: string;
+    suburb: string;
+    state: string;
+    postcode: string;
+  };
 }
 
 interface AuthStatusResponse {

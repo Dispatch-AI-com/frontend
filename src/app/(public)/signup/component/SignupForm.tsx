@@ -148,9 +148,17 @@ export default function SignupForm() {
 
   const onSubmit = async (vals: SignupFormData) => {
     const payload = {
-      name: `${vals.firstName} ${vals.lastName}`,
+      firstName: vals.firstName,
+      lastName: vals.lastName,
       email: vals.workEmail,
       password: vals.password,
+      address: {
+        streetAddress: 'N/A', // required
+        suburb: 'N/A', // required
+        state: 'N/A', // required
+        postcode: 'N/A', // required
+        unitAptPOBox: 'N/A', // optional
+      },
     };
 
     await signupUser(payload);
