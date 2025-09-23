@@ -167,8 +167,19 @@ export default function OnboardingChat() {
       }).unwrap();
       addAIMessage(currentStep.onValidResponse(input));
 
-      if (resp.currentStep <= steps.length) {
-        setCurrentStepIndex(resp.currentStep - 1);
+      // Skip custom greeting message step if user chose default greeting
+      let nextStepIndex = resp.currentStep - 1;
+      if (
+        currentStep.field === 'user.greeting.type' &&
+        input === 'Use Default Greeting'
+      ) {
+        // Skip the custom message step (step 5) and go directly to demo step (step 6)
+        const demoStepIndex = steps.findIndex(step => step.field === '');
+        nextStepIndex = demoStepIndex >= 0 ? demoStepIndex : nextStepIndex;
+      }
+
+      if (nextStepIndex < steps.length) {
+        setCurrentStepIndex(nextStepIndex);
       } else {
         await completeFlow(userId!).unwrap();
         setIsCompleted(true);

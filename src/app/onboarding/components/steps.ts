@@ -3,7 +3,7 @@ export interface Step {
 
   field:
     | '' // Demo-call
-    | `user.${'contact' | 'position' | 'address.full' | 'greeting.message'}`;
+    | `user.${'fullPhoneNumber' | 'position' | 'address.full' | 'greeting.type' | 'greeting.message'}`;
 
   question: string;
   inputType: 'text' | 'button' | 'address';
@@ -16,7 +16,7 @@ export interface Step {
 export const steps: Step[] = [
   {
     id: 1,
-    field: 'user.contact',
+    field: 'user.fullPhoneNumber',
     question:
       'Hey there! 👋 Before we dive in, could you share your phone number with me?',
     inputType: 'text',
@@ -52,19 +52,33 @@ export const steps: Step[] = [
 
   {
     id: 4,
+    field: 'user.greeting.type',
+    question: 'How would you like Dispatch AI to greet your callers?',
+    inputType: 'button',
+    options: ['Use Default Greeting', 'Create Custom Greeting'],
+    validate: v =>
+      ['Use Default Greeting', 'Create Custom Greeting'].includes(v),
+    onValidResponse: choice =>
+      choice === 'Use Default Greeting'
+        ? "Great! We'll use our professional default greeting for your callers."
+        : "Perfect! Let's create a custom greeting for your business.",
+    retryMessage: 'Please choose one of the greeting options.',
+  },
+
+  {
+    id: 5,
     field: 'user.greeting.message',
-    question:
-      'How would you like Dispatch AI to greet your callers? You can use our default greeting or customize your own.',
+    question: 'Please enter your custom greeting message (10-500 characters):',
     inputType: 'text',
     validate: input => input.trim().length >= 10 && input.trim().length <= 500,
     onValidResponse: greeting =>
-      `Perfect! Your greeting is set: "${greeting.slice(0, 50)}${greeting.length > 50 ? '...' : ''}".`,
+      `Perfect! Your custom greeting is set: "${greeting.slice(0, 50)}${greeting.length > 50 ? '...' : ''}".`,
     retryMessage:
       'Please enter a greeting message between 10 and 500 characters.',
   },
 
   {
-    id: 5,
+    id: 6,
     field: '',
     question:
       'And lastly, would you like to hear a sample of how Dispatch AI will answer your calls?',
