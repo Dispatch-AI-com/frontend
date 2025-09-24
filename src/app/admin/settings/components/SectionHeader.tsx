@@ -18,14 +18,11 @@ const HeaderContainer = styled(Box)({
   justifyContent: 'space-between',
   alignItems: 'center',
   marginBottom: theme.spacing(2),
-  padding: theme.spacing(0, 1),
   [theme.breakpoints.down('md')]: {
     marginBottom: theme.spacing(1.5),
-    padding: theme.spacing(0, 0.5),
   },
   [theme.breakpoints.down('sm')]: {
     marginBottom: theme.spacing(1),
-    padding: theme.spacing(0),
   },
 });
 

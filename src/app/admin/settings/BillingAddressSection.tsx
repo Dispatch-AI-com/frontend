@@ -4,9 +4,9 @@ import React from 'react';
 import EditableSection from '@/app/admin/settings/components/EditableSection';
 import SelectField from '@/app/admin/settings/components/SelectField';
 import {
-  type AddressSettings,
-  useGetAddressQuery,
-  useUpdateAddressMutation,
+  type BillingAddressSettings,
+  useGetBillingAddressQuery,
+  useUpdateBillingAddressMutation,
 } from '@/features/settings/settingsApi';
 import { useAppSelector } from '@/redux/hooks';
 import type { ValidationResult } from '@/utils/validationSettings';
@@ -141,34 +141,37 @@ const validateState = (state: string): ValidationResult => {
 export default function BillingAddressSection() {
   const user = useAppSelector(state => state.auth.user);
 
-  const { data: billingData, isLoading } = useGetAddressQuery(user?._id ?? '', {
-    skip: !user?._id,
-  });
+  const { data: billingData, isLoading } = useGetBillingAddressQuery(
+    user?._id ?? '',
+    {
+      skip: !user?._id,
+    },
+  );
 
-  const [updateAddress] = useUpdateAddressMutation();
+  const [updateBillingAddress] = useUpdateBillingAddressMutation();
   const handleSave = async (values: Record<string, string>) => {
     if (!user?._id) {
       throw new Error('User not logged in');
     }
 
-    // Convert Record<string, string> to AddressSettings
-    const addressSettings: AddressSettings = {
-      unitAptPOBox: values.unit,
+    // Convert Record<string, string> to BillingAddressSettings
+    const billingAddressSettings: BillingAddressSettings = {
+      unit: values.unit,
       streetAddress: values.streetAddress,
       suburb: values.suburb,
       state: values.state,
       postcode: values.postcode,
     };
 
-    await updateAddress({
+    await updateBillingAddress({
       userId: user._id,
-      address: addressSettings,
+      ...billingAddressSettings,
     });
   };
 
   const convertedData = billingData
     ? {
-        unit: billingData.unitAptPOBox ?? '',
+        unit: billingData.unit ?? '',
         streetAddress: billingData.streetAddress,
         suburb: billingData.suburb,
         state: billingData.state,
