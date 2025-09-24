@@ -214,7 +214,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     return parsed;
   };
 
-  //change address components into adress string
+  //change address components into address string
   const formatStructuredAddress = (components: AddressComponents): string => {
     const parts = [];
 
