@@ -380,7 +380,7 @@ const BookingList: React.FC<Props> = ({ services, onServiceClick }) => {
           boxShadow: 2,
         },
       }}
-      onClick={() => onServiceClick && onServiceClick(service)}
+      onClick={() => onServiceClick?.(service)}
     >
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
         <Box
