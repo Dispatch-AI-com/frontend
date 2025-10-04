@@ -243,7 +243,7 @@ export default function ActivitySection() {
               subscription?.endAt,
             )}
           </SubTitle>
-          <Box>
+          <Box sx={{ justifyItems: 'center' }}>
             <HalfCircleProgress
               value={523}
               maxValue={1000}

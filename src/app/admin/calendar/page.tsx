@@ -1,9 +1,12 @@
 'use client';
 
 import { Box } from '@mui/material';
-import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
+import { useSubscription } from '@/features/subscription/useSubscription';
+import { getPlanTier, isProPlan } from '@/utils/planUtils';
 
 import Filter from './components/CalendarToolbar/Filter';
 import MonthSelect from './components/CalendarToolbar/MonthSelect';
@@ -48,6 +51,9 @@ const styles = {
 };
 
 export default function CalendarPage() {
+  const router = useRouter();
+  const { subscription } = useSubscription();
+  const isPro = isProPlan(getPlanTier(subscription));
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewType, setViewType] = useState<'weekly' | 'monthly'>('monthly');
   const [selectedFilters, setSelectedFilters] = useState([
@@ -56,6 +62,16 @@ export default function CalendarPage() {
     'Done',
   ]);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (!isPro) {
+      router.replace(
+        '/admin/overview?featurePrompt=' + encodeURIComponent('Calendar'),
+      );
+    }
+  }, [isPro, router]);
+
+  if (!isPro) return null;
 
   const headerActions = (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
