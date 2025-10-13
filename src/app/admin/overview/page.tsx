@@ -1,11 +1,13 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
-import React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect } from 'react';
 
 import { AdminPageLayout } from '@/components/layout/admin-layout';
+import ProFeatureModal from '@/components/ui/ProFeatureModal';
 import { useSubscription } from '@/features/subscription/useSubscription';
-import { getPlanTier, isFreeOrBasicPlan } from '@/utils/planUtils';
+import { getPlanTier, isFreeOrBasicPlan, isProPlan } from '@/utils/planUtils';
 
 import ActivitySection from './components/ActivitySection';
 import CampaignProgressSection from './components/CompaignProgressSection';
@@ -35,30 +37,59 @@ const styles = {
 
 export default function OverviewPage() {
   const { subscription } = useSubscription();
+  const params = useSearchParams();
+  const router = useRouter();
 
   // Check if user has FREE or BASIC plan
   const planTier = getPlanTier(subscription);
   const shouldHideBookingFeatures = isFreeOrBasicPlan(planTier);
+  const isPro = isProPlan(planTier);
+  const featurePrompt = params.get('featurePrompt');
+  const [open, setOpen] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    if (featurePrompt && !isPro) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [featurePrompt, isPro]);
+
+  const handleClose = () => {
+    setOpen(false);
+    router.replace('/admin/overview');
+  };
+  const handleUpgrade = () => {
+    router.push('/admin/billing');
+  };
 
   return (
-    <AdminPageLayout title="Overview" padding="normal" background="solid">
-      <Box sx={styles.contentContainer}>
-        <ActivitySection />
-      </Box>
+    <>
+      <AdminPageLayout title="Overview" padding="normal" background="solid">
+        <Box sx={styles.contentContainer}>
+          <ActivitySection />
+        </Box>
 
-      <Typography sx={styles.sectionTitle}>Compaign Progress</Typography>
-      <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
-        <CampaignProgressSection />
-      </Box>
+        <Typography sx={styles.sectionTitle}>Compaign Progress</Typography>
+        <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
+          <CampaignProgressSection />
+        </Box>
 
-      {!shouldHideBookingFeatures && (
-        <>
-          <Typography sx={styles.sectionTitle}>Recent Bookings</Typography>
-          <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
-            <RecentService />
-          </Box>
-        </>
-      )}
-    </AdminPageLayout>
+        {!shouldHideBookingFeatures && (
+          <>
+            <Typography sx={styles.sectionTitle}>Recent Bookings</Typography>
+            <Box sx={{ ...styles.contentContainer, paddingTop: 0 }}>
+              <RecentService />
+            </Box>
+          </>
+        )}
+      </AdminPageLayout>
+      <ProFeatureModal
+        open={open}
+        onClose={handleClose}
+        onUpgrade={handleUpgrade}
+        featureName={featurePrompt ?? undefined}
+      />
+    </>
   );
 }
