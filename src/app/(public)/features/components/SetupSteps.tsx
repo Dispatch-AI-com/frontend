@@ -178,7 +178,7 @@ const Arrow = styled(Box)(({ theme }) => ({
     justifyContent: 'center',
     lineHeight: 1,
     transform: 'rotate(90deg) scaleY(2.2)',
-    margin: theme.spacing(1, 0),
+    margin: '9px 0 9px 0', // Testing equal margins to see baseline
   },
 }));
 

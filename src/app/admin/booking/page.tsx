@@ -12,10 +12,13 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import BookingManager from '@/app/admin/booking/components/TaskManager/BookingManager';
 import { AdminPageLayout } from '@/components/layout/admin-layout';
+import { useSubscription } from '@/features/subscription/useSubscription';
+import { getPlanTier, isProPlan } from '@/utils/planUtils';
 
 const SearchWrapper = styled(Box)(({ theme }) => ({
   width: '232px',
@@ -101,6 +104,9 @@ const CreateButton = styled(Box)(({ theme }) => ({
 }));
 
 export default function BookingPage() {
+  const router = useRouter();
+  const { subscription } = useSubscription();
+  const isPro = isProPlan(getPlanTier(subscription));
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   useMediaQuery(theme.breakpoints.down('md'));
@@ -109,6 +115,16 @@ export default function BookingPage() {
   const [filterAnchor, setFilterAnchor] = useState<HTMLElement | null>(null);
   const [isCreateBookingModalOpen, setIsCreateBookingModalOpen] =
     useState(false);
+
+  useEffect(() => {
+    if (!isPro) {
+      router.replace(
+        '/admin/overview?featurePrompt=' + encodeURIComponent('Booking'),
+      );
+    }
+  }, [isPro, router]);
+
+  if (!isPro) return null;
 
   const handleSearch = (searchTerm: string) => {
     setSearch(searchTerm);
