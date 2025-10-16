@@ -105,7 +105,9 @@ export default function CalendarOptionsList({
             </CalendarLabel>
             <CustomSwitch
               checked={calendar.checked}
-              onChange={() => onToggle(calendar.id)}
+              onChange={() => {
+                onToggle(calendar.id);
+              }}
               size="small"
             />
           </CalendarOption>

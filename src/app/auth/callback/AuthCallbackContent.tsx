@@ -49,7 +49,7 @@ export default function AuthCallbackContent() {
         // Clear any persisted auth state to prevent old user ID from being used
         localStorage.removeItem('persist:root');
 
-        console.log('[AuthCallback] Setting user with ID:', parsedUser._id);
+        // console.log('[AuthCallback] Setting user with ID:', parsedUser._id);
 
         dispatch(
           setCredentials({
@@ -64,6 +64,15 @@ export default function AuthCallbackContent() {
             },
           }),
         );
+
+        // Persist current user to sessionStorage for front-end flows (e.g., OAuth)
+        try {
+          sessionStorage.setItem('userId', parsedUser._id);
+          sessionStorage.setItem('userEmail', parsedUser.email);
+          sessionStorage.setItem('user', JSON.stringify(parsedUser));
+        } catch {
+          // ignore storage errors
+        }
 
         router.replace('/admin/overview');
       } catch (error) {
