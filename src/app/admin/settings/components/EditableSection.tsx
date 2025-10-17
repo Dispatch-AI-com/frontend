@@ -44,6 +44,7 @@ interface Field {
   component?: (props: {
     value: string;
     onChange: (value: string) => void;
+    setFieldValue: (key: string, value: string) => void;
     placeholder?: string;
     label: string;
     name: string;
@@ -203,6 +204,12 @@ export default function EditableSection({
                   onChange: (value: string) => {
                     if (!saving) {
                       setFormValues(f => ({ ...f, [field.key]: value }));
+                      if (error) setError('');
+                    }
+                  },
+                  setFieldValue: (key: string, value: string) => {
+                    if (!saving) {
+                      setFormValues(f => ({ ...f, [key]: value }));
                       if (error) setError('');
                     }
                   },

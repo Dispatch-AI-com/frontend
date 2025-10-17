@@ -106,6 +106,7 @@ export default function UserInputArea({
               value={userInput}
               onChange={setUserInput}
               onAddressSelect={handleAddressSelect}
+              displayFullAddress={true}
               placeholder="Start typing your address..."
               disabled={disabled}
               onKeyDown={handleAddressKeyDown}

@@ -35,6 +35,7 @@ interface AddressAutocompleteProps {
     placeId: string,
     components?: AddressComponents,
   ) => void;
+  displayFullAddress?: boolean;
   placeholder?: string;
   disabled?: boolean;
   error?: boolean;
@@ -77,6 +78,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   value,
   onChange,
   onAddressSelect,
+  displayFullAddress = false,
   placeholder = 'Enter your address...',
   disabled = false,
   error = false,
@@ -177,21 +179,28 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
           'formatted_address,address_component',
         );
         const details = detailsResp?.result;
-        let addressToUse = details?.formatted_address ?? option.description;
         let components: AddressComponents | undefined;
+        let streetOnly = '';
+        let addressToUse = option.description; // default
         if (
           details?.address_components &&
           details.address_components.length > 0
         ) {
           components = parseAddressComponents(details.address_components);
-          const structuredAddress = formatStructuredAddress(components);
-          if (structuredAddress) addressToUse = structuredAddress;
+          streetOnly =
+            `${components.streetNumber ?? ''} ${components.route ?? ''}`.trim();
+          if (components) {
+            addressToUse = formatStructuredAddress(components);
+          }
         }
-        onAddressSelect(addressToUse, option.place_id, components);
-        setInputValue(addressToUse);
-        onChange(addressToUse);
+        const inputValueToSet = displayFullAddress ? addressToUse : streetOnly;
+        onAddressSelect(inputValueToSet, option.place_id, components);
+        setInputValue(inputValueToSet);
+        onChange(inputValueToSet);
       } catch {
         onAddressSelect(option.description, option.place_id);
+        setInputValue(option.description);
+        onChange(option.description);
       } finally {
         setLoading(false);
       }
