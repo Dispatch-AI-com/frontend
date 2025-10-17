@@ -28,10 +28,6 @@ const buildApiUrl = (path: string): string => {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   if (!API_BASE) return normalizedPath; // Relative path, delegate to same-origin proxy
 
-  // If API_BASE already ends with /api and path also starts with /api, remove one /api to prevent /api/api duplication
-  if (/\/api\/?$/.test(API_BASE) && normalizedPath.startsWith('/api')) {
-    return `${API_BASE}${normalizedPath.replace(/^\/api/, '')}`;
-  }
   return `${API_BASE}${normalizedPath}`;
 };
 
@@ -123,8 +119,7 @@ export default function IntegrationsSection() {
       id: 'email',
       name:
         (typeof window !== 'undefined'
-          ? (sessionStorage.getItem('userEmail') ??
-            localStorage.getItem('userEmail') ??
+          ? (localStorage.getItem('userEmail') ??
             process.env.NEXT_PUBLIC_CALENDAR_USER_EMAIL)
           : null) ?? '',
       color: '#989ffd',
@@ -136,7 +131,6 @@ export default function IntegrationsSection() {
     // Prefer reading from sessionStorage/localStorage; replace with your global user context if needed
     if (typeof window === 'undefined') return null;
     return (
-      sessionStorage.getItem('userId') ??
       localStorage.getItem('userId') ??
       process.env.NEXT_PUBLIC_CALENDAR_USER_ID ??
       null
@@ -146,7 +140,6 @@ export default function IntegrationsSection() {
   const getUserEmail = (): string | null => {
     if (typeof window === 'undefined') return null;
     return (
-      sessionStorage.getItem('userEmail') ??
       localStorage.getItem('userEmail') ??
       process.env.NEXT_PUBLIC_CALENDAR_USER_EMAIL ??
       null
@@ -166,11 +159,8 @@ export default function IntegrationsSection() {
       }
     };
     const candidates = [
-      sessionStorage.getItem('user'),
       localStorage.getItem('user'),
-      sessionStorage.getItem('currentUser'),
       localStorage.getItem('currentUser'),
-      sessionStorage.getItem('auth_user'),
       localStorage.getItem('auth_user'),
     ];
     for (const raw of candidates) {
@@ -212,11 +202,7 @@ export default function IntegrationsSection() {
       return;
     }
     // Build state so backend can parse userId and return URL
-    const from = encodeURIComponent(
-      typeof window !== 'undefined'
-        ? window.location.pathname + window.location.search
-        : '/admin/settings',
-    );
+    const from = encodeURIComponent('/admin/settings?connected=google');
     const stateObj: Record<string, string> = { u: userId, from };
     // If backend supports login_hint, include email in state for future use
     if (userEmail) {
@@ -279,6 +265,10 @@ export default function IntegrationsSection() {
       const params = new URLSearchParams(window.location.search);
       const connected = params.get('connected');
       if (connected === 'google') {
+        if (window.location.pathname !== '/admin/settings') {
+          window.location.replace('/admin/settings?connected=google');
+          return;
+        }
         setIsConnected(true);
       }
     }
@@ -295,10 +285,10 @@ export default function IntegrationsSection() {
       // Fallback: try common storage keys/global variables
       const fromStore = readUserFromStorage();
       if (fromStore.id) {
-        sessionStorage.setItem('userId', fromStore.id);
+        localStorage.setItem('userId', fromStore.id);
       }
       if (fromStore.email) {
-        sessionStorage.setItem('userEmail', fromStore.email);
+        localStorage.setItem('userEmail', fromStore.email);
         setUserEmail(fromStore.email);
         setCalendars(prev =>
           prev.map(cal =>

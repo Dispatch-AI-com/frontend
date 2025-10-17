@@ -67,14 +67,18 @@ export default function AuthCallbackContent() {
 
         // Persist current user to sessionStorage for front-end flows (e.g., OAuth)
         try {
-          sessionStorage.setItem('userId', parsedUser._id);
-          sessionStorage.setItem('userEmail', parsedUser.email);
-          sessionStorage.setItem('user', JSON.stringify(parsedUser));
+          // sessionStorage.setItem('userId', parsedUser._id or localStorage.setItem('userId', parsedUser._id);
+          localStorage.setItem('userId', parsedUser._id);
+          // sessionStorage.setItem('userEmail', parsedUser.email);
+          localStorage.setItem('userEmail', parsedUser.email);
+          // sessionStorage.setItem('user', JSON.stringify(parsedUser));
+          localStorage.setItem('user', JSON.stringify(parsedUser));
         } catch {
           // ignore storage errors
         }
 
-        router.replace('/admin/overview');
+        const from = searchParams.get('from');
+        router.replace(from ?? '/admin/settings?connected=google');
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Auth callback - parsing error:', error);
