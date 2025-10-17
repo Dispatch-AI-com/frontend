@@ -131,12 +131,14 @@ const PlanTitle = styled(Typography)({
   fontSize: 'clamp(18px, 2.2vw, 20px)',
   fontWeight: 800,
   color: '#060606',
+  display: 'inline-block',
 });
 
 const SubTitle = styled(Typography)({
   fontSize: 'clamp(12px, 1.8vw, 14px)',
   color: '#6d6d6d',
   marginBottom: 16,
+  display: 'inline-block',
 });
 
 const UserName = styled(Typography)({
@@ -236,13 +238,28 @@ export default function ActivitySection() {
 
       <InfoGrid>
         <InfoCard bgcolor="#a8f574">
-          <PlanTitle>{subscription?.planId.name ?? 'Free Plan'}</PlanTitle>
-          <SubTitle>
-            {formatSubscriptionPeriod(
-              subscription?.startAt,
-              subscription?.endAt,
-            )}
-          </SubTitle>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              gap: 1,
+              marginBottom: 2,
+            }}
+          >
+            <PlanTitle sx={{ flex: '0 0 auto' }}>
+              {subscription?.planId.name ?? 'Free Plan'}
+            </PlanTitle>
+            <SubTitle
+              sx={{ marginBottom: 0, flex: '0 1 auto', textAlign: 'right' }}
+            >
+              {formatSubscriptionPeriod(
+                subscription?.startAt,
+                subscription?.endAt,
+              )}
+            </SubTitle>
+          </Box>
           <Box sx={{ justifyItems: 'center' }}>
             <HalfCircleProgress
               value={523}
