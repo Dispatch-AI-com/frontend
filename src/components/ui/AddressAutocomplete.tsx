@@ -8,18 +8,15 @@ import {
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useEffect, useRef, useState } from 'react';
+import debounce from 'lodash/debounce';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import googleMapsLoader from '@/utils/googleMapsLoader';
-
-interface AddressSuggestion {
-  place_id: string;
-  description: string;
-  structured_formatting?: {
-    main_text: string;
-    secondary_text: string;
-  };
-}
+import type {
+  AddressComponent,
+  AutocompletePrediction,
+  PlaceDetailsResult,
+} from '@/services/places';
+import { fetchPlaceAutocomplete, fetchPlaceDetails } from '@/services/places';
 
 interface AddressComponents {
   streetNumber?: string;
@@ -86,89 +83,40 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   helperText,
   onKeyDown,
 }) => {
-  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+  const [suggestions, setSuggestions] = useState<AutocompletePrediction[]>([]);
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState(value);
-  const autocompleteService =
-    useRef<google.maps.places.AutocompleteService | null>(null);
-  const placesService = useRef<google.maps.places.PlacesService | null>(null);
-  const autocompleteRef = useRef<HTMLDivElement>(null);
+
+  // Debounced fetch for autocomplete
+  const debouncedFetch = useMemo(
+    () =>
+      debounce(async (input: string) => {
+        if (!input || input.trim().length < 2) {
+          setSuggestions([]);
+          return;
+        }
+        setLoading(true);
+        try {
+          const data = await fetchPlaceAutocomplete(input, {
+            country: 'au',
+            types: 'address',
+          });
+          setSuggestions(data?.predictions ?? []);
+        } catch {
+          setSuggestions([]);
+        } finally {
+          setLoading(false);
+        }
+      }, 300),
+    [],
+  );
 
   useEffect(() => {
-    // Load Google Maps JavaScript API using the loader
-    const loadAPI = async () => {
-      try {
-        await googleMapsLoader.load({
-          libraries: ['places'],
-        });
-        initializeServices();
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to load Google Maps API:', error);
-      }
+    void debouncedFetch(inputValue);
+    return () => {
+      debouncedFetch.cancel();
     };
-
-    if (googleMapsLoader.isAPILoaded()) {
-      initializeServices();
-    } else {
-      void loadAPI();
-    }
-  }, []);
-
-  const initializeServices = () => {
-    if (window.google?.maps && autocompleteRef.current) {
-      autocompleteService.current =
-        new window.google.maps.places.AutocompleteService();
-      placesService.current = new window.google.maps.places.PlacesService(
-        autocompleteRef.current,
-      );
-    }
-  };
-
-  const fetchSuggestions = (input: string) => {
-    if (!autocompleteService.current || !input.trim()) {
-      setSuggestions([]);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const request: google.maps.places.AutocompletionRequest = {
-        input: input.trim(),
-        componentRestrictions: { country: 'au' }, // Restrict to Australia
-        types: ['address'],
-      };
-
-      void autocompleteService.current.getPlacePredictions(
-        request,
-        (predictions, status) => {
-          if (
-            status === window.google.maps.places.PlacesServiceStatus.OK &&
-            predictions
-          ) {
-            const formattedSuggestions = predictions.map(prediction => ({
-              place_id: prediction.place_id,
-              description: prediction.description,
-              structured_formatting: {
-                main_text: prediction.structured_formatting?.main_text ?? '',
-                secondary_text:
-                  prediction.structured_formatting?.secondary_text ?? '',
-              },
-            }));
-            setSuggestions(formattedSuggestions);
-          } else {
-            setSuggestions([]);
-          }
-          setLoading(false);
-        },
-      );
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error fetching address suggestions:', error);
-      setSuggestions([]);
-      setLoading(false);
-    }
-  };
+  }, [inputValue, debouncedFetch]);
 
   const handleInputChange = (
     event: React.SyntheticEvent,
@@ -176,136 +124,108 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   ) => {
     setInputValue(newInputValue);
     onChange(newInputValue);
-
-    // Debounce the API call
-    const timeoutId = setTimeout(() => {
-      fetchSuggestions(newInputValue);
-    }, 300);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
   };
 
-  // change google maps component into address components we defined
+  // Parse backend address components to your format
   const parseAddressComponents = (
-    components: google.maps.GeocoderAddressComponent[],
+    components: AddressComponent[],
   ): AddressComponents => {
     const parsed: AddressComponents = {};
-
     components.forEach(component => {
       const types = component.types;
-
-      if (types.includes('street_number')) {
+      if (types.includes('street_number'))
         parsed.streetNumber = component.long_name;
-      } else if (types.includes('route')) {
-        parsed.route = component.long_name;
-      } else if (types.includes('locality')) {
-        parsed.locality = component.long_name;
-      } else if (types.includes('administrative_area_level_1')) {
+      if (types.includes('route')) parsed.route = component.long_name;
+      if (types.includes('locality')) parsed.locality = component.long_name;
+      if (types.includes('administrative_area_level_1'))
         parsed.administrativeAreaLevel1 = component.short_name;
-      } else if (types.includes('postal_code')) {
+      if (types.includes('postal_code'))
         parsed.postalCode = component.long_name;
-      } else if (types.includes('country')) {
-        parsed.country = component.long_name;
-      }
+      if (types.includes('country')) parsed.country = component.long_name;
     });
-
     return parsed;
   };
 
-  //change address components into address string
+  // Format address for display
   const formatStructuredAddress = (components: AddressComponents): string => {
     const parts = [];
-
     if (components.streetNumber && components.route) {
       parts.push(`${components.streetNumber} ${components.route}`);
     } else if (components.route) {
       parts.push(components.route);
     }
-
     if (components.locality) {
       parts.push(components.locality);
     }
-
     const statePostcode = [];
-    if (components.administrativeAreaLevel1) {
+    if (components.administrativeAreaLevel1)
       statePostcode.push(components.administrativeAreaLevel1);
-    }
-    if (components.postalCode) {
-      statePostcode.push(components.postalCode);
-    }
-
-    if (statePostcode.length > 0) {
-      parts.push(statePostcode.join(' '));
-    }
-
+    if (components.postalCode) statePostcode.push(components.postalCode);
+    if (statePostcode.length > 0) parts.push(statePostcode.join(' '));
     return parts.join(', ');
   };
 
-  const handleOptionSelect = (
+  const handleOptionSelect = async (
     event: React.SyntheticEvent,
-    option: AddressSuggestion | null,
+    option: AutocompletePrediction | null,
   ) => {
-    if (option && placesService.current) {
-      const request: google.maps.places.PlaceDetailsRequest = {
-        placeId: option.place_id,
-        fields: ['formatted_address', 'address_components'],
-      };
-
-      placesService.current.getDetails(request, (place, status) => {
+    if (option) {
+      setLoading(true);
+      try {
+        const detailsResp: PlaceDetailsResult = await fetchPlaceDetails(
+          option.place_id,
+          'formatted_address,address_component',
+        );
+        const details = detailsResp?.result;
+        let addressToUse = details?.formatted_address ?? option.description;
+        let components: AddressComponents | undefined;
         if (
-          status === window.google.maps.places.PlacesServiceStatus.OK &&
-          place
+          details?.address_components &&
+          details.address_components.length > 0
         ) {
-          let addressToUse = place.formatted_address ?? option.description;
-          let components: AddressComponents | undefined;
-
-          if (place.address_components && place.address_components.length > 0) {
-            components = parseAddressComponents(place.address_components);
-            const structuredAddress = formatStructuredAddress(components);
-            if (structuredAddress) {
-              addressToUse = structuredAddress;
-            }
-          }
-
-          onAddressSelect(addressToUse, option.place_id, components);
-          setInputValue(addressToUse);
-          onChange(addressToUse);
+          components = parseAddressComponents(details.address_components);
+          const structuredAddress = formatStructuredAddress(components);
+          if (structuredAddress) addressToUse = structuredAddress;
         }
-      });
+        onAddressSelect(addressToUse, option.place_id, components);
+        setInputValue(addressToUse);
+        onChange(addressToUse);
+      } catch {
+        onAddressSelect(option.description, option.place_id);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const formatAddressForDisplay = (suggestion: AddressSuggestion) => {
-    return (
-      <SuggestionItem>
-        <MainText variant="body1">
-          {suggestion.structured_formatting?.main_text ??
-            suggestion.description}
-        </MainText>
-        <SecondaryText variant="body2">
-          {suggestion.structured_formatting?.secondary_text ?? ''}
-        </SecondaryText>
-      </SuggestionItem>
-    );
-  };
+  const formatAddressForDisplay = (suggestion: AutocompletePrediction) => (
+    <SuggestionItem>
+      <MainText variant="body1">
+        {suggestion.structured_formatting?.main_text ?? suggestion.description}
+      </MainText>
+      <SecondaryText variant="body2">
+        {suggestion.structured_formatting?.secondary_text ?? ''}
+      </SecondaryText>
+    </SuggestionItem>
+  );
 
   return (
     <Box>
       <StyledAutocomplete
-        ref={autocompleteRef}
         options={suggestions}
         getOptionLabel={option =>
           typeof option === 'string'
             ? option
-            : (option as AddressSuggestion).description
+            : (option as AutocompletePrediction).description
         }
         inputValue={inputValue}
         onInputChange={handleInputChange}
-        onChange={(event, value) =>
-          handleOptionSelect(event, value as AddressSuggestion | null)
-        }
+        onChange={(event, value) => {
+          void handleOptionSelect(
+            event,
+            value as AutocompletePrediction | null,
+          );
+        }}
         renderInput={params => (
           <TextField
             {...params}
@@ -332,7 +252,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             props as React.HTMLAttributes<HTMLLIElement> & { key: React.Key };
           return (
             <li key={key} {...otherProps}>
-              {formatAddressForDisplay(option as AddressSuggestion)}
+              {formatAddressForDisplay(option as AutocompletePrediction)}
             </li>
           );
         }}
@@ -344,9 +264,6 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         includeInputInList
         filterSelectedOptions
       />
-
-      {/* Hidden div for PlacesService */}
-      <div ref={autocompleteRef} style={{ display: 'none' }} />
     </Box>
   );
 };
