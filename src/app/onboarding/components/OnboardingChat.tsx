@@ -221,7 +221,7 @@ export default function OnboardingChat() {
           disabled={isTyping || !!currentStep.options?.length || isCompleted}
           inputType={currentStep.inputType}
           onAddressSelect={(address, placeId, components) => {
-            setUserInput(address);
+            setUserInput(address ?? '');
             // Log the structured address components for debugging
             // eslint-disable-next-line no-console
             console.log('Selected address:', address);
