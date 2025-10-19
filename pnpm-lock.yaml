@@ -41,6 +41,12 @@ importers:
       '@tanstack/react-virtual':
         specifier: ^3.13.10
         version: 3.13.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@types/gapi':
+        specifier: ^0.0.47
+        version: 0.0.47
+      '@types/google.maps':
+        specifier: ^3.58.1
+        version: 3.58.1
       axios:
         specifier: ^1.9.0
         version: 1.12.2
@@ -836,6 +842,12 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
+  '@types/gapi@0.0.47':
+    resolution: {integrity: sha512-/ZsLuq6BffMgbKMtZyDZ8vwQvTyKhKQ1G2K6VyWCgtHHhfSSXbk4+4JwImZiTjWNXfI2q1ZStAwFFHSkNoTkHA==}
+
+  '@types/google.maps@3.58.1':
+    resolution: {integrity: sha512-X9QTSvGJ0nCfMzYOnaVs/k6/4L+7F5uCS+4iUmkLEls6J9S/Phv+m/i3mDeyc49ZBgwab3EFO1HEoBY7k98EGQ==}
 
   '@types/hoist-non-react-statics@3.3.7':
     resolution: {integrity: sha512-PQTyIulDkIDro8P+IHbKCsw7U2xxBYflVzW/FgWdCAePD9xGSidgA76/GeJ6lBKoblyhf9pBY763gbrN+1dI8g==}
@@ -3391,6 +3403,10 @@ snapshots:
   '@types/date-arithmetic@4.1.4': {}
 
   '@types/estree@1.0.8': {}
+
+  '@types/gapi@0.0.47': {}
+
+  '@types/google.maps@3.58.1': {}
 
   '@types/hoist-non-react-statics@3.3.7(@types/react@19.1.15)':
     dependencies:
