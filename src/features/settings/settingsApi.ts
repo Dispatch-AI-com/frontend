@@ -138,7 +138,7 @@ export const settingsApi = createApi({
     }),
     getVerification: builder.query<VerificationSettings, string>({
       query: userId => ({
-        url: `/api/settings/user/${userId}/verification`,
+        url: `/api/verification/user/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Verification'],
@@ -148,7 +148,7 @@ export const settingsApi = createApi({
       { userId: string } & VerificationSettings
     >({
       query: ({ userId, ...verificationData }) => ({
-        url: `/api/settings/user/${userId}/verification`,
+        url: `/api/verification/user/${userId}`,
         method: 'PUT',
         data: verificationData,
       }),
@@ -159,7 +159,7 @@ export const settingsApi = createApi({
       { userId: string; mobile: string }
     >({
       query: ({ userId, mobile }) => ({
-        url: `/api/settings/user/${userId}/verification/mobile`,
+        url: `/api/verification/user/${userId}/mobile`,
         method: 'POST',
         data: { mobile },
       }),
@@ -170,7 +170,7 @@ export const settingsApi = createApi({
       { userId: string; mobile: string }
     >({
       query: ({ userId, mobile }) => ({
-        url: `/api/settings/user/${userId}/verification/mobile/send`,
+        url: `/api/verification/user/${userId}/mobile/send`,
         method: 'POST',
         data: { mobile },
       }),
@@ -181,7 +181,7 @@ export const settingsApi = createApi({
       { userId: string; mobile: string; code: string }
     >({
       query: ({ userId, mobile, code }) => ({
-        url: `/api/settings/user/${userId}/verification/mobile/verify`,
+        url: `/api/verification/user/${userId}/mobile/verify`,
         method: 'POST',
         data: { mobile, code },
       }),
@@ -192,7 +192,7 @@ export const settingsApi = createApi({
       { userId: string; email: string }
     >({
       query: ({ userId, email }) => ({
-        url: `/api/settings/user/${userId}/verification/email/send`,
+        url: `/api/verification/user/${userId}/email/send`,
         method: 'POST',
         data: { email },
       }),
@@ -203,7 +203,7 @@ export const settingsApi = createApi({
       { userId: string; email: string; code: string }
     >({
       query: ({ userId, email, code }) => ({
-        url: `/api/settings/user/${userId}/verification/email/verify`,
+        url: `/api/verification/user/${userId}/email/verify`,
         method: 'POST',
         data: { email, code },
       }),
