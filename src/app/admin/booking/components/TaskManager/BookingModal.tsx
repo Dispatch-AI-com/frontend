@@ -298,8 +298,8 @@ const BookingModal: React.FC<Props> = ({
     Record<string, string>
   >({});
   const [createServiceBooking] = useCreateServiceBookingMutation();
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-  const user = useAppSelector(state => state.auth.user) as RootState['auth']['user'];
+
+  const user = useAppSelector(state => state.auth.user);
   const { blockOperationWithAlert } = useVerificationCheck();
 
   // Get custom form fields for the selected service

@@ -341,7 +341,8 @@ export default function VerificationSection() {
   };
 
   // Check verification status
-  const isFullyVerified = verificationData?.emailVerified && verificationData?.mobileVerified;
+  const isFullyVerified =
+    verificationData?.emailVerified && verificationData?.mobileVerified;
   const unverifiedCount = [
     !verificationData?.emailVerified,
     !verificationData?.mobileVerified,
@@ -350,38 +351,40 @@ export default function VerificationSection() {
   return (
     <>
       <SectionDivider />
-      
+
       {/* Verification Status Alert */}
       {!isFullyVerified && verificationData && (
-        <Alert 
-          severity="error" 
-          sx={{ 
-            mb: 2, 
+        <Alert
+          severity="error"
+          sx={{
+            mb: 2,
             borderRadius: 2,
             border: '2px solid #f44336',
             backgroundColor: '#ffebee',
           }}
         >
           <AlertTitle sx={{ color: '#d32f2f', fontWeight: 'bold' }}>
-            🚨 Account Verification Required - {unverifiedCount} Item{unverifiedCount > 1 ? 's' : ''} Pending
+            🚨 Account Verification Required - {unverifiedCount} Item
+            {unverifiedCount > 1 ? 's' : ''} Pending
           </AlertTitle>
           <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>Impact:</strong> Some operations are blocked until verification is complete.
+            <strong>Impact:</strong> Some operations are blocked until
+            verification is complete.
           </Typography>
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             {!verificationData.emailVerified && (
-              <Chip 
-                label="Email Unverified" 
-                color="error" 
-                size="small" 
+              <Chip
+                label="Email Unverified"
+                color="error"
+                size="small"
                 sx={{ fontWeight: 'bold' }}
               />
             )}
             {!verificationData.mobileVerified && (
-              <Chip 
-                label="Phone Unverified" 
-                color="error" 
-                size="small" 
+              <Chip
+                label="Phone Unverified"
+                color="error"
+                size="small"
                 sx={{ fontWeight: 'bold' }}
               />
             )}
@@ -391,10 +394,10 @@ export default function VerificationSection() {
 
       {/* Verification Success Alert */}
       {isFullyVerified && verificationData && (
-        <Alert 
-          severity="success" 
-          sx={{ 
-            mb: 2, 
+        <Alert
+          severity="success"
+          sx={{
+            mb: 2,
             borderRadius: 2,
             border: '2px solid #4caf50',
             backgroundColor: '#e8f5e8',
@@ -404,7 +407,8 @@ export default function VerificationSection() {
             ✅ Account Fully Verified
           </AlertTitle>
           <Typography variant="body2">
-            All contact information has been verified. You have full access to all features.
+            All contact information has been verified. You have full access to
+            all features.
           </Typography>
         </Alert>
       )}

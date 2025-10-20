@@ -40,36 +40,44 @@ export const useVerificationCheck = () => {
   }, [isFullyVerified, router]);
 
   // New function to check verification with detailed error message
-  const checkVerificationWithMessage = useCallback((operation: string) => {
-    if (isLoading) {
-      return { allowed: false, message: 'Verification status is loading...' };
-    }
+  const checkVerificationWithMessage = useCallback(
+    (operation: string) => {
+      if (isLoading) {
+        return { allowed: false, message: 'Verification status is loading...' };
+      }
 
-    if (!isFullyVerified) {
-      const unverifiedItems = [];
-      if (!isEmailVerified) unverifiedItems.push('email');
-      if (!isPhoneVerified) unverifiedItems.push('phone');
-      
-      return {
-        allowed: false,
-        message: `Cannot ${operation}. Please verify your ${unverifiedItems.join(' and ')} first.`,
-        unverifiedItems,
-        redirect: () => router.push('/admin/settings')
-      };
-    }
+      if (!isFullyVerified) {
+        const unverifiedItems = [];
+        if (!isEmailVerified) unverifiedItems.push('email');
+        if (!isPhoneVerified) unverifiedItems.push('phone');
 
-    return { allowed: true };
-  }, [isLoading, isFullyVerified, isEmailVerified, isPhoneVerified, router]);
+        return {
+          allowed: false,
+          message: `Cannot ${operation}. Please verify your ${unverifiedItems.join(' and ')} first.`,
+          unverifiedItems,
+          redirect: () => router.push('/admin/settings'),
+        };
+      }
+
+      return { allowed: true };
+    },
+    [isLoading, isFullyVerified, isEmailVerified, isPhoneVerified, router],
+  );
 
   // Function to block operations with alert
-  const blockOperationWithAlert = useCallback((operation: string) => {
-    const result = checkVerificationWithMessage(operation);
-    if (!result.allowed) {
-      alert(`🚨 Verification Required\n\n${result.message}\n\nYou will be redirected to Settings to complete verification.`);
-      result.redirect?.();
-    }
-    return result.allowed;
-  }, [checkVerificationWithMessage]);
+  const blockOperationWithAlert = useCallback(
+    (operation: string) => {
+      const result = checkVerificationWithMessage(operation);
+      if (!result.allowed) {
+        alert(
+          `🚨 Verification Required\n\n${result.message}\n\nYou will be redirected to Settings to complete verification.`,
+        );
+        result.redirect?.();
+      }
+      return result.allowed;
+    },
+    [checkVerificationWithMessage],
+  );
 
   return {
     isFullyVerified,

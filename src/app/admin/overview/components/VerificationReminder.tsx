@@ -1,6 +1,13 @@
 'use client';
 
-import { Alert, AlertTitle, Box, Button, Typography, Chip } from '@mui/material';
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  Chip,
+  Typography,
+} from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -56,22 +63,25 @@ export default function VerificationReminder({
         }}
       >
         <AlertTitle sx={{ color: '#d32f2f', fontWeight: 'bold' }}>
-          🚨 Account Verification Required - {unverifiedCount} Item{unverifiedCount > 1 ? 's' : ''} Pending
+          🚨 Account Verification Required - {unverifiedCount} Item
+          {unverifiedCount > 1 ? 's' : ''} Pending
         </AlertTitle>
-        
+
         <Typography variant="body1" sx={{ mb: 2, fontWeight: 500 }}>
-          <strong>Important:</strong> Your account requires verification to access all features and ensure security.
+          <strong>Important:</strong> Your account requires verification to
+          access all features and ensure security.
           <br />
-          <strong>Impact:</strong> Some operations are currently blocked until verification is complete.
+          <strong>Impact:</strong> Some operations are currently blocked until
+          verification is complete.
         </Typography>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 3 }}>
           {!verificationData.emailVerified && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Chip 
-                label="UNVERIFIED" 
-                color="error" 
-                size="small" 
+              <Chip
+                label="UNVERIFIED"
+                color="error"
+                size="small"
                 sx={{ fontWeight: 'bold' }}
               />
               <Typography variant="body2" color="text.secondary">
@@ -81,10 +91,10 @@ export default function VerificationReminder({
           )}
           {!verificationData.mobileVerified && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Chip 
-                label="UNVERIFIED" 
-                color="error" 
-                size="small" 
+              <Chip
+                label="UNVERIFIED"
+                color="error"
+                size="small"
                 sx={{ fontWeight: 'bold' }}
               />
               <Typography variant="body2" color="text.secondary">
@@ -111,7 +121,7 @@ export default function VerificationReminder({
           >
             Complete Verification Now
           </Button>
-          
+
           <Button
             variant="outlined"
             size="medium"

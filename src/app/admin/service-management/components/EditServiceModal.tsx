@@ -221,8 +221,8 @@ export default function EditServiceModal({
 
   useMediaQuery(theme.breakpoints.down('sm'));
   useMediaQuery(theme.breakpoints.down('xs'));
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-  const user = useAppSelector(state => state.auth.user) as RootState['auth']['user'];
+
+  const user = useAppSelector(state => state.auth.user);
 
   // Fallback: try to get user from auth check if Redux state is empty
   const { data: authCheckData } = useCheckAuthStatusQuery(undefined, {

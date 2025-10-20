@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { useVerificationCheck } from '@/features/settings/hooks/useVerificationCheck';
 
 interface VerificationGuardProps {
@@ -13,10 +14,10 @@ interface VerificationGuardProps {
  * A guard component that blocks operations if user is not fully verified
  * Shows fallback content or nothing if verification is required
  */
-export default function VerificationGuard({ 
-  children, 
-  operation: _operation, 
-  fallback 
+export default function VerificationGuard({
+  children,
+  operation: _operation,
+  fallback,
 }: VerificationGuardProps) {
   const { isFullyVerified, isLoading } = useVerificationCheck();
 
@@ -39,7 +40,7 @@ export const useVerificationGuard = () => {
 
   const guardFunction = <T extends (...args: unknown[]) => unknown>(
     fn: T,
-    operation: string
+    operation: string,
   ): T => {
     return ((...args: Parameters<T>) => {
       if (!blockOperationWithAlert(operation)) {
