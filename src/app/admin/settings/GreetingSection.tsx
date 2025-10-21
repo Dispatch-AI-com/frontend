@@ -55,7 +55,7 @@ export default function GreetingSection() {
   }
 
   if (error) {
-    // 检查是否是 404 错误（Company not found）
+    // 检查是否是 404 错误（User not found）
     const errorMessage =
       typeof error === 'string'
         ? error
@@ -67,7 +67,7 @@ export default function GreetingSection() {
 
     if (
       typeof errorMessage === 'string' &&
-      (errorMessage.includes('Company not found') ||
+      (errorMessage.includes('User not found') ||
         ('status' in error && error.status === 404))
     ) {
       return (
@@ -83,7 +83,7 @@ export default function GreetingSection() {
             }}
           >
             <Typography variant="body2">
-              No company information found. Please complete your company profile
+              No user information found. Please complete your company profile
               first.
             </Typography>
           </Box>

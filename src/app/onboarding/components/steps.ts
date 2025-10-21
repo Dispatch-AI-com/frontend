@@ -3,11 +3,10 @@ export interface Step {
 
   field:
     | '' // Demo-call
-    | `user.${'fullPhoneNumber' | 'position'}`
-    | `company.${'businessName' | 'abn' | 'address.full'}`;
+    | `user.${'fullPhoneNumber' | 'position' | 'address.full' | 'greeting.type' | 'greeting.message'}`;
 
   question: string;
-  inputType: 'text' | 'button';
+  inputType: 'text' | 'button' | 'address';
   validate: (input: string) => boolean;
   onValidResponse: (input: string) => string;
   retryMessage: string;
@@ -41,58 +40,41 @@ export const steps: Step[] = [
 
   {
     id: 3,
-    field: 'company.businessName',
-    question: "What's the name of your company or business?",
-    inputType: 'text',
-    validate: input => input.trim().length >= 2,
-    onValidResponse: name => `Great – "${name}" sounds solid!`,
+    field: 'user.address.full',
+    question:
+      'Please enter your billing address. Start typing and select from the suggestions.',
+    inputType: 'address',
+    validate: input => input.trim().length >= 5,
+    onValidResponse: addr => `Great, I have your billing address as "${addr}".`,
     retryMessage:
-      "Oops, didn't catch that. Could you type the business name again?",
+      'Please enter a valid address. Start typing and select from the suggestions.',
   },
 
   {
     id: 4,
-    field: 'company.abn',
-    question: "What's your Australian Business Number (ABN)?",
-    inputType: 'text',
-    validate: input => {
-      if (!/^\d{11}$/.test(input)) {
-        return false;
-      }
-
-      if (input.length !== 11) {
-        return false;
-      }
-
-      const weights = [10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
-      let sum = 0;
-
-      const firstDigit = parseInt(input[0], 10) - 1;
-      sum += firstDigit * weights[0];
-
-      for (let i = 1; i < 11; i++) {
-        sum += parseInt(input[i], 10) * weights[i];
-      }
-
-      return sum % 89 === 0;
-    },
-    onValidResponse: () => 'Thanks, ABN stored.',
-    retryMessage:
-      'Hmm, that doesn’t seem like a real ABN. Could you double-check it?',
+    field: 'user.greeting.type',
+    question: 'How would you like Dispatch AI to greet your callers?',
+    inputType: 'button',
+    options: ['Use Default Greeting', 'Create Custom Greeting'],
+    validate: v =>
+      ['Use Default Greeting', 'Create Custom Greeting'].includes(v),
+    onValidResponse: choice =>
+      choice === 'Use Default Greeting'
+        ? "Great! We'll use our professional default greeting for your callers."
+        : "Perfect! Let's create a custom greeting for your business.",
+    retryMessage: 'Please choose one of the greeting options.',
   },
 
   {
     id: 5,
-    field: 'company.address.full',
+    field: 'user.greeting.message',
+    question: 'Please enter your custom greeting message (10-500 characters):',
     inputType: 'text',
-    question:
-      'Please enter your office address in the format: Street, Suburb, STATE Postcode. (eg. 123 Collins St, Melbourne, VIC 3000)',
-    // Accepts: any chars + comma + Suburb + comma + STATE + space + 4-digit postcode
-    validate: input =>
-      /^[^,]+,\s*[^,]+,\s*[A-Z]{2,3}\s+\d{4}$/.test(input.trim()),
-    onValidResponse: addr => `Great, I have your address as "${addr}".`,
+    validate: input => input.trim().length >= 10 && input.trim().length <= 500,
+    onValidResponse: greeting =>
+      `Perfect! Your custom greeting is set: "${greeting.slice(0, 50)}${greeting.length > 50 ? '...' : ''}".`,
     retryMessage:
-      'That address does not look right. Example: 123 Collins St, Melbourne, VIC 3000',
+      'Please enter a greeting message between 10 and 500 characters.',
   },
 
   {

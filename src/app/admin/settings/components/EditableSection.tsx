@@ -44,6 +44,7 @@ interface Field {
   component?: (props: {
     value: string;
     onChange: (value: string) => void;
+    setFieldValue: (key: string, value: string) => void;
     placeholder?: string;
     label: string;
     name: string;
@@ -104,7 +105,7 @@ export default function EditableSection({
     setOpen(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (values: Record<string, string>) => {
     setError('');
     setSaving(true);
 
@@ -182,7 +183,7 @@ export default function EditableSection({
           setOpen(false);
           setError('');
         }}
-        onSave={() => void handleSave()}
+        onSave={() => void handleSave(formValues)}
       >
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           {error && (
@@ -203,6 +204,12 @@ export default function EditableSection({
                   onChange: (value: string) => {
                     if (!saving) {
                       setFormValues(f => ({ ...f, [field.key]: value }));
+                      if (error) setError('');
+                    }
+                  },
+                  setFieldValue: (key: string, value: string) => {
+                    if (!saving) {
+                      setFormValues(f => ({ ...f, [key]: value }));
                       if (error) setError('');
                     }
                   },

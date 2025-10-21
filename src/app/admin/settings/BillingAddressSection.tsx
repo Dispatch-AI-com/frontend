@@ -1,9 +1,12 @@
 'use client';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 import EditableSection from '@/app/admin/settings/components/EditableSection';
 import SelectField from '@/app/admin/settings/components/SelectField';
+import AddressAutocomplete from '@/components/ui/AddressAutocomplete';
 import {
+  type BillingAddressSettings,
   useGetBillingAddressQuery,
   useUpdateBillingAddressMutation,
 } from '@/features/settings/settingsApi';
@@ -28,6 +31,17 @@ const STATE_OPTIONS = [
   },
   { label: 'Northern Territory', value: 'Northern Territory' },
 ];
+
+const STATE_ABBREVIATION_MAP: Record<string, string> = {
+  NSW: 'New South Wales',
+  VIC: 'Victoria',
+  QLD: 'Queensland',
+  WA: 'Western Australia',
+  SA: 'South Australia',
+  TAS: 'Tasmania',
+  ACT: 'Australian Capital Territory',
+  NT: 'Northern Territory',
+};
 
 // Billing address specific validation functions
 const validateStreetAddress = (street: string): ValidationResult => {
@@ -153,14 +167,19 @@ export default function BillingAddressSection() {
       throw new Error('User not logged in');
     }
 
-    await updateBillingAddress({
-      userId: user._id,
-      unit: values.unit || undefined,
+    // Convert Record<string, string> to BillingAddressSettings
+    const billingAddressSettings: BillingAddressSettings = {
+      unit: values.unit,
       streetAddress: values.streetAddress,
       suburb: values.suburb,
       state: values.state,
       postcode: values.postcode,
-    }).unwrap();
+    };
+
+    await updateBillingAddress({
+      userId: user._id,
+      ...billingAddressSettings,
+    });
   };
 
   const convertedData = billingData
@@ -188,6 +207,34 @@ export default function BillingAddressSection() {
           key: 'streetAddress',
           placeholder: 'Street address',
           validate: validateStreetAddress,
+          component: ({ label, value, onChange, setFieldValue, ...props }) => (
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant="subtitle2">{label}</Typography>
+              <AddressAutocomplete
+                value={value}
+                onChange={onChange}
+                onAddressSelect={(_address, _placeId, components) => {
+                  if (components) {
+                    setFieldValue(
+                      'streetAddress',
+                      `${components.streetNumber ?? ''} ${components.route ?? ''}`.trim(),
+                    );
+                    setFieldValue('suburb', components.locality ?? '');
+                    const stateFullName =
+                      STATE_ABBREVIATION_MAP[
+                        components.administrativeAreaLevel1 ?? ''
+                      ] ??
+                      components.administrativeAreaLevel1 ??
+                      '';
+                    setFieldValue('state', stateFullName);
+                    setFieldValue('postcode', components.postalCode ?? '');
+                  }
+                }}
+                displayFullAddress={false}
+                {...props}
+              />
+            </Box>
+          ),
         },
         {
           label: 'Suburb:',
