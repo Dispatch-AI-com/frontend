@@ -167,7 +167,7 @@ export default function IntegrationsSection() {
 
   // Get current display email (prioritize Google email, otherwise login email)
   const getDisplayEmail = (): string | null => {
-    return googleEmail || loginEmail || userEmail;
+    return googleEmail ?? loginEmail ?? userEmail;
   };
 
   // Check if email is Gmail
@@ -180,24 +180,28 @@ export default function IntegrationsSection() {
 
   // Get email type information
   const getEmailTypeInfo = (): { isGmail: boolean; message: string } => {
-    const currentEmail = loginEmail || userEmail;
+    const currentEmail = loginEmail ?? userEmail;
     const isGmail = isGmailEmail(currentEmail);
 
     if (isGmail) {
       return {
         isGmail: true,
-        message: 'Your login email is Gmail, you can directly connect to Google Calendar'
+        message:
+          'Your login email is Gmail, you can directly connect to Google Calendar',
       };
     } else {
       return {
         isGmail: false,
-        message: 'Your login email is not Gmail, connecting to Google Calendar requires a Gmail account'
+        message:
+          'Your login email is not Gmail, connecting to Google Calendar requires a Gmail account',
       };
     }
   };
 
   // Get Google Calendar user information
-  const fetchGoogleProfile = async (userId: string): Promise<{
+  const fetchGoogleProfile = async (
+    userId: string,
+  ): Promise<{
     googleUserId?: string;
     userEmail?: string;
     userName?: string;
@@ -205,10 +209,17 @@ export default function IntegrationsSection() {
   } | null> => {
     try {
       const response = await fetch(
-        buildApiUrl(`/calendar-token/user/${encodeURIComponent(userId)}/profile`)
+        buildApiUrl(
+          `/calendar-token/user/${encodeURIComponent(userId)}/profile`,
+        ),
       );
       if (response.ok) {
-        return await response.json();
+        return (await response.json()) as {
+          googleUserId?: string;
+          userEmail?: string;
+          userName?: string;
+          userPicture?: string;
+        };
       }
       return null;
     } catch {
@@ -342,7 +353,7 @@ export default function IntegrationsSection() {
       prev.map(cal => ({
         ...cal,
         checked: cal.id === 'email',
-        name: cal.id === 'email' ? (loginEmail || '') : cal.name,
+        name: cal.id === 'email' ? (loginEmail ?? '') : cal.name,
       })),
     );
   };
@@ -366,10 +377,14 @@ export default function IntegrationsSection() {
           setUserEmail(gEmail);
           try {
             localStorage.setItem(CONNECTED_EMAIL_KEY, gEmail);
-          } catch {}
+          } catch {
+            // Ignore storage errors
+          }
           // Update email display in calendar list
           setCalendars(prev =>
-            prev.map(cal => (cal.id === 'email' ? { ...cal, name: gEmail } : cal)),
+            prev.map(cal =>
+              cal.id === 'email' ? { ...cal, name: gEmail } : cal,
+            ),
           );
         }
       }
@@ -379,9 +394,12 @@ export default function IntegrationsSection() {
     const email = getUserEmail();
 
     // Set login email (from localStorage)
-    const storedLoginEmail = typeof window !== 'undefined'
-      ? localStorage.getItem('userEmail') ?? process.env.NEXT_PUBLIC_CALENDAR_USER_EMAIL ?? null
-      : null;
+    const storedLoginEmail =
+      typeof window !== 'undefined'
+        ? (localStorage.getItem('userEmail') ??
+          process.env.NEXT_PUBLIC_CALENDAR_USER_EMAIL ??
+          null)
+        : null;
     setLoginEmail(storedLoginEmail);
 
     // Check if email type warning should be displayed (only when not connected and not Gmail)
@@ -435,13 +453,21 @@ export default function IntegrationsSection() {
               setUserEmail(profile.userEmail);
               try {
                 localStorage.setItem(CONNECTED_EMAIL_KEY, profile.userEmail);
-              } catch {}
+              } catch {
+                // Ignore storage errors
+              }
               // Update email display in calendar list
               setCalendars(prev =>
-                prev.map(cal => (cal.id === 'email' ? { ...cal, name: profile.userEmail! } : cal)),
+                prev.map(cal =>
+                  cal.id === 'email'
+                    ? { ...cal, name: profile.userEmail! }
+                    : cal,
+                ),
               );
             }
-          } catch {}
+          } catch {
+            // Ignore profile fetch errors
+          }
         } else if (res.status === 404) {
           setIsConnected(false);
         }
@@ -488,7 +514,7 @@ export default function IntegrationsSection() {
     ); // Check every 5 minutes
 
     return () => clearInterval(intervalId);
-  }, [isConnected]);
+  }, [isConnected, getUserId]);
 
   const handleCalendarToggle = (calendarId: string) => {
     setCalendars(prev =>
@@ -555,7 +581,7 @@ export default function IntegrationsSection() {
               Connected account:
             </Typography>
             <Typography variant="body2" color="text.primary" sx={{ mb: 2 }}>
-              {googleEmail || userEmail}
+              {googleEmail ?? userEmail}
             </Typography>
 
             <FormControlLabel
