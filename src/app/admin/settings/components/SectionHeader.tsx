@@ -8,7 +8,7 @@ import React from 'react';
 import theme from '@/theme';
 
 interface SectionHeaderProps {
-  title: string;
+  title: React.ReactNode;
   onEdit?: () => void;
   showEditIcon?: boolean;
 }
