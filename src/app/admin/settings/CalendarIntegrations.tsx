@@ -102,10 +102,26 @@ const CustomCheckbox = styled(Checkbox)({
   },
 });
 
+const EmailTypeWarning = styled(Box)({
+  backgroundColor: '#fff3cd',
+  border: '1px solid #ffeaa7',
+  borderRadius: theme.spacing(1),
+  padding: theme.spacing(1.5),
+  marginBottom: theme.spacing(2),
+  '& .MuiTypography-root': {
+    fontSize: '0.875rem',
+    color: '#856404',
+  },
+});
+
 export default function IntegrationsSection() {
   const [isConnected, setIsConnected] = useState(false);
   const [showGoogleEvents, setShowGoogleEvents] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [loginEmail, setLoginEmail] = useState<string | null>(null);
+  const [googleEmail, setGoogleEmail] = useState<string | null>(null);
+  const [showEmailTypeWarning, setShowEmailTypeWarning] = useState(false);
+  const CONNECTED_EMAIL_KEY = 'calendarConnectedEmail';
   const [calendars, setCalendars] = useState<CalendarItem[]>([
     { id: 'family', name: 'Family', color: '#d076eb', checked: false },
     { id: 'birthdays', name: 'Birthdays', color: '#ae725d', checked: false },
@@ -139,11 +155,65 @@ export default function IntegrationsSection() {
 
   const getUserEmail = (): string | null => {
     if (typeof window === 'undefined') return null;
+    // Prioritize connected calendar email; otherwise fall back to login email or default value
+    const connectedEmail = localStorage.getItem(CONNECTED_EMAIL_KEY);
+    if (connectedEmail) return connectedEmail;
     return (
       localStorage.getItem('userEmail') ??
       process.env.NEXT_PUBLIC_CALENDAR_USER_EMAIL ??
       null
     );
+  };
+
+  // Get current display email (prioritize Google email, otherwise login email)
+  const getDisplayEmail = (): string | null => {
+    return googleEmail || loginEmail || userEmail;
+  };
+
+  // Check if email is Gmail
+  const isGmailEmail = (email: string | null): boolean => {
+    if (!email) return false;
+    const gmailDomains = ['gmail.com', 'googlemail.com'];
+    const domain = email.split('@')[1]?.toLowerCase();
+    return gmailDomains.includes(domain);
+  };
+
+  // Get email type information
+  const getEmailTypeInfo = (): { isGmail: boolean; message: string } => {
+    const currentEmail = loginEmail || userEmail;
+    const isGmail = isGmailEmail(currentEmail);
+
+    if (isGmail) {
+      return {
+        isGmail: true,
+        message: 'Your login email is Gmail, you can directly connect to Google Calendar'
+      };
+    } else {
+      return {
+        isGmail: false,
+        message: 'Your login email is not Gmail, connecting to Google Calendar requires a Gmail account'
+      };
+    }
+  };
+
+  // Get Google Calendar user information
+  const fetchGoogleProfile = async (userId: string): Promise<{
+    googleUserId?: string;
+    userEmail?: string;
+    userName?: string;
+    userPicture?: string;
+  } | null> => {
+    try {
+      const response = await fetch(
+        buildApiUrl(`/calendar-token/user/${encodeURIComponent(userId)}/profile`)
+      );
+      if (response.ok) {
+        return await response.json();
+      }
+      return null;
+    } catch {
+      return null;
+    }
   };
 
   const readUserFromStorage = (): { id?: string; email?: string } => {
@@ -201,6 +271,17 @@ export default function IntegrationsSection() {
       );
       return;
     }
+
+    // Check if current login email is Gmail
+    const emailInfo = getEmailTypeInfo();
+    if (!emailInfo.isGmail) {
+      // If not Gmail, show confirmation dialog
+      const confirmMessage = `${emailInfo.message}\n\nClick "OK" to redirect to Gmail login page, you need to use a Gmail account for authorization.\n\nNote: After connection, the calendar will use your Gmail account, not the current login email.`;
+      if (!window.confirm(confirmMessage)) {
+        return;
+      }
+    }
+
     // Build state so backend can parse userId and return URL
     const from = encodeURIComponent('/admin/settings?connected=google');
     const stateObj: Record<string, string> = { u: userId, from };
@@ -250,11 +331,18 @@ export default function IntegrationsSection() {
     }
 
     setIsConnected(false);
+    setGoogleEmail(null);
+    setUserEmail(loginEmail); // Return to login email
     setShowGoogleEvents(true);
+    // After disconnection, if login email is not Gmail, show warning again
+    if (loginEmail && !isGmailEmail(loginEmail)) {
+      setShowEmailTypeWarning(true);
+    }
     setCalendars(prev =>
       prev.map(cal => ({
         ...cal,
         checked: cal.id === 'email',
+        name: cal.id === 'email' ? (loginEmail || '') : cal.name,
       })),
     );
   };
@@ -264,17 +352,44 @@ export default function IntegrationsSection() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const connected = params.get('connected');
+      const gEmail = params.get('gEmail');
       if (connected === 'google') {
         if (window.location.pathname !== '/admin/settings') {
           window.location.replace('/admin/settings?connected=google');
           return;
         }
         setIsConnected(true);
+        setShowEmailTypeWarning(false); // Hide warning after successful connection
+        // If gEmail is returned, prioritize and persist it
+        if (gEmail) {
+          setGoogleEmail(gEmail);
+          setUserEmail(gEmail);
+          try {
+            localStorage.setItem(CONNECTED_EMAIL_KEY, gEmail);
+          } catch {}
+          // Update email display in calendar list
+          setCalendars(prev =>
+            prev.map(cal => (cal.id === 'email' ? { ...cal, name: gEmail } : cal)),
+          );
+        }
       }
     }
 
     const userId = getUserId();
     const email = getUserEmail();
+
+    // Set login email (from localStorage)
+    const storedLoginEmail = typeof window !== 'undefined'
+      ? localStorage.getItem('userEmail') ?? process.env.NEXT_PUBLIC_CALENDAR_USER_EMAIL ?? null
+      : null;
+    setLoginEmail(storedLoginEmail);
+
+    // Check if email type warning should be displayed (only when not connected and not Gmail)
+    if (!isConnected && storedLoginEmail && !isGmailEmail(storedLoginEmail)) {
+      setShowEmailTypeWarning(true);
+    }
+
+    // Set current display email
     setUserEmail(email);
     if (email) {
       setCalendars(prev =>
@@ -311,6 +426,22 @@ export default function IntegrationsSection() {
         if (res.ok) {
           // Convention: having a valid token means connected
           setIsConnected(true);
+          setShowEmailTypeWarning(false); // Hide warning after successful connection
+          // Use new profile API to get Google user information
+          try {
+            const profile = await fetchGoogleProfile(effectiveUserId);
+            if (profile?.userEmail) {
+              setGoogleEmail(profile.userEmail);
+              setUserEmail(profile.userEmail);
+              try {
+                localStorage.setItem(CONNECTED_EMAIL_KEY, profile.userEmail);
+              } catch {}
+              // Update email display in calendar list
+              setCalendars(prev =>
+                prev.map(cal => (cal.id === 'email' ? { ...cal, name: profile.userEmail! } : cal)),
+              );
+            }
+          } catch {}
         } else if (res.status === 404) {
           setIsConnected(false);
         }
@@ -371,6 +502,17 @@ export default function IntegrationsSection() {
     <>
       <SectionDivider />
       <SectionHeader title="Integrations" />
+
+      {/* Email type warning */}
+      {showEmailTypeWarning && !isConnected && (
+        <EmailTypeWarning>
+          <Typography variant="body2">
+            <strong>Note:</strong>
+            {getEmailTypeInfo().message}
+          </Typography>
+        </EmailTypeWarning>
+      )}
+
       <InfoRow>
         <IntegrationItem>
           <LeftSection>
@@ -387,7 +529,7 @@ export default function IntegrationsSection() {
               />
               <ContentSection>
                 <Typography variant="body2" color="text.primary" sx={{ mb: 1 }}>
-                  {userEmail}
+                  {getDisplayEmail()}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Sync your appointments to Google Calendar. Online booking
@@ -413,7 +555,7 @@ export default function IntegrationsSection() {
               Connected account:
             </Typography>
             <Typography variant="body2" color="text.primary" sx={{ mb: 2 }}>
-              {userEmail}
+              {googleEmail || userEmail}
             </Typography>
 
             <FormControlLabel
