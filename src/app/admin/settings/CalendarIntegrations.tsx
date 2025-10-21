@@ -14,6 +14,8 @@ import type { CalendarItem } from '@/app/admin/settings/components/CalendarForm'
 import CalendarOptionsList from '@/app/admin/settings/components/CalendarForm';
 import SectionDivider from '@/app/admin/settings/components/SectionDivider';
 import SectionHeader from '@/app/admin/settings/components/SectionHeader';
+import ProFeatureModal from '@/components/ui/ProFeatureModal';
+import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 
 const InfoRow = styled(Box)({
@@ -45,15 +47,18 @@ const IconAndContentRow = styled(Box)({
   gap: theme.spacing(1.5),
 });
 
-const ConnectButton = styled(Button)({
-  backgroundColor: '#000000',
+const ConnectButton = styled(Button, {
+  shouldForwardProp: prop => prop !== '$disabled',
+})<{ $disabled?: boolean }>(({ $disabled }) => ({
+  backgroundColor: $disabled ? '#e0e0e0' : '#000000',
   color: 'white',
   padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
   textTransform: 'none',
+  boxShadow: 'none',
   '&:hover': {
-    backgroundColor: '#374151',
+    backgroundColor: $disabled ? '#e0e0e0' : '#374151',
   },
-});
+}));
 
 const RemoveButton = styled(Button)({
   backgroundColor: 'transparent',
@@ -87,7 +92,18 @@ const CustomCheckbox = styled(Checkbox)({
   },
 });
 
-export default function IntegrationsSection() {
+interface IntegrationsSectionProps {
+  editable?: boolean;
+  showProBadge?: boolean;
+  user?: { email?: string };
+}
+
+export default function IntegrationsSection({
+  editable = false,
+  showProBadge = false,
+}: IntegrationsSectionProps) {
+  const user = useAppSelector(state => state.auth.user);
+  const [showProModal, setShowProModal] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [showGoogleEvents, setShowGoogleEvents] = useState(true);
   const [calendars, setCalendars] = useState<CalendarItem[]>([
@@ -107,12 +123,21 @@ export default function IntegrationsSection() {
     },
   ]);
 
+  const handleUnlockPro = () => setShowProModal(true);
+  const handleCloseProModal = () => setShowProModal(false);
+  const handleUpgrade = () => {
+    // Redirect to billing or upgrade page
+    window.location.href = '/admin/billing';
+  };
+
   const handleConnect = () => {
+    if (!editable) return;
     // TODO: Implement Google Calendar OAuth connection
     setIsConnected(true);
   };
 
   const handleRemove = () => {
+    if (!editable) return;
     setIsConnected(false);
     setShowGoogleEvents(true);
     setCalendars(prev =>
@@ -124,6 +149,7 @@ export default function IntegrationsSection() {
   };
 
   const handleCalendarToggle = (calendarId: string) => {
+    if (!editable) return;
     setCalendars(prev =>
       prev.map(cal =>
         cal.id === calendarId ? { ...cal, checked: !cal.checked } : cal,
@@ -134,7 +160,29 @@ export default function IntegrationsSection() {
   return (
     <>
       <SectionDivider />
-      <SectionHeader title="Integrations" />
+      <Box display="flex" alignItems="center" gap={1} mb={1}>
+        <SectionHeader title="Integrations" />
+        {showProBadge && !editable && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+              backgroundColor: '#fff2d0',
+              padding: '2px 6px',
+              borderRadius: '8px',
+              fontSize: '10px',
+              fontWeight: 'bold',
+              color: '#333',
+              border: '1px solid #ffd700',
+              mb: '20px',
+            }}
+          >
+            <Image src="/plan/pro.svg" alt="Pro" width={12} height={12} />
+            <span style={{ fontSize: '10px', fontWeight: 'bold' }}>PRO</span>
+          </Box>
+        )}
+      </Box>
       <InfoRow>
         <IntegrationItem>
           <LeftSection>
@@ -151,7 +199,7 @@ export default function IntegrationsSection() {
               />
               <ContentSection>
                 <Typography variant="body2" color="text.primary" sx={{ mb: 1 }}>
-                  email51@company.com
+                  {user?.email ?? ''}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Sync your appointments to Google Calendar. Online booking
@@ -163,9 +211,39 @@ export default function IntegrationsSection() {
           </LeftSection>
 
           {isConnected ? (
-            <RemoveButton onClick={handleRemove}>Remove</RemoveButton>
+            <RemoveButton onClick={handleRemove} disabled={!editable}>
+              Remove
+            </RemoveButton>
+          ) : editable ? (
+            <ConnectButton
+              onClick={handleConnect}
+              disabled={!editable}
+              $disabled={!editable}
+            >
+              Connect
+            </ConnectButton>
           ) : (
-            <ConnectButton onClick={handleConnect}>Connect</ConnectButton>
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={handleUnlockPro}
+              sx={{
+                backgroundColor: '#fff2d0',
+                color: '#333',
+                fontWeight: 600,
+                textTransform: 'none',
+                borderRadius: 2,
+                boxShadow: 'none',
+                '&:hover': {
+                  backgroundColor: '#ffd54f',
+                },
+              }}
+              startIcon={
+                <Image src="/plan/pro.svg" alt="Pro" width={16} height={16} />
+              }
+            >
+              Unlock with Pro
+            </Button>
           )}
         </IntegrationItem>
 
@@ -175,15 +253,18 @@ export default function IntegrationsSection() {
               Connected account:
             </Typography>
             <Typography variant="body2" color="text.primary" sx={{ mb: 2 }}>
-              email51@company.com
+              {user?.email ?? ''}
             </Typography>
 
             <FormControlLabel
               control={
                 <CustomCheckbox
                   checked={showGoogleEvents}
-                  onChange={e => setShowGoogleEvents(e.target.checked)}
+                  onChange={e => {
+                    if (editable) setShowGoogleEvents(e.target.checked);
+                  }}
                   size="small"
+                  disabled={!editable}
                 />
               }
               label={
@@ -202,10 +283,19 @@ export default function IntegrationsSection() {
             <CalendarOptionsList
               calendars={calendars}
               onToggle={handleCalendarToggle}
+              editable={editable}
             />
           </ConnectedInfo>
         )}
       </InfoRow>
+
+      {/* Render the modal here */}
+      <ProFeatureModal
+        open={showProModal}
+        onClose={handleCloseProModal}
+        onUpgrade={handleUpgrade}
+        featureName="Calendar Integrations"
+      />
     </>
   );
 }

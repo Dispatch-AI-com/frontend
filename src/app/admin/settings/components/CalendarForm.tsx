@@ -84,12 +84,14 @@ interface CalendarOptionsListProps {
   calendars: CalendarItem[];
   onToggle: (calendarId: string) => void;
   title?: string;
+  editable?: boolean;
 }
 
 export default function CalendarOptionsList({
   calendars,
   onToggle,
   title = 'Calendars to show:',
+  editable = false,
 }: CalendarOptionsListProps) {
   return (
     <>
@@ -105,8 +107,9 @@ export default function CalendarOptionsList({
             </CalendarLabel>
             <CustomSwitch
               checked={calendar.checked}
-              onChange={() => onToggle(calendar.id)}
+              onChange={() => editable && onToggle(calendar.id)}
               size="small"
+              disabled={!editable}
             />
           </CalendarOption>
         ))}
