@@ -78,7 +78,6 @@ export default function CompanyInfoSection({
   const handleUpgrade = () => {
     window.location.href = '/admin/billing';
   };
-  const [forceEdit, setForceEdit] = useState(false);
 
   // Synchronous validation for real-time feedback (format only)
   const validateABN = (abn: string): ValidationResult => {
