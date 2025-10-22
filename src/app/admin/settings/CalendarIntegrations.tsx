@@ -95,7 +95,6 @@ const CustomCheckbox = styled(Checkbox)({
 interface IntegrationsSectionProps {
   editable?: boolean;
   showProBadge?: boolean;
-  user?: { email?: string };
 }
 
 export default function IntegrationsSection({
