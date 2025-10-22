@@ -134,12 +134,8 @@ export default function CompanyInfoSection({
 
   // Handler for edit button
   const handleEditClick = () => {
-      if (!editable) {
-        setShowProModal(true);
-      } else {
-        setForceEdit(true);
-      }
-    };
+    setShowProModal(true);
+  };
 
   const titleWithBadge = (
     <Box display="flex" alignItems="center" gap={1}>
@@ -193,6 +189,7 @@ export default function CompanyInfoSection({
           abn: '',
         }}
         {...(!editable && { onEdit: handleEditClick })}
+        onEdit={!editable ? handleEditClick : undefined}
       />
       <ProFeatureModal
         open={showProModal}

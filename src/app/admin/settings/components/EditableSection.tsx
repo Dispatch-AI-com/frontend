@@ -60,7 +60,7 @@ interface EditableSectionProps {
   data?: Record<string, string>;
   isLoading?: boolean;
   onSave?: (values: Record<string, string>) => Promise<void>;
-  // onEdit?: () => void;
+  onEdit?: () => void;
 }
 
 function splitFields(fields: Field[], columns: number) {
@@ -81,7 +81,7 @@ export default function EditableSection({
   data,
   isLoading = false,
   onSave,
-  // onEdit,
+  onEdit,
 }: EditableSectionProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -162,7 +162,7 @@ export default function EditableSection({
       <SectionDivider />
       <SectionHeader
         title={title}
-        onEdit={isLoading ? undefined : handleEdit}
+        onEdit={isLoading ? undefined : (onEdit ?? handleEdit)}
       />
       <InfoRow>
         {fieldColumns.map((colFields, colIdx) => (
