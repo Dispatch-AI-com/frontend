@@ -185,7 +185,7 @@ export default function EditableSection({
           setOpen(false);
           setError('');
         }}
-        onSave={() => void handleSave(formValues)}
+        onSave={() => void handleSave()}
       >
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           {error && (
