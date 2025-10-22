@@ -73,7 +73,6 @@ export default function CompanyInfoSection({
   const user = useAppSelector(state => state.auth.user);
   const [checkABNExists] = useCheckABNExistsMutation();
   const [showProModal, setShowProModal] = useState(false);
-  const [forceEdit, setForceEdit] = useState(false);
   const handleCloseProModal = () => setShowProModal(false);
   const handleUpgrade = () => {
     window.location.href = '/admin/billing';
