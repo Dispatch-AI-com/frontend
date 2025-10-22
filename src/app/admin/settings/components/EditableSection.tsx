@@ -107,7 +107,7 @@ export default function EditableSection({
     setOpen(true);
   };
 
-  const handleSave = async (values: Record<string, string>) => {
+  const handleSave = async () => {
     setError('');
     setSaving(true);
 
