@@ -849,8 +849,31 @@ export default function IntegrationsSection({
   return (
     <>
       <SectionDivider />
-      <Box display="flex" alignItems="center" gap={1} mb={1}>
-        <SectionHeader title="Integrations" />
+      <Box mb={1}>
+        <Box display="flex" alignItems="center" gap={1} mb={1}>
+          <SectionHeader title="Integrations" />
+          {/* Pro badge */}
+          {showProBadge && !editable && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                backgroundColor: '#fff2d0',
+                padding: '2px 6px',
+                borderRadius: '8px',
+                fontSize: '10px',
+                fontWeight: 'bold',
+                color: '#333',
+                border: '1px solid #ffd700',
+                mb: '20px',
+              }}
+            >
+              <Image src="/plan/pro.svg" alt="Pro" width={12} height={12} />
+              <span style={{ fontSize: '10px', fontWeight: 'bold' }}>PRO</span>
+            </Box>
+          )}
+        </Box>
         {/* Email type warning */}
         {showEmailTypeWarning && !isConnected && (
           <EmailTypeWarning>
@@ -860,30 +883,8 @@ export default function IntegrationsSection({
             </Typography>
           </EmailTypeWarning>
         )}
-
-
-        {/* Pro badge */}
-        {showProBadge && !editable && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5,
-              backgroundColor: '#fff2d0',
-              padding: '2px 6px',
-              borderRadius: '8px',
-              fontSize: '10px',
-              fontWeight: 'bold',
-              color: '#333',
-              border: '1px solid #ffd700',
-              mb: '20px',
-            }}
-          >
-            <Image src="/plan/pro.svg" alt="Pro" width={12} height={12} />
-            <span style={{ fontSize: '10px', fontWeight: 'bold' }}>PRO</span>
-          </Box>
-        )}
       </Box>
+
 
 
       <InfoRow>
