@@ -170,7 +170,7 @@ export default function IntegrationsSection() {
     return googleEmail ?? loginEmail ?? userEmail;
   };
 
-  // Get display email with source label for UI/debug
+  // Get display email with source label for UI
   const getDisplayEmailInfo = (): {
     email: string | null;
     source: 'google' | 'login' | 'fallback' | null;
@@ -180,33 +180,6 @@ export default function IntegrationsSection() {
     return { email: userEmail, source: userEmail ? 'fallback' : null };
   };
 
-  // Debug function to log current storage state
-  const logStorageState = () => {
-    if (typeof window === 'undefined') return;
-    console.log('=== Calendar Storage Debug ===');
-    console.log('sessionStorage userId:', sessionStorage.getItem('userId'));
-    console.log(
-      'sessionStorage userEmail:',
-      sessionStorage.getItem('userEmail'),
-    );
-    console.log('localStorage userId:', localStorage.getItem('userId'));
-    console.log('localStorage userEmail:', localStorage.getItem('userEmail'));
-    console.log(
-      'localStorage calendarConnectedEmail:',
-      localStorage.getItem(CONNECTED_EMAIL_KEY),
-    );
-    console.log(
-      'localStorage persist:root exists:',
-      !!localStorage.getItem('persist:root'),
-    );
-    console.log('State - isConnected:', isConnected);
-    console.log('State - googleEmail:', googleEmail);
-    console.log('State - loginEmail:', loginEmail);
-    console.log('State - userEmail:', userEmail);
-    console.log('State - showEmailTypeWarning:', showEmailTypeWarning);
-    console.log('Current URL:', window.location.href);
-    console.log('==============================');
-  };
 
   // Check if email is Gmail
   const isGmailEmail = (email: string | null): boolean => {
@@ -432,14 +405,11 @@ export default function IntegrationsSection() {
 
       if (deleteResponse.ok) {
         const result = (await deleteResponse.json()) as { message?: string };
-        console.log('Calendar token deleted successfully:', result.message);
-
         // Clean up localStorage immediately after successful deletion
         try {
           localStorage.removeItem(CONNECTED_EMAIL_KEY);
-          console.log('localStorage calendarConnectedEmail cleared');
         } catch {
-          console.error('Failed to clear localStorage calendarConnectedEmail');
+          // Ignore storage errors
         }
 
         // Reset local state immediately
@@ -503,11 +473,8 @@ export default function IntegrationsSection() {
       // Clean up localStorage as fallback
       try {
         localStorage.removeItem(CONNECTED_EMAIL_KEY);
-        console.log('localStorage calendarConnectedEmail cleared (fallback)');
       } catch {
-        console.error(
-          'Failed to clear localStorage calendarConnectedEmail (fallback)',
-        );
+        // Ignore storage errors
       }
 
       // Add flag to prevent re-checking backend after fallback cleanup
@@ -643,8 +610,6 @@ export default function IntegrationsSection() {
         sessionStorage.getItem('disable_calendar_backend_check') === 'true' ||
         sessionStorage.getItem('calendar_manually_deleted') === 'true');
 
-    console.log('Is callback scenario:', isCallback);
-    console.log('Just deleted calendar:', justDeletedCalendar);
     if (!userId) {
       // Fallback: try common storage keys/global variables
       const fromStore = readUserFromStorage();
@@ -703,11 +668,6 @@ export default function IntegrationsSection() {
         isRecentDeletion ||
         disableBackendCheck === 'true'
       ) {
-        console.log('Skipping backend check - calendar was just deleted', {
-          justDeleted,
-          isRecentDeletion,
-          disableBackendCheck,
-        });
         // Clear the flags
         try {
           sessionStorage.removeItem('calendar_deleted');
@@ -764,16 +724,6 @@ export default function IntegrationsSection() {
                 } catch {
                   // Ignore storage errors
                 }
-              } else {
-                console.log(
-                  'Skipping localStorage write for calendarConnectedEmail:',
-                  {
-                    hasExisting: !!localStorage.getItem(CONNECTED_EMAIL_KEY),
-                    justDeleted,
-                    disableBackendCheck,
-                    manuallyDeleted,
-                  },
-                );
               }
               // Update email display in calendar list
               setCalendars(prev =>
@@ -812,7 +762,6 @@ export default function IntegrationsSection() {
     if (!justDeletedCalendar) {
       void checkValid();
     } else {
-      console.log('Skipping all backend checks - calendar was just deleted');
       // Clear the temporary flags but keep the permanent one
       try {
         sessionStorage.removeItem('calendar_deleted');
@@ -824,8 +773,6 @@ export default function IntegrationsSection() {
       }
     }
 
-    // Debug: log storage state on component mount
-    logStorageState();
   }, []);
 
   useEffect(() => {
@@ -888,19 +835,6 @@ export default function IntegrationsSection() {
         </EmailTypeWarning>
       )}
 
-      {/* Debug button (development only) */}
-      {process.env.NODE_ENV === 'development' && (
-        <Box sx={{ mb: 2 }}>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={logStorageState}
-            sx={{ fontSize: '0.75rem' }}
-          >
-            Debug Storage State
-          </Button>
-        </Box>
-      )}
 
       <InfoRow>
         <IntegrationItem>
