@@ -144,7 +144,7 @@ export default function IntegrationsSection() {
   ]);
 
   const getUserId = (): string | null => {
-    // Prefer reading from sessionStorage/localStorage; replace with your global user context if needed
+    // Prefer reading from localStorage; replace with your global user context if needed
     if (typeof window === 'undefined') return null;
     return (
       localStorage.getItem('userId') ??
@@ -168,6 +168,44 @@ export default function IntegrationsSection() {
   // Get current display email (prioritize Google email, otherwise login email)
   const getDisplayEmail = (): string | null => {
     return googleEmail ?? loginEmail ?? userEmail;
+  };
+
+  // Get display email with source label for UI/debug
+  const getDisplayEmailInfo = (): {
+    email: string | null;
+    source: 'google' | 'login' | 'fallback' | null;
+  } => {
+    if (googleEmail) return { email: googleEmail, source: 'google' };
+    if (loginEmail) return { email: loginEmail, source: 'login' };
+    return { email: userEmail, source: userEmail ? 'fallback' : null };
+  };
+
+  // Debug function to log current storage state
+  const logStorageState = () => {
+    if (typeof window === 'undefined') return;
+    console.log('=== Calendar Storage Debug ===');
+    console.log('sessionStorage userId:', sessionStorage.getItem('userId'));
+    console.log(
+      'sessionStorage userEmail:',
+      sessionStorage.getItem('userEmail'),
+    );
+    console.log('localStorage userId:', localStorage.getItem('userId'));
+    console.log('localStorage userEmail:', localStorage.getItem('userEmail'));
+    console.log(
+      'localStorage calendarConnectedEmail:',
+      localStorage.getItem(CONNECTED_EMAIL_KEY),
+    );
+    console.log(
+      'localStorage persist:root exists:',
+      !!localStorage.getItem('persist:root'),
+    );
+    console.log('State - isConnected:', isConnected);
+    console.log('State - googleEmail:', googleEmail);
+    console.log('State - loginEmail:', loginEmail);
+    console.log('State - userEmail:', userEmail);
+    console.log('State - showEmailTypeWarning:', showEmailTypeWarning);
+    console.log('Current URL:', window.location.href);
+    console.log('==============================');
   };
 
   // Check if email is Gmail
@@ -229,6 +267,24 @@ export default function IntegrationsSection() {
 
   const readUserFromStorage = (): { id?: string; email?: string } => {
     if (typeof window === 'undefined') return {};
+    // Try Redux Persist root (persist:root) → nested JSON strings
+    try {
+      const persistRoot = localStorage.getItem('persist:root');
+      if (persistRoot) {
+        const rootObj = JSON.parse(persistRoot) as { auth?: string };
+        if (rootObj?.auth) {
+          const authObj = JSON.parse(rootObj.auth) as {
+            user?: { _id?: string; id?: string; email?: string };
+          };
+          const u = authObj.user;
+          if (u && (u._id ?? u.id)) {
+            return { id: u._id ?? u.id, email: u.email };
+          }
+        }
+      }
+    } catch {
+      // ignore parse errors
+    }
     const tryParse = (
       val: string | null,
     ): { _id?: string; id?: string; email?: string } | null => {
@@ -264,6 +320,16 @@ export default function IntegrationsSection() {
   };
 
   const handleConnect = () => {
+    // Clear any deletion flags when connecting
+    try {
+      sessionStorage.removeItem('calendar_deleted');
+      sessionStorage.removeItem('calendar_deleted_time');
+      sessionStorage.removeItem('disable_calendar_backend_check');
+      sessionStorage.removeItem('calendar_manually_deleted');
+    } catch {
+      // Ignore storage errors
+    }
+
     const userId = getUserId();
     if (!userId) {
       if (typeof window !== 'undefined') {
@@ -331,31 +397,139 @@ export default function IntegrationsSection() {
     }
 
     try {
-      await fetch(
+      // First, get CSRF token
+      const csrfResponse = await fetch(
+        buildApiUrl('/calendar-token/csrf-token'),
+        {
+          method: 'GET',
+          credentials: 'include',
+        },
+      );
+
+      if (!csrfResponse.ok) {
+        throw new Error('Failed to get CSRF token');
+      }
+
+      const csrfData = (await csrfResponse.json()) as { csrfToken?: string };
+      const csrfToken = csrfData.csrfToken;
+
+      if (!csrfToken) {
+        throw new Error('No CSRF token received');
+      }
+
+      // Then delete the calendar token
+      const deleteResponse = await fetch(
         buildApiUrl(`/calendar-token/user/${encodeURIComponent(userId)}`),
         {
           method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken,
+          },
+          credentials: 'include',
         },
       );
-    } catch {
-      // Ignore deletion errors; still reset local UI
-    }
 
-    setIsConnected(false);
-    setGoogleEmail(null);
-    setUserEmail(loginEmail); // Return to login email
-    setShowGoogleEvents(true);
-    // After disconnection, if login email is not Gmail, show warning again
-    if (loginEmail && !isGmailEmail(loginEmail)) {
-      setShowEmailTypeWarning(true);
+      if (deleteResponse.ok) {
+        const result = (await deleteResponse.json()) as { message?: string };
+        console.log('Calendar token deleted successfully:', result.message);
+
+        // Clean up localStorage immediately after successful deletion
+        try {
+          localStorage.removeItem(CONNECTED_EMAIL_KEY);
+          console.log('localStorage calendarConnectedEmail cleared');
+        } catch {
+          console.error('Failed to clear localStorage calendarConnectedEmail');
+        }
+
+        // Reset local state immediately
+        setIsConnected(false);
+        setGoogleEmail(null);
+        setUserEmail(loginEmail);
+        setShowGoogleEvents(true);
+
+        // Update calendars to show login email
+        setCalendars(prev =>
+          prev.map(cal => ({
+            ...cal,
+            checked: cal.id === 'email',
+            name: cal.id === 'email' ? (loginEmail ?? '') : cal.name,
+          })),
+        );
+
+        // Show warning if login email is not Gmail
+        if (loginEmail && !isGmailEmail(loginEmail)) {
+          setShowEmailTypeWarning(true);
+        }
+
+        // Add a flag to prevent re-checking backend after successful deletion
+        try {
+          sessionStorage.setItem('calendar_deleted', 'true');
+          // Also add a timestamp to make it more specific
+          sessionStorage.setItem(
+            'calendar_deleted_time',
+            Date.now().toString(),
+          );
+          // Add a flag to completely disable backend checks
+          sessionStorage.setItem('disable_calendar_backend_check', 'true');
+          // Add a permanent flag to prevent any localStorage writes
+          sessionStorage.setItem('calendar_manually_deleted', 'true');
+        } catch {
+          // Ignore storage errors
+        }
+
+        // Small delay to ensure state updates, then redirect
+        setTimeout(() => {
+          if (typeof window !== 'undefined') {
+            // Force reload to ensure clean state
+            window.location.href = '/admin/settings';
+          }
+        }, 200);
+      } else {
+        console.error(
+          'Failed to delete calendar token:',
+          deleteResponse.status,
+          deleteResponse.statusText,
+        );
+      }
+    } catch (error) {
+      console.error('Error during calendar token deletion:', error);
+      // Reset local UI even if server deletion fails
+      setIsConnected(false);
+      setGoogleEmail(null);
+      setUserEmail(loginEmail);
+      setShowGoogleEvents(true);
+
+      // Clean up localStorage as fallback
+      try {
+        localStorage.removeItem(CONNECTED_EMAIL_KEY);
+        console.log('localStorage calendarConnectedEmail cleared (fallback)');
+      } catch {
+        console.error(
+          'Failed to clear localStorage calendarConnectedEmail (fallback)',
+        );
+      }
+
+      // Add flag to prevent re-checking backend after fallback cleanup
+      try {
+        sessionStorage.setItem('calendar_deleted', 'true');
+      } catch {
+        // Ignore storage errors
+      }
+
+      // Update calendars and show warning if needed
+      setCalendars(prev =>
+        prev.map(cal => ({
+          ...cal,
+          checked: cal.id === 'email',
+          name: cal.id === 'email' ? (loginEmail ?? '') : cal.name,
+        })),
+      );
+
+      if (loginEmail && !isGmailEmail(loginEmail)) {
+        setShowEmailTypeWarning(true);
+      }
     }
-    setCalendars(prev =>
-      prev.map(cal => ({
-        ...cal,
-        checked: cal.id === 'email',
-        name: cal.id === 'email' ? (loginEmail ?? '') : cal.name,
-      })),
-    );
   };
 
   useEffect(() => {
@@ -369,12 +543,15 @@ export default function IntegrationsSection() {
           window.location.replace('/admin/settings?connected=google');
           return;
         }
+        // Immediately set connected state to prevent warning from showing
         setIsConnected(true);
-        setShowEmailTypeWarning(false); // Hide warning after successful connection
+        setShowEmailTypeWarning(false);
+
         // If gEmail is returned, prioritize and persist it
         if (gEmail) {
           setGoogleEmail(gEmail);
           setUserEmail(gEmail);
+          // Always set for OAuth callback (new connection)
           try {
             localStorage.setItem(CONNECTED_EMAIL_KEY, gEmail);
           } catch {
@@ -386,7 +563,34 @@ export default function IntegrationsSection() {
               cal.id === 'email' ? { ...cal, name: gEmail } : cal,
             ),
           );
+        } else {
+          // No gEmail in URL, try to fetch profile immediately to resolve googleEmail
+          const uid = getUserId() ?? readUserFromStorage().id ?? null;
+          if (uid) {
+            void (async () => {
+              const profile = await fetchGoogleProfile(uid);
+              if (profile?.userEmail) {
+                setGoogleEmail(profile.userEmail);
+                setUserEmail(profile.userEmail);
+                // Always set for OAuth callback (new connection)
+                try {
+                  localStorage.setItem(CONNECTED_EMAIL_KEY, profile.userEmail);
+                } catch {
+                  // Ignore storage errors
+                }
+                setCalendars(prev =>
+                  prev.map(cal =>
+                    cal.id === 'email'
+                      ? { ...cal, name: profile.userEmail! }
+                      : cal,
+                  ),
+                );
+              }
+            })();
+          }
         }
+        // Early return to prevent further processing
+        return;
       }
     }
 
@@ -414,14 +618,55 @@ export default function IntegrationsSection() {
         prev.map(cal => (cal.id === 'email' ? { ...cal, name: email } : cal)),
       );
     }
+
+    // Check if localStorage has calendarConnectedEmail, if not, ensure not connected
+    const hasConnectedEmail =
+      typeof window !== 'undefined'
+        ? localStorage.getItem(CONNECTED_EMAIL_KEY)
+        : null;
+    if (!hasConnectedEmail) {
+      setIsConnected(false);
+      setGoogleEmail(null);
+    }
+
+    // Check if we're in a callback scenario (OAuth redirect)
+    const isCallback =
+      typeof window !== 'undefined' &&
+      (window.location.search.includes('connected=google') ||
+        window.location.search.includes('csrfToken') ||
+        window.location.search.includes('user='));
+
+    // Check if we just deleted calendar and should skip all backend checks
+    const justDeletedCalendar =
+      typeof window !== 'undefined' &&
+      (sessionStorage.getItem('calendar_deleted') === 'true' ||
+        sessionStorage.getItem('disable_calendar_backend_check') === 'true' ||
+        sessionStorage.getItem('calendar_manually_deleted') === 'true');
+
+    console.log('Is callback scenario:', isCallback);
+    console.log('Just deleted calendar:', justDeletedCalendar);
     if (!userId) {
       // Fallback: try common storage keys/global variables
       const fromStore = readUserFromStorage();
       if (fromStore.id) {
-        localStorage.setItem('userId', fromStore.id);
+        // Only set if not already exists AND not in callback scenario AND not just deleted calendar
+        if (
+          !localStorage.getItem('userId') &&
+          !isCallback &&
+          !justDeletedCalendar
+        ) {
+          localStorage.setItem('userId', fromStore.id);
+        }
       }
       if (fromStore.email) {
-        localStorage.setItem('userEmail', fromStore.email);
+        // Only set if not already exists AND not in callback scenario AND not just deleted calendar
+        if (
+          !localStorage.getItem('userEmail') &&
+          !isCallback &&
+          !justDeletedCalendar
+        ) {
+          localStorage.setItem('userEmail', fromStore.email);
+        }
         setUserEmail(fromStore.email);
         setCalendars(prev =>
           prev.map(cal =>
@@ -435,6 +680,48 @@ export default function IntegrationsSection() {
 
     // Check if backend already has a valid token
     const checkValid = async () => {
+      // Skip backend check if we just deleted the calendar
+      const justDeleted =
+        typeof window !== 'undefined'
+          ? sessionStorage.getItem('calendar_deleted')
+          : null;
+      const deletedTime =
+        typeof window !== 'undefined'
+          ? sessionStorage.getItem('calendar_deleted_time')
+          : null;
+      const disableBackendCheck =
+        typeof window !== 'undefined'
+          ? sessionStorage.getItem('disable_calendar_backend_check')
+          : null;
+
+      // Check if deletion was recent (within last 10 seconds)
+      const isRecentDeletion =
+        deletedTime && Date.now() - parseInt(deletedTime) < 10000;
+
+      if (
+        justDeleted === 'true' ||
+        isRecentDeletion ||
+        disableBackendCheck === 'true'
+      ) {
+        console.log('Skipping backend check - calendar was just deleted', {
+          justDeleted,
+          isRecentDeletion,
+          disableBackendCheck,
+        });
+        // Clear the flags
+        try {
+          sessionStorage.removeItem('calendar_deleted');
+          sessionStorage.removeItem('calendar_deleted_time');
+          sessionStorage.removeItem('disable_calendar_backend_check');
+        } catch {
+          // Ignore storage errors
+        }
+        // Ensure we're in disconnected state
+        setIsConnected(false);
+        setGoogleEmail(null);
+        return;
+      }
+
       try {
         const res = await fetch(
           buildApiUrl(
@@ -451,10 +738,42 @@ export default function IntegrationsSection() {
             if (profile?.userEmail) {
               setGoogleEmail(profile.userEmail);
               setUserEmail(profile.userEmail);
-              try {
-                localStorage.setItem(CONNECTED_EMAIL_KEY, profile.userEmail);
-              } catch {
-                // Ignore storage errors
+              // Only set if not already exists to avoid overwriting manual deletions
+              // Also check if we just deleted calendar
+              const justDeleted =
+                typeof window !== 'undefined'
+                  ? sessionStorage.getItem('calendar_deleted')
+                  : null;
+              const disableBackendCheck =
+                typeof window !== 'undefined'
+                  ? sessionStorage.getItem('disable_calendar_backend_check')
+                  : null;
+              const manuallyDeleted =
+                typeof window !== 'undefined'
+                  ? sessionStorage.getItem('calendar_manually_deleted')
+                  : null;
+
+              if (
+                !localStorage.getItem(CONNECTED_EMAIL_KEY) &&
+                !justDeleted &&
+                !disableBackendCheck &&
+                !manuallyDeleted
+              ) {
+                try {
+                  localStorage.setItem(CONNECTED_EMAIL_KEY, profile.userEmail);
+                } catch {
+                  // Ignore storage errors
+                }
+              } else {
+                console.log(
+                  'Skipping localStorage write for calendarConnectedEmail:',
+                  {
+                    hasExisting: !!localStorage.getItem(CONNECTED_EMAIL_KEY),
+                    justDeleted,
+                    disableBackendCheck,
+                    manuallyDeleted,
+                  },
+                );
               }
               // Update email display in calendar list
               setCalendars(prev =>
@@ -470,13 +789,43 @@ export default function IntegrationsSection() {
           }
         } else if (res.status === 404) {
           setIsConnected(false);
+          // If no valid token, ensure localStorage is clean
+          try {
+            localStorage.removeItem(CONNECTED_EMAIL_KEY);
+          } catch {
+            // Ignore storage errors
+          }
         }
       } catch {
         // Ignore errors and keep default state
+        // If there's an error, assume not connected and clean localStorage
+        setIsConnected(false);
+        try {
+          localStorage.removeItem(CONNECTED_EMAIL_KEY);
+        } catch {
+          // Ignore storage errors
+        }
       }
     };
 
-    void checkValid();
+    // Only run backend check if we didn't just delete calendar
+    if (!justDeletedCalendar) {
+      void checkValid();
+    } else {
+      console.log('Skipping all backend checks - calendar was just deleted');
+      // Clear the temporary flags but keep the permanent one
+      try {
+        sessionStorage.removeItem('calendar_deleted');
+        sessionStorage.removeItem('calendar_deleted_time');
+        sessionStorage.removeItem('disable_calendar_backend_check');
+        // Keep calendar_manually_deleted for permanent protection
+      } catch {
+        // Ignore storage errors
+      }
+    }
+
+    // Debug: log storage state on component mount
+    logStorageState();
   }, []);
 
   useEffect(() => {
@@ -539,6 +888,20 @@ export default function IntegrationsSection() {
         </EmailTypeWarning>
       )}
 
+      {/* Debug button (development only) */}
+      {process.env.NODE_ENV === 'development' && (
+        <Box sx={{ mb: 2 }}>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={logStorageState}
+            sx={{ fontSize: '0.75rem' }}
+          >
+            Debug Storage State
+          </Button>
+        </Box>
+      )}
+
       <InfoRow>
         <IntegrationItem>
           <LeftSection>
@@ -555,7 +918,17 @@ export default function IntegrationsSection() {
               />
               <ContentSection>
                 <Typography variant="body2" color="text.primary" sx={{ mb: 1 }}>
-                  {getDisplayEmail()}
+                  {getDisplayEmailInfo().email}
+                  {getDisplayEmailInfo().source && (
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ ml: 1 }}
+                    >
+                      ({getDisplayEmailInfo().source})
+                    </Typography>
+                  )}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Sync your appointments to Google Calendar. Online booking

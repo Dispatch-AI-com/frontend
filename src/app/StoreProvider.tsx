@@ -12,25 +12,9 @@ export default function StoreProvider({
 }: {
   children: React.ReactNode;
 }) {
-  function SessionSync() {
-    const user = useAppSelector(s => s.auth.user);
-    useEffect(() => {
-      if (!user) return;
-      try {
-        if (user._id) sessionStorage.setItem('userId', user._id);
-        if (user.email) sessionStorage.setItem('userEmail', user.email);
-        sessionStorage.setItem('user', JSON.stringify(user));
-      } catch {
-        // ignore storage errors
-      }
-    }, [user]);
-    return null;
-  }
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <SessionSync />
         {children}
       </PersistGate>
     </Provider>

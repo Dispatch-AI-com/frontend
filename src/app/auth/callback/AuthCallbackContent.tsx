@@ -65,14 +65,18 @@ export default function AuthCallbackContent() {
           }),
         );
 
-        // Persist current user to sessionStorage for front-end flows (e.g., OAuth)
+        // Persist current user to localStorage for front-end flows (e.g., OAuth)
+        // Only set if not already exists to avoid overwriting manual deletions
         try {
-          // sessionStorage.setItem('userId', parsedUser._id or localStorage.setItem('userId', parsedUser._id);
-          localStorage.setItem('userId', parsedUser._id);
-          // sessionStorage.setItem('userEmail', parsedUser.email);
-          localStorage.setItem('userEmail', parsedUser.email);
-          // sessionStorage.setItem('user', JSON.stringify(parsedUser));
-          localStorage.setItem('user', JSON.stringify(parsedUser));
+          if (!localStorage.getItem('userId')) {
+            localStorage.setItem('userId', parsedUser._id);
+          }
+          if (!localStorage.getItem('userEmail')) {
+            localStorage.setItem('userEmail', parsedUser.email);
+          }
+          if (!localStorage.getItem('user')) {
+            localStorage.setItem('user', JSON.stringify(parsedUser));
+          }
         } catch {
           // ignore storage errors
         }
