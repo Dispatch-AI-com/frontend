@@ -214,10 +214,7 @@ export default function IntegrationsSection({
               Remove
             </RemoveButton>
           ) : editable ? (
-            <ConnectButton
-              onClick={handleConnect}
-              disabled={!editable}
-            >
+            <ConnectButton onClick={handleConnect} disabled={!editable}>
               Connect
             </ConnectButton>
           ) : (

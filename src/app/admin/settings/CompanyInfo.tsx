@@ -73,7 +73,7 @@ export default function CompanyInfoSection({
   const user = useAppSelector(state => state.auth.user);
   const [checkABNExists] = useCheckABNExistsMutation();
   const [showProModal, setShowProModal] = useState(false);
-  const handleUnlockPro = () => setShowProModal(true);
+  const [forceEdit, setForceEdit] = useState(false);
   const handleCloseProModal = () => setShowProModal(false);
   const handleUpgrade = () => {
     window.location.href = '/admin/billing';
@@ -131,7 +131,7 @@ export default function CompanyInfoSection({
         abn: companyData.abn,
       }
     : undefined;
-  
+
   // Handler for edit button
   const handleEditClick = () => {
     if (!editable) {
