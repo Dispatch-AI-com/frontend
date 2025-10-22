@@ -162,7 +162,7 @@ export default function EditableSection({
       <SectionDivider />
       <SectionHeader
         title={title}
-        onEdit={isLoading ? undefined : (onEdit ?? handleEdit)}
+        onEdit={isLoading ? undefined : handleEdit}
       />
       <InfoRow>
         {fieldColumns.map((colFields, colIdx) => (
