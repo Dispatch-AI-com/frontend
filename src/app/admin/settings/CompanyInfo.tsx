@@ -1,5 +1,5 @@
 'use client';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -134,12 +134,12 @@ export default function CompanyInfoSection({
 
   // Handler for edit button
   const handleEditClick = () => {
-    if (!editable) {
-      setShowProModal(true);
-    } else {
-      setForceEdit(true);
-    }
-  };
+      if (!editable) {
+        setShowProModal(true);
+      } else {
+        setForceEdit(true);
+      }
+    };
 
   const titleWithBadge = (
     <Box display="flex" alignItems="center" gap={1}>
