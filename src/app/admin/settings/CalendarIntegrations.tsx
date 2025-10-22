@@ -195,7 +195,6 @@ export default function IntegrationsSection({
     return { email: userEmail, source: userEmail ? 'fallback' : null };
   };
 
-
   // Check if email is Gmail
   const isGmailEmail = (email: string | null): boolean => {
     if (!email) return false;
@@ -315,7 +314,6 @@ export default function IntegrationsSection({
   };
 
   const handleConnect = () => {
-
     if (!editable) return;
 
     // Clear any deletion flags when connecting
@@ -797,7 +795,6 @@ export default function IntegrationsSection({
         // Ignore storage errors
       }
     }
-
   }, []);
 
   useEffect(() => {
@@ -885,8 +882,6 @@ export default function IntegrationsSection({
         )}
       </Box>
 
-
-
       <InfoRow>
         <IntegrationItem>
           <LeftSection>
@@ -925,7 +920,10 @@ export default function IntegrationsSection({
           </LeftSection>
 
           {isConnected ? (
-            <RemoveButton onClick={handleRemove} disabled={!editable}>
+            <RemoveButton
+              onClick={() => void handleRemove()}
+              disabled={!editable}
+            >
               Remove
             </RemoveButton>
           ) : editable ? (
