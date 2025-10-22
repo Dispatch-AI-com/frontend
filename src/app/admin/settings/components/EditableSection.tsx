@@ -52,7 +52,7 @@ interface Field {
 }
 
 interface EditableSectionProps {
-  title: string;
+  title: React.ReactNode;
   fields: Field[] | ((values: Record<string, string>) => Field[]);
   initialValues?: Record<string, string>;
   columns?: number;
@@ -60,6 +60,7 @@ interface EditableSectionProps {
   data?: Record<string, string>;
   isLoading?: boolean;
   onSave?: (values: Record<string, string>) => Promise<void>;
+  onEdit?: () => void;
 }
 
 function splitFields(fields: Field[], columns: number) {
@@ -80,6 +81,7 @@ export default function EditableSection({
   data,
   isLoading = false,
   onSave,
+  onEdit,
 }: EditableSectionProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -105,7 +107,7 @@ export default function EditableSection({
     setOpen(true);
   };
 
-  const handleSave = async (values: Record<string, string>) => {
+  const handleSave = async () => {
     setError('');
     setSaving(true);
 
@@ -160,7 +162,7 @@ export default function EditableSection({
       <SectionDivider />
       <SectionHeader
         title={title}
-        onEdit={isLoading ? undefined : handleEdit}
+        onEdit={isLoading ? undefined : (onEdit ?? handleEdit)}
       />
       <InfoRow>
         {fieldColumns.map((colFields, colIdx) => (
@@ -183,7 +185,7 @@ export default function EditableSection({
           setOpen(false);
           setError('');
         }}
-        onSave={() => void handleSave(formValues)}
+        onSave={() => void handleSave()}
       >
         <Box display="flex" flexDirection="column" gap={2} p={2}>
           {error && (

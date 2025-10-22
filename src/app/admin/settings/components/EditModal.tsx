@@ -11,7 +11,7 @@ import React from 'react';
 
 interface EditModalProps {
   open: boolean;
-  title: string;
+  title: React.ReactNode;
   onClose: () => void;
   onSave: () => void;
   children: React.ReactNode;

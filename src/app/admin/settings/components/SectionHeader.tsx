@@ -8,7 +8,7 @@ import React from 'react';
 import theme from '@/theme';
 
 interface SectionHeaderProps {
-  title: string;
+  title: React.ReactNode;
   onEdit?: () => void;
   showEditIcon?: boolean;
 }
@@ -31,6 +31,8 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
   onEdit,
   showEditIcon = true,
 }) => {
+  // Safe string version of title for places where a string is required (e.g. aria-labels).
+  const titleText = typeof title === 'string' ? title : 'section';
   return (
     <HeaderContainer>
       <Typography variant="h3">{title}</Typography>
@@ -40,7 +42,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
           <IconButton
             onClick={onEdit}
             size="small"
-            aria-label={`Edit ${title}`}
+            aria-label={`Edit ${titleText}`}
           >
             <Image
               src="/dashboard/settings/edit.svg"

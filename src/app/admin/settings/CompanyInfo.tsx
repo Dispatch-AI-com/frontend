@@ -1,7 +1,11 @@
 'use client';
-import React from 'react';
+import { Box } from '@mui/material';
+import Image from 'next/image';
+import React, { useState } from 'react';
 
 import EditableSection from '@/app/admin/settings/components/EditableSection';
+import SectionHeader from '@/app/admin/settings/components/SectionHeader';
+import ProFeatureModal from '@/components/ui/ProFeatureModal';
 import {
   useCheckABNExistsMutation,
   useGetCompanyInfoQuery,
@@ -62,9 +66,17 @@ const validateABNFormat = (abn: string): ValidationResult => {
   return { isValid: true };
 };
 
-export default function CompanyInfoSection() {
+export default function CompanyInfoSection({
+  editable = false,
+  showProBadge = false,
+}: { editable?: boolean; showProBadge?: boolean } = {}) {
   const user = useAppSelector(state => state.auth.user);
   const [checkABNExists] = useCheckABNExistsMutation();
+  const [showProModal, setShowProModal] = useState(false);
+  const handleCloseProModal = () => setShowProModal(false);
+  const handleUpgrade = () => {
+    window.location.href = '/admin/billing';
+  };
 
   // Synchronous validation for real-time feedback (format only)
   const validateABN = (abn: string): ValidationResult => {
@@ -119,30 +131,71 @@ export default function CompanyInfoSection() {
       }
     : undefined;
 
+  // Handler for edit button
+  const handleEditClick = () => {
+    setShowProModal(true);
+  };
+
+  const titleWithBadge = (
+    <Box display="flex" alignItems="center" gap={1}>
+      <SectionHeader title="Company Info" />
+      {showProBadge && !editable && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5,
+            backgroundColor: '#fff2d0',
+            padding: '2px 6px',
+            borderRadius: '8px',
+            fontSize: '10px',
+            fontWeight: 'bold',
+            color: '#333',
+            border: '1px solid #ffd700',
+            mb: '20px',
+          }}
+        >
+          <Image src="/plan/pro.svg" alt="Pro" width={12} height={12} />
+          <span style={{ fontSize: '10px', fontWeight: 'bold' }}>PRO</span>
+        </Box>
+      )}
+    </Box>
+  );
+
   return (
-    <EditableSection
-      title="Company Info"
-      fields={[
-        {
-          label: 'Company Name:',
-          key: 'companyName',
-          placeholder: 'e.g. Google',
-          validate: validateCompanyName,
-        },
-        {
-          label: 'ABN:',
-          key: 'abn',
-          placeholder: 'e.g. 12345678909',
-          validate: validateABN,
-        },
-      ]}
-      data={convertedData}
-      isLoading={isLoading}
-      onSave={handleSave}
-      initialValues={{
-        companyName: '',
-        abn: '',
-      }}
-    />
+    <>
+      <EditableSection
+        title={titleWithBadge}
+        fields={[
+          {
+            label: 'Company Name:',
+            key: 'companyName',
+            placeholder: 'e.g. Google',
+            validate: validateCompanyName,
+          },
+          {
+            label: 'ABN:',
+            key: 'abn',
+            placeholder: 'e.g. 12345678909',
+            validate: validateABN,
+          },
+        ]}
+        data={convertedData}
+        isLoading={isLoading}
+        onSave={handleSave}
+        initialValues={{
+          companyName: '',
+          abn: '',
+        }}
+        {...(!editable && { onEdit: handleEditClick })}
+        onEdit={!editable ? handleEditClick : undefined}
+      />
+      <ProFeatureModal
+        open={showProModal}
+        onClose={handleCloseProModal}
+        onUpgrade={handleUpgrade}
+        featureName="Company Information"
+      />
+    </>
   );
 }
