@@ -218,7 +218,6 @@ export default function IntegrationsSection({
             <ConnectButton
               onClick={handleConnect}
               disabled={!editable}
-              $disabled={!editable}
             >
               Connect
             </ConnectButton>
