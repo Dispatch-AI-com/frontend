@@ -355,16 +355,16 @@ export default function VerificationSection() {
       {/* Verification Status Alert */}
       {!isFullyVerified && verificationData && (
         <Alert
-          severity="error"
+          severity="warning"
           sx={{
             mb: 2,
             borderRadius: 2,
-            border: '2px solid #f44336',
-            backgroundColor: '#ffebee',
+            border: '2px solid #ff9800',
+            backgroundColor: '#fff8e1',
           }}
         >
-          <AlertTitle sx={{ color: '#d32f2f', fontWeight: 'bold' }}>
-            🚨 Account Verification Required - {unverifiedCount} Item
+          <AlertTitle sx={{ color: '#f57c00', fontWeight: 'bold' }}>
+            ⚠️ Account Verification Required - {unverifiedCount} Item
             {unverifiedCount > 1 ? 's' : ''} Pending
           </AlertTitle>
           <Typography variant="body2" sx={{ mb: 1 }}>
@@ -375,17 +375,23 @@ export default function VerificationSection() {
             {!verificationData.emailVerified && (
               <Chip
                 label="Email Unverified"
-                color="error"
+                sx={{ 
+                  backgroundColor: '#ff9800',
+                  color: 'white',
+                  fontWeight: 'bold' 
+                }}
                 size="small"
-                sx={{ fontWeight: 'bold' }}
               />
             )}
             {!verificationData.mobileVerified && (
               <Chip
                 label="Phone Unverified"
-                color="error"
+                sx={{ 
+                  backgroundColor: '#ff9800',
+                  color: 'white',
+                  fontWeight: 'bold' 
+                }}
                 size="small"
-                sx={{ fontWeight: 'bold' }}
               />
             )}
           </Box>

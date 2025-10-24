@@ -52,18 +52,18 @@ export default function VerificationReminder({
   return (
     <Box sx={{ mb: 3 }}>
       <Alert
-        severity="error"
+        severity="warning"
         sx={{
           borderRadius: 2,
-          border: '2px solid #f44336',
-          backgroundColor: '#ffebee',
+          border: '2px solid #ff9800',
+          backgroundColor: '#fff8e1',
           '& .MuiAlert-message': {
             width: '100%',
           },
         }}
       >
-        <AlertTitle sx={{ color: '#d32f2f', fontWeight: 'bold' }}>
-          🚨 Account Verification Required - {unverifiedCount} Item
+        <AlertTitle sx={{ color: '#f57c00', fontWeight: 'bold' }}>
+          ⚠️ Account Verification Required - {unverifiedCount} Item
           {unverifiedCount > 1 ? 's' : ''} Pending
         </AlertTitle>
 
@@ -80,9 +80,12 @@ export default function VerificationReminder({
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Chip
                 label="UNVERIFIED"
-                color="error"
+                sx={{ 
+                  backgroundColor: '#ff9800',
+                  color: 'white',
+                  fontWeight: 'bold' 
+                }}
                 size="small"
-                sx={{ fontWeight: 'bold' }}
               />
               <Typography variant="body2" color="text.secondary">
                 Email: {verificationData.email ?? 'Not provided'}
@@ -93,9 +96,12 @@ export default function VerificationReminder({
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Chip
                 label="UNVERIFIED"
-                color="error"
+                sx={{ 
+                  backgroundColor: '#ff9800',
+                  color: 'white',
+                  fontWeight: 'bold' 
+                }}
                 size="small"
-                sx={{ fontWeight: 'bold' }}
               />
               <Typography variant="body2" color="text.secondary">
                 Phone: {verificationData.mobile ?? 'Not provided'}
@@ -110,12 +116,12 @@ export default function VerificationReminder({
             size="medium"
             onClick={handleGoToSettings}
             sx={{
-              backgroundColor: '#d32f2f',
+              backgroundColor: '#ff9800',
               color: 'white',
               fontWeight: 'bold',
               px: 3,
               '&:hover': {
-                backgroundColor: '#b71c1c',
+                backgroundColor: '#f57c00',
               },
             }}
           >
@@ -127,13 +133,13 @@ export default function VerificationReminder({
             size="medium"
             onClick={() => window.open('/admin/settings', '_blank')}
             sx={{
-              borderColor: '#d32f2f',
-              color: '#d32f2f',
+              borderColor: '#ff9800',
+              color: '#ff9800',
               fontWeight: 'bold',
               px: 3,
               '&:hover': {
-                borderColor: '#b71c1c',
-                backgroundColor: '#ffebee',
+                borderColor: '#f57c00',
+                backgroundColor: '#fff8e1',
               },
             }}
           >
