@@ -82,6 +82,10 @@ interface VerificationCardProps {
   onVerifyEmail?: () => void;
   onMarketingPromotionsChange?: (checked: boolean) => void;
   isLastCard?: boolean;
+  mobileCountdown?: number;
+  emailCountdown?: number;
+  isMobileCountdownActive?: boolean;
+  isEmailCountdownActive?: boolean;
 }
 
 export default function VerificationCard({
@@ -96,6 +100,10 @@ export default function VerificationCard({
   onVerifyEmail,
   onMarketingPromotionsChange,
   isLastCard = false,
+  mobileCountdown = 0,
+  emailCountdown = 0,
+  isMobileCountdownActive = false,
+  isEmailCountdownActive = false,
 }: VerificationCardProps) {
   const handleVerifyMobile = () => {
     if (onVerifyMobile) {
@@ -138,8 +146,9 @@ export default function VerificationCard({
                 variant="contained"
                 size="small"
                 onClick={handleVerifyMobile}
+                disabled={isMobileCountdownActive}
               >
-                Verify
+                {isMobileCountdownActive ? `${mobileCountdown}s` : 'Verify'}
               </VerifyButton>
             )}
             {mobileVerified && (
@@ -164,8 +173,9 @@ export default function VerificationCard({
                 variant="contained"
                 size="small"
                 onClick={handleVerifyEmail}
+                disabled={isEmailCountdownActive}
               >
-                Verify
+                {isEmailCountdownActive ? `${emailCountdown}s` : 'Verify'}
               </VerifyButton>
             )}
             {emailVerified && (

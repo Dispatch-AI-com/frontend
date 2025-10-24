@@ -20,9 +20,13 @@ import {
 } from '@/features/settings/settingsApi';
 import { useAppSelector } from '@/redux/hooks';
 import { validateVerificationForm } from '@/utils/validationSettings';
+import { useCountdown } from '@/hooks/useCountdown';
 
 export default function VerificationSection() {
   const user = useAppSelector(state => state.auth.user);
+  const { countdown: emailCountdown, isActive: isEmailCountdownActive, startCountdown: startEmailCountdown } = useCountdown();
+  const { countdown: mobileCountdown, isActive: isMobileCountdownActive, startCountdown: startMobileCountdown } = useCountdown();
+  
   // Get verification data from API
   const { data: verificationData, isLoading: isVerificationLoading } =
     useGetVerificationQuery(user?._id ?? '', {
@@ -173,13 +177,16 @@ export default function VerificationSection() {
         mobile: values.mobile,
       }).unwrap();
 
+      // Start 60-second countdown
+      startMobileCountdown(60);
+
       setVerificationModal({
         open: true,
         type: 'mobile',
         contact: values.mobile,
       });
-    } catch {
-      setError('Failed to send SMS verification');
+    } catch (error: any) {
+      setError(error?.data?.message || 'Failed to send SMS verification');
     }
   };
 
@@ -194,13 +201,16 @@ export default function VerificationSection() {
         email: values.email,
       }).unwrap();
 
+      // Start 60-second countdown
+      startEmailCountdown(60);
+
       setVerificationModal({
         open: true,
         type: 'email',
         contact: values.email,
       });
-    } catch {
-      setError('Failed to send verification email');
+    } catch (error: any) {
+      setError(error?.data?.message || 'Failed to send verification email');
     }
   };
 
@@ -278,6 +288,8 @@ export default function VerificationSection() {
               type="SMS"
               mobile={values.mobile}
               mobileVerified={values.mobileVerified}
+              mobileCountdown={mobileCountdown}
+              isMobileCountdownActive={isMobileCountdownActive}
               onVerifyMobile={() => {
                 void handleVerifyMobile();
               }}
@@ -290,6 +302,8 @@ export default function VerificationSection() {
               type="Email"
               email={values.email}
               emailVerified={values.emailVerified}
+              emailCountdown={emailCountdown}
+              isEmailCountdownActive={isEmailCountdownActive}
               marketingPromotions={values.marketingPromotions}
               showMarketingPromotions
               onVerifyEmail={() => {
@@ -317,6 +331,10 @@ export default function VerificationSection() {
         emailVerified={
           values.type === 'Email' ? values.emailVerified : undefined
         }
+        mobileCountdown={values.type === 'SMS' ? mobileCountdown : undefined}
+        emailCountdown={values.type === 'Email' ? emailCountdown : undefined}
+        isMobileCountdownActive={values.type === 'SMS' ? isMobileCountdownActive : undefined}
+        isEmailCountdownActive={values.type === 'Email' ? isEmailCountdownActive : undefined}
         marketingPromotions={
           values.type === 'Email' ? values.marketingPromotions : undefined
         }
