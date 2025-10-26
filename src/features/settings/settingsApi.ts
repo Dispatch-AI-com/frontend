@@ -154,17 +154,6 @@ export const settingsApi = createApi({
       }),
       invalidatesTags: ['Verification', 'UserProfile'],
     }),
-    verifyMobile: builder.mutation<
-      { success: boolean; message: string },
-      { userId: string; mobile: string }
-    >({
-      query: ({ userId, mobile }) => ({
-        url: `/verification/user/${userId}/mobile`,
-        method: 'POST',
-        data: { mobile },
-      }),
-      invalidatesTags: ['Verification'],
-    }),
     sendSmsVerification: builder.mutation<
       { success: boolean; message?: string },
       { userId: string; mobile: string }
@@ -252,7 +241,6 @@ export const {
   useUpdateGreetingMutation,
   useGetVerificationQuery,
   useUpdateVerificationMutation,
-  useVerifyMobileMutation,
   useSendSmsVerificationMutation,
   useVerifySmsMutation,
   useSendEmailVerificationMutation,
