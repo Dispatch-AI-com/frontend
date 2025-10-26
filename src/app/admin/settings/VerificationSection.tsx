@@ -150,8 +150,10 @@ export default function VerificationSection() {
 
       setOpen(false);
       setError(null);
-    } catch {
-      setError('Failed to update verification settings');
+    } catch (error: any) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to update verification settings';
+      setError(errorMessage);
+      console.error('Verification update error:', error);
     }
   };
 
