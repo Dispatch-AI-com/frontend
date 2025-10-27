@@ -21,9 +21,11 @@ export const useSubscription = () => {
     refetch,
   } = useGetSubscriptionByUserQuery(userId!, { skip: !userId });
 
-  const isSubscribed = subscription?.status === 'active';
+  const isSubscribed = subscription?.status === 'active' || subscription?.status === 'pending_cancellation' || subscription?.status === 'pending_downgrade';
   const isCancelled = subscription?.status === 'cancelled' || !subscription;
   const isFailed = subscription?.status === 'failed';
+  const isPendingCancellation = subscription?.status === 'pending_cancellation';
+  const isPendingDowngrade = subscription?.status === 'pending_downgrade';
   const currentPlanId = subscription?.planId._id ?? '';
 
   return {
@@ -31,6 +33,8 @@ export const useSubscription = () => {
     isSubscribed,
     isCancelled,
     isFailed,
+    isPendingCancellation,
+    isPendingDowngrade,
     currentPlanId,
     isLoading,
     isError,

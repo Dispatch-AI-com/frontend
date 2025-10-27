@@ -38,21 +38,53 @@ function getPrice(pricing: { rrule: string; price: number }[]) {
 function getButtonsByPlan(
   plan: Plan,
   currentPlanId: string,
+  pendingPlanId: string | undefined,
   isSubscribed: boolean,
   isCancelled: boolean,
+  isPendingCancellation: boolean,
+  isPendingDowngrade: boolean,
 ): PlanButton[] {
   const isCurrent = plan._id === currentPlanId;
+  const isPendingDowngradeToPlan = isPendingDowngrade && plan._id === pendingPlanId;
+  
   if (isCancelled) {
     if (plan.tier === 'FREE')
       return [{ label: 'Your current plan', variant: 'disabled' }];
     return [{ label: `Go with ${plan.tier}`, variant: 'primary' }];
   }
+  
   if (isSubscribed) {
+    // Current plan display
     if (isCurrent) {
+      if (isPendingCancellation) {
+        return [{ label: 'Cancels at period end', variant: 'disabled' }];
+      }
+      if (isPendingDowngrade) {
+        // Current plan during pending downgrade - show cancel downgrade option
+        return [{ label: 'Cancel downgrade', variant: 'primary' }];
+      }
       return [{ label: 'Cancel Subscription', variant: 'cancel' }];
     }
+    
+    // Special handling for pending downgrade
+    if (isPendingDowngrade) {
+      if (isPendingDowngradeToPlan) {
+        // Target plan (Basic) - show downgrade info
+        return [{ label: 'Downgrades next cycle', variant: 'disabled' }];
+      } else {
+        // Other plans during pending downgrade - show switch option
+        return [{ label: `Go with ${plan.tier}`, variant: 'primary' }];
+      }
+    }
+    
+    // If pending cancellation, show "Go with" to allow reactivation
+    if (isPendingCancellation) {
+      return [{ label: `Go with ${plan.tier}`, variant: 'primary' }];
+    }
+    
     return [{ label: `Switch to ${plan.tier}`, variant: 'primary' }];
   }
+  
   return [{ label: 'Try for Free', variant: 'primary' }];
 }
 
@@ -69,8 +101,10 @@ export default function BillingSection() {
   const { create } = useCreateSubscription();
   const { change } = useChangePlan();
   const { downgrade } = useDowngradeToFree();
-  const { subscription, isSubscribed, isCancelled, currentPlanId } =
+  const { subscription, isSubscribed, isCancelled, isPendingCancellation, isPendingDowngrade, currentPlanId } =
     useSubscription();
+  
+  const pendingPlanId = subscription?.pendingPlanId?._id;
 
   const tierOrder = { FREE: 0, BASIC: 1, PRO: 2 };
   const sortedPlans = [...plans].sort(
@@ -111,12 +145,24 @@ export default function BillingSection() {
     if (label.startsWith('Go with')) {
       if (!subscription || subscription.status === 'cancelled') {
         await create(planId);
+      } else if (subscription.status === 'pending_cancellation' || subscription.status === 'pending_downgrade') {
+        // If pending cancellation or downgrade, use change to cancel the pending change and switch plan
+        await change(planId);
+        window.location.reload();
       } else if (subscription.planId._id !== planId) {
         await change(planId);
       }
     }
-    if (label === 'Cancel Subscription') {
+    if (label === 'Cancel Subscription' || label === 'Cancel Instead') {
       setShowCancelModal(true);
+      return;
+    }
+    if (label === 'Cancel downgrade') {
+      // Cancel the pending downgrade by switching back to current plan
+      if (subscription?.planId._id) {
+        await change(subscription.planId._id);
+        window.location.reload();
+      }
       return;
     }
     if (label.startsWith('Switch to')) {
@@ -124,6 +170,7 @@ export default function BillingSection() {
       else await change(planId);
       window.location.reload();
     }
+    // Do nothing for disabled states ('Cancels at period end', 'Downgrades next cycle', 'Your current plan')
   };
 
   const handleConfirmCancel = async () => {
@@ -182,8 +229,11 @@ export default function BillingSection() {
               buttons={getButtonsByPlan(
                 plan,
                 currentPlanId,
+                pendingPlanId,
                 isSubscribed,
                 isCancelled,
+                isPendingCancellation,
+                isPendingDowngrade,
               )}
               onButtonClick={label =>
                 void handleClick(label, plan.tier, plan._id)
