@@ -45,20 +45,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Enable corepack (pnpm)
+        run: corepack enable
 
-      # 先安装 pnpm（确保后续步骤能找到可执行文件）
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      # 再设置 Node，并启用 pnpm 缓存（指向前端锁文件）
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
-          cache-dependency-path: apps/frontend/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -72,11 +78,11 @@ jobs:
       - name: Test
         run: pnpm test
 
-      # 若 Dockerfile.uat 会 COPY apps/frontend/.next，则先在 CI 构建
+      # 若 Dockerfile.uat 会 COPY apps/frontend/.next，则先构建
       - name: Build (only if you COPY .next into image)
         run: NEXT_PUBLIC_API_BASE_URL="${{ secrets.UAT_BACKEND_URL }}" pnpm build
 
-      # 仅当需要 COPY .next 时上传构建产物；与下载步骤条件一致
+      # 仅当需要 COPY .next 时上传产物
       - name: Upload Next.js artifact
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/upload-artifact@v4
@@ -99,7 +105,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 仅当上游上传了 artifact（即需要 COPY .next）时才下载
+      # 仅当上游上传了 artifact（需要 COPY .next）时才下载
       - name: Download build artifact (when Dockerfile needs COPY .next)
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/download-artifact@v4
