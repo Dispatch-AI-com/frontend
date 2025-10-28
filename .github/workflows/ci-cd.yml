@@ -40,7 +40,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: apps/frontend
+        working-directory: .
 
     steps:
       - name: Checkout
