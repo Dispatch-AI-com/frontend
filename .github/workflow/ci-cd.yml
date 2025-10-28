@@ -1,0 +1,144 @@
+name: CI/CD pipeline
+run-name: >
+  ${{ github.event_name == 'workflow_dispatch' && format('Manual {0} pipeline (by {1})', inputs.mode, github.actor) ||
+      github.event_name == 'pull_request' && format('CI Pipeline is triggered by PR (by {0})', github.actor) ||
+      github.event_name == 'push' && format('CI&CD Pipeline is triggered by PUSH (by {0})', github.actor) ||
+      'CI/CD pipeline' }}
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Choose pipeline mode"
+        type: choice
+        options: [ci, cicd]
+        default: cicd
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write   # OIDC to AWS
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REPO: ${{ secrets.FRONTEND_ECR }}
+  IMAGE_SHA: sha-${{ github.sha }}
+  IMAGE_UAT: uat-latest
+
+jobs:
+  ci_frontend:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.mode == 'ci' || inputs.mode == 'cicd' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Enable corepack (pnpm)
+        run: corepack enable
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm run type-check
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build (only if you COPY .next into image)
+        run: NEXT_PUBLIC_API_BASE_URL="${{ secrets.UAT_BACKEND_URL }}" pnpm build
+
+      - name: Upload Next.js artifact (可选，用于多阶段 Dockerfile COPY)
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: |
+            .next/**
+            public/**
+          include-hidden-files: true
+          retention-days: 1
+
+  build_and_push:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
+    needs: ci_frontend
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifact (若 Dockerfile 需要 COPY .next)
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: .
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build & push (two tags: uat-latest + sha-*)
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: .
+          file: ./Dockerfile.uat
+          tags: |
+            ${{ env.ECR_REPO }}:${{ env.IMAGE_UAT }}
+            ${{ env.ECR_REPO }}:${{ env.IMAGE_SHA }}
+          platforms: linux/amd64
+          provenance: false
+
+  notify_platform:
+    name: Notify platform repo to deploy UAT
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch deploy event to main platform
+        env:
+          GH_TOKEN: ${{ secrets.PLATFORM_DISPATCH_TOKEN }}
+        run: |
+          owner="${{ secrets.PLATFORM_REPO_OWNER }}"   # e.g. depengsun
+          repo="${{ secrets.PLATFORM_REPO_NAME }}"     # e.g. dispatchai-platform
+          curl -s -X POST \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${owner}/${repo}/dispatches \
+            -d @- <<'JSON'
+          {
+            "event_type": "deploy_uat",
+            "client_payload": {
+              "service": "frontend",
+              "tag": "uat-latest"
+            }
+          }
+          JSON
