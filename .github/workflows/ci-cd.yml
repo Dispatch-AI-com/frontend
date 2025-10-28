@@ -38,7 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' || inputs.mode == 'ci' || inputs.mode == 'cicd' }}
 
-    # 前端在 apps/frontend
     defaults:
       run:
         working-directory: apps/frontend
@@ -52,10 +51,8 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
-          # 指定锁文件路径（配合 working-directory）
           cache-dependency-path: apps/frontend/pnpm-lock.yaml
 
-      # 关键：安装 pnpm（修复 “Unable to locate executable file: pnpm”）
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -73,17 +70,16 @@ jobs:
       - name: Test
         run: pnpm test
 
-      # 如果 Dockerfile.uat 会 COPY .next 进镜像，需要先构建
+      # 若 Dockerfile.uat 会 COPY apps/frontend/.next，则先在 CI 构建
       - name: Build (only if you COPY .next into image)
         run: NEXT_PUBLIC_API_BASE_URL="${{ secrets.UAT_BACKEND_URL }}" pnpm build
 
-      # 仅当需要 COPY .next 时才上传构建产物；与 download 步骤保持相同条件
+      # 仅当需要 COPY .next 时上传产物；若 Dockerfile 内自行 build，可删掉上下两个 artifact 步骤
       - name: Upload Next.js artifact
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          # 注意：artifact 路径要从仓库根算；这里加上前缀 apps/frontend
           path: |
             apps/frontend/.next/**
             apps/frontend/public/**
@@ -101,13 +97,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 仅当上游上传了 artifact（即需要 COPY .next）时才下载
+      # 与上游 artifact 条件一致
       - name: Download build artifact (when Dockerfile needs COPY .next)
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
-          path: .  # 展开到仓库根；Dockerfile.uat 可 COPY apps/frontend/.next
+          path: .  # 解压到仓库根；Dockerfile.uat 可 COPY apps/frontend/.next
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
@@ -139,22 +135,26 @@ jobs:
     needs: build_and_push
     runs-on: ubuntu-latest
     steps:
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
       - name: Dispatch deploy event to main platform
         env:
           GH_TOKEN: ${{ secrets.PLATFORM_DISPATCH_TOKEN }}
+          OWNER: ${{ secrets.PLATFORM_REPO_OWNER }}
+          REPO: ${{ secrets.PLATFORM_REPO_NAME }}
+          SERVICE: frontend
+          TAG: uat-latest
         run: |
-          owner="${{ secrets.PLATFORM_REPO_OWNER }}"
-          repo="${{ secrets.PLATFORM_REPO_NAME }}"
+          set -euo pipefail
+          payload="$(jq -n \
+            --arg et "deploy_uat" \
+            --arg svc "${SERVICE}" \
+            --arg tag "${TAG}" \
+            '{event_type:$et, client_payload:{service:$svc, tag:$tag}}')"
+
           curl -s -X POST \
             -H "Authorization: token ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${owner}/${repo}/dispatches \
-            -d @- <<'JSON'
-          {
-            "event_type": "deploy_uat",
-            "client_payload": {
-              "service": "frontend",
-              "tag": "uat-latest"
-            }
-          }
-          JSON
+            "https://api.github.com/repos/${OWNER}/${REPO}/dispatches" \
+            -d "${payload}"
