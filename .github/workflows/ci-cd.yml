@@ -37,6 +37,12 @@ jobs:
   ci_frontend:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' || inputs.mode == 'ci' || inputs.mode == 'cicd' }}
+
+    # 前端在 apps/frontend
+    defaults:
+      run:
+        working-directory: apps/frontend
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,11 +52,16 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
+          # 指定锁文件路径（配合 working-directory）
+          cache-dependency-path: apps/frontend/pnpm-lock.yaml
 
-      - name: Enable corepack (pnpm)
-        run: corepack enable
+      # 关键：安装 pnpm（修复 “Unable to locate executable file: pnpm”）
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-      - name: pnpm install
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Type check
@@ -62,19 +73,20 @@ jobs:
       - name: Test
         run: pnpm test
 
-      # 如果你的 Dockerfile.uat 会 COPY .next 进镜像，需要先构建
+      # 如果 Dockerfile.uat 会 COPY .next 进镜像，需要先构建
       - name: Build (only if you COPY .next into image)
         run: NEXT_PUBLIC_API_BASE_URL="${{ secrets.UAT_BACKEND_URL }}" pnpm build
 
-      # 可选：把 .next 产物作为工件，供后续构建步骤 COPY
+      # 仅当需要 COPY .next 时才上传构建产物；与 download 步骤保持相同条件
       - name: Upload Next.js artifact
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
+          # 注意：artifact 路径要从仓库根算；这里加上前缀 apps/frontend
           path: |
-            .next/**
-            public/**
+            apps/frontend/.next/**
+            apps/frontend/public/**
           include-hidden-files: true
           retention-days: 1
 
@@ -89,12 +101,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 如果 Dockerfile.uat 要 COPY .next，则需要下载 artefact
+      # 仅当上游上传了 artifact（即需要 COPY .next）时才下载
       - name: Download build artifact (when Dockerfile needs COPY .next)
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
-          path: .
+          path: .  # 展开到仓库根；Dockerfile.uat 可 COPY apps/frontend/.next
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
@@ -108,7 +121,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: "Build & push (two tags: uat-latest + sha-*)"
+      - name: Build & push (two tags: uat-latest + sha-*)
         uses: docker/build-push-action@v6
         with:
           push: true
