@@ -70,11 +70,11 @@ jobs:
       - name: Test
         run: pnpm test
 
-      # 若 Dockerfile.uat 会 COPY apps/frontend/.next，则先在 CI 构建
+      # 若 Dockerfile.uat 会 COPY apps/frontend/.next，则先构建
       - name: Build (only if you COPY .next into image)
         run: NEXT_PUBLIC_API_BASE_URL="${{ secrets.UAT_BACKEND_URL }}" pnpm build
 
-      # 仅当需要 COPY .next 时上传产物；若 Dockerfile 内自行 build，可删掉上下两个 artifact 步骤
+      # 仅当需要 COPY .next 时上传产物
       - name: Upload Next.js artifact
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/upload-artifact@v4
@@ -97,7 +97,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 与上游 artifact 条件一致
+      # 仅当上游上传了 artifact（需要 COPY .next）时才下载
       - name: Download build artifact (when Dockerfile needs COPY .next)
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
         uses: actions/download-artifact@v4
@@ -117,7 +117,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build & push (two tags: uat-latest + sha-*)
+      - name: "Build & push (two tags: uat-latest + sha-*)"
         uses: docker/build-push-action@v6
         with:
           push: true
@@ -152,7 +152,6 @@ jobs:
             --arg svc "${SERVICE}" \
             --arg tag "${TAG}" \
             '{event_type:$et, client_payload:{service:$svc, tag:$tag}}')"
-
           curl -s -X POST \
             -H "Authorization: token ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
