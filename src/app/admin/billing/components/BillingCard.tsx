@@ -226,7 +226,9 @@ export default function PricingCard({
                   ? 'green'
                   : btn.variant === 'cancel'
                     ? 'cancel'
-                    : 'disabled'
+                    : btn.variant === 'retry'
+                      ? 'retry'
+                      : 'disabled'
             }
             onClick={
               btn.variant === 'disabled'

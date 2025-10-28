@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-type ButtonVariant = 'black' | 'green' | 'disabled' | 'cancel';
+type ButtonVariant = 'black' | 'green' | 'disabled' | 'cancel' | 'retry';
 
 interface CommonButtonProps extends Omit<ButtonProps, 'variant'> {
   children: React.ReactNode;
@@ -46,6 +46,17 @@ const StyledButton = styled(Button, {
       border: '1px solid #d5d5d5',
       '&:hover': {
         backgroundColor: '#f5f5f5',
+      },
+    };
+  }
+
+  if (buttonVariant === 'retry') {
+    return {
+      ...baseStyle,
+      backgroundColor: '#ff4444',
+      color: '#ffffff',
+      '&:hover': {
+        backgroundColor: '#cc3333',
       },
     };
   }
