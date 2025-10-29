@@ -1,0 +1,167 @@
+name: CI/CD pipeline
+run-name: >
+  ${{ github.event_name == 'workflow_dispatch' && format('Manual {0} pipeline (by {1})', inputs.mode, github.actor) ||
+      github.event_name == 'pull_request' && format('CI Pipeline is triggered by PR (by {0})', github.actor) ||
+      github.event_name == 'push' && format('CI&CD Pipeline is triggered by PUSH (by {0})', github.actor) ||
+      'CI/CD pipeline' }}
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Choose pipeline mode"
+        type: choice
+        options: [ci, cicd]
+        default: cicd
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write  # OIDC to AWS
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REPO: ${{ secrets.FRONTEND_ECR }}
+  IMAGE_SHA: sha-${{ github.sha }}
+  IMAGE_UAT: uat-latest
+
+jobs:
+  ci_frontend:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' || inputs.mode == 'ci' || inputs.mode == 'cicd' }}
+
+    defaults:
+      run:
+        working-directory: .
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Enable corepack (pnpm)
+        run: corepack enable
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm run type-check
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Test
+        run: pnpm test
+
+      # 若 Dockerfile.uat 会 COPY apps/frontend/.next，则先构建
+      - name: Build (only if you COPY .next into image)
+        run: NEXT_PUBLIC_API_BASE_URL="${{ secrets.UAT_BACKEND_URL }}" pnpm build
+
+      # 仅当需要 COPY .next 时上传产物
+      - name: Upload Next.js artifact
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: |
+            apps/frontend/.next/**
+            apps/frontend/public/**
+          include-hidden-files: true
+          retention-days: 1
+
+  build_and_push:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
+    needs: ci_frontend
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 仅当上游上传了 artifact（需要 COPY .next）时才下载
+      - name: Download build artifact (when Dockerfile needs COPY .next)
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: .  # 解压到仓库根；Dockerfile.uat 可 COPY apps/frontend/.next
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: "Build & push (two tags: uat-latest + sha-*)"
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: .
+          file: ./Dockerfile.uat
+          tags: |
+            ${{ env.ECR_REPO }}:${{ env.IMAGE_UAT }}
+            ${{ env.ECR_REPO }}:${{ env.IMAGE_SHA }}
+          platforms: linux/amd64
+          provenance: false
+
+  notify_platform:
+    name: Notify platform repo to deploy UAT
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.mode == 'cicd') }}
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Dispatch deploy event to main platform
+        env:
+          GH_TOKEN: ${{ secrets.PLATFORM_DISPATCH_TOKEN }}
+          OWNER: ${{ secrets.PLATFORM_REPO_OWNER }}
+          REPO: ${{ secrets.PLATFORM_REPO_NAME }}
+          SERVICE: frontend
+          TAG: uat-latest
+        run: |
+          set -euo pipefail
+          payload="$(jq -n \
+            --arg et "deploy_uat" \
+            --arg svc "${SERVICE}" \
+            --arg tag "${TAG}" \
+            '{event_type:$et, client_payload:{service:$svc, tag:$tag}}')"
+          curl -s -X POST \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${OWNER}/${REPO}/dispatches" \
+            -d "${payload}"
