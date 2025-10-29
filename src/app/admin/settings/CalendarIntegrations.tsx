@@ -137,7 +137,7 @@ export default function IntegrationsSection({
   const isEditable =
     editable ||
     user?.role === 'admin' ||
-    (user as any)?.plan === 'pro' ||
+    user?.plan === 'pro' ||
     process.env.NEXT_PUBLIC_FORCE_EDITABLE === 'true';
   const [showProModal, setShowProModal] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
