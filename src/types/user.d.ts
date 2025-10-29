@@ -1,5 +1,5 @@
 export type Role = 'admin' | 'user';
-export type Plan = 'pro' | 'basic' | 'free' | string;
+export type Plan = 'pro' | 'basic' | 'free';
 
 export interface UserInfo {
   _id: string;
