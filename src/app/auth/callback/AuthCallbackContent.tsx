@@ -65,21 +65,7 @@ export default function AuthCallbackContent() {
           }),
         );
 
-        // Persist current user to localStorage for front-end flows (e.g., OAuth)
-        // Only set if not already exists to avoid overwriting manual deletions
-        try {
-          if (!localStorage.getItem('userId')) {
-            localStorage.setItem('userId', parsedUser._id);
-          }
-          if (!localStorage.getItem('userEmail')) {
-            localStorage.setItem('userEmail', parsedUser.email);
-          }
-          if (!localStorage.getItem('user')) {
-            localStorage.setItem('user', JSON.stringify(parsedUser));
-          }
-        } catch {
-          // ignore storage errors
-        }
+        // 取消將數據寫入 localStorage，改為僅依賴後端與 Redux 狀態
 
         const from = searchParams.get('from');
         router.replace(from ?? '/admin/settings?connected=google');
