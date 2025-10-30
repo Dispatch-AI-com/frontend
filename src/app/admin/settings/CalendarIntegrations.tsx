@@ -137,8 +137,7 @@ export default function IntegrationsSection({
   const isEditable =
     editable ||
     user?.role === 'admin' ||
-    user?.plan === 'pro' ||
-    process.env.NEXT_PUBLIC_FORCE_EDITABLE === 'true';
+    user?.plan === 'pro';
   const [showProModal, setShowProModal] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [showGoogleEvents, setShowGoogleEvents] = useState(true);
