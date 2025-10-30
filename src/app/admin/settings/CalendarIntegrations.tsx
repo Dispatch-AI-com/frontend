@@ -20,6 +20,7 @@ import SectionHeader from '@/app/admin/settings/components/SectionHeader';
 import ProFeatureModal from '@/components/ui/ProFeatureModal';
 import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
+import { useSubscription } from '@/features/subscription/useSubscription';
 
 // Backend base URL (e.g., http://localhost:4000 or http://localhost:4000/api)
 // Recommended environment variable without /api (e.g., http://localhost:4000). For compatibility, prevent duplicate concatenation here.
@@ -134,10 +135,9 @@ export default function IntegrationsSection({
   const router = useRouter();
   const user = useAppSelector(state => state.auth.user);
   const searchParams = useSearchParams();
-  const isEditable =
-    editable ||
-    user?.role === 'admin' ||
-    user?.plan === 'pro';
+  const { subscription, isSubscribed } = useSubscription();
+  const isPro = isSubscribed && subscription?.planId?.tier === 'PRO';
+  const isEditable = editable || user?.role === 'admin' || isPro;
   const [showProModal, setShowProModal] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [showGoogleEvents, setShowGoogleEvents] = useState(true);
