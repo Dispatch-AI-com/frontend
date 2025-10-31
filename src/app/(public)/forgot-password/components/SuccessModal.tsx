@@ -1,0 +1,89 @@
+'use client';
+
+import styled from 'styled-components';
+
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(80, 80, 80, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalBox = styled.div`
+  background: #fff;
+  border-radius: 16px;
+  padding: 36px 32px 28px 32px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.12);
+  min-width: 340px;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+`;
+
+const CloseBtn = styled.button`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #888;
+  cursor: pointer;
+`;
+
+const SuccessIcon = () => (
+  <svg
+    width="60"
+    height="60"
+    viewBox="0 0 60 60"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g fill="none" fill-rule="evenodd">
+      <path d="M0 0h60v60H0z" />
+      <g fill-rule="nonzero">
+        <path
+          d="M50.938 27.527c0 11.683-9.662 21.345-21.856 21.345-11.683 0-21.345-9.662-21.345-21.345 0-12.194 9.662-21.856 21.345-21.856 12.194 0 21.856 9.662 21.856 21.856zm-32.331 1.162 7.107 7.363a.225.225 0 0 0 .325 0L41.392 20.93a.225.225 0 0 0 0-.325l-.93-.906c-.092-.093-.254-.116-.347-.023L26.039 31.406c-.116.07-.278.07-.371 0l-5.784-4.437c-.093-.069-.255-.046-.325.047l-.975 1.324a.28.28 0 0 0 .022.348zM43.94 5.965l2.546-2.545a1.146 1.146 0 1 1 1.62 1.62L45.56 7.585a1.146 1.146 0 0 1-1.62-1.62zm-3.417-1.638.932-3.478a1.146 1.146 0 1 1 2.213.593l-.932 3.478a1.146 1.146 0 0 1-2.213-.593zm11.078 4.81-3.263 1.523a1.146 1.146 0 1 1-.968-2.077l3.263-1.521a1.145 1.145 0 1 1 .968 2.076z"
+          fill="#58C112"
+        />
+        <path
+          d="M15.919 57.709c0 1.265 6.008 2.291 13.418 2.291 7.411 0 13.42-1.026 13.42-2.291 0-.818-2.558-1.575-6.71-1.984-4.152-.41-9.267-.41-13.419 0-4.152.41-6.71 1.166-6.71 1.984z"
+          fill="#EEE"
+        />
+      </g>
+    </g>
+  </svg>
+);
+
+interface SuccessModalProps {
+  email?: string;
+  title?: string;
+  description?: React.ReactNode;
+  onClose: () => void;
+}
+
+export default function SuccessModal({
+  email,
+  title,
+  description,
+  onClose,
+}: SuccessModalProps) {
+  return (
+    <Overlay>
+      <ModalBox>
+        <CloseBtn onClick={onClose} aria-label="Close">
+          &times;
+        </CloseBtn>
+        <SuccessIcon />
+        <h3 style={{ margin: '20px 0 16px 0', fontWeight: 700, fontSize: 18 }}>
+          {title}
+        </h3>
+        <div style={{ color: '#444', fontSize: 14, margin: '16px 11px 0 0' }}>
+          {description}
+        </div>
+      </ModalBox>
+    </Overlay>
+  );
+}

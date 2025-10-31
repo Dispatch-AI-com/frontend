@@ -99,6 +99,22 @@ const ErrorMessage = styled.div`
   margin-bottom: 16px;
 `;
 
+const ForgotPasswordWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+`;
+
+const ForgotPasswordLink = styled.a`
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: bold;
+  color: #0687ff;
+  text-decoration: none;
+`;
+
 export default function LoginForm() {
   const { control, handleSubmit } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -133,7 +149,18 @@ export default function LoginForm() {
           disabled={isLoading}
         />
       </FormField>
-      <FormField label="Password" mb={0}>
+
+      <FormField
+        label={
+          <ForgotPasswordWrapper>
+            <span>Password</span>
+            <ForgotPasswordLink href="/forgot-password" tabIndex={0}>
+              Forgot password?
+            </ForgotPasswordLink>
+          </ForgotPasswordWrapper>
+        }
+        mb={0}
+      >
         <div style={{ position: 'relative' }}>
           <ControllerInput
             name="password"

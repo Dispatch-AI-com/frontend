@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-
 interface FormFieldProps {
-  label?: string;
+  label?: React.ReactNode;
   children: React.ReactNode;
   size?: 'small' | 'normal' | 'large';
   mb?: number;
