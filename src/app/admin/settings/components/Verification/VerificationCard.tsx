@@ -76,6 +76,10 @@ interface VerificationCardProps {
   email?: string;
   mobileVerified?: boolean;
   emailVerified?: boolean;
+  mobileCountdown?: number;
+  emailCountdown?: number;
+  isMobileCountdownActive?: boolean;
+  isEmailCountdownActive?: boolean;
   marketingPromotions?: boolean;
   showMarketingPromotions?: boolean;
   onVerifyMobile?: () => void;
