@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from 'styled-components';
 
 import ResetPasswordForm from './components/ResetPasswordForm';
@@ -91,6 +91,8 @@ const Title = styled.h2`
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token') ?? '';
 
   return (
     <PageContainer>
@@ -116,7 +118,7 @@ export default function ResetPasswordPage() {
           </LogoImageWrapper>
         </LogoContainer>
         <Title>Reset Your Password</Title>
-        <ResetPasswordForm />
+        <ResetPasswordForm token={token} />
       </FormContainer>
     </PageContainer>
   );

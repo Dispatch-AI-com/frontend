@@ -48,7 +48,11 @@ const EyeOffIcon = () => (
   </svg>
 );
 
-export default function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+  token: string;
+}
+
+export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [mounted, setMounted] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -72,10 +76,11 @@ export default function ResetPasswordForm() {
   }) => {
     try {
       // Call the backend API to reset password (mocked for now)
-      const res = await fetch('/api/auth/reset-password', {
+      const res = await fetch('/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          token,
           password: data.password,
           confirmPassword: data.confirmPassword,
         }),
