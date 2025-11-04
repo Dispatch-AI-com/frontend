@@ -18,15 +18,23 @@ import {
   useVerifyEmailMutation,
   useVerifySmsMutation,
 } from '@/features/settings/settingsApi';
+import { useCountdown } from '@/hooks/useCountdown';
 import { useAppSelector } from '@/redux/hooks';
 import { validateVerificationForm } from '@/utils/validationSettings';
-import { useCountdown } from '@/hooks/useCountdown';
 
 export default function VerificationSection() {
   const user = useAppSelector(state => state.auth.user);
-  const { countdown: emailCountdown, isActive: isEmailCountdownActive, startCountdown: startEmailCountdown } = useCountdown();
-  const { countdown: mobileCountdown, isActive: isMobileCountdownActive, startCountdown: startMobileCountdown } = useCountdown();
-  
+  const {
+    countdown: emailCountdown,
+    isActive: isEmailCountdownActive,
+    startCountdown: startEmailCountdown,
+  } = useCountdown();
+  const {
+    countdown: mobileCountdown,
+    isActive: isMobileCountdownActive,
+    startCountdown: startMobileCountdown,
+  } = useCountdown();
+
   // Get verification data from API
   const { data: verificationData, isLoading: isVerificationLoading } =
     useGetVerificationQuery(user?._id ?? '', {
@@ -185,8 +193,12 @@ export default function VerificationSection() {
         type: 'mobile',
         contact: values.mobile,
       });
-    } catch (error: any) {
-      setError(error?.data?.message || 'Failed to send SMS verification');
+    } catch (error: unknown) {
+      const errorMessage =
+        error && typeof error === 'object' && 'data' in error
+          ? (error.data as { message?: string })?.message
+          : null;
+      setError(errorMessage ?? 'Failed to send SMS verification');
     }
   };
 
@@ -209,8 +221,12 @@ export default function VerificationSection() {
         type: 'email',
         contact: values.email,
       });
-    } catch (error: any) {
-      setError(error?.data?.message || 'Failed to send verification email');
+    } catch (error: unknown) {
+      const errorMessage =
+        error && typeof error === 'object' && 'data' in error
+          ? (error.data as { message?: string })?.message
+          : null;
+      setError(errorMessage ?? 'Failed to send verification email');
     }
   };
 
@@ -333,8 +349,12 @@ export default function VerificationSection() {
         }
         mobileCountdown={values.type === 'SMS' ? mobileCountdown : undefined}
         emailCountdown={values.type === 'Email' ? emailCountdown : undefined}
-        isMobileCountdownActive={values.type === 'SMS' ? isMobileCountdownActive : undefined}
-        isEmailCountdownActive={values.type === 'Email' ? isEmailCountdownActive : undefined}
+        isMobileCountdownActive={
+          values.type === 'SMS' ? isMobileCountdownActive : undefined
+        }
+        isEmailCountdownActive={
+          values.type === 'Email' ? isEmailCountdownActive : undefined
+        }
         marketingPromotions={
           values.type === 'Email' ? values.marketingPromotions : undefined
         }
@@ -393,10 +413,10 @@ export default function VerificationSection() {
             {!verificationData.emailVerified && (
               <Chip
                 label="Email Unverified"
-                sx={{ 
+                sx={{
                   backgroundColor: '#ff9800',
                   color: 'white',
-                  fontWeight: 'bold' 
+                  fontWeight: 'bold',
                 }}
                 size="small"
               />
@@ -404,10 +424,10 @@ export default function VerificationSection() {
             {!verificationData.mobileVerified && (
               <Chip
                 label="Phone Unverified"
-                sx={{ 
+                sx={{
                   backgroundColor: '#ff9800',
                   color: 'white',
-                  fontWeight: 'bold' 
+                  fontWeight: 'bold',
                 }}
                 size="small"
               />
