@@ -27,6 +27,7 @@ import { type Service } from '@/features/service/serviceApi';
 import { useCreateServiceBookingMutation } from '@/features/service/serviceBookingApi';
 import type { ServiceManagement } from '@/features/service-management/serviceManagementApi';
 import { useGetServiceFormFieldsQuery } from '@/features/service-management/serviceManagementApi';
+import { useVerificationCheck } from '@/features/settings/hooks/useVerificationCheck';
 import { useAppSelector } from '@/redux/hooks';
 interface Props {
   onClose: () => void;
@@ -297,6 +298,7 @@ const BookingModal: React.FC<Props> = ({
   >({});
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const user = useAppSelector(state => state.auth.user);
+  const { blockOperationWithAlert } = useVerificationCheck();
 
   // Get custom form fields for the selected service
   const { data: customFormFields = [] } = useGetServiceFormFieldsQuery(
@@ -445,6 +447,11 @@ const BookingModal: React.FC<Props> = ({
 
   const handleCreate = async (): Promise<void> => {
     try {
+      // Check verification before creating booking
+      if (!blockOperationWithAlert('create a booking')) {
+        return;
+      }
+
       if (!user) {
         throw new Error('User is missing, please login again.');
       }

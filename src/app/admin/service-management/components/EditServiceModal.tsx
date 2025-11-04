@@ -28,6 +28,7 @@ import {
   useSaveServiceFormFieldsMutation,
   useUpdateServiceMutation,
 } from '@/features/service-management/serviceManagementApi';
+import { useVerificationCheck } from '@/features/settings/hooks/useVerificationCheck';
 import { useAppSelector } from '@/redux/hooks';
 import theme from '@/theme';
 
@@ -232,6 +233,7 @@ export default function EditServiceModal({
   const [createService, { isLoading: isCreating }] = useCreateServiceMutation();
   const [updateService, { isLoading: isUpdating }] = useUpdateServiceMutation();
   const [saveServiceFormFields] = useSaveServiceFormFieldsMutation();
+  const { blockOperationWithAlert } = useVerificationCheck();
 
   // 获取现有的表单字段
   const { data: existingFormFields = [] } = useGetServiceFormFieldsQuery(
@@ -309,6 +311,11 @@ export default function EditServiceModal({
 
   const handleSubmit = async (): Promise<void> => {
     try {
+      // Check verification before creating/updating service
+      if (!blockOperationWithAlert('create or update a service')) {
+        return;
+      }
+
       // Validation before submission
       if (!formData.name.trim()) {
         alert('Please enter a service name');
