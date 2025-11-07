@@ -285,7 +285,12 @@ endpoints: {
 1. **Install dependencies**:
    ```bash
    cd apps/frontend
-   npm install  # or pnpm install
+   pnpm install
+   ```
+   
+   **Note**: This project uses **pnpm** as the package manager. If you don't have pnpm installed:
+   ```bash
+   npm install -g pnpm
    ```
 
 2. **Set up environment**:
@@ -299,7 +304,7 @@ endpoints: {
 
 3. **Run development server**:
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 4. **Access application**:
@@ -308,24 +313,24 @@ endpoints: {
 ### Available Commands
 
 ```bash
-npm run dev          # Development server
-npm run build        # Production build
-npm run start        # Start production server
-npm run lint         # Lint with ESLint
-npm run type-check   # Type check with TypeScript
+pnpm dev          # Development server
+pnpm build        # Production build
+pnpm start        # Start production server
+pnpm lint         # Lint with ESLint
+pnpm type-check   # Type check with TypeScript
 ```
 
 ### Code Quality
 
 ```bash
 # Lint
-npm run lint
+pnpm lint
 
 # Fix linting issues
-npm run lint -- --fix
+pnpm lint -- --fix
 
 # Type check
-npm run type-check
+pnpm type-check
 ```
 
 ### Docker Development
@@ -473,13 +478,13 @@ docker compose up frontend
 
 ```bash
 # Run tests (when available)
-npm run test
+pnpm test
 
 # Watch mode
-npm run test:watch
+pnpm test:watch
 
 # Coverage
-npm run test:coverage
+pnpm test:coverage
 ```
 
 ## 🐛 Common Issues
@@ -498,11 +503,11 @@ npm run test:coverage
 
 ### Issue: TypeScript errors
 
-**Fix**: Run `npm run type-check`, ensure dependencies match
+**Fix**: Run `pnpm type-check`, ensure dependencies match
 
 ### Issue: Build fails
 
-**Fix**: Clear `.next` folder, run `npm run build` again
+**Fix**: Clear `.next` folder, run `pnpm build` again
 
 ## 📚 Additional Resources
 
