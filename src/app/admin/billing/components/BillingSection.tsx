@@ -83,16 +83,19 @@ export default function BillingSection() {
     breakpoints: {
       '(min-width: 599px)': { slides: { perView: 1, spacing: 0 } },
       '(min-width: 1000px)': { slides: { perView: 2, spacing: 0 } },
-      '(min-width: 1420px)': { slides: { perView: 2, spacing: 0 } },
+      '(min-width: 1420px)': { slides: { perView: 3, spacing: 0 } }, // 显示所有 3 个计划
     },
   });
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      slider.current?.update();
-    }, 100);
-    return () => clearTimeout(timeout);
-  }, [slider]);
+    // Update slider when plans data changes
+    if (plans.length > 0 && slider.current) {
+      const timeout = setTimeout(() => {
+        slider.current?.update();
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [plans.length, slider]);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
 
@@ -101,20 +104,14 @@ export default function BillingSection() {
     tier: 'FREE' | 'BASIC' | 'PRO',
     planId: string,
   ): Promise<void> => {
-    // Helper function to check if current plan is FREE
-    // Check both planId.tier and subscriptionId (FREE plans have no subscriptionId)
-    const isFreePlan =
-      subscription?.planId?.tier === 'FREE' ||
-      !subscription?.subscriptionId ||
-      subscription?.subscriptionId === '' ||
-      subscription?.subscriptionId === null ||
-      subscription?.subscriptionId === undefined;
+    // Check if current plan is FREE (FREE plans have no subscriptionId)
+    const isFreePlan = !subscription?.subscriptionId;
 
     if (label.startsWith('Go with')) {
       if (!subscription || subscription.status === 'cancelled') {
         await create(planId);
       } else if (subscription.planId._id !== planId) {
-        // Check if upgrading from FREE plan
+        // FREE plan users should create, paid users should change
         if (isFreePlan) {
           await create(planId);
         } else {
@@ -131,12 +128,11 @@ export default function BillingSection() {
         await downgrade();
         window.location.reload();
       } else {
-        // Check if current plan is FREE (no subscriptionId means FREE plan)
+        // FREE plan upgrade: create new subscription
+        // Paid plan switch: use change
         if (isFreePlan) {
-          // FREE plan upgrade: create new subscription
           await create(planId);
         } else {
-          // Paid plan switch: use change
           await change(planId);
           window.location.reload();
         }
