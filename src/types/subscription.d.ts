@@ -13,9 +13,9 @@ export interface Subscription {
   _id: string;
   userId: string;
   planId: Plan;
-  subscriptionId: string;
-  stripeCustomerId: string;
-  chargeId: string;
+  subscriptionId?: string | null; // Optional for FREE plan users
+  stripeCustomerId?: string | null; // Optional for FREE plan users
+  chargeId?: string | null; // Optional for FREE plan users
   status: 'active' | 'cancelled' | 'failed';
   startAt: string;
   endAt: string;

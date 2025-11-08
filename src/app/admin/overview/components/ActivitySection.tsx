@@ -2,6 +2,7 @@
 
 import { Avatar, Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { format, isToday, parseISO } from 'date-fns';
 import Image from 'next/image';
 
@@ -175,10 +176,12 @@ export default function ActivitySection() {
     b => b.status === 'Confirmed',
   ).length;
 
-  const { data: { twilioPhoneNumber } = {} } = useGetTwilioPhoneNumberQuery(
-    userId ?? '',
-    { skip: !userId },
+  const { data: twilioPhoneNumberData } = useGetTwilioPhoneNumberQuery(
+    userId ?? skipToken,
   );
+
+  const twilioPhoneNumber: string | undefined =
+    twilioPhoneNumberData?.twilioPhoneNumber;
 
   return (
     <PageGrid equal={shouldHideBookingFeatures}>

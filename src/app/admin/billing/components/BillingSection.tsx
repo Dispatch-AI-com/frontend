@@ -77,10 +77,6 @@ export default function BillingSection() {
     (a, b) => tierOrder[a.tier] - tierOrder[b.tier],
   );
 
-  {
-    /* slide */
-  }
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
     slides: { perView: 'auto', spacing: 0, origin: 'center' },
     rubberband: false,
@@ -88,9 +84,6 @@ export default function BillingSection() {
       '(min-width: 599px)': { slides: { perView: 1, spacing: 0 } },
       '(min-width: 1000px)': { slides: { perView: 2, spacing: 0 } },
       '(min-width: 1420px)': { slides: { perView: 2, spacing: 0 } },
-    },
-    slideChanged(sliderInstance) {
-      setCurrentSlide(sliderInstance.track.details.rel);
     },
   });
 
@@ -108,11 +101,25 @@ export default function BillingSection() {
     tier: 'FREE' | 'BASIC' | 'PRO',
     planId: string,
   ): Promise<void> => {
+    // Helper function to check if current plan is FREE
+    // Check both planId.tier and subscriptionId (FREE plans have no subscriptionId)
+    const isFreePlan =
+      subscription?.planId?.tier === 'FREE' ||
+      !subscription?.subscriptionId ||
+      subscription?.subscriptionId === '' ||
+      subscription?.subscriptionId === null ||
+      subscription?.subscriptionId === undefined;
+
     if (label.startsWith('Go with')) {
       if (!subscription || subscription.status === 'cancelled') {
         await create(planId);
       } else if (subscription.planId._id !== planId) {
-        await change(planId);
+        // Check if upgrading from FREE plan
+        if (isFreePlan) {
+          await create(planId);
+        } else {
+          await change(planId);
+        }
       }
     }
     if (label === 'Cancel Subscription') {
@@ -120,9 +127,20 @@ export default function BillingSection() {
       return;
     }
     if (label.startsWith('Switch to')) {
-      if (tier === 'FREE') await downgrade();
-      else await change(planId);
-      window.location.reload();
+      if (tier === 'FREE') {
+        await downgrade();
+        window.location.reload();
+      } else {
+        // Check if current plan is FREE (no subscriptionId means FREE plan)
+        if (isFreePlan) {
+          // FREE plan upgrade: create new subscription
+          await create(planId);
+        } else {
+          // Paid plan switch: use change
+          await change(planId);
+          window.location.reload();
+        }
+      }
     }
   };
 
