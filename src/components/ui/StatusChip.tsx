@@ -30,7 +30,7 @@ const StatusChip = ({ status }: Props) => {
     dot: '#999999',
     text: status || 'Unknown',
   };
-  
+
   const { bg, dot, text } = statusConfig;
 
   return (

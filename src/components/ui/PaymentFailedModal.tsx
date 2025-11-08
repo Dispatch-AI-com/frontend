@@ -47,7 +47,8 @@ export default function PaymentFailedModal({
           Payment Failed
         </Typography>
         <Typography variant="body2" color="text.secondary" mt={1}>
-          Your subscription payment failed. Please update your payment method to continue using our service.
+          Your subscription payment failed. Please update your payment method to
+          continue using our service.
         </Typography>
 
         <Box display="flex" gap={2} mt={4} justifyContent="flex-end">

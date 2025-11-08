@@ -7,15 +7,14 @@ import Image from 'next/image';
 
 import HalfCircleProgress from '@/components/ui/HalfCircleProgress';
 import { useGetTodayMetricsQuery } from '@/features/callog/calllogApi';
-import { useGetTwilioPhoneNumberQuery } from '@/features/overview/overviewApi';
 import { useGetBookingsQuery } from '@/features/service/serviceBookingApi';
 import { useSubscription } from '@/features/subscription/useSubscription';
+import { useGetTwilioPhoneNumberQuery } from '@/features/twilio-phone-number/twilioPhoneNumberApi';
 import { useAppSelector } from '@/redux/hooks';
 import { getPlanTier, isFreeOrBasicPlan } from '@/utils/planUtils';
-import { 
-  getRemainingMinutes, 
-  getTotalMinutes, 
-  getUsagePercentage 
+import {
+  getRemainingMinutes,
+  getTotalMinutes,
 } from '@/utils/subscriptionUtils';
 
 function formatSubscriptionPeriod(
@@ -168,13 +167,13 @@ export default function ActivitySection() {
   // Calculate minutes data for the progress circle
   const remainingMinutes = getRemainingMinutes(subscription);
   const totalMinutes = getTotalMinutes(subscription?.planId);
-  const usedMinutes = totalMinutes - remainingMinutes;
-  const usagePercentage = getUsagePercentage(subscription, subscription?.planId);
-  
+
   // Determine display values and unit text
   const isUnlimited = totalMinutes === Number.MAX_SAFE_INTEGER;
   const displayValue = remainingMinutes; // Always show remaining minutes
-  const displayMaxValue = isUnlimited ? Math.max(remainingMinutes, 1000) : totalMinutes;
+  const displayMaxValue = isUnlimited
+    ? Math.max(remainingMinutes, 1000)
+    : totalMinutes;
   const unitText = isUnlimited ? '/Unlimited' : `/${totalMinutes}`;
 
   const { data: bookings } = useGetBookingsQuery({ userId }, { skip: !userId });

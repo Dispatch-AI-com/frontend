@@ -17,11 +17,16 @@ export interface Subscription {
   subscriptionId: string;
   stripeCustomerId: string;
   chargeId: string;
-  status: 'active' | 'cancelled' | 'failed' | 'pending_cancellation' | 'pending_downgrade';
+  status:
+    | 'active'
+    | 'cancelled'
+    | 'failed'
+    | 'pending_cancellation'
+    | 'pending_downgrade';
   startAt: string;
   endAt: string;
   createdAt: string;
-  secondsLeft: number; 
+  secondsLeft: number;
 }
 
 export interface RawInvoice {

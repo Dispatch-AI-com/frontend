@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint --fix",
     "type-check": "tsc --noEmit",
-    "test": "echo \"No tests yet\"",
-    "prepare": "husky install && (chmod -R +x .husky || echo 'Skipping chmod')"
+    "test": "echo \"No tests yet\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
