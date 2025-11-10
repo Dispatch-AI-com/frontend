@@ -21,6 +21,7 @@ The Frontend is a modern React application built with Next.js 15, Material-UI, a
 - **Language**: TypeScript 5.8
 
 ### Project Structure
+apple
 
 ```
 apps/frontend/
@@ -287,7 +288,7 @@ endpoints: {
    cd apps/frontend
    pnpm install
    ```
-   
+
    **Note**: This project uses **pnpm** as the package manager. If you don't have pnpm installed:
    ```bash
    npm install -g pnpm
@@ -386,8 +387,8 @@ docker compose up frontend
 
 ### Implementation
 
-**RTK Slice**: `features/auth/authSlice.ts`  
-**API**: `features/auth/authApi.ts`  
+**RTK Slice**: `features/auth/authSlice.ts`
+**API**: `features/auth/authApi.ts`
 **Hook**: `useCSRFToken()`
 
 ## 📊 State Management
@@ -424,29 +425,29 @@ docker compose up frontend
 
 ### Styling Approach
 
-**Emotion**: Primary styling (CSS-in-JS)  
-**Styled Components**: Legacy components  
-**SX Prop**: Inline styling  
+**Emotion**: Primary styling (CSS-in-JS)
+**Styled Components**: Legacy components
+**SX Prop**: Inline styling
 **Global Styles**: `src/app/globals.css`
 
 ## 🔗 External Integrations
 
 ### Google OAuth
 
-**Button**: `components/GoogleOAuthButton.tsx`  
-**Config**: Environment variables  
+**Button**: `components/GoogleOAuthButton.tsx`
+**Config**: Environment variables
 **Redirect**: `/auth/callback`
 
 ### Google Maps / Places API
 
-**Component**: `components/ui/AddressAutocomplete.tsx`  
-**Usage**: Address autocomplete in forms  
+**Component**: `components/ui/AddressAutocomplete.tsx`
+**Usage**: Address autocomplete in forms
 **API Key**: `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
 
 ### Calendar Integration
 
-**Google Calendar**: OAuth flow  
-**Outlook**: Microsoft Graph API  
+**Google Calendar**: OAuth flow
+**Outlook**: Microsoft Graph API
 **UI**: `app/admin/settings/CalendarIntegrations.tsx`
 
 ## 📦 Key Dependencies
