@@ -1,7 +1,6 @@
 'use client';
 
 import { styled } from '@mui/material/styles';
-import { padding } from '@mui/system';
 import Image from 'next/image';
 
 import CommonButton from '@/components/ui/CommonButton';
@@ -226,7 +225,9 @@ export default function PricingCard({
                   ? 'green'
                   : btn.variant === 'cancel'
                     ? 'cancel'
-                    : 'disabled'
+                    : btn.variant === 'retry'
+                      ? 'retry'
+                      : 'disabled'
             }
             onClick={
               btn.variant === 'disabled'

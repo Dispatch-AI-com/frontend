@@ -7,11 +7,13 @@ import { useKeenSlider } from 'keen-slider/react';
 import { useEffect, useState } from 'react';
 
 import CancelConfirmModal from '@/components/ui/CancelConfirmModal';
+import PaymentFailedModal from '@/components/ui/PaymentFailedModal';
 import { useGetPlansQuery } from '@/features/public/publicApiSlice';
 import {
   useChangePlan,
   useCreateSubscription,
   useDowngradeToFree,
+  useRetryPayment,
   useSubscription,
 } from '@/features/subscription/useSubscription';
 import type { Plan, PlanButton } from '@/types/plan.types';
@@ -38,21 +40,64 @@ function getPrice(pricing: { rrule: string; price: number }[]) {
 function getButtonsByPlan(
   plan: Plan,
   currentPlanId: string,
+  pendingPlanId: string | undefined,
   isSubscribed: boolean,
   isCancelled: boolean,
+  isPendingCancellation: boolean,
+  isPendingDowngrade: boolean,
+  isFailed: boolean,
 ): PlanButton[] {
   const isCurrent = plan._id === currentPlanId;
+  const isPendingDowngradeToPlan =
+    isPendingDowngrade && plan._id === pendingPlanId;
+
   if (isCancelled) {
     if (plan.tier === 'FREE')
       return [{ label: 'Your current plan', variant: 'disabled' }];
     return [{ label: `Go with ${plan.tier}`, variant: 'primary' }];
   }
-  if (isSubscribed) {
+
+  if (isFailed) {
+    // For failed subscriptions, show retry payment button for current plan
     if (isCurrent) {
+      return [{ label: 'Retry Payment', variant: 'retry' }];
+    }
+    // For other plans, disable them during payment failure
+    return [{ label: `Go with ${plan.tier}`, variant: 'disabled' }];
+  }
+
+  if (isSubscribed) {
+    // Current plan display
+    if (isCurrent) {
+      if (isPendingCancellation) {
+        return [{ label: 'Cancels at period end', variant: 'disabled' }];
+      }
+      if (isPendingDowngrade) {
+        // Current plan during pending downgrade - show cancel downgrade option
+        return [{ label: 'Cancel downgrade', variant: 'primary' }];
+      }
       return [{ label: 'Cancel Subscription', variant: 'cancel' }];
     }
+
+    // Special handling for pending downgrade
+    if (isPendingDowngrade) {
+      if (isPendingDowngradeToPlan) {
+        // Target plan (Basic) - show downgrade info
+        return [{ label: 'Downgrades next cycle', variant: 'disabled' }];
+      } else {
+        // Other plans during pending downgrade - show switch option
+        return [{ label: `Go with ${plan.tier}`, variant: 'primary' }];
+      }
+    }
+
+    // If pending cancellation, show "Go with" to allow reactivation
+    if (isPendingCancellation) {
+      return [{ label: `Go with ${plan.tier}`, variant: 'primary' }];
+    }
+
     return [{ label: `Switch to ${plan.tier}`, variant: 'primary' }];
   }
+
   return [{ label: 'Try for Free', variant: 'primary' }];
 }
 
@@ -69,8 +114,18 @@ export default function BillingSection() {
   const { create } = useCreateSubscription();
   const { change } = useChangePlan();
   const { downgrade } = useDowngradeToFree();
-  const { subscription, isSubscribed, isCancelled, currentPlanId } =
-    useSubscription();
+  const { retryPayment } = useRetryPayment();
+  const {
+    subscription,
+    isSubscribed,
+    isCancelled,
+    isFailed,
+    isPendingCancellation,
+    isPendingDowngrade,
+    currentPlanId,
+  } = useSubscription();
+
+  const pendingPlanId = subscription?.pendingPlanId?._id;
 
   const tierOrder = { FREE: 0, BASIC: 1, PRO: 2 };
   const sortedPlans = [...plans].sort(
@@ -80,7 +135,6 @@ export default function BillingSection() {
   {
     /* slide */
   }
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
     slides: { perView: 'auto', spacing: 0, origin: 'center' },
     rubberband: false,
@@ -88,9 +142,6 @@ export default function BillingSection() {
       '(min-width: 599px)': { slides: { perView: 1, spacing: 0 } },
       '(min-width: 1000px)': { slides: { perView: 2, spacing: 0 } },
       '(min-width: 1420px)': { slides: { perView: 2, spacing: 0 } },
-    },
-    slideChanged(sliderInstance) {
-      setCurrentSlide(sliderInstance.track.details.rel);
     },
   });
 
@@ -102,6 +153,7 @@ export default function BillingSection() {
   }, [slider]);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showPaymentFailedModal, setShowPaymentFailedModal] = useState(false);
 
   const handleClick = async (
     label: string,
@@ -111,12 +163,31 @@ export default function BillingSection() {
     if (label.startsWith('Go with')) {
       if (!subscription || subscription.status === 'cancelled') {
         await create(planId);
+      } else if (
+        subscription.status === 'pending_cancellation' ||
+        subscription.status === 'pending_downgrade'
+      ) {
+        // If pending cancellation or downgrade, use change to cancel the pending change and switch plan
+        await change(planId);
+        window.location.reload();
       } else if (subscription.planId._id !== planId) {
         await change(planId);
       }
     }
-    if (label === 'Cancel Subscription') {
+    if (label === 'Cancel Subscription' || label === 'Cancel Instead') {
       setShowCancelModal(true);
+      return;
+    }
+    if (label === 'Retry Payment') {
+      setShowPaymentFailedModal(true);
+      return;
+    }
+    if (label === 'Cancel downgrade') {
+      // Cancel the pending downgrade by switching back to current plan
+      if (subscription?.planId._id) {
+        await change(subscription.planId._id);
+        window.location.reload();
+      }
       return;
     }
     if (label.startsWith('Switch to')) {
@@ -124,6 +195,7 @@ export default function BillingSection() {
       else await change(planId);
       window.location.reload();
     }
+    // Do nothing for disabled states ('Cancels at period end', 'Downgrades next cycle', 'Your current plan')
   };
 
   const handleConfirmCancel = async () => {
@@ -131,6 +203,15 @@ export default function BillingSection() {
       await downgrade();
       setShowCancelModal(false);
       window.location.reload();
+    } catch {
+      // Handle error silently
+    }
+  };
+
+  const handleRetryPayment = async () => {
+    try {
+      await retryPayment();
+      setShowPaymentFailedModal(false);
     } catch {
       // Handle error silently
     }
@@ -182,8 +263,12 @@ export default function BillingSection() {
               buttons={getButtonsByPlan(
                 plan,
                 currentPlanId,
+                pendingPlanId,
                 isSubscribed,
                 isCancelled,
+                isPendingCancellation,
+                isPendingDowngrade,
+                isFailed,
               )}
               onButtonClick={label =>
                 void handleClick(label, plan.tier, plan._id)
@@ -203,6 +288,12 @@ export default function BillingSection() {
         open={showCancelModal}
         onClose={() => setShowCancelModal(false)}
         onConfirm={handleConfirmCancel}
+      />
+
+      <PaymentFailedModal
+        open={showPaymentFailedModal}
+        onClose={() => setShowPaymentFailedModal(false)}
+        onRetryPayment={handleRetryPayment}
       />
     </Box>
   );

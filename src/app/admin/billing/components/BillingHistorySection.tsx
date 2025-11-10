@@ -77,9 +77,9 @@ const BillingHistorySection = () => {
     timestamp: new Date(ref.date).getTime(),
   }));
 
-  const combined: BillingEntry[] = [...invoiceEntries, ...refundEntries].sort(
-    (a, b) => b.timestamp - a.timestamp,
-  );
+  const combined: BillingEntry[] = [...invoiceEntries, ...refundEntries]
+    .filter(entry => ['paid', 'unpaid', 'refunded'].includes(entry.status))
+    .sort((a, b) => b.timestamp - a.timestamp);
 
   return (
     <Box sx={{ width: '100%' }}>

@@ -63,7 +63,7 @@ export default function HalfCircleProgress({
               marginLeft: '3px',
             }}
           >
-            {unitText}
+            {unitText} min
           </Typography>
         </Typography>
       </Box>

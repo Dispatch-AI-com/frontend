@@ -26,6 +26,7 @@ import { subscriptionApi } from '@/features/subscription/subscriptionApi';
 import { testApi } from '@/features/test/testApiSlice';
 import { transcriptApi } from '@/features/transcript/transcriptApi';
 import { transcriptChunksApi } from '@/features/transcript-chunk/transcriptChunksApi';
+import { twilioPhoneNumberApi } from '@/features/twilio-phone-number/twilioPhoneNumberApi';
 
 import { rootReducer } from './root-reducer';
 
@@ -60,6 +61,7 @@ export const store = configureStore({
       serviceBookingApi.middleware,
       serviceApi.middleware,
       serviceManagementApi.middleware,
+      twilioPhoneNumberApi.middleware,
     ),
 });
 

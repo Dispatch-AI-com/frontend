@@ -25,7 +25,13 @@ const statusStyles = {
 };
 
 const StatusChip = ({ status }: Props) => {
-  const { bg, dot, text } = statusStyles[status];
+  const statusConfig = statusStyles[status] || {
+    bg: '#f5f5f5',
+    dot: '#999999',
+    text: status || 'Unknown',
+  };
+
+  const { bg, dot, text } = statusConfig;
 
   return (
     <Box

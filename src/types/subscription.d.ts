@@ -13,13 +13,20 @@ export interface Subscription {
   _id: string;
   userId: string;
   planId: Plan;
+  pendingPlanId?: Plan;
   subscriptionId: string;
   stripeCustomerId: string;
   chargeId: string;
-  status: 'active' | 'cancelled' | 'failed';
+  status:
+    | 'active'
+    | 'cancelled'
+    | 'failed'
+    | 'pending_cancellation'
+    | 'pending_downgrade';
   startAt: string;
   endAt: string;
   createdAt: string;
+  secondsLeft: number;
 }
 
 export interface RawInvoice {
