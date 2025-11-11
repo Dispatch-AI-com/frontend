@@ -135,11 +135,27 @@ export default function ForgotPasswordPage() {
     setMounted(true);
   }, []);
 
-  const onSubmit = (data: { email: string }) => {
-    // TODO: handle forgot password logic
+const onSubmit = async (data: { email: string }) => {
+  try {
+    const res = await fetch('http://localhost:4000/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: data.email }),
+    });
+
+    // Optionally handle error response
+    if (!res.ok) {
+      const result = await res.json();
+      alert(result.message || 'Failed to send reset email');
+      return;
+    }
+
     setSentEmail(data.email);
     setShowSuccess(true);
-  };
+  } catch (err) {
+    alert('Network error. Please try again.');
+  }
+};
 
   if (!mounted) {
     return (
