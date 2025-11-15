@@ -459,6 +459,22 @@ export default function VerificationSection() {
 
       <SectionHeader title="Verification" onEdit={handleEdit} />
 
+      {/* Error Message Display */}
+      {error && (
+        <Alert
+          severity="error"
+          sx={{
+            mt: 2,
+            mb: 2,
+            borderRadius: 2,
+          }}
+          onClose={() => setError(null)}
+        >
+          <AlertTitle>Error</AlertTitle>
+          {error}
+        </Alert>
+      )}
+
       {/* Display Mode */}
       <Box sx={{ mt: 2 }}>
         {isVerificationLoading ? (
