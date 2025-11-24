@@ -1,0 +1,25 @@
+name: Trigger UAT deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify main repo of submodule update
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.MAIN_REPO_TRIGGER_TOKEN }}
+          repository: Dispatch-AI-com/dispatchai-platform
+          event-type: submodule-updated
+          client-payload: |
+            {
+              "submodule": "${{ github.repository }}",
+              "ref": "${{ github.ref }}",
+              "sha": "${{ github.sha }}",
+              "actor": "${{ github.actor }}"
+            }
