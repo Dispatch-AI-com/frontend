@@ -126,7 +126,7 @@ export default function ForgotPasswordPage() {
   const router = useRouter();
   const [showSuccess, setShowSuccess] = useState(false);
   const [sentEmail, setSentEmail] = useState('');
-  const { control, handleSubmit, formState } = useForm<{ email: string }>({
+  const { control, handleSubmit } = useForm<{ email: string }>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: '' },
   });
