@@ -198,12 +198,12 @@ const onSubmit = async (data: { email: string }) => {
             viewBox="0 0 16 16"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
               <path d="M0 0h16v16H0z" />
               <path
                 d="M6.424 3.576a.6.6 0 0 1 0 .848L3.448 7.4H14a.6.6 0 0 1 0 1.2H3.448l2.976 2.976a.6.6 0 0 1 .07.765l-.07.083a.6.6 0 0 1-.848 0l-4-4-.06-.07a.602.602 0 0 1-.006-.008l.066.078A.602.602 0 0 1 1.4 8v-.027l.004-.042L1.4 8a.602.602 0 0 1 .176-.424l4-4a.6.6 0 0 1 .848 0z"
                 fill="#5A5A5A"
-                fill-rule="nonzero"
+                fillRule="nonzero"
               />
             </g>
           </svg>
