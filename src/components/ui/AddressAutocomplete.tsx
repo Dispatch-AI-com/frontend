@@ -93,7 +93,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   const debouncedFetch = useMemo(
     () =>
       debounce(async (input: string | undefined) => {
-        const inputStr = input || '';
+        const inputStr = input ?? '';
         if (!inputStr || inputStr.trim().length < 2) {
           setSuggestions([]);
           return;
@@ -160,24 +160,26 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   // Backend expects: "Street, Suburb, State Postcode" (e.g., "123 Main St, Sydney, NSW 2000")
   const formatStructuredAddress = (components: AddressComponents): string => {
     const parts = [];
-    
+
     // Build street address
     if (components.streetNumber && components.route) {
       parts.push(`${components.streetNumber} ${components.route}`);
     } else if (components.route) {
       parts.push(components.route);
     }
-    
+
     // Add suburb
     if (components.locality) {
       parts.push(components.locality);
     }
-    
+
     // Combine state and postcode (backend expects "State Postcode" format)
     const statePostcode = [];
     if (components.administrativeAreaLevel1) {
       // Ensure state is uppercase and 2-3 characters
-      const state = components.administrativeAreaLevel1.toUpperCase().substring(0, 3);
+      const state = components.administrativeAreaLevel1
+        .toUpperCase()
+        .substring(0, 3);
       statePostcode.push(state);
     }
     if (components.postalCode) {
@@ -187,11 +189,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         statePostcode.push(postcode);
       }
     }
-    
+
     if (statePostcode.length > 0) {
       parts.push(statePostcode.join(' '));
     }
-    
+
     return parts.join(', ');
   };
 
@@ -235,12 +237,16 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     }
   };
 
-  const formatAddressForDisplay = (suggestion: AutocompletePrediction | null | undefined) => {
+  const formatAddressForDisplay = (
+    suggestion: AutocompletePrediction | null | undefined,
+  ) => {
     if (!suggestion) return null;
     return (
       <SuggestionItem>
         <MainText variant="body1">
-          {suggestion.structured_formatting?.main_text ?? suggestion.description ?? ''}
+          {suggestion.structured_formatting?.main_text ??
+            suggestion.description ??
+            ''}
         </MainText>
         <SecondaryText variant="body2">
           {suggestion.structured_formatting?.secondary_text ?? ''}
@@ -290,7 +296,9 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         renderOption={(props, option) => {
           const { key, ...otherProps } =
             props as React.HTMLAttributes<HTMLLIElement> & { key: React.Key };
-          const display = formatAddressForDisplay(option as AutocompletePrediction | null | undefined);
+          const display = formatAddressForDisplay(
+            option as AutocompletePrediction | null | undefined,
+          );
           if (!display) return null;
           return (
             <li key={key} {...otherProps}>
