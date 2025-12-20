@@ -103,7 +103,7 @@ export default function UserInputArea({
         <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
           <Box sx={{ flex: 1 }}>
             <AddressAutocomplete
-              value={userInput || ''}
+              value={userInput ?? ''}
               onChange={setUserInput}
               onAddressSelect={handleAddressSelect}
               displayFullAddress={true}
@@ -113,7 +113,7 @@ export default function UserInputArea({
             />
           </Box>
           <SendIconBtn
-            onClick={() => onTextSubmit(userInput || '')}
+            onClick={() => onTextSubmit(userInput ?? '')}
             disabled={disabled || !userInput || userInput.trim() === ''}
             sx={{ mb: 0.5 }}
           >
@@ -128,7 +128,7 @@ export default function UserInputArea({
         fullWidth
         variant="outlined"
         placeholder="Enter your message..."
-        value={userInput || ''}
+        value={userInput ?? ''}
         onChange={e => setUserInput(e.target.value)}
         onKeyDown={handleKeyDown}
         disabled={disabled}
@@ -136,7 +136,7 @@ export default function UserInputArea({
           endAdornment: (
             <InputAdornment position="end">
               <SendIconBtn
-                onClick={() => onTextSubmit(userInput || '')}
+                onClick={() => onTextSubmit(userInput ?? '')}
                 disabled={disabled || !userInput || userInput.trim() === ''}
               >
                 <ArrowUpwardRoundedIcon fontSize="small" />

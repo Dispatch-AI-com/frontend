@@ -87,7 +87,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 }) => {
   const [suggestions, setSuggestions] = useState<AutocompletePrediction[]>([]);
   const [loading, setLoading] = useState(false);
-  const [inputValue, setInputValue] = useState(value || '');
+  const [inputValue, setInputValue] = useState(value ?? '');
 
   // Debounced fetch for autocomplete
   const debouncedFetch = useMemo(
@@ -117,12 +117,12 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   // Sync inputValue with value prop when it changes externally
   useEffect(() => {
     if (value !== undefined && value !== inputValue) {
-      setInputValue(value || '');
+      setInputValue(value ?? '');
     }
-  }, [value]);
+  }, [value, inputValue]);
 
   useEffect(() => {
-    void debouncedFetch(inputValue || '');
+    void debouncedFetch(inputValue ?? '');
     return () => {
       debouncedFetch.cancel();
     };
@@ -258,7 +258,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             ? option
             : (option as AutocompletePrediction)?.description || ''
         }
-        inputValue={inputValue || ''}
+        inputValue={inputValue ?? ''}
         onInputChange={handleInputChange}
         onChange={(event, value) => {
           void handleOptionSelect(
