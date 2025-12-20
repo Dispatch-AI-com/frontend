@@ -23,7 +23,7 @@ interface AddressComponents {
 }
 
 interface UserInputAreaProps {
-  userInput: string;
+  userInput: string | undefined;
   setUserInput: (value: string) => void;
   onTextSubmit: (input: string) => void;
   disabled?: boolean;
@@ -73,7 +73,7 @@ export default function UserInputArea({
   onAddressSelect,
 }: UserInputAreaProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && userInput.trim()) {
+    if (e.key === 'Enter' && userInput?.trim()) {
       e.preventDefault();
       onTextSubmit(userInput);
     }
@@ -91,7 +91,7 @@ export default function UserInputArea({
   };
 
   const handleAddressKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && userInput.trim()) {
+    if (e.key === 'Enter' && userInput?.trim()) {
       e.preventDefault();
       onTextSubmit(userInput);
     }
@@ -103,7 +103,7 @@ export default function UserInputArea({
         <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
           <Box sx={{ flex: 1 }}>
             <AddressAutocomplete
-              value={userInput}
+              value={userInput || ''}
               onChange={setUserInput}
               onAddressSelect={handleAddressSelect}
               displayFullAddress={true}
@@ -113,8 +113,8 @@ export default function UserInputArea({
             />
           </Box>
           <SendIconBtn
-            onClick={() => onTextSubmit(userInput)}
-            disabled={disabled || userInput.trim() === ''}
+            onClick={() => onTextSubmit(userInput || '')}
+            disabled={disabled || !userInput || userInput.trim() === ''}
             sx={{ mb: 0.5 }}
           >
             <ArrowUpwardRoundedIcon fontSize="small" />
@@ -128,7 +128,7 @@ export default function UserInputArea({
         fullWidth
         variant="outlined"
         placeholder="Enter your message..."
-        value={userInput}
+        value={userInput || ''}
         onChange={e => setUserInput(e.target.value)}
         onKeyDown={handleKeyDown}
         disabled={disabled}
@@ -136,8 +136,8 @@ export default function UserInputArea({
           endAdornment: (
             <InputAdornment position="end">
               <SendIconBtn
-                onClick={() => onTextSubmit(userInput)}
-                disabled={disabled || userInput.trim() === ''}
+                onClick={() => onTextSubmit(userInput || '')}
+                disabled={disabled || !userInput || userInput.trim() === ''}
               >
                 <ArrowUpwardRoundedIcon fontSize="small" />
               </SendIconBtn>

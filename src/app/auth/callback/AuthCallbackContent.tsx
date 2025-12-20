@@ -51,16 +51,23 @@ export default function AuthCallbackContent() {
 
         console.log('[AuthCallback] Setting user with ID:', parsedUser._id);
 
+        // Validate parsed user data
+        if (!parsedUser._id || !parsedUser.email) {
+          console.error('[AuthCallback] Invalid user data:', parsedUser);
+          router.replace('/login?error=oauth_invalid_data');
+          return;
+        }
+
         dispatch(
           setCredentials({
             csrfToken,
             user: {
               _id: parsedUser._id,
-              email: parsedUser.email,
-              firstName: parsedUser.firstName,
-              lastName: parsedUser.lastName,
-              role: parsedUser.role,
-              status: parsedUser.status,
+              email: parsedUser.email || '',
+              firstName: parsedUser.firstName || '',
+              lastName: parsedUser.lastName || '',
+              role: parsedUser.role || 'user',
+              status: parsedUser.status || 'active',
             },
           }),
         );

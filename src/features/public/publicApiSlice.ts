@@ -10,7 +10,7 @@ interface HealthResponse {
 export const publicApiSlice = createApi({
   reducerPath: 'publicApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api',
     responseHandler: 'content-type',
   }),
   endpoints: builder => ({
