@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/material';
+import { Alert, AlertTitle, Box, Chip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 import EditModal from '@/app/admin/settings/components/EditModal';
@@ -12,15 +12,29 @@ import VerificationForm from '@/app/admin/settings/components/Verification/Verif
 import {
   useGetUserProfileQuery,
   useGetVerificationQuery,
+  useSendEmailVerificationMutation,
+  useSendSmsVerificationMutation,
   useUpdateVerificationMutation,
   useVerifyEmailMutation,
-  useVerifyMobileMutation,
+  useVerifySmsMutation,
 } from '@/features/settings/settingsApi';
+import { useCountdown } from '@/hooks/useCountdown';
 import { useAppSelector } from '@/redux/hooks';
 import { validateVerificationForm } from '@/utils/validationSettings';
 
 export default function VerificationSection() {
   const user = useAppSelector(state => state.auth.user);
+  const {
+    countdown: emailCountdown,
+    isActive: isEmailCountdownActive,
+    startCountdown: startEmailCountdown,
+  } = useCountdown();
+  const {
+    countdown: mobileCountdown,
+    isActive: isMobileCountdownActive,
+    startCountdown: startMobileCountdown,
+  } = useCountdown();
+
   // Get verification data from API
   const { data: verificationData, isLoading: isVerificationLoading } =
     useGetVerificationQuery(user?._id ?? '', {
@@ -31,8 +45,10 @@ export default function VerificationSection() {
     skip: !user?._id,
   });
   const [updateVerification] = useUpdateVerificationMutation();
-  const [verifyMobile] = useVerifyMobileMutation();
+  const [sendEmailVerification] = useSendEmailVerificationMutation();
   const [verifyEmail] = useVerifyEmailMutation();
+  const [sendSmsVerification] = useSendSmsVerificationMutation();
+  const [verifySms] = useVerifySmsMutation();
   const [open, setOpen] = useState(false);
   const [verificationModal, setVerificationModal] = useState<{
     open: boolean;
@@ -112,6 +128,20 @@ export default function VerificationSection() {
         return;
       }
 
+      // Check if country code is selected for mobile verification
+      if (
+        (formValues.type === 'SMS' || formValues.type === 'Both') &&
+        formValues.mobile
+      ) {
+        const match = /^(\+\d+)?\s*(.*)$/.exec(formValues.mobile);
+        const countryCode = match?.[1];
+
+        if (!countryCode || countryCode === '') {
+          setError('Please select a country code for mobile number');
+          return;
+        }
+      }
+
       // Check if mobile or email has changed
       const mobileChanged = formValues.mobile !== values.mobile;
       const emailChanged = formValues.email !== values.email;
@@ -139,18 +169,36 @@ export default function VerificationSection() {
         throw new Error('Mobile number not available');
       }
 
-      await verifyMobile({
+      // Check if country code is selected
+      const match = /^(\+\d+)?\s*(.*)$/.exec(values.mobile);
+      const countryCode = match?.[1];
+
+      if (!countryCode || countryCode === '') {
+        setError(
+          'Please select a country code before sending SMS verification',
+        );
+        return;
+      }
+
+      await sendSmsVerification({
         userId: user._id,
         mobile: values.mobile,
       }).unwrap();
+
+      // Start 60-second countdown
+      startMobileCountdown(60);
 
       setVerificationModal({
         open: true,
         type: 'mobile',
         contact: values.mobile,
       });
-    } catch {
-      setError('Failed to verify mobile number');
+    } catch (error: unknown) {
+      const errorMessage =
+        error && typeof error === 'object' && 'data' in error
+          ? (error.data as { message?: string })?.message
+          : null;
+      setError(errorMessage ?? 'Failed to send SMS verification');
     }
   };
 
@@ -160,18 +208,25 @@ export default function VerificationSection() {
         throw new Error('Email not available');
       }
 
-      await verifyEmail({
+      await sendEmailVerification({
         userId: user._id,
         email: values.email,
       }).unwrap();
+
+      // Start 60-second countdown
+      startEmailCountdown(60);
 
       setVerificationModal({
         open: true,
         type: 'email',
         contact: values.email,
       });
-    } catch {
-      setError('Failed to verify email address');
+    } catch (error: unknown) {
+      const errorMessage =
+        error && typeof error === 'object' && 'data' in error
+          ? (error.data as { message?: string })?.message
+          : null;
+      setError(errorMessage ?? 'Failed to send verification email');
     }
   };
 
@@ -181,6 +236,26 @@ export default function VerificationSection() {
       type: 'mobile',
       contact: '',
     });
+  };
+
+  const handleVerifyCode = async (code: string) => {
+    if (!user?._id || !verificationModal.contact) {
+      throw new Error('User or contact not available');
+    }
+
+    if (verificationModal.type === 'email') {
+      await verifyEmail({
+        userId: user._id,
+        email: verificationModal.contact,
+        code,
+      }).unwrap();
+    } else if (verificationModal.type === 'mobile') {
+      await verifySms({
+        userId: user._id,
+        mobile: verificationModal.contact,
+        code,
+      }).unwrap();
+    }
   };
 
   const handleMarketingPromotionsChange = async (checked: boolean) => {
@@ -229,6 +304,8 @@ export default function VerificationSection() {
               type="SMS"
               mobile={values.mobile}
               mobileVerified={values.mobileVerified}
+              mobileCountdown={mobileCountdown}
+              isMobileCountdownActive={isMobileCountdownActive}
               onVerifyMobile={() => {
                 void handleVerifyMobile();
               }}
@@ -241,6 +318,8 @@ export default function VerificationSection() {
               type="Email"
               email={values.email}
               emailVerified={values.emailVerified}
+              emailCountdown={emailCountdown}
+              isEmailCountdownActive={isEmailCountdownActive}
               marketingPromotions={values.marketingPromotions}
               showMarketingPromotions
               onVerifyEmail={() => {
@@ -268,6 +347,14 @@ export default function VerificationSection() {
         emailVerified={
           values.type === 'Email' ? values.emailVerified : undefined
         }
+        mobileCountdown={values.type === 'SMS' ? mobileCountdown : undefined}
+        emailCountdown={values.type === 'Email' ? emailCountdown : undefined}
+        isMobileCountdownActive={
+          values.type === 'SMS' ? isMobileCountdownActive : undefined
+        }
+        isEmailCountdownActive={
+          values.type === 'Email' ? isEmailCountdownActive : undefined
+        }
         marketingPromotions={
           values.type === 'Email' ? values.marketingPromotions : undefined
         }
@@ -291,10 +378,102 @@ export default function VerificationSection() {
     );
   };
 
+  // Check verification status
+  const isFullyVerified =
+    verificationData?.emailVerified && verificationData?.mobileVerified;
+  const unverifiedCount = [
+    !verificationData?.emailVerified,
+    !verificationData?.mobileVerified,
+  ].filter(Boolean).length;
+
   return (
     <>
       <SectionDivider />
+
+      {/* Verification Status Alert */}
+      {!isFullyVerified && verificationData && (
+        <Alert
+          severity="warning"
+          sx={{
+            mb: 2,
+            borderRadius: 2,
+            border: '2px solid #ff9800',
+            backgroundColor: '#fff8e1',
+          }}
+        >
+          <AlertTitle sx={{ color: '#f57c00', fontWeight: 'bold' }}>
+            ⚠️ Account Verification Required - {unverifiedCount} Item
+            {unverifiedCount > 1 ? 's' : ''} Pending
+          </AlertTitle>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            <strong>Impact:</strong> Some operations are blocked until
+            verification is complete.
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {!verificationData.emailVerified && (
+              <Chip
+                label="Email Unverified"
+                sx={{
+                  backgroundColor: '#ff9800',
+                  color: 'white',
+                  fontWeight: 'bold',
+                }}
+                size="small"
+              />
+            )}
+            {!verificationData.mobileVerified && (
+              <Chip
+                label="Phone Unverified"
+                sx={{
+                  backgroundColor: '#ff9800',
+                  color: 'white',
+                  fontWeight: 'bold',
+                }}
+                size="small"
+              />
+            )}
+          </Box>
+        </Alert>
+      )}
+
+      {/* Verification Success Alert */}
+      {isFullyVerified && verificationData && (
+        <Alert
+          severity="success"
+          sx={{
+            mb: 2,
+            borderRadius: 2,
+            border: '2px solid #4caf50',
+            backgroundColor: '#e8f5e8',
+          }}
+        >
+          <AlertTitle sx={{ color: '#2e7d32', fontWeight: 'bold' }}>
+            ✅ Account Fully Verified
+          </AlertTitle>
+          <Typography variant="body2">
+            All contact information has been verified. You have full access to
+            all features.
+          </Typography>
+        </Alert>
+      )}
+
       <SectionHeader title="Verification" onEdit={handleEdit} />
+
+      {/* Error Message Display */}
+      {error && (
+        <Alert
+          severity="error"
+          sx={{
+            mt: 2,
+            mb: 2,
+            borderRadius: 2,
+          }}
+          onClose={() => setError(null)}
+        >
+          <AlertTitle>Error</AlertTitle>
+          {error}
+        </Alert>
+      )}
 
       {/* Display Mode */}
       <Box sx={{ mt: 2 }}>
@@ -327,6 +506,7 @@ export default function VerificationSection() {
         type={verificationModal.type}
         contact={verificationModal.contact}
         onClose={handleCloseVerificationModal}
+        onVerify={handleVerifyCode}
       />
     </>
   );

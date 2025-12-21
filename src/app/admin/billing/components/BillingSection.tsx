@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 import CancelConfirmModal from '@/components/ui/CancelConfirmModal';
 import { useGetPlansQuery } from '@/features/public/publicApiSlice';
+import { useVerificationCheck } from '@/features/settings/hooks/useVerificationCheck';
 import {
   useChangePlan,
   useCreateSubscription,
@@ -71,6 +72,7 @@ export default function BillingSection() {
   const { downgrade } = useDowngradeToFree();
   const { subscription, isSubscribed, isCancelled, currentPlanId } =
     useSubscription();
+  const { blockOperationWithAlert } = useVerificationCheck();
 
   const tierOrder = { FREE: 0, BASIC: 1, PRO: 2 };
   const sortedPlans = [...plans].sort(
@@ -108,6 +110,11 @@ export default function BillingSection() {
     tier: 'FREE' | 'BASIC' | 'PRO',
     planId: string,
   ): Promise<void> => {
+    // Check verification before any plan operations with detailed message
+    if (!blockOperationWithAlert('switch plans')) {
+      return;
+    }
+
     if (label.startsWith('Go with')) {
       if (!subscription || subscription.status === 'cancelled') {
         await create(planId);

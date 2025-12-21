@@ -7,11 +7,13 @@ import React, { useEffect } from 'react';
 import { AdminPageLayout } from '@/components/layout/admin-layout';
 import ProFeatureModal from '@/components/ui/ProFeatureModal';
 import { useSubscription } from '@/features/subscription/useSubscription';
+import { useAppSelector } from '@/redux/hooks';
 import { getPlanTier, isFreeOrBasicPlan, isProPlan } from '@/utils/planUtils';
 
 import ActivitySection from './components/ActivitySection';
 import CampaignProgressSection from './components/CompaignProgressSection';
 import RecentService from './components/RecentService';
+import VerificationReminder from './components/VerificationReminder';
 
 const styles = {
   contentContainer: {
@@ -36,6 +38,7 @@ const styles = {
 };
 
 export default function OverviewPage() {
+  const user = useAppSelector(state => state.auth.user);
   const { subscription } = useSubscription();
   const params = useSearchParams();
   const router = useRouter();
@@ -66,6 +69,9 @@ export default function OverviewPage() {
   return (
     <>
       <AdminPageLayout title="Overview" padding="normal" background="solid">
+        {/* Verification Reminder */}
+        {user?._id && <VerificationReminder userId={user._id} />}
+
         <Box sx={styles.contentContainer}>
           <ActivitySection />
         </Box>
