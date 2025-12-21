@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 import theme from '@/theme';
 import type { Blog } from '@/types/blog';
+import { getApiBaseUrl } from '@/utils/api-config';
 
 import BlogCard from './BlogCard';
 
@@ -51,8 +52,7 @@ export default function BlogList() {
         if (keyword.trim()) params.set('keyword', keyword.trim());
         if (topic.trim()) params.set('topic', topic.trim());
 
-        const baseUrl =
-          process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
+        const baseUrl = getApiBaseUrl();
         const url = `${baseUrl}/blogs/search?${params.toString()}`;
 
         const res = await axios.get<{
@@ -82,8 +82,7 @@ export default function BlogList() {
       if (keyword.trim()) nextParams.set('keyword', keyword.trim());
       if (topic.trim()) nextParams.set('topic', topic.trim());
 
-      const baseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
+      const baseUrl = getApiBaseUrl();
       const checkUrl = `${baseUrl}/blogs/search?${nextParams.toString()}`;
 
       const res = await axios.get<{ data: Blog[] }>(checkUrl);

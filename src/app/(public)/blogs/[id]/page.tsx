@@ -1,5 +1,6 @@
 // src/app/blogs/[id]/page.tsx
 import type { Blog } from '@/types/blog';
+import { getApiBaseUrl } from '@/utils/api-config';
 
 import IntroSection from './components/IntroSection';
 
@@ -10,8 +11,7 @@ export default async function DetailBlogPage({
 }) {
   // params.id is a plain string here
   const { id } = await params;
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
+  const baseUrl = getApiBaseUrl();
   const res = await fetch(`${baseUrl}/blogs/${id}`, {
     cache: 'no-store',
   });

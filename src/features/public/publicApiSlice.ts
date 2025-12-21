@@ -2,6 +2,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import type { Plan } from '@/types/plan.types';
+import { getApiBaseUrl } from '@/utils/api-config';
 
 interface HealthResponse {
   status: string;
@@ -10,7 +11,7 @@ interface HealthResponse {
 export const publicApiSlice = createApi({
   reducerPath: 'publicApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api',
+    baseUrl: getApiBaseUrl(),
     responseHandler: 'content-type',
   }),
   endpoints: builder => ({
