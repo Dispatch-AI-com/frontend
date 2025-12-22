@@ -6,7 +6,6 @@ import { Suspense, useEffect, useState } from 'react';
 
 import theme from '@/theme';
 import type { Blog } from '@/types/blog';
-import { getApiBaseUrl } from '@/utils/api-config';
 
 import Banner from './components/Banner';
 import BlogFilterBar from './components/BlogFilterBar';
@@ -22,7 +21,8 @@ export default function BlogsPage() {
 
     const fetchHighlightBlogs = async () => {
       try {
-        const baseUrl = getApiBaseUrl();
+        const baseUrl =
+          process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
 
         const res = await axios.get<Blog[]>(`${baseUrl}/blogs/highlights`, {
           params: { limit: 3 },

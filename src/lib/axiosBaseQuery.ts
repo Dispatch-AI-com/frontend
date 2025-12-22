@@ -5,7 +5,6 @@ import axios from 'axios';
 
 import { logout, updateCSRFToken } from '@/features/auth/authSlice';
 import type { RootState } from '@/redux/store';
-import { getApiBaseUrl } from '@/utils/api-config';
 
 interface ErrorResponse {
   message: string;
@@ -26,7 +25,7 @@ export const axiosBaseQuery = (): BaseQueryFn<
     { url, method = 'GET', data, params, headers },
     { dispatch, getState },
   ) => {
-    const apiBaseUrl = getApiBaseUrl();
+    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
 
     try {
       let { csrfToken } = (getState() as RootState).auth;

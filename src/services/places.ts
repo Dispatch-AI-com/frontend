@@ -1,6 +1,4 @@
-import { getApiBaseUrl } from '@/utils/api-config';
-
-const API_BASE = getApiBaseUrl();
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
 
 // Autocomplete prediction structure
 export interface AutocompletePrediction {
