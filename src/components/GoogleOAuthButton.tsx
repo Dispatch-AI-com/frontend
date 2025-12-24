@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useCallback } from 'react';
 import styled from 'styled-components';
 
+import { getApiBaseUrl } from '@/utils/api-config';
+
 const GoogleButton = styled.button`
   display: flex;
   align-items: center;
@@ -90,8 +92,7 @@ export default function GoogleOAuthButton({
   text = 'Sign in with Google',
 }: GoogleOAuthButtonProps) {
   const handleGoogleLogin = useCallback(() => {
-    const backendUrl =
-      process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/api';
+    const backendUrl = getApiBaseUrl();
     window.location.href = `${backendUrl}/auth/google`;
   }, []);
 
